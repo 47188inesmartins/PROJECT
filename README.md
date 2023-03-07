@@ -1,1 +1,1 @@
-"Projecto e Semin rio" 
+"Projecto e Seminario" 
