@@ -1,4 +1,4 @@
-package ps.schedule.project
+package backend
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
