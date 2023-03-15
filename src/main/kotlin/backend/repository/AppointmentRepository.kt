@@ -1,11 +1,12 @@
-package DAW.BattleShip.repository
+package backend.repository
 
-import java.time.Instant
+import backend.domain.Appointment
+import java.sql.Time
 import java.util.*
 
-interface MarcacoesRepository{
+interface AppointmentRepository{
     fun getByEmpresa(empresa: String): Int
     fun getByCliente(cliente: String): Int
     fun remove(empresa: String, cliente: String, date: Date, hour: Date) : Int?
-    fun add(empresa: String, cliente: String, date: Date, hour: Date) : Int?
+    fun add(appointment: Appointment): Int?
 }
