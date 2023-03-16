@@ -1,16 +1,15 @@
 BEGIN;
 
 create schema if not exists dbo;
- id serial primary key,
-    token UUID unique default gen_random_uuid(),
-    email varchar(50) unique CHECK (email LIKE '%@%'),
-    password varchar(30),
-    username varchar(20) unique,
-    comp_name varchar(20),
-    comp_type varchar(30),
-    description varchar(300)
-create table if not exists dbo.COMPANY (
 
+create table if not exists dbo.COMPANY (
+   id serial primary key,
+   token UUID unique default gen_random_uuid(),
+   email varchar(50) unique CHECK (email LIKE '%@%'),
+   password varchar(30),
+   comp_name varchar(20),
+   comp_type varchar(30),
+   description varchar(300)
 );
 
 create table if not exists dbo.CLIENT (
@@ -50,6 +49,7 @@ create table if not exists dbo.SERVICE (
     service_name varchar(30),
     duration time,
     number_max int default 1,
+    price float,
     cid int,
     aid int,
     foreign key(cid) references dbo.COMPANY(id),

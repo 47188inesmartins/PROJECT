@@ -1,9 +1,11 @@
 package backend.repository
 
+import backend.domain.Company
+import backend.domain.DB.CompanyDB
 import java.util.*
 
 interface CompanyRepository {
-    fun get(email: String): Boolean
+    fun get(email: String): CompanyDB?
     fun remove(email: String) : Boolean
-    fun add(email: String, password: String, username: String, name: String, type: String, description: String) : Int?
+    fun add(company : Company) : Int?
 }

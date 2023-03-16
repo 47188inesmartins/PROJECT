@@ -2,6 +2,7 @@ package backend.repository.jbdi
 
 import backend.domain.Appointment
 import backend.domain.Client
+import backend.domain.DB.AppointmentDB
 import backend.domain.Schedule
 import backend.repository.AppointmentRepository
 import org.jdbi.v3.core.Handle
