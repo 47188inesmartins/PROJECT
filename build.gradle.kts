@@ -24,6 +24,7 @@ dependencies {
 	implementation("org.springframework.security:spring-security-core:5.7.3")
 
 	// for JDBI
+	implementation ("org.springframework:spring-jdbc:5.3.13")
 	implementation("org.jdbi:jdbi3-core:3.33.0")
 	implementation("org.jdbi:jdbi3-kotlin:3.33.0")
 	implementation("org.jdbi:jdbi3-postgres:3.33.0")

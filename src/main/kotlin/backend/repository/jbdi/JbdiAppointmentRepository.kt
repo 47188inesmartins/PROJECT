@@ -12,27 +12,37 @@ import java.util.*
 
 class JbdiAppointmentRepository(private val handle: Handle): AppointmentRepository {
 
-    override fun getByEmpresa(empresa: String): Int {
-        TODO("Not yet implemented")
+    override fun getAppByCompany(company: Int): List<AppointmentDB> {
+        return handle.createQuery("select * from dbo.appointment where cid=:comp ")
+            .bind("comp", company)
+            .mapTo<AppointmentDB>()
+            .list()
     }
 
-    override fun getByCliente(cliente: String): Int {
-        TODO("Not yet implemented")
+    override fun getAppByClient(client: Int): List<AppointmentDB> {
+        return handle.createQuery("select * from dbo.appointment where cid=:client ")
+            .bind("client", client)
+            .mapTo<AppointmentDB>()
+            .list()
+
     }
 
-    override fun remove(empresa: String, cliente: String, date: Date, hour: Date): Int? {
-        TODO("Not yet implemented")
+    override fun remove(appointment: AppointmentDB): Int? {
+        return handle.createQuery("delete from dbo.appointment where id=:app_id ")
+            .bind("app_id", appointment.id)
+            .mapTo<Int>()
+            .first()
     }
 
-    override fun add(appointment: Appointment): Int? {
-        return handle.createQuery("insert into dbo.appointment(app_number, app_hour, availability, sid, cid) values (:app_number, :app_hour, :availability, :sid,:cid) returning id"
+    override fun add(appointment: Appointment): AppointmentDB? {
+        return handle.createQuery("insert into dbo.appointment(number_app_persons, app_hour, availability, sid, cid) values (:app_number, :app_hour, :availability, :sid,:cid) returning id"
             )
-            .bind("app_number", appointment.appNumber)
+            .bind("number_app_persons", appointment.appNumber)
             .bind("app_hour", appointment.appHour)
             .bind("availability", appointment.availability)
             .bind("sid", appointment.sid)
             .bind("cid", appointment.cid)
-            .mapTo<Int>()
+            .mapTo<AppointmentDB>()
             .first()
     }
 }

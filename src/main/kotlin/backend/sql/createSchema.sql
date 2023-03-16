@@ -35,7 +35,7 @@ create table if not exists dbo.SCHEDULE (
 
 create table if not exists dbo.APPOINTMENT (
     id serial primary key,
-    app_number int,
+    number_app_persons int,
     app_hour varchar(100),
     availability varchar(12) check (availability like 'available' or availability like 'unavailable'),
     sid int,
