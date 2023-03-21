@@ -8,4 +8,5 @@ interface CompanyRepository {
     fun get(email: String): CompanyDB?
     fun remove(email: String) : Boolean
     fun add(company : Company) : Int?
+    fun addEmployee(email: String): Boolean
 }

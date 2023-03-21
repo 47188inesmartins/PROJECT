@@ -36,4 +36,19 @@ class JbdiCompanyRepository(private val handle: Handle): CompanyRepository {
             .mapTo<Int>()
             .first()
     }
+
+    override fun addEmployee(email: String): Boolean {
+        return handle.createQuery("insert into dbo.company(email, password, comp_name, comp_type, description) " +
+                "values (:email, :password, :username, :type, :description) returning id"
+        )
+            .bind("email", company.email)
+            .bind("password", company.password)
+            .bind("username", company.compName)
+            .bind("type", company.compType)
+            .bind("description", company.description)
+            .mapTo<Int>()
+            .first()
+    }
+
+
 }
