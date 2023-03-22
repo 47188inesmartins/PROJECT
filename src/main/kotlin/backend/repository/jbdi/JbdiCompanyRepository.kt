@@ -2,13 +2,13 @@ package backend.repository.jbdi
 
 import backend.domain.Company
 import backend.domain.DB.CompanyDB
-import backend.repository.CompanyRepository
+import backend.repository.ICompanyRepository
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
 
 
 
-class JbdiCompanyRepository(private val handle: Handle): CompanyRepository {
+class JbdiCompanyRepository(private val handle: Handle): ICompanyRepository {
     override fun get(email: String): CompanyDB? {
         return handle.createQuery("select * from dbo.company where email = :email")
             .bind("email", email)

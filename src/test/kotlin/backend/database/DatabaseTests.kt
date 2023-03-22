@@ -4,11 +4,10 @@ import backend.domain.Appointment
 import backend.domain.Company
 import backend.domain.Schedule
 import backend.repository.AppointmentRepository
-import backend.repository.CompanyRepository
+import backend.repository.ICompanyRepository
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
 import org.springframework.boot.test.context.SpringBootTest
 import java.sql.Time
@@ -22,7 +21,7 @@ class DatabaseTests {
     @Autowired
     lateinit var appointmentRepository: AppointmentRepository
     @Autowired
-    lateinit var companyRepository: CompanyRepository
+    lateinit var companyRepository: ICompanyRepository
 
     @Test
     fun `Add an appointment`(){

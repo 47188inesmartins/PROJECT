@@ -7,8 +7,10 @@ import backend.domain.Schedule
 import backend.repository.AppointmentRepository
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
+import org.springframework.stereotype.Repository
 import java.sql.Time
 import java.util.*
+
 
 class JbdiAppointmentRepository(private val handle: Handle): AppointmentRepository {
 
