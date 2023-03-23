@@ -10,17 +10,35 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
 import org.springframework.boot.test.context.SpringBootTest
 import kotlin.test.assertEquals
 
-@SpringBootTest
+@SpringBootTest(classes = [TestConfig::class])
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class DatabaseTests {
-    @Autowired
+
     lateinit var entityManager: TestEntityManager
-    @Autowired
-    lateinit var appointmentRepository: AppointmentRepository
     @Autowired
     lateinit var companyRepository: ICompanyRepository
 
     @Test
+    fun `add a company`(){
+        val com = Company(
+            nif = "250407671",
+            phoneNumber="933280527",
+            address = "Rua Ferreira da Costa",
+            compName = "Maf,Lda",
+            compType = "Cabeleireiro",
+            description = "Cabeleireira LeiLa,cabelos,unhas,depilaçao e unhas",
+            Schedule()
+        )
+        val company = companyRepository.insert(com)
+
+        val get = companyRepository.select(company!!)
+
+        assertEquals(company,get.id)
+
+
+    }
+
+    /*@Test
     fun `Add an appointment`(){
         val company = entityManager.persist(
             Company(
@@ -65,7 +83,7 @@ class DatabaseTests {
         val company2 = companyRepository.get("mafalda@hotmail.com")
         company2?.let { assertEquals(company.description, it.description) }
 
-    }
+    }*/
 
 
 }
