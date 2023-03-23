@@ -1,16 +1,16 @@
 package backend
 
-import backend.repository.AppointmentRepository
-import backend.repository.CompanyRepository
-import backend.repository.ScheduleRepository
+import backend.model.repository.interfaces.IAppointmentRepository
+import backend.model.repository.CompanyRepository
+import backend.model.repository.interfaces.IScheduleRepository
 
 interface Transaction {
 
-    val appointmentRepository: AppointmentRepository
+    val appointmentRepository: IAppointmentRepository
 
     val companyRepository: CompanyRepository
 
-    val scheduleRepository: ScheduleRepository
+    val scheduleRepository: IScheduleRepository
 
     fun rollback()
 }

@@ -11,43 +11,52 @@ class Company {
         @Id
         @Column(name = "id")
         @GeneratedValue(strategy = GenerationType.SEQUENCE)
-        val id: Int? = null
+        var id: Int? = null
 
         @Column(name = "nif")
-        val nif: String = ""
+        val nif: String
 
         @Column(name = "phone_number")
-        val phoneNumber: String = ""
+        val phoneNumber: String
 
         @Column(name = "address")
-        val address: String = ""
+        val address: String
 
         @Column(name = "comp_name")
-        val compName: String = ""
+        val compName: String
 
         @Column(name = "comp_type")
-        val compType : String = ""
+        val compType : String
 
         @Column(name = "description")
-        val description:String = ""
+        val description:String
 
         @OneToOne(mappedBy = "comp_id")
-        val schedule: Schedule = Schedule()
+        val schedule: Schedule
+
+        constructor() {
+                this.nif = ""
+                this.phoneNumber = ""
+                this.address = ""
+                this.compName = ""
+                this.compType = ""
+                this.description = ""
+                this.schedule = Schedule()
+        }
+
+
+        constructor(nif: String, phoneNumber: String, address: String, compName: String, compType: String, description: String, schedule: Schedule){
+                this.nif = nif
+                this.phoneNumber = phoneNumber
+                this.address = address
+                this.compName = compName
+                this.compType = compType
+                this.description = description
+                this.schedule = schedule
+        }
+
 
         @OneToMany
         val calendar: MutableList<Calendar> = mutableListOf()
 
-        fun getId(): Int? = this.id
-
-        fun getNif():String = this.nif
-
-        fun getPhoneNumber(): String = this.phoneNumber
-
-        fun getAddress(): String = this.address
-
-        fun getCompName(): String = this.compName
-
-        fun getCompType(): String = this.compType
-
-        fun getDescription(): String = this.description
 }

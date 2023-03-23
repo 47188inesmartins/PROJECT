@@ -1,18 +1,13 @@
-package backend.repository.jbdi
+package backend.model.repository.jbdi
 
 import backend.domain.Appointment
-import backend.domain.Client
 import backend.domain.DB.AppointmentDB
-import backend.domain.Schedule
-import backend.repository.AppointmentRepository
+import backend.model.repository.interfaces.IAppointmentRepository
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
-import org.springframework.stereotype.Repository
-import java.sql.Time
-import java.util.*
 
 
-class JbdiAppointmentRepository(private val handle: Handle): AppointmentRepository {
+class JbdiAppointmentRepository(private val handle: Handle): IAppointmentRepository {
 
     override fun getAppByCompany(company: Int): List<AppointmentDB> {
         return handle.createQuery("select * from dbo.appointment where cid=:comp ")
@@ -39,12 +34,16 @@ class JbdiAppointmentRepository(private val handle: Handle): AppointmentReposito
     override fun add(appointment: Appointment): AppointmentDB? {
         return handle.createQuery("insert into dbo.appointment(number_app_persons, app_hour, availability, sid, cid) values (:app_number, :app_hour, :availability, :sid,:cid) returning id"
             )
-            .bind("number_app_persons", appointment.appNumber)
+            .bind("number_app_persons", appointment.numberAppPeople)
             .bind("app_hour", appointment.appHour)
             .bind("availability", appointment.availability)
             .bind("sid", appointment.sid)
             .bind("cid", appointment.cid)
             .mapTo<AppointmentDB>()
             .first()
+    }
+
+    override fun get(id: Int): Appointment {
+        TODO("Not yet implemented")
     }
 }

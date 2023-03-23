@@ -44,6 +44,7 @@ create table if not exists dbo.SCHEDULE (
     shc_interval time,
     duration time,
     comp_id int,
+    week_days varchar(27) CHECK (week_days like SCHEDULE.week_days ~ '^(seg|ter|qua|qui|sex|sab|dom)(;(seg|ter|qua|qui|sex|sab|dom)){0,6}$'),
     foreign key(comp_id) references dbo.COMPANY(id)
 );
 
@@ -68,15 +69,6 @@ create table if not exists dbo.SERVICE (
     aid int,
     foreign key(cid) references dbo.COMPANY(id),
     foreign key(aid) references dbo.APPOINTMENT(id)
-);
-
-create table if not exists dbo.CALENDAR (
-    id serial,
-    cid int,
-    week_day varchar(15) check (week_day in ('Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday')),
-    calendar_state varchar(5) check (calendar_state in ('open','close')),
-    primary key(id, cid),
-    foreign key(cid) references dbo.COMPANY(id)
 );
 
 

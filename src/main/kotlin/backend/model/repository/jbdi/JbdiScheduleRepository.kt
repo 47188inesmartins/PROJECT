@@ -1,11 +1,11 @@
-package backend.repository.jbdi
+package backend.model.repository.jbdi
 
 import backend.domain.DB.ScheduleDB
-import backend.repository.ScheduleRepository
+import backend.model.repository.interfaces.IScheduleRepository
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
 
-class JbdiScheduleRepository(private val handle: Handle): ScheduleRepository {
+class JbdiScheduleRepository(private val handle: Handle): IScheduleRepository {
     override fun get(id: Int): ScheduleDB? {
         return handle.createQuery("select * from dbo.schedule where comp_id = :id")
             .bind("id", id)

@@ -1,16 +1,13 @@
 package backend.database
 
-import backend.domain.Appointment
 import backend.domain.Company
 import backend.domain.Schedule
-import backend.repository.AppointmentRepository
-import backend.repository.ICompanyRepository
+import backend.model.repository.interfaces.ICompanyRepository
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
 import org.springframework.boot.test.context.SpringBootTest
-import java.sql.Time
 import kotlin.test.assertEquals
 
 @SpringBootTest

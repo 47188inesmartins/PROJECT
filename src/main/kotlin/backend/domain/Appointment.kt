@@ -21,6 +21,7 @@ import java.sql.Time
 @Entity
 @Table(name = "appointment")
 class Appointment {
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id")
@@ -38,7 +39,7 @@ class Appointment {
     @JoinColumn(name = "cid")
     val cid : Company
 
-    init {
+    constructor() {
         this.id = null
         this.numberAppPeople = 0
         this.appHour = Time.valueOf("")
@@ -46,17 +47,5 @@ class Appointment {
         this.sid = Schedule()
         this.cid = Company()
     }
-
-    fun getId(): Int? = this.id
-
-    fun getNumberAppPeople(): Int = this.numberAppPeople
-
-    fun getAppHour(): Time = this.appHour
-
-    fun getAvailability(): String = this.availability
-
-    fun getSid(): Schedule = this.sid
-
-    fun getCid(): Company = this.cid
 
 }
