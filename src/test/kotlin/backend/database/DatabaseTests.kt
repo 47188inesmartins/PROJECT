@@ -26,9 +26,10 @@ class DatabaseTests {
             address = "Rua Ferreira da Costa",
             compName = "Maf,Lda",
             compType = "Cabeleireiro",
-            description = "Cabeleireira LeiLa,cabelos,unhas,depilaçao e unhas",
+            description = "Cabeleireira ",
             Schedule()
         )
+
         val company = companyRepository.insert(com)
 
         val get = companyRepository.select(company!!)

@@ -12,7 +12,28 @@ create table if not exists dbo.COMPANY (
    description varchar(300)
 );
 
+
 create table if not exists dbo.USER (
+    id serial primary key,
+    token UUID unique default gen_random_uuid(),
+    email varchar(50) unique CHECK (email LIKE '%@%'),
+    password varchar(30),
+    username varchar(30) unique,
+    name varchar(30),
+    birthday date check (date(CURRENT_TIMESTAMP) >= birthday + interval '18 year')
+);
+
+create table if not exists dbo.EMPLOYEE (
+    id serial primary key,
+    token UUID unique default gen_random_uuid(),
+    email varchar(50) unique CHECK (email LIKE '%@%'),
+    password varchar(30),
+    username varchar(30) unique,
+    name varchar(30),
+    birthday date check (date(CURRENT_TIMESTAMP) >= birthday + interval '18 year')
+);
+
+create table if not exists dbo.MANAGER (
     id serial primary key,
     token UUID unique default gen_random_uuid(),
     email varchar(50) unique CHECK (email LIKE '%@%'),
@@ -24,10 +45,26 @@ create table if not exists dbo.USER (
     foreign key(comp_id) references dbo.COMPANY(id)
 );
 
+create table if not exists dbo.CLIENT (
+   id serial primary key,
+   token UUID unique default gen_random_uuid(),
+   email varchar(50) unique CHECK (email LIKE '%@%'),
+   password varchar(30),
+   username varchar(30) unique,
+   name varchar(30),
+   birthday date check (date(CURRENT_TIMESTAMP) >= birthday + interval '18 year')
+);
+
 create table if not exists dbo.ROLE (
     id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name varchar(20) NOT NULL UNIQUE CHECK ( name IN ('guest', 'user', 'employee', 'manager') )
 );
+
+/*
+
+N:N relation with user and role
+
+*/
 
 create table if not exists dbo.USER_ROLE(
     role_id int,
@@ -56,7 +93,7 @@ create table if not exists dbo.APPOINTMENT (
     sid int,
     cid int,
     foreign key(sid) references dbo.SCHEDULE(id),
-    foreign key(cid) references dbo.USER(id)
+    foreign key(cid) references dbo.CLIENT(id)
 );
 
 create table if not exists dbo.SERVICE (
@@ -69,6 +106,21 @@ create table if not exists dbo.SERVICE (
     aid int,
     foreign key(cid) references dbo.COMPANY(id),
     foreign key(aid) references dbo.APPOINTMENT(id)
+);
+
+
+/*
+
+N:N relation with employee and service
+
+*/
+
+create table if not exists dbo.EMPLOYEE_SERVICE(
+    employee_id int,
+    service_id int,
+    primary key(employee_id, service_id),
+    foreign key (employee_id) references dbo.EMPLOYEE(id),
+    foreign key (service_id) references dbo.SERVICE(id)
 );
 
 
