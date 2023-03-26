@@ -5,11 +5,24 @@ create schema if not exists dbo;
 create table if not exists dbo.COMPANY (
    id serial primary key,
    nif varchar(9) unique,
-   phone_number varchar(13) unique,
    address varchar(40),
    comp_name varchar(20),
    comp_type varchar(30),
    description varchar(300)
+);
+
+
+/*
+
+    company's composed attribute
+
+*/
+create table if not exists dbo.COMPANY_NUMBERS(
+    id serial primary key,
+    phone_number varchar(13),
+    cid int,
+    primary key (id,phone_number),
+    foreign key (cid) references dbo.COMPANY(id)
 );
 
 
@@ -18,7 +31,6 @@ create table if not exists dbo.USER (
     token UUID unique default gen_random_uuid(),
     email varchar(50) unique CHECK (email LIKE '%@%'),
     password varchar(30),
-    username varchar(30) unique,
     name varchar(30),
     birthday date check (date(CURRENT_TIMESTAMP) >= birthday + interval '18 year')
 );
@@ -30,7 +42,8 @@ create table if not exists dbo.EMPLOYEE (
     password varchar(30),
     username varchar(30) unique,
     name varchar(30),
-    birthday date check (date(CURRENT_TIMESTAMP) >= birthday + interval '18 year')
+    birthday date check (date(CURRENT_TIMESTAMP) >= birthday + interval '18 year'),
+    availability varchar(15) check (availability in ('available','unavailable'))
 );
 
 create table if not exists dbo.MANAGER (
@@ -69,19 +82,14 @@ N:N relation with user and role
 create table if not exists dbo.USER_ROLE(
     role_id int,
     user_id int,
-    primary key(role_id,user_id),
+    primary key (role_id,user_id),
     foreign key (role_id) references dbo.ROLE(id),
     foreign key (user_id) references dbo.USER(id)
 );
 
 create table if not exists dbo.SCHEDULE (
     id serial primary key,
-    begin_hour time,
-    end_hour time,
-    shc_interval time,
-    duration time,
     comp_id int,
-    week_days varchar(27) CHECK (week_days like SCHEDULE.week_days ~ '^(seg|ter|qua|qui|sex|sab|dom)(;(seg|ter|qua|qui|sex|sab|dom)){0,6}$'),
     foreign key(comp_id) references dbo.COMPANY(id)
 );
 
@@ -90,10 +98,13 @@ create table if not exists dbo.APPOINTMENT (
     number_app_people int,
     app_hour time,
     availability varchar(11) check (availability like 'available' or availability like 'unavailable'),
+    app_date date,
     sid int,
     cid int,
+    eid int,
     foreign key(sid) references dbo.SCHEDULE(id),
-    foreign key(cid) references dbo.CLIENT(id)
+    foreign key(cid) references dbo.CLIENT(id),
+    foreign key(eid) references dbo.EMPLOYEE(id)
 );
 
 create table if not exists dbo.SERVICE (
@@ -123,6 +134,22 @@ create table if not exists dbo.EMPLOYEE_SERVICE(
     foreign key (service_id) references dbo.SERVICE(id)
 );
 
+create table if not exists dbo.DAY(
+     id serial primary key,
+     begin_hour time,
+     end_hour time,
+     interval time,
+     week_days char(4) CHECK (week_days in ('MON','TUE','WED','THU','FRI','SAT','SUN')),
+     sid int,
+     foreign key (sid) references dbo.SCHEDULE(id)
+);
 
+create table if not exists dbo.VACATION(
+    id serial primary key,
+    date_begin date,
+    date_end date check ( date_end > date_begin ),
+    sid int,
+    foreign key (sid) references dbo.SCHEDULE(id)
+);
 
 COMMIT;
