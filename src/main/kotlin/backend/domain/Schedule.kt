@@ -11,25 +11,25 @@ class Schedule {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id")
     val id: Int?
-    @Column(name = "begin_hour")
-    val beginHour : Time
-    @Column(name = "end_hour")
-    val endHour : Time
-    @Column(name = "shc_interval")
-    val shcInterval : Time
-    @Column(name = "duration")
-    val duration : Time
+
     @OneToOne
     @JoinColumn(name = "comp_id")
     val compId : Company
 
+    @OneToMany(mappedBy = "sid")
+    val appointment: List<Appointment>
+
+    @OneToMany(mappedBy = "sid")
+    val day: List<Day>
+
+    @OneToMany(mappedBy = "sid")
+    val vacation: List<Vacation>
+
     constructor(){
         this.id = null
-        this.beginHour = Time.valueOf("")
-        this.endHour = Time.valueOf("")
-        this.shcInterval = Time.valueOf("")
-        this.duration = Time.valueOf("")
         this.compId = Company()
+        this.appointment = listOf()
+        this.day = listOf()
+        this.vacation = listOf()
     }
-
 }

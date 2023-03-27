@@ -1,19 +1,8 @@
 package backend.model.repository
-
 import backend.domain.User
-import backend.model.mappers.ClientMapper
-import backend.model.repository.interfaces.IClientRepository
+import org.springframework.boot.autoconfigure.integration.IntegrationProperties.RSocket.Client
+import org.springframework.data.jpa.repository.JpaRepository
 
-class ClientRepository:IClientRepository {
-
-    private lateinit var userMapper: ClientMapper
-
-    override fun insertUser(user: User): Int? = userMapper.add(user)
-
-    override fun getUser(id: Int): User = userMapper.get(id)
-
-    override fun deleteUser(id: Int) = userMapper.remove(id)
-
-    override fun getUserByEmail(email: String): User = userMapper.getUserByEmail(email)
+interface ClientRepository : JpaRepository<Client, Int>{
 
 }

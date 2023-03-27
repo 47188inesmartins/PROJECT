@@ -1,90 +1,71 @@
 package backend.database
 
 import backend.domain.Company
-import backend.domain.Schedule
-import backend.model.repository.interfaces.ICompanyRepository
+import backend.model.repository.CompanyRepository
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
+import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
-import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
+import org.springframework.test.context.junit4.SpringRunner
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 
-@SpringBootTest(classes = [TestConfig::class])
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class DatabaseTests {
+@DataJpaTest
+@RunWith(SpringRunner::class)
+class CompanyRepositoryTest {
 
-    lateinit var entityManager: TestEntityManager
     @Autowired
-    lateinit var companyRepository: ICompanyRepository
+    private lateinit var companyRepository: CompanyRepository
 
     @Test
-    fun `add a company`(){
+    fun `Insert one company`() {
         val com = Company(
             nif = "250407671",
-            phoneNumber="933280527",
             address = "Rua Ferreira da Costa",
             compName = "Maf,Lda",
             compType = "Cabeleireiro",
-            description = "Cabeleireira ",
-            Schedule()
+            description = "Cabeleireira "
         )
 
-        val company = companyRepository.insert(com)
-
-        val get = companyRepository.select(company!!)
-
-        assertEquals(company,get.id)
-
-
+        val espera = companyRepository.save(com)
+        println(espera.id)
+        assertNotNull(espera.id)
     }
-
-    /*@Test
-    fun `Add an appointment`(){
-        val company = entityManager.persist(
-            Company(
-                email = "grupo18@hotmail.com",
-                password = "grupo18",
-                compName = "Cabeleireira LeiLa",
-                compType = "Cabeleireiro",
-                description = "Cabeleireira LeiLa,cabelos,unhas,depilaçao e unhas")
-        )
-
-        val schedule = entityManager.persist(
-            Schedule(
-                beginHour = Time.valueOf("12:00:00"),
-                endHour = Time.valueOf("12:00:00"),
-                shcInterval = Time.valueOf("00:30:00"),
-                duration = Time.valueOf("00:30:00") ,
-                compId = 1
-            )
-        )
-        val appointment = entityManager.persist(
-            Appointment( appNumber =  3, appHour = "12:30", availability = "available",sid = 1, cid = 1)
-        )
-
-        val foundAppointment = appointmentRepository.add(appointment)
-
-
-        assertEquals(appointment.appHour,foundAppointment?.appHour)
-
-    }
-
 
     @Test
-    fun `Get a company`(){
-        val company = entityManager.persist(
-            Company(email = "mafalda@hotmail.com",
-                password = "Mafalda123",
-                compName = "Schedule APP",
-                compType = "IT",
-                description = "Aplicacao para fazer marcacoes")
+    fun `select one company`() {
+
+        val com = Company(
+            nif = "250407671",
+            address = "Rua Ferreira da Costa",
+            compName = "Maf,Lda",
+            compType = "Cabeleireiro",
+            description = "Cabeleireira "
         )
 
-        val company2 = companyRepository.get("mafalda@hotmail.com")
-        company2?.let { assertEquals(company.description, it.description) }
+        val company = companyRepository.save(com)
 
-    }*/
+        val getCompany = companyRepository.findAllById(company.id!!)
 
+        assertEquals(company,getCompany)
+    }
+
+    @Test
+    fun `select one company by nif`() {
+
+        val com = Company(
+            nif = "250407671",
+            address = "Rua Ferreira da Costa",
+            compName = "Maf,Lda",
+            compType = "Cabeleireiro",
+            description = "Cabeleireira "
+        )
+
+        val company = companyRepository.save(com)
+
+        val getCompany = companyRepository.findCompanyByNif("250407671")
+
+        assertEquals(company,getCompany)
+    }
 
 }

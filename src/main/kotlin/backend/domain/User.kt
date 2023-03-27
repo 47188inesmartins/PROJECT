@@ -34,39 +34,38 @@ class User {
         @Column(name = "password")
         val password: String
 
-        @Column(name = "username")
-        val username: String
-
         @Column(name = "name")
         val clientName: String
 
         @Column(name = "birthday")
         val birthday: Date?
 
-        @ManyToOne
-        @JoinColumn(name = "comp_id")
-        val companyId: Company
+        @ManyToMany()
+        @JoinTable(
+                name = "user_role",
+                joinColumns = [JoinColumn(name = "user_id")],
+                inverseJoinColumns = [JoinColumn(name = "role_id")]
+        )
+        val role: List<Role>
 
         constructor(email:String,
                     password:String,
-                    username:String,
                     clientName:String,
                     birth:Date,
-                    cid:Company){
+                    role: List<Role>
+        ){
                 this.email = email
                 this.password = password
-                this.username = username
                 this.clientName = clientName
                 this.birthday = birth
-                this.companyId = cid
+                this.role = role
         }
 
         constructor(){
                 this.email = ""
                 this.password = ""
-                this.username = ""
                 this.clientName = ""
                 this.birthday = null
-                this.companyId = Company()
+                this.role = listOf()
         }
 }

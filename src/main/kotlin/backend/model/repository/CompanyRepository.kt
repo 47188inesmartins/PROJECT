@@ -1,10 +1,12 @@
-package backend.model.repository.interfaces
+package backend.model.repository
 
 import backend.domain.Company
-import backend.domain.DB.CompanyDB
+import org.springframework.data.jpa.repository.JpaRepository
 
-interface ICompanyRepository {
-    fun select(id: Int): Company
-    fun delete(id: Int) : Boolean
-    fun insert(company : Company) : Int?
+interface CompanyRepository : JpaRepository<Company, Int>{
+
+    fun findAllById(id: Int):Company
+
+    fun findCompanyByNif(nif:String):Company
+
 }

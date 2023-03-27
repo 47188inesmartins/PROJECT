@@ -13,15 +13,12 @@ create table if not exists dbo.COMPANY (
 
 
 /*
-
     company's composed attribute
-
 */
 create table if not exists dbo.COMPANY_NUMBERS(
-    id serial primary key,
     phone_number varchar(13),
     cid int,
-    primary key (id,phone_number),
+    primary key (phone_number),
     foreign key (cid) references dbo.COMPANY(id)
 );
 
@@ -51,7 +48,6 @@ create table if not exists dbo.MANAGER (
     token UUID unique default gen_random_uuid(),
     email varchar(50) unique CHECK (email LIKE '%@%'),
     password varchar(30),
-    username varchar(30) unique,
     name varchar(30),
     birthday date check (date(CURRENT_TIMESTAMP) >= birthday + interval '18 year'),
     comp_id int,
@@ -72,12 +68,8 @@ create table if not exists dbo.ROLE (
     name varchar(20) NOT NULL UNIQUE CHECK ( name IN ('guest', 'user', 'employee', 'manager') )
 );
 
-/*
 
-N:N relation with user and role
-
-*/
-
+/*N:N relation with user and role*/
 create table if not exists dbo.USER_ROLE(
     role_id int,
     user_id int,
@@ -113,18 +105,20 @@ create table if not exists dbo.SERVICE (
     number_max int default 1,
     price float,
     cid int,
-    aid int,
-    foreign key(cid) references dbo.COMPANY(id),
-    foreign key(aid) references dbo.APPOINTMENT(id)
+    foreign key(cid) references dbo.COMPANY(id)
+);
+
+/*N:N relation with service and appointment*/
+create table if not exists dbo.SERVICE_APPOINTMENT(
+    service_id int,
+    appointment_id int,
+    primary key (service_id,appointment_id),
+    foreign key (service_id) references dbo.SERVICE(id),
+    foreign key (appointment_id) references dbo.APPOINTMENT(id)
 );
 
 
-/*
-
-N:N relation with employee and service
-
-*/
-
+/*N:N relation with employee and service*/
 create table if not exists dbo.EMPLOYEE_SERVICE(
     employee_id int,
     service_id int,
@@ -152,3 +146,5 @@ create table if not exists dbo.VACATION(
 );
 
 COMMIT;
+
+ROLLBACK;

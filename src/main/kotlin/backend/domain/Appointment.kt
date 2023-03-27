@@ -25,27 +25,51 @@ class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id")
-    val id: Int?
+    var id: Int? = null
+
     @Column(name = "number_app_people")
     val numberAppPeople: Int
+
     @Column(name = "app_hour")
     val appHour : Time
+
     @Column(name = "availability")
     val availability : String
+
+    @ManyToOne
+    @JoinColumn(name = "eid")
+    val eid: Employee
+
     @ManyToOne
     @JoinColumn(name = "sid")  // nome da foreign key
     val sid : Schedule
-    @OneToOne
+
+    @ManyToOne
     @JoinColumn(name = "cid")
-    val cid : Company
+    val cid : Client
+
+    @ManyToMany(mappedBy = "appointment")
+    val service: List<Service>
 
     constructor() {
         this.id = null
         this.numberAppPeople = 0
         this.appHour = Time.valueOf("")
         this.availability = "unavailable"
+        this.eid = Employee()
         this.sid = Schedule()
-        this.cid = Company()
+        this.cid = Client()
+        this.service = listOf()
+    }
+
+    constructor(numberAppPeople: Int, appHour: Time, availability: String, eid: Employee, sid: Schedule, cid: Client, service: List<Service>) {
+        this.numberAppPeople = numberAppPeople
+        this.appHour = appHour
+        this.availability = availability
+        this.eid = eid
+        this.sid = sid
+        this.cid = cid
+        this.service = service
     }
 
 }
