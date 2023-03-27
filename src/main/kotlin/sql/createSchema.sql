@@ -63,7 +63,6 @@ create table if not exists dbo.CLIENT (
    token UUID unique default gen_random_uuid(),
    email varchar(50) unique CHECK (email LIKE '%@%'),
    password varchar(30),
-   username varchar(30) unique,
    name varchar(30),
    birthday date check (date(CURRENT_TIMESTAMP) >= birthday + interval '18 year')
 );

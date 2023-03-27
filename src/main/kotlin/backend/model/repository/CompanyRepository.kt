@@ -1,22 +1,10 @@
-package backend.model.repository
+package backend.model.repository.interfaces
 
 import backend.domain.Company
-import backend.model.mappers.CompanyMapper
-import backend.model.repository.interfaces.ICompanyRepository
-import org.springframework.stereotype.Component
-import javax.persistence.EntityManager
+import backend.domain.DB.CompanyDB
 
-
-@Component
-class CompanyRepository : ICompanyRepository {
-
-    private lateinit var entityManager: EntityManager
-    private lateinit var companyMapper: CompanyMapper
-
-    override fun select(id: Int): Company = companyMapper.get(id)
-
-    override fun delete(id: Int): Boolean = companyMapper.remove(id)
-
-    override fun insert(company: Company): Int? = companyMapper.add(company)
-
+interface ICompanyRepository {
+    fun select(id: Int): Company
+    fun delete(id: Int) : Boolean
+    fun insert(company : Company) : Int?
 }

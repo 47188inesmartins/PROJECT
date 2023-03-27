@@ -16,9 +16,6 @@ class Company {
         @Column(name = "nif")
         val nif: String
 
-        @Column(name = "phone_number")
-        val phoneNumber: String
-
         @Column(name = "address")
         val address: String
 
@@ -31,23 +28,19 @@ class Company {
         @Column(name = "description")
         val description:String
 
-        @OneToOne(mappedBy = "comp_id")
-        val schedule: Schedule
-
         constructor() {
                 this.nif = ""
-                this.phoneNumber = ""
                 this.address = ""
                 this.compName = ""
                 this.compType = ""
                 this.description = ""
+                this.service = listOf()
                 this.schedule = Schedule()
         }
 
 
         constructor(nif: String, phoneNumber: String, address: String, compName: String, compType: String, description: String, schedule: Schedule){
                 this.nif = nif
-                this.phoneNumber = phoneNumber
                 this.address = address
                 this.compName = compName
                 this.compType = compType
