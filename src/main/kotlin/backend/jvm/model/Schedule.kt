@@ -1,7 +1,6 @@
-package backend.domain
+package backend.jvm.model
 
 import jakarta.persistence.*
-import java.sql.Time
 
 @Entity(name = "Schedule")
 @Table(name = "schedule")

@@ -1,7 +1,6 @@
-package backend.domain
+package backend.jvm.model
 
 import jakarta.persistence.*
-import java.sql.Time
 import javax.persistence.Column
 
 
@@ -15,9 +14,9 @@ class  CompanyNumbers{
         @Id
         @Column(name = "cid")
         @ManyToOne
-        val companyId:Company
+        val companyId: Company
 
-        constructor(phoneNumber:String,cid:Company){
+        constructor(phoneNumber:String,cid: Company){
                 this.phoneNumber = phoneNumber
                 this.companyId = cid
         }

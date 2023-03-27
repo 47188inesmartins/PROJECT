@@ -1,4 +1,4 @@
-package backend.domain
+package backend.jvm.model
 
 import jakarta.persistence.*
 import java.sql.Date

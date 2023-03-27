@@ -1,4 +1,4 @@
-package backend.domain
+package backend.jvm.model
 
 import jakarta.persistence.*
 import javax.persistence.Column
@@ -48,7 +48,7 @@ class Company {
                 this.manager = listOf()
         }
 
-        constructor(nif: String,address: String, compName: String, compType: String, description: String, service: List<Service>, schedule: Schedule, manager: List<Manager>){
+        constructor(nif: String, address: String, compName: String, compType: String, description: String, service: List<Service>, schedule: Schedule, manager: List<Manager>){
                 this.nif = nif
                 this.address = address
                 this.compName = compName
@@ -59,3 +59,4 @@ class Company {
                 this.manager = manager
         }
 }
+

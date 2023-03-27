@@ -1,4 +1,4 @@
-package backend.utils
+package backend.jvm.utils
 
 class Hashing(){
     fun encodePass(){

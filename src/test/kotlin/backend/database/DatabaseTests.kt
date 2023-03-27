@@ -1,7 +1,7 @@
 package backend.database
 
-import backend.domain.Company
-import backend.model.repository.CompanyRepository
+import backend.jvm.model.Company
+import backend.jvm.repository.CompanyRepository
 import org.junit.jupiter.api.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
