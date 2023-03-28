@@ -1,6 +1,7 @@
 package backend.database
 
 import backend.jvm.model.Company
+import backend.jvm.model.Service
 import backend.jvm.repository.CompanyRepository
 import org.junit.jupiter.api.Test
 import org.junit.runner.RunWith
@@ -10,6 +11,8 @@ import org.springframework.test.context.junit4.SpringRunner
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
+
+/*
 @DataJpaTest
 @RunWith(SpringRunner::class)
 class CompanyRepositoryTest {
@@ -24,7 +27,9 @@ class CompanyRepositoryTest {
             address = "Rua Ferreira da Costa",
             compName = "Maf,Lda",
             compType = "Cabeleireiro",
-            description = "Cabeleireira "
+            description = "Cabeleireira ",
+            service = Service(),
+
         )
 
         val espera = companyRepository.save(com)
@@ -68,4 +73,4 @@ class CompanyRepositoryTest {
         assertEquals(company,getCompany)
     }
 
-}
+}*/

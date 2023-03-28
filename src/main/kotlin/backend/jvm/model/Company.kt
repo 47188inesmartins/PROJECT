@@ -31,10 +31,10 @@ class Company {
         @OneToMany(mappedBy = "cid")
         val service: List<Service>
 
-        @OneToOne(mappedBy = "cid")
+        @OneToOne(mappedBy = "compIdSch")
         val schedule: Schedule
 
-        @OneToMany(mappedBy = "comp_id")
+        @OneToMany(mappedBy = "compId")
         val manager: List<Manager>
 
         constructor() {

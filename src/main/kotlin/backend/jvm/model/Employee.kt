@@ -38,17 +38,17 @@ class Employee {
     val service: List<Service>
 
     @OneToMany(mappedBy = "eid")
-    val employee: List<Employee>
+    val appointment: List<Appointment>
 
     @Suppress("ConvertSecondaryConstructorToPrimary")
-    constructor(email:String, password:String, name:String, birthday: Date, service: List<Service>, employee: List<Employee>) {
+    constructor(email:String, password:String, name:String, birthday: Date, service: List<Service>, appointment: List<Appointment>) {
         if(!validateEmail(email)) throw Error("Invalid email") //FAZER UMA CENA DE ERROS
         this.email = email
         this.password = password
         this.name = name
         this.birthday = birthday
         this.service = service
-        this.employee = employee
+        this.appointment = appointment
     }
 
     constructor(){
@@ -57,7 +57,7 @@ class Employee {
         this.name = ""
         this.birthday = java.sql.Date.valueOf("")
         this.service = listOf()
-        this.employee = listOf()
+        this.appointment = listOf()
     }
 
 

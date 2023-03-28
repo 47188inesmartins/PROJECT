@@ -23,19 +23,19 @@ class Vacation {
 
     @ManyToOne
     @JoinColumn(name = "sid")
-    val schedule: Schedule
+    val sid: Schedule
 
 
     constructor(){
         this.dateBegin = Date.valueOf("")
         this.dateEnd = Date.valueOf("")
-        this.schedule = Schedule()
+        this.sid = Schedule()
     }
 
     constructor(dateBegin: Date, dateEnd: Date, schedule: Schedule){
         this.dateBegin = dateBegin
         this.dateEnd = dateEnd
-        this.schedule = schedule
+        this.sid = schedule
     }
 
 }

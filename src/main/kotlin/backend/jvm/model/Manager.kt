@@ -33,7 +33,7 @@ class Manager {
     val compId: Company
 
     @Suppress("ConvertSecondaryConstructorToPrimary")
-    constructor(email:String,password:String,name:String,birthday: Date, company: Company) {
+    constructor(email:String, password:String, name:String, birthday: Date, company: Company) {
         if(!validateEmail(email)) throw Error("Invalid email") //FAZER UMA CENA DE ERROS
         this.email = email
         this.password = password
