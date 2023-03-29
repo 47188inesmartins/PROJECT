@@ -25,7 +25,7 @@ create table if not exists dbo.COMPANY_NUMBERS(
 
 create table if not exists dbo.USER (
     id serial primary key,
-    token UUID unique default gen_random_uuid(),
+    token UUID unique /*default gen_random_uuid()*/,
     email varchar(50) unique CHECK (email LIKE '%@%'),
     password varchar(30),
     name varchar(30),
@@ -34,7 +34,7 @@ create table if not exists dbo.USER (
 
 create table if not exists dbo.EMPLOYEE (
     id serial primary key,
-    token UUID unique default gen_random_uuid(),
+    token UUID unique /*default gen_random_uuid()*/,
     email varchar(50) unique CHECK (email LIKE '%@%'),
     password varchar(30),
     username varchar(30) unique,
@@ -45,7 +45,7 @@ create table if not exists dbo.EMPLOYEE (
 
 create table if not exists dbo.MANAGER (
     id serial primary key,
-    token UUID unique default gen_random_uuid(),
+    token varchar(20) unique /*default gen_random_uuid()*/,
     email varchar(50) unique CHECK (email LIKE '%@%'),
     password varchar(30),
     name varchar(30),

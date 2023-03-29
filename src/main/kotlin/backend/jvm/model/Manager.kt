@@ -2,7 +2,7 @@ package backend.jvm.model
 
 import jakarta.persistence.*
 import java.util.*
-
+import java.util.Date
 @Entity
 @Table(name = "manager")
 class Manager {
@@ -10,9 +10,9 @@ class Manager {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id")
     var id: Int? = null
+    //@GeneratedValue(strategy = GenerationType.UUID)
 
     @Column(name = "token")
-    @GeneratedValue(strategy = GenerationType.UUID)
     var token: String? = null
 
     @Column(name = "email")
@@ -46,7 +46,7 @@ class Manager {
         this.email = ""
         this.password = ""
         this.name = ""
-        this.birthday = java.sql.Date.valueOf("")
+        this.birthday = Date()
         this.compId = Company()
     }
 
