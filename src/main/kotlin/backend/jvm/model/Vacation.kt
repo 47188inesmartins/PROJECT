@@ -4,7 +4,7 @@ import jakarta.persistence.*
 import java.sql.Date
 import javax.persistence.Column
 
-
+/*
 @Entity
 @Table(name = "vacation")
 class Vacation {
@@ -39,3 +39,4 @@ class Vacation {
     }
 
 }
+*/

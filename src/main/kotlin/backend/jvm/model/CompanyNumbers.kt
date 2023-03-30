@@ -3,7 +3,7 @@ package backend.jvm.model
 import jakarta.persistence.*
 import javax.persistence.Column
 
-
+/*
 @Entity
 @Table(name = "COMPANY_NUMBERS")
 class  CompanyNumbers{
@@ -26,4 +26,4 @@ class  CompanyNumbers{
                 this.companyId = Company()
         }
 
-}
+}*/

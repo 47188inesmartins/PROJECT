@@ -1,7 +1,7 @@
 package backend.jvm.model
 
 import jakarta.persistence.*
-
+/*
 @Entity(name = "Schedule")
 @Table(name = "schedule")
 class Schedule {
@@ -31,4 +31,4 @@ class Schedule {
         this.day = listOf()
         this.vacation = listOf()
     }
-}
+}*/

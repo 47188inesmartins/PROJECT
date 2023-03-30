@@ -3,7 +3,7 @@ package backend.jvm.model
 import jakarta.persistence.*
 import java.util.*
 import java.util.Date
-@Entity
+/*@Entity
 @Table(name = "manager")
 class Manager {
     @Id
@@ -52,4 +52,4 @@ class Manager {
 
     private fun validateEmail(email:String) = Regex("[a-zA-Z]+@[a-zA-Z]+").matches(email)
 
-}
+}*/

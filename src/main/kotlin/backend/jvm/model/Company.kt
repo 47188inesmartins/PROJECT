@@ -12,7 +12,6 @@ class Company {
 
         @Id
         @Column(name = "id")
-        @GeneratedValue(strategy = GenerationType.SEQUENCE)
         var id: Int? = null
 
         @Column(name = "nif")
