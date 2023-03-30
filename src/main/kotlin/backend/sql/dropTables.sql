@@ -14,5 +14,5 @@ drop table if exists dbo.EMPLOYEE cascade;
 drop table if exists dbo.EMPLOYEE_SERVICE cascade;
 drop table if exists dbo.MANAGER cascade;
 drop table if exists dbo.VACATION cascade;
-
+drop table if exists dbo.calendar cascade;
 COMMIT;

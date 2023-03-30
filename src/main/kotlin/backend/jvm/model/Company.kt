@@ -2,6 +2,8 @@ package backend.jvm.model
 
 import jakarta.persistence.*
 import javax.persistence.Column
+import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
 import javax.persistence.OneToMany
 
 @Entity
@@ -28,14 +30,14 @@ class Company {
         @Column(name = "description")
         val description:String
 
-        @OneToMany(mappedBy = "cid")
+       /* @OneToMany(mappedBy = "cid")
         val service: List<Service>
 
         @OneToOne(mappedBy = "compIdSch")
-        val schedule: Schedule
+        val schedule: Schedule?*/
 
-        @OneToMany(mappedBy = "compId")
-        val manager: List<Manager>
+       /* @OneToMany(mappedBy = "compId")
+        val manager: List<Manager>*/
 
         constructor() {
                 this.nif = ""
@@ -43,20 +45,22 @@ class Company {
                 this.compName = ""
                 this.compType = ""
                 this.description = ""
-                this.service = listOf()
-                this.schedule = Schedule()
-                this.manager = listOf()
+                this.id = 0
+              //  this.service = listOf()
+               // this.schedule = Schedule()
+               // this.manager = listOf()
         }
 
-        constructor(nif: String, address: String, compName: String, compType: String, description: String, service: List<Service>, schedule: Schedule, manager: List<Manager>){
+        constructor(nif: String, address: String, compName: String, compType: String, description: String, id: Int/* service: List<Service>, schedule: Schedule?*//*, manager: List<Manager>*/){
                 this.nif = nif
                 this.address = address
                 this.compName = compName
                 this.compType = compType
                 this.description = description
-                this.service = service
-                this.schedule = schedule
-                this.manager = manager
+                this.id = id
+               // this.service = service
+                //this.schedule = schedule
+             //   this.manager = manager
         }
 }
 

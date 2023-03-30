@@ -1,10 +1,10 @@
 package backend.jvm.services
 
 import backend.jvm.model.*
-import backend.jvm.repository.AppointmentRepository
+//import backend.jvm.repository.AppointmentRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-
+/*
 @Service
 class AppointmentServices {
 
@@ -28,4 +28,4 @@ class AppointmentServices {
 
     fun getCompany(id: Int): Company = appointmentRepository.getCompany(id)
 
-}
+}*/

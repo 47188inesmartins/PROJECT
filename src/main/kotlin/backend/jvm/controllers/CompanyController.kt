@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping(("/company"),produces = ["application/json"])
+@RequestMapping(("/company"))
 class CompanyController {
 
     @Autowired

@@ -2,7 +2,7 @@ package backend.jvm.model
 
 import jakarta.persistence.*
 import java.sql.Time
-
+/*
 @Entity
 @Table(name = "day")
 class Day {
@@ -45,4 +45,4 @@ class Day {
             this.weekDays = weekDays
             this.sid = sid
         }
-}
+}*/

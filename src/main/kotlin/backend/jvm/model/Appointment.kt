@@ -17,7 +17,7 @@ import java.sql.Time
  *
  */
 
-
+/*
 @Entity
 @Table(name = "appointment")
 class Appointment {
@@ -73,3 +73,4 @@ class Appointment {
     }
 
 }
+*/

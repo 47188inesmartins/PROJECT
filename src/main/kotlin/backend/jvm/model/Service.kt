@@ -3,7 +3,7 @@ package backend.jvm.model
 import jakarta.persistence.*
 import java.sql.Time
 
-
+/*
 @Entity
 @Table(name = "service")
 class Service{
@@ -16,6 +16,7 @@ class Service{
     @Column(name = "service_name")
     val name: String
 
+    @Temporal(TemporalType.TIME)
     @Column(name = "duration")
     val duration: Time
 
@@ -43,7 +44,7 @@ class Service{
 
     constructor(){
         this.name = ""
-        this.duration = Time.valueOf("")
+        this.duration = Time.valueOf("00:00:00")
         this.numberMax = 0
         this.price = 0.0
         this.company = Company()
@@ -60,4 +61,4 @@ class Service{
         this.employee = employee
         this.appointment = appointment
     }
-}
+}*/

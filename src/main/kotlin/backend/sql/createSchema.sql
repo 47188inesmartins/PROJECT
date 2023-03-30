@@ -3,7 +3,7 @@ BEGIN;
 create schema if not exists dbo;
 
 create table if not exists dbo.COMPANY (
-   id serial primary key,
+   id int,
    nif varchar(9) unique,
    address varchar(40),
    comp_name varchar(20),
@@ -15,7 +15,7 @@ create table if not exists dbo.COMPANY (
 /*
     company's composed attribute
 */
-create table if not exists dbo.COMPANY_NUMBERS(
+/*create table if not exists dbo.COMPANY_NUMBERS(
     phone_number varchar(13),
     cid int,
     primary key (phone_number),
@@ -143,7 +143,7 @@ create table if not exists dbo.VACATION(
     date_end date check ( date_end > date_begin ),
     sid int,
     foreign key (sid) references dbo.SCHEDULE(id)
-);
+);*/
 
 COMMIT;
 

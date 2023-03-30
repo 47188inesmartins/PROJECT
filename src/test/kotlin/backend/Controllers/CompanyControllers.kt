@@ -36,7 +36,7 @@ class CompanyControllersTest {
                     "cabeleireiro",
                     "so cabelos",
                     emptyList(),
-                    Schedule(),
+                    null,
                     emptyList()
                 )
         Mockito.`when`(companyServices.addCompany(com)).thenReturn(com)

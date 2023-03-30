@@ -2,7 +2,7 @@ package backend.jvm.model
 
 import jakarta.persistence.*
 
-@Entity
+/*@Entity
 @Table(name = "role")
 class Role {
     @Id
@@ -25,4 +25,4 @@ class Role {
         this.name = name
         this.user = user
     }
-}
+}*/

@@ -16,7 +16,7 @@ import java.util.*
  * @property birthday the User birthday
  * @property companyId null if the user has the role of 'guest' or 'client'. the company where the user works
  */
-
+/*
 @Entity
 @Table(name = "user")
 class User {
@@ -67,5 +67,5 @@ class User {
                 this.clientName = ""
                 this.birthday = null
                 this.role = listOf()
-        }
-}
+        }*/
+//}

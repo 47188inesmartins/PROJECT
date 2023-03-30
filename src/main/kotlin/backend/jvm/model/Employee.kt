@@ -4,7 +4,7 @@ import jakarta.persistence.*
 import java.util.*
 import javax.persistence.Column
 
-@Entity
+/*@Entity
 @Table(name = "employee")
 class Employee {
     @Id
@@ -61,5 +61,5 @@ class Employee {
     }
 
 
-    private fun validateEmail(email:String) = Regex("[a-zA-Z]+@[a-zA-Z]+").matches(email)
-}
+    private fun validateEmail(email:String) = Regex("[a-zA-Z]+@[a-zA-Z]+").matches(email)*/
+//}

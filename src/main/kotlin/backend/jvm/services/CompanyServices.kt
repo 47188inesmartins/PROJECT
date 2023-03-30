@@ -12,6 +12,7 @@ class CompanyServices {
     lateinit var companyRepository: CompanyRepository
 
     fun addCompany(company: Company): Company {
+        println(company)
         return companyRepository.save(company)
     }
 
