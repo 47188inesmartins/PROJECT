@@ -1,6 +1,6 @@
 BEGIN;
 
-drop table if exists dbo.COMPANY cascade;
+drop table if exists COMPANY cascade;
 drop table if exists dbo.CLIENT cascade;
 drop table if exists dbo.SCHEDULE cascade;
 drop table if exists dbo.APPOINTMENT cascade;

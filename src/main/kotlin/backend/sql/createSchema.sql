@@ -1,13 +1,13 @@
 BEGIN;
 
-create schema if not exists dbo;
+/*create schema if not exists dbo;*/
 
-create table if not exists dbo.COMPANY (
-   id int,
+create table if not exists COMPANY (
+   id serial primary key,
    nif varchar(9) unique,
    address varchar(40),
-   comp_name varchar(20),
-   comp_type varchar(30),
+   name varchar(20),
+   type varchar(30),
    description varchar(300)
 );
 
@@ -147,4 +147,3 @@ create table if not exists dbo.VACATION(
 
 COMMIT;
 
-ROLLBACK;

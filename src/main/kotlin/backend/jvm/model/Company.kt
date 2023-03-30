@@ -4,27 +4,27 @@ import jakarta.persistence.*
 import javax.persistence.Column
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
-import javax.persistence.OneToMany
 
 @Entity
 @Table(name = "company")
 class Company {
 
         @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
         @Column(name = "id")
         var id: Int? = null
 
-        @Column(name = "nif")
+        @Column(name = "nif", unique = true)
         val nif: String
 
         @Column(name = "address")
         val address: String
 
-        @Column(name = "comp_name")
-        val compName: String
+        @Column(name = "name")
+        val name: String
 
-        @Column(name = "comp_type")
-        val compType : String
+        @Column(name = "type")
+        val type : String
 
         @Column(name = "description")
         val description:String
@@ -41,22 +41,20 @@ class Company {
         constructor() {
                 this.nif = ""
                 this.address = ""
-                this.compName = ""
-                this.compType = ""
+                this.name = ""
+                this.type = ""
                 this.description = ""
-                this.id = 0
-              //  this.service = listOf()
-               // this.schedule = Schedule()
-               // this.manager = listOf()
+                //this.service = listOf()
+                // this.schedule = Schedule()
+                // this.manager = listOf()
         }
 
-        constructor(nif: String, address: String, compName: String, compType: String, description: String, id: Int/* service: List<Service>, schedule: Schedule?*//*, manager: List<Manager>*/){
+        constructor(nif: String, address: String, compName: String, compType: String, description: String,/* service: List<Service>, schedule: Schedule?*//*, manager: List<Manager>*/){
                 this.nif = nif
                 this.address = address
-                this.compName = compName
-                this.compType = compType
+                this.name = compName
+                this.type = compType
                 this.description = description
-                this.id = id
                // this.service = service
                 //this.schedule = schedule
              //   this.manager = manager

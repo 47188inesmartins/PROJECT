@@ -12,16 +12,10 @@ class CompanyController {
     @Autowired
     lateinit var companyServices: CompanyServices
 
+    @ResponseBody
     @PostMapping
-    fun addCompany(@RequestBody company: Company): CompanyResponse {
-        val response = companyServices.addCompany(company)
-        return  CompanyResponse(
-            response.nif,
-            response.address,
-            response.compName,
-            response.compType,
-            response.description
-        )
+    fun addCompany(@RequestBody company: Company): Company {
+        return   companyServices.addCompany(company)
     }
 
     @DeleteMapping("/{id}")
@@ -29,6 +23,7 @@ class CompanyController {
         return companyServices.deleteCompany(id)
     }
 
+    @ResponseBody
     @GetMapping("/{id}")
     fun findAllById(@PathVariable id: Int): Company {
         return companyServices.findAllById(id)

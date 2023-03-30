@@ -1,2 +1,2 @@
-insert into dbo.COMPANY(nif,phone_number,address,comp_name,comp_type,description)
-values ("")
+insert into company(nif, address, name, type, description)
+values ('1234567', 'Rua Violinos', 'PT', 'Treino', 'treinos com o pt');
