@@ -1,5 +1,4 @@
 package backend.jvm.controllers
-import backend.jvm.http.CompanyResponse
 import backend.jvm.model.Company
 import backend.jvm.services.CompanyServices
 import org.springframework.beans.factory.annotation.Autowired

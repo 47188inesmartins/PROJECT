@@ -32,6 +32,7 @@ dependencies {
 	implementation("org.jdbi:jdbi3-postgres:3.33.0")
 	implementation("org.postgresql:postgresql:42.5.0")
 	implementation("javax.persistence:javax.persistence-api:2.2")
+	implementation ("org.springframework.boot:spring-boot-starter-validation")
 	testImplementation(kotlin("test"))
 	testImplementation ("junit:junit:4.12")
 	testImplementation ("com.h2database:h2:2.1.214")
