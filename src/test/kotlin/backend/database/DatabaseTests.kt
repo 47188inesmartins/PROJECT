@@ -30,7 +30,10 @@ class CompanyRepositoryTest {
             address = "Rua Ferreira da Costa",
             compName = "Maf,Lda",
             compType = "Cabeleireiro",
-            description = "Cabeleireira "
+            description = "Cabeleireira ",
+            listOf(),
+            null,
+            listOf()
         )
 
         val a = entityManager.persist(com)

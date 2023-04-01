@@ -4,7 +4,7 @@ import jakarta.persistence.*
 import java.sql.Date
 import javax.persistence.Column
 
-/*
+
 @Entity
 @Table(name = "vacation")
 class Vacation {
@@ -23,13 +23,13 @@ class Vacation {
 
     @ManyToOne
     @JoinColumn(name = "sid")
-    val sid: Schedule
+    val sid: Schedule?
 
 
     constructor(){
-        this.dateBegin = Date.valueOf("")
-        this.dateEnd = Date.valueOf("")
-        this.sid = Schedule()
+        this.dateBegin = Date.valueOf("2001-01-1")
+        this.dateEnd =  Date.valueOf("2001-01-1")
+        this.sid = null
     }
 
     constructor(dateBegin: Date, dateEnd: Date, schedule: Schedule){
@@ -39,4 +39,3 @@ class Vacation {
     }
 
 }
-*/

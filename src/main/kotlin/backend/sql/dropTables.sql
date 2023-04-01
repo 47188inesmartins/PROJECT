@@ -1,18 +1,20 @@
 BEGIN;
 
 drop table if exists COMPANY cascade;
-drop table if exists dbo.CLIENT cascade;
-drop table if exists dbo.SCHEDULE cascade;
-drop table if exists dbo.APPOINTMENT cascade;
-drop table if exists dbo.SERVICE cascade;
-drop table if exists dbo.ROLE cascade;
-drop table if exists dbo.USER_ROLE cascade;
-drop table if exists dbo.USER cascade;
-drop table if exists dbo.COMPANY_NUMBERS cascade;
-drop table if exists dbo.DAY cascade;
-drop table if exists dbo.EMPLOYEE cascade;
-drop table if exists dbo.EMPLOYEE_SERVICE cascade;
-drop table if exists dbo.MANAGER cascade;
-drop table if exists dbo.VACATION cascade;
-drop table if exists dbo.calendar cascade;
+drop table if exists CLIENT cascade;
+drop table if exists SCHEDULE cascade;
+drop table if exists APPOINTMENT cascade;
+drop table if exists SERVICE cascade;
+drop table if exists U_ROLE cascade;
+drop table if exists USER_ROLE cascade;
+drop table if exists SCH_USER cascade;
+drop table if exists COMPANY_NUMBERS cascade;
+drop table if exists SCH_DAY cascade;
+drop table if exists EMPLOYEE cascade;
+drop table if exists EMPLOYEE_SERVICE cascade;
+drop table if exists MANAGER cascade;
+drop table if exists VACATION cascade;
+drop table if exists CALENDAR cascade;
+drop table if exists SERVICE_APPOINTMENT cascade;
+
 COMMIT;

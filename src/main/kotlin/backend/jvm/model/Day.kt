@@ -2,26 +2,26 @@ package backend.jvm.model
 
 import jakarta.persistence.*
 import java.sql.Time
-/*
+
 @Entity
-@Table(name = "day")
+@Table(name = "sch_day")
 class Day {
         @Id
-        @GeneratedValue(strategy = GenerationType.SEQUENCE)
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
         @Column(name = "id")
         var id: Int? = null
 
         @Temporal(TemporalType.TIME)
         @Column(name = "begin_hour")
-        val beginHour: Time
+        val beginHour: Time?
 
         @Temporal(TemporalType.TIME)
         @Column(name = "end_hour")
-        val endHour: Time
+        val endHour: Time?
 
         @Temporal(TemporalType.TIME)
-        @Column(name = "interval")
-        val interval: Time
+        @Column(name = "day_interval")
+        val interval: Time?
 
         @Column(name = "week_days")
         val weekDays: String
@@ -31,11 +31,11 @@ class Day {
         val sid : Schedule?
 
         constructor(){
-            this.beginHour = Time.valueOf("")
-            this.endHour = Time.valueOf("")
-            this.interval = Time.valueOf("")
-            this.weekDays = ""
-            this.sid = Schedule()
+            this.beginHour = null
+            this.endHour = null
+            this.interval = null
+            this.weekDays = "MON"
+            this.sid = null
         }
 
         constructor(beginHour : Time, endHour: Time, interval: Time, weekDays: String, sid: Schedule){
@@ -45,4 +45,4 @@ class Day {
             this.weekDays = weekDays
             this.sid = sid
         }
-}*/
+}

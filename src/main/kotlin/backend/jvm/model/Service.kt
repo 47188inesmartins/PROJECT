@@ -3,7 +3,7 @@ package backend.jvm.model
 import jakarta.persistence.*
 import java.sql.Time
 
-/*
+
 @Entity
 @Table(name = "service")
 class Service{
@@ -28,7 +28,7 @@ class Service{
 
     @ManyToOne
     @JoinColumn(name = "cid")
-    val company : Company
+    val cid : Company?
 
     @ManyToMany
     @JoinTable(
@@ -47,7 +47,7 @@ class Service{
         this.duration = Time.valueOf("00:00:00")
         this.numberMax = 0
         this.price = 0.0
-        this.company = Company()
+        this.cid = null
         this.employee = listOf()
         this.appointment = listOf()
     }
@@ -57,8 +57,8 @@ class Service{
         this.duration = duration
         this.numberMax = numberMax
         this.price = price
-        this.company = company
+        this.cid = company
         this.employee = employee
         this.appointment = appointment
     }
-}*/
+}

@@ -17,13 +17,13 @@ import java.sql.Time
  *
  */
 
-/*
+
 @Entity
 @Table(name = "appointment")
 class Appointment {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     var id: Int? = null
 
@@ -38,28 +38,28 @@ class Appointment {
 
     @ManyToOne
     @JoinColumn(name = "eid")
-    val eid: Employee
+    val eid: Employee?
 
     @ManyToOne
     @JoinColumn(name = "sid")  // nome da foreign key
-    val sid : Schedule
+    val sid : Schedule?
 
     @ManyToOne
     @JoinColumn(name = "cid")
-    val cid : Client
+    val cid : Client?
 
     @ManyToMany(mappedBy = "appointment")
-    val service: List<Service>
+    val service: List<Service>?
 
     constructor() {
         this.id = null
         this.numberAppPeople = 0
-        this.appHour = Time.valueOf("")
+        this.appHour = Time.valueOf("00:00:00")
         this.availability = "unavailable"
-        this.eid = Employee()
-        this.sid = Schedule()
-        this.cid = Client()
-        this.service = listOf()
+        this.eid = null
+        this.sid = null
+        this.cid = null
+        this.service = null
     }
 
     constructor(numberAppPeople: Int, appHour: Time, availability: String, eid: Employee, sid: Schedule, cid: Client, service: List<Service>) {
@@ -73,4 +73,3 @@ class Appointment {
     }
 
 }
-*/

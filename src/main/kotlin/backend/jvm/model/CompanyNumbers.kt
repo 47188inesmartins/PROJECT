@@ -3,7 +3,7 @@ package backend.jvm.model
 import jakarta.persistence.*
 import javax.persistence.Column
 
-/*
+
 @Entity
 @Table(name = "COMPANY_NUMBERS")
 class  CompanyNumbers{
@@ -14,7 +14,7 @@ class  CompanyNumbers{
         @Id
         @Column(name = "cid")
         @ManyToOne
-        val companyId: Company
+        val companyId: Company?
 
         constructor(phoneNumber:String,cid: Company){
                 this.phoneNumber = phoneNumber
@@ -23,7 +23,7 @@ class  CompanyNumbers{
 
         constructor(){
                 this.phoneNumber = ""
-                this.companyId = Company()
+                this.companyId = null
         }
 
-}*/
+}

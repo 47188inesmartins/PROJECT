@@ -1,7 +1,7 @@
 package backend.jvm.model
 
 import jakarta.persistence.*
-/*
+
 @Entity(name = "Schedule")
 @Table(name = "schedule")
 class Schedule {
@@ -13,7 +13,7 @@ class Schedule {
 
     @OneToOne
     @JoinColumn(name = "comp_id")
-    val compIdSch : Company
+    val compIdSch : Company?
 
     @OneToMany(mappedBy = "sid")
     val appointment: List<Appointment>
@@ -26,9 +26,9 @@ class Schedule {
 
     constructor(){
         this.id = null
-        this.compIdSch = Company()
+        this.compIdSch = null
         this.appointment = listOf()
         this.day = listOf()
         this.vacation = listOf()
     }
-}*/
+}

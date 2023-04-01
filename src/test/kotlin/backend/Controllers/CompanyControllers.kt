@@ -22,7 +22,6 @@ class CompanyControllersTest {
     @Autowired
     lateinit var mockMvc: MockMvc
 
-
     @MockBean
     lateinit var companyServices: CompanyServices
 
@@ -34,6 +33,9 @@ class CompanyControllersTest {
                     "corte e costura",
                     "cabeleireiro",
                     "so cabelos",
+                listOf(),
+                null,
+                listOf()
                 )
         Mockito.`when`(companyServices.addCompany(com)).thenReturn(com)
         this.mockMvc.perform(post("/company"))

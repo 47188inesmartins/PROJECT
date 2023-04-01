@@ -16,13 +16,13 @@ import java.util.*
  * @property birthday the User birthday
  * @property companyId null if the user has the role of 'guest' or 'client'. the company where the user works
  */
-/*
+
 @Entity
-@Table(name = "user")
+@Table(name = "sch_user")
 class User {
         @Id
         @Column(name = "id")
-        @GeneratedValue(strategy = GenerationType.SEQUENCE)
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
         val id: Int? = null
 
         @Column(name = "token")
@@ -38,15 +38,23 @@ class User {
         val clientName: String
 
         @Column(name = "birthday")
-        val birthday: Date?
+        val birthday: Date
 
-        @ManyToMany()
+        @ManyToMany
         @JoinTable(
                 name = "user_role",
                 joinColumns = [JoinColumn(name = "user_id")],
                 inverseJoinColumns = [JoinColumn(name = "role_id")]
         )
-        val role: List<Role>
+        val role: List<Role>?
+
+        constructor(){
+                this.email = ""
+                this.password = ""
+                this.clientName = ""
+                this.birthday = java.sql.Date.valueOf("2001-01-01")
+                this.role = null
+        }
 
         constructor(email:String,
                     password:String,
@@ -61,11 +69,4 @@ class User {
                 this.role = role
         }
 
-        constructor(){
-                this.email = ""
-                this.password = ""
-                this.clientName = ""
-                this.birthday = null
-                this.role = listOf()
-        }*/
-//}
+}

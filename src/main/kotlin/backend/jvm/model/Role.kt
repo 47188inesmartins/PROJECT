@@ -2,8 +2,8 @@ package backend.jvm.model
 
 import jakarta.persistence.*
 
-/*@Entity
-@Table(name = "role")
+@Entity
+@Table(name = "u_role")
 class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -25,4 +25,4 @@ class Role {
         this.name = name
         this.user = user
     }
-}*/
+}

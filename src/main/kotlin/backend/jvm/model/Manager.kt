@@ -3,7 +3,7 @@ package backend.jvm.model
 import jakarta.persistence.*
 import java.util.*
 import java.util.Date
-/*@Entity
+@Entity
 @Table(name = "manager")
 class Manager {
     @Id
@@ -30,7 +30,7 @@ class Manager {
 
     @ManyToOne
     @JoinColumn(name = "comp_id")
-    val compId: Company
+    val compId: Company?
 
     @Suppress("ConvertSecondaryConstructorToPrimary")
     constructor(email:String, password:String, name:String, birthday: Date, company: Company) {
@@ -47,9 +47,9 @@ class Manager {
         this.password = ""
         this.name = ""
         this.birthday = Date()
-        this.compId = Company()
+        this.compId = null
     }
 
     private fun validateEmail(email:String) = Regex("[a-zA-Z]+@[a-zA-Z]+").matches(email)
 
-}*/
+}

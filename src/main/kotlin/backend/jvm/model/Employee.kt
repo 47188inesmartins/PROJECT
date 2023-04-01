@@ -4,7 +4,7 @@ import jakarta.persistence.*
 import java.util.*
 import javax.persistence.Column
 
-/*@Entity
+@Entity
 @Table(name = "employee")
 class Employee {
     @Id
@@ -35,10 +35,10 @@ class Employee {
         joinColumns = [JoinColumn(name = "employee_id")],
         inverseJoinColumns = [JoinColumn(name = "service_id")]
     )
-    val service: List<Service>
+    val service: List<Service>?
 
     @OneToMany(mappedBy = "eid")
-    val appointment: List<Appointment>
+    val appointment: List<Appointment>?
 
     @Suppress("ConvertSecondaryConstructorToPrimary")
     constructor(email:String, password:String, name:String, birthday: Date, service: List<Service>, appointment: List<Appointment>) {
@@ -55,11 +55,11 @@ class Employee {
         this.email = ""
         this.password = ""
         this.name = ""
-        this.birthday = java.sql.Date.valueOf("")
+        this.birthday = java.sql.Date.valueOf("2001-01-01")
         this.service = listOf()
         this.appointment = listOf()
     }
 
 
-    private fun validateEmail(email:String) = Regex("[a-zA-Z]+@[a-zA-Z]+").matches(email)*/
-//}
+    private fun validateEmail(email:String) = Regex("[a-zA-Z]+@[a-zA-Z]+").matches(email)
+}

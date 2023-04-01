@@ -4,13 +4,14 @@ import jakarta.persistence.*
 import java.sql.Date
 import javax.persistence.Column
 
-/*
+
 @Entity
 @Table(name = "client")
 class Client {
+
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int? = null
 
     @Column(name = "token")
@@ -28,12 +29,11 @@ class Client {
 
     @Column(name = "birthday")
     @Temporal(TemporalType.DATE)
-    val birthday: Date
+    val birthday: Date?
 
     @OneToMany(mappedBy = "cid")
-    val appointment: List<Appointment>
+    val appointment: List<Appointment>?
 
-    @Suppress("ConvertSecondaryConstructorToPrimary")
     constructor(email:String, password:String, name:String, birthday:Date, appointment: List<Appointment>) {
         if(!validateEmail(email)) throw Error("Invalid email")//FAZER UMA CENA DE ERROS
         this.email = email
@@ -47,11 +47,11 @@ class Client {
         this.email = ""
         this.password = ""
         this.name = ""
-        this.birthday = Date.valueOf("")
-        this.appointment = listOf()
+        this.birthday = null
+        this.appointment = null
     }
 
 
     private fun validateEmail(email:String) = Regex("[a-zA-Z]+@[a-zA-Z]+").matches(email)
 
-}*/
+}
