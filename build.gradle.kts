@@ -20,20 +20,20 @@ dependencies {
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-	implementation("junit:junit:4.13.2")
+	implementation("junit:junit:4.13.1")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-	implementation("org.springframework.security:spring-security-core:6.0.2")
+	implementation("org.springframework.security:spring-security-core:5.7.3")
 
 	// for JDBI
 	implementation ("org.springframework:spring-jdbc:6.0.6")
-	implementation("org.jdbi:jdbi3-core:3.37.1")
-	implementation("org.jdbi:jdbi3-kotlin:3.37.1")
-	implementation("org.jdbi:jdbi3-postgres:3.37.1")
-	implementation("org.postgresql:postgresql:42.5.4")
+	implementation("org.jdbi:jdbi3-core:3.33.0")
+	implementation("org.jdbi:jdbi3-kotlin:3.33.0")
+	implementation("org.jdbi:jdbi3-postgres:3.33.0")
+	implementation("org.postgresql:postgresql:42.5.0")
 	implementation("javax.persistence:javax.persistence-api:2.2")
 	testImplementation(kotlin("test"))
-	testImplementation ("junit:junit:4.13.2")
+	testImplementation ("junit:junit:4.12")
 	testImplementation ("com.h2database:h2:2.1.214")
 }
 

@@ -29,7 +29,7 @@ class CompanyControllersTest {
     @Test
     fun `create a Company`(){
             val com = Company(
-                    1,
+                1,
                     "12345678",
                     "rua adelaide",
                     "corte e costura",

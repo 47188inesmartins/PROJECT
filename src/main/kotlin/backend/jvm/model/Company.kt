@@ -10,7 +10,6 @@ import javax.persistence.GenerationType
 class Company {
 
         @Id
-        //@GeneratedValue(strategy = GenerationType.IDENTITY)
         @Column(name = "id")
         var id: Int? = null
 
@@ -49,8 +48,8 @@ class Company {
                 // this.manager = listOf()
         }
 
-        constructor(id: Int,nif: String, address: String, compName: String, compType: String, description: String,/* service: List<Service>, schedule: Schedule?*//*, manager: List<Manager>*/){
-                this.id = id
+        constructor(id: Int, nif: String, address: String, compName: String, compType: String, description: String,/* service: List<Service>, schedule: Schedule?*//*, manager: List<Manager>*/){
+               this.id = id
                 this.nif = nif
                 this.address = address
                 this.name = compName
