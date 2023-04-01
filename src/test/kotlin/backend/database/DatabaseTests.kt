@@ -26,7 +26,6 @@ class CompanyRepositoryTest {
     @Test
     fun `Insert one company`() {
         val com = Company(
-            id = 4,
             nif = "250407671",
             address = "Rua Ferreira da Costa",
             compName = "Maf,Lda",

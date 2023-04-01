@@ -2,15 +2,13 @@ package backend.jvm.model
 
 import jakarta.persistence.*
 import javax.persistence.Column
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
 
 @Entity
 @Table(name = "company")
 class Company {
 
         @Id
-        @Column(name = "id")
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
         var id: Int? = null
 
         @Column(name = "nif", unique = true)
@@ -48,8 +46,7 @@ class Company {
                 // this.manager = listOf()
         }
 
-        constructor(id: Int, nif: String, address: String, compName: String, compType: String, description: String,/* service: List<Service>, schedule: Schedule?*//*, manager: List<Manager>*/){
-               this.id = id
+        constructor(nif: String, address: String, compName: String, compType: String, description: String,/* service: List<Service>, schedule: Schedule?*//*, manager: List<Manager>*/){
                 this.nif = nif
                 this.address = address
                 this.name = compName
