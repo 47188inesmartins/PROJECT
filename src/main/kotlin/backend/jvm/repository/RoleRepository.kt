@@ -1,8 +1,9 @@
 package backend.jvm.repository
 
+import backend.jvm.model.Role
 import org.springframework.data.jpa.repository.JpaRepository
-import javax.management.relation.Role
-/*
+
+
 interface RoleRepository : JpaRepository<Role, Int>{
 
-}*/
+}

@@ -1,6 +1,7 @@
 package backend.jvm.repository
 
+import backend.jvm.model.Manager
 import org.springframework.data.jpa.repository.JpaRepository
 
-/*interface Manager : JpaRepository<Manager, Int> {
-}*/
+interface ManagerRepository : JpaRepository<Manager, Int> {
+}

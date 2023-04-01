@@ -14,7 +14,7 @@ class CompanyController {
     @ResponseBody
     @PostMapping
     fun addCompany(@RequestBody company: Company): Company {
-        return   companyServices.addCompany(company)
+        return companyServices.addCompany(company)
     }
 
     @DeleteMapping("/{id}")

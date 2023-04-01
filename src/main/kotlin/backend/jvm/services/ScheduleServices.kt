@@ -1,5 +1,5 @@
 package backend.jvm.services
-/*
+
 import backend.jvm.repository.ScheduleRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -9,6 +9,6 @@ import org.springframework.stereotype.Service
 class ScheduleServices {
 
     @Autowired
-    lateinit var scheduleRepository : ScheduleRepository
+    lateinit var scheduleRepository: ScheduleRepository
 
-}*/
+}

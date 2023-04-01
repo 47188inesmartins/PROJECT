@@ -3,11 +3,14 @@ package backend.jvm.model
 import jakarta.persistence.*
 import java.util.*
 import java.util.Date
+
+
 @Entity
 @Table(name = "manager")
 class Manager {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     var id: Int? = null
     //@GeneratedValue(strategy = GenerationType.UUID)
