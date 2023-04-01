@@ -2,7 +2,6 @@ package backend.Controllers
 
 import backend.jvm.controllers.CompanyController
 import backend.jvm.model.Company
-import backend.jvm.model.Schedule
 import backend.jvm.services.CompanyServices
 import org.junit.jupiter.api.Test
 import org.junit.runner.RunWith
@@ -30,14 +29,12 @@ class CompanyControllersTest {
     @Test
     fun `create a Company`(){
             val com = Company(
+                    1,
                     "12345678",
                     "rua adelaide",
                     "corte e costura",
                     "cabeleireiro",
                     "so cabelos",
-                    emptyList(),
-                    null,
-                    emptyList()
                 )
         Mockito.`when`(companyServices.addCompany(com)).thenReturn(com)
         this.mockMvc.perform(post("/company"))
