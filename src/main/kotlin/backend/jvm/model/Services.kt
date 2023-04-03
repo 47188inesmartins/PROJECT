@@ -6,7 +6,7 @@ import java.sql.Time
 
 @Entity
 @Table(name = "service")
-class Service{
+class Services{
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -39,7 +39,7 @@ class Service{
     val appointment: List<Appointment>
 
 
-    @ManyToMany(mappedBy = "service")
+    @ManyToMany(mappedBy = "services")
     val employee: List<Employee>
 
     constructor(){

@@ -49,7 +49,7 @@ class Appointment {
     val cid : Client?
 
     @ManyToMany(mappedBy = "appointment")
-    val service: List<Service>?
+    val services: List<Services>?
 
     constructor() {
         this.id = null
@@ -59,17 +59,17 @@ class Appointment {
         this.eid = null
         this.sid = null
         this.cid = null
-        this.service = null
+        this.services = null
     }
 
-    constructor(numberAppPeople: Int, appHour: Time, availability: String, eid: Employee, sid: Schedule, cid: Client, service: List<Service>) {
+    constructor(numberAppPeople: Int, appHour: Time, availability: String, eid: Employee, sid: Schedule, cid: Client, services: List<Services>) {
         this.numberAppPeople = numberAppPeople
         this.appHour = appHour
         this.availability = availability
         this.eid = eid
         this.sid = sid
         this.cid = cid
-        this.service = service
+        this.services = services
     }
 
 }

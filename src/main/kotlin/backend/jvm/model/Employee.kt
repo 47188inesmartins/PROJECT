@@ -35,19 +35,19 @@ class Employee {
         joinColumns = [JoinColumn(name = "employee_id")],
         inverseJoinColumns = [JoinColumn(name = "service_id")]
     )
-    val service: List<Service>?
+    val services: List<Services>?
 
     @OneToMany(mappedBy = "eid")
     val appointment: List<Appointment>?
 
     @Suppress("ConvertSecondaryConstructorToPrimary")
-    constructor(email:String, password:String, name:String, birthday: Date, service: List<Service>, appointment: List<Appointment>) {
+    constructor(email:String, password:String, name:String, birthday: Date, services: List<Services>, appointment: List<Appointment>) {
         if(!validateEmail(email)) throw Error("Invalid email") //FAZER UMA CENA DE ERROS
         this.email = email
         this.password = password
         this.name = name
         this.birthday = birthday
-        this.service = service
+        this.services = services
         this.appointment = appointment
     }
 
@@ -56,7 +56,7 @@ class Employee {
         this.password = ""
         this.name = ""
         this.birthday = java.sql.Date.valueOf("2001-01-01")
-        this.service = listOf()
+        this.services = listOf()
         this.appointment = listOf()
     }
 

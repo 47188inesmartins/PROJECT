@@ -9,7 +9,7 @@ class Schedule {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id")
-    val id: Int?
+    val id: Int? = null
 
     @OneToOne
     @JoinColumn(name = "comp_id")
@@ -25,10 +25,17 @@ class Schedule {
     val vacation: List<Vacation>
 
     constructor(){
-        this.id = null
         this.compIdSch = null
         this.appointment = listOf()
         this.day = listOf()
         this.vacation = listOf()
+    }
+
+    constructor(compIdSch: Company,appointment: List<Appointment>,day: List<Day>,vacation: List<Vacation>){
+        this.compIdSch = compIdSch
+        this.appointment = appointment
+        this.day = day
+        this.vacation = vacation
+
     }
 }

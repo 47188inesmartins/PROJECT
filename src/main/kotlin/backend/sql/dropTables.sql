@@ -17,4 +17,5 @@ drop table if exists VACATION cascade;
 drop table if exists CALENDAR cascade;
 drop table if exists SERVICE_APPOINTMENT cascade;
 
+
 COMMIT;

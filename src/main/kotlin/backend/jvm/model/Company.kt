@@ -27,7 +27,7 @@ class Company {
         val description:String
 
         @OneToMany(mappedBy = "cid")
-        val service: List<Service>?
+        val services: List<Services>?
 
         @OneToOne(mappedBy = "compIdSch")
         val schedule: Schedule?
@@ -41,18 +41,18 @@ class Company {
                 this.name = ""
                 this.type = ""
                 this.description = ""
-                this.service = null
+                this.services = null
                 this.schedule = null
                 this.manager = null
         }
 
-        constructor(nif: String, address: String, compName: String, compType: String, description: String, service: List<Service>, schedule: Schedule?, manager: List<Manager>){
+        constructor(nif: String, address: String, compName: String, compType: String, description: String, services: List<Services>, schedule: Schedule?, manager: List<Manager>){
                 this.nif = nif
                 this.address = address
                 this.name = compName
                 this.type = compType
                 this.description = description
-                this.service = service
+                this.services = services
                 this.schedule = schedule
                 this.manager = manager
         }
