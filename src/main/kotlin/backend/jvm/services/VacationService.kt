@@ -20,11 +20,18 @@ class VacationService {
         vacationRepository.delete(vacation)
     }
 
-    fun changeBeginDate(id:Int,date: Date): Vacation {
-        return vacationRepository.changeBeginDate(id,date)
+    fun changeBeginDate(id:Int,date: String): Vacation {
+        if(!validateDataFormat(date)) throw Exception("Invalid data format")
+        return vacationRepository.changeBeginDate(id, Date.valueOf(date))
     }
 
-    fun changeEndDate(id:Int,date: Date): Vacation {
-        return vacationRepository.changeEndDate(id,date)
+    fun changeEndDate(id:Int,date: String): Vacation {
+        if(!validateDataFormat(date)) throw Exception("Invalid data format")
+        return vacationRepository.changeEndDate(id,Date.valueOf(date))
+    }
+
+    private fun validateDataFormat(string: String): Boolean {
+        val regex = Regex("\\d{4}-\\d{2}-\\d{2}")
+        return regex.matches(string)
     }
 }

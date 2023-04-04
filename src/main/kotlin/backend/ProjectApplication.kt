@@ -9,9 +9,8 @@ import org.springframework.context.annotation.Bean
 
 @SpringBootApplication
 @EnableConfigurationProperties
-class ProjectApplication{
+class ProjectApplication
 
-}
 
 fun main(args: Array<String>) {
 	runApplication<ProjectApplication>(*args)

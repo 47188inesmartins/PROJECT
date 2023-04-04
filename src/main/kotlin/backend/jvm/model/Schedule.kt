@@ -7,13 +7,14 @@ import jakarta.persistence.*
 class Schedule {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     val id: Int? = null
 
     @OneToOne
     @JoinColumn(name = "comp_id")
     val compIdSch : Company?
+
 
     @OneToMany(mappedBy = "sid")
     val appointment: List<Appointment>
