@@ -31,7 +31,7 @@ class VacationService {
     }
 
     private fun validateDataFormat(string: String): Boolean {
-        val regex = Regex("\\d{4}-\\d{2}-\\d{2}")
-        return regex.matches(string)
+        val regex = """^\d{4}-(0?[1-9]|1[0-2])-([1-9]|[12][0-9]|3[01])$""".toRegex()
+        return string.matches(regex)
     }
 }
