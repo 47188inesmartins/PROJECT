@@ -4,6 +4,36 @@ import backend.jvm.model.*
 import backend.jvm.repository.AppointmentRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.sql.Time
+import java.util.*
+
+
+/**
+ *
+ *
+ * --mafalda
+## Appointment
+
+>#### POST
+> add an appointment [/appointment] @Params in body
+
+>#### GET
+> get specific appointment [/appointment/{id}] @RequestParams data and hour
+>
+> get specific appointment by date and hour [/appointment]
+>
+> get client info [/appointment/{id}/client]
+
+>#### DELETE
+> delete an appointment [/appointment/{id}]
+
+>#### PUT
+> change number of people scheduled for that appointment [/appointment/{id}/scheduled] @RequestBody new number
+>
+> change availability [/appointment/{id}/availability]
+
+ *
+ */
 
 
 @Service
@@ -20,6 +50,10 @@ class AppointmentServices {
         appointmentRepository.deleteById(id)
         return true
     }
+
+    fun findAppClientByDateAndHour(cid: Client, date: Date, hour: Time) = appointmentRepository.findAllByAppHourAndCidAndAppDate(cid,date,hour)
+
+    fun findById(id: Int) = appointmentRepository.findById(id)
 
     fun findAllByClient(cid: Client) = appointmentRepository.findAllByCid(cid)
 

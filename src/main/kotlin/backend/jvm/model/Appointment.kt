@@ -2,6 +2,7 @@ package backend.jvm.model
 
 import jakarta.persistence.*
 import java.sql.Time
+import java.util.Date
 
 
 /**
@@ -36,6 +37,10 @@ class Appointment {
     @Column(name = "availability")
     val availability : String
 
+    @Column(name = "app_date")
+    @Temporal(TemporalType.DATE)
+    val appDate: Date?
+
     @ManyToOne
     @JoinColumn(name = "eid")
     val eid: Employee?
@@ -56,16 +61,18 @@ class Appointment {
         this.numberAppPeople = 0
         this.appHour = Time.valueOf("00:00:00")
         this.availability = "unavailable"
+        this.appDate = null
         this.eid = null
         this.sid = null
         this.cid = null
         this.services = null
     }
 
-    constructor(numberAppPeople: Int, appHour: Time, availability: String, eid: Employee, sid: Schedule, cid: Client, services: List<Services>) {
+    constructor(numberAppPeople: Int, appHour: Time, availability: String, appDate : Date, eid: Employee, sid: Schedule, cid: Client, services: List<Services>) {
         this.numberAppPeople = numberAppPeople
         this.appHour = appHour
         this.availability = availability
+        this.appDate = appDate
         this.eid = eid
         this.sid = sid
         this.cid = cid
