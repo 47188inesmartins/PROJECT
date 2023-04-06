@@ -122,3 +122,31 @@
 > delete a vacation [/vacation/{id}]
 
 
+## Role
+>#### POST
+> add a role [/role] @Params in body
+
+>#### GET
+> get role [/role/{id}]
+
+
+
+## User
+>#### POST
+> add a user [/user] @Params in body
+
+>#### GET
+> get role [/user/{id}/role]
+>
+> get user [/user/{id}]
+
+>#### PUT
+> change role [/user/{id}/role]
+> 
+> change password [/user/{id}/password]
+>
+>#### DELETE
+> change role [/user/{id}/role]
+>
+> change password [/user/{id}/password]
+
