@@ -1,9 +1,11 @@
 package backend.jvm.services
 
-import backend.jvm.model.Company
+import backend.jvm.model.*
 import backend.jvm.repository.CompanyRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.sql.Time
+import java.util.*
 
 @Service
 class CompanyServices {
@@ -20,12 +22,51 @@ class CompanyServices {
         return true
     }
 
-    fun findAllById(id: Int): Company {
-        return companyRepository.findAllById(id)
+    fun getCompany(id: Int): Optional<Company> {
+        return companyRepository.findById(id)
     }
 
     fun findCompanyByNif(nif: String): Company {
         return companyRepository.findCompanyByNif(nif)
     }
 
+    fun getAllEmployees(id: Int): List<Employee>{
+        return companyRepository.getAllEmployees(id)
+    }
+
+    fun getAllServices(id: Int): List<Services>{
+        return companyRepository.getAllServices(id)
+    }
+
+    fun getAllAppointments(id: Int):List<Appointment>{
+        return companyRepository.getAllAppointments(id)
+    }
+
+    fun getAppointment(id: Int, date: Date, time: Time): Appointment{
+        return companyRepository.getAppointment(id, date, time)
+    }
+
+    fun getOpenDays(id: Int): List<Day>{
+        return companyRepository.getOpenDays(id)
+    }
+
+    fun getVacation(id: Int): List<Vacation>{
+        return companyRepository.getVacation(id)
+    }
+
+    fun changeAddress(id: Int, address: String): Company{
+        return companyRepository.changeAddress(id, address)
+    }
+
+    fun changeDescription(id: Int, description: String): Company{
+        return companyRepository.changeDescription(id, description)
+    }
+
 }
+
+/*
+>#### PUT
+> change company's address [/company/{id}] @RequestBody address
+>
+> change company's description [/company/{id}] @RequestBody description
+*/

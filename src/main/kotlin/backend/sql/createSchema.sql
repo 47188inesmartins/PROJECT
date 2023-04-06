@@ -40,7 +40,9 @@ create table if not exists EMPLOYEE (
     username varchar(30) unique,
     name varchar(30),
     birthday date check (date(CURRENT_TIMESTAMP) >= birthday + interval '18 year'),
-    availability varchar(15) check (availability in ('available','unavailable'))
+    availability varchar(15) check (availability in ('available','unavailable')),
+    comp_id int,
+    foreign key(comp_id) references COMPANY(id)
 );
 
 create table if not exists MANAGER (

@@ -32,7 +32,7 @@
 
 >#### DELETE
 > delete a client [/client/{id}]
-> 
+
 
 
 ## COMPANY
@@ -43,7 +43,7 @@
 >#### GET
 > get a company [/company/{id}]
 >
-> get all employees of the company [/company/]
+> get all employees of the company [/company/{id}/company]
 >
 > get all services [/company/{id}/services]
 >

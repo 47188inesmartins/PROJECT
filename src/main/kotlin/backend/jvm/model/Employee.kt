@@ -40,8 +40,14 @@ class Employee {
     @OneToMany(mappedBy = "eid")
     val appointment: List<Appointment>?
 
+
+    @ManyToOne
+    @JoinColumn(name = "comp_id")
+    val company: Company?
+
+
     @Suppress("ConvertSecondaryConstructorToPrimary")
-    constructor(email:String, password:String, name:String, birthday: Date, services: List<Services>, appointment: List<Appointment>) {
+    constructor(email:String, password:String, name:String, birthday: Date, services: List<Services>, appointment: List<Appointment>, company: Company) {
         if(!validateEmail(email)) throw Error("Invalid email") //FAZER UMA CENA DE ERROS
         this.email = email
         this.password = password
@@ -49,6 +55,7 @@ class Employee {
         this.birthday = birthday
         this.services = services
         this.appointment = appointment
+        this.company = company
     }
 
     constructor(){
@@ -58,6 +65,7 @@ class Employee {
         this.birthday = java.sql.Date.valueOf("2001-01-01")
         this.services = listOf()
         this.appointment = listOf()
+        this.company = null
     }
 
 

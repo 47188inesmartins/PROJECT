@@ -3,6 +3,7 @@ import backend.jvm.model.Company
 import backend.jvm.services.CompanyServices
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
+import java.util.*
 
 @RestController
 @RequestMapping(("/company"))
@@ -24,8 +25,8 @@ class CompanyController {
 
     @ResponseBody
     @GetMapping("/{id}")
-    fun findAllById(@PathVariable id: Int): Company {
-        return companyServices.findAllById(id)
+    fun findAllById(@PathVariable id: Int): Optional<Company> {
+        return companyServices.getCompany(id)
     }
 
     @GetMapping

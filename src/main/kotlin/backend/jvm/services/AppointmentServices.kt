@@ -3,6 +3,8 @@ package backend.jvm.services
 import backend.jvm.model.*
 import backend.jvm.repository.AppointmentRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Service
 import java.sql.Time
 import java.util.*
@@ -51,9 +53,9 @@ class AppointmentServices {
         return true
     }
 
-    fun findAppClientByDateAndHour(cid: Client, date: Date, hour: Time) = appointmentRepository.findAllByAppHourAndCidAndAppDate(cid,date,hour)
+    fun getAppointment(id: Int): Optional<Appointment> = appointmentRepository.findById(id)
 
-    fun findById(id: Int) = appointmentRepository.findById(id)
+    fun findAppClientByDateAndHour(cid: Client, date: Date, hour: Time) = appointmentRepository.findAllByAppHourAndCidAndAppDate(hour, cid, date)
 
     fun findAllByClient(cid: Client) = appointmentRepository.findAllByCid(cid)
 
@@ -61,6 +63,14 @@ class AppointmentServices {
 
     fun findAllByEmployee(eid: Employee) = appointmentRepository.findAllByEid(eid)
 
-   // fun getCompany(id: Int): Company = appointmentRepository.getCompany(id)
+    fun findAllByAppHourAndSidAndAppDate (appHour: Time, sid: Schedule, appDate: Date) : Appointment = appointmentRepository.findAllByAppHourAndSidAndAppDate(appHour,sid,appDate)
+
+    fun getCompany(id: Int) = appointmentRepository.getCompany(id)
+
+    fun editNumberAppPeople(id: Int, numberAppPeople: Int): Appointment = appointmentRepository.editNumberAppPeople(id, numberAppPeople)
+
+    fun editAvailability(id: Int, availability: String): Appointment = appointmentRepository.editAvailability(id, availability)
+
+
 
 }
