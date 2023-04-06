@@ -8,6 +8,7 @@ import backend.jvm.services.AppointmentServices
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -54,7 +55,7 @@ class AppointmentController {
     }
 
     @PutMapping("/{id}/scheduled")
-    fun changeNumberOfScheduledPeople(id: Int, @RequestParam number: Int): Appointment{
+    fun changeNumberOfScheduledPeople(@PathVariable id: Int, @RequestParam number: Int): Appointment{
         return appointmentServices.editNumberAppPeople(id, number)
     }
 }

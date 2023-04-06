@@ -1,4 +1,3 @@
---mafalda
 ## Appointment
 
 >#### POST
@@ -19,7 +18,7 @@
 >
 > change availability [/appointment/{id}/availability]
 
---maf
+
 ## Client
 
 >#### POST
@@ -43,7 +42,7 @@
 >#### GET
 > get a company [/company/{id}]
 >
-> get all employees of the company [/company/{id}/company]
+> get all employees of the company [/company/{id}/employees]
 >
 > get all services [/company/{id}/services]
 >
@@ -61,12 +60,11 @@
 > delete a company [/company/{id}]
 
 >#### PUT
-> change company's address [/company/{id}] @RequestBody address
+> change company's address [/company/{id}/address] @RequestBody address
 >
-> change company's description [/company/{id}] @RequestBody description
+> change company's description [/company/{id}/description] @RequestBody description
 
 
---ines
 ## Schedule
 >#### POST 
 > add a schedule [/schedule] @Params in body
@@ -90,6 +88,7 @@
  
 
 ## Service
+
 >#### POST
 > add a service [/service] @Params in body
 
