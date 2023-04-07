@@ -23,21 +23,20 @@ create table if not exists COMPANY_NUMBERS(
 );
 
 
-create table if not exists SCH_USER (
+/*create table if not exists SCH_USER (
     id serial primary key,
     token UUID unique /*default gen_random_uuid()*/,
     email varchar(50) unique CHECK (email LIKE '%@%'),
     password varchar(30),
     name varchar(30),
     birthday date check (date(CURRENT_TIMESTAMP) >= birthday + interval '18 year')
-);
+);*/
 
-create table if not exists EMPLOYEE (
+create table if not exists SCH_USER (
     id serial primary key,
     token UUID unique /*default gen_random_uuid()*/,
     email varchar(50) unique CHECK (email LIKE '%@%'),
     password varchar(30),
-    username varchar(30) unique,
     name varchar(30),
     birthday date check (date(CURRENT_TIMESTAMP) >= birthday + interval '18 year'),
     availability varchar(15) check (availability in ('available','unavailable')),
@@ -45,25 +44,6 @@ create table if not exists EMPLOYEE (
     foreign key(comp_id) references COMPANY(id)
 );
 
-create table if not exists MANAGER (
-    id serial primary key,
-    token varchar(20) unique /*default gen_random_uuid()*/,
-    email varchar(50) unique CHECK (email LIKE '%@%'),
-    password varchar(30),
-    name varchar(30),
-    birthday date check (date(CURRENT_TIMESTAMP) >= birthday + interval '18 year'),
-    comp_id int,
-    foreign key(comp_id) references COMPANY(id)
-);
-
-create table if not exists CLIENT (
-   id serial primary key,
-   token UUID unique default gen_random_uuid(),
-   email varchar(50) unique CHECK (email LIKE '%@%'),
-   password varchar(30),
-   name varchar(30),
-   birthday date check (date(CURRENT_TIMESTAMP) >= birthday + interval '18 year')
-);
 
 create table if not exists U_ROLE (
     id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -86,6 +66,7 @@ create table if not exists SCHEDULE (
     foreign key(comp_id) references COMPANY(id)
 );
 
+
 create table if not exists APPOINTMENT (
     id serial primary key,
     number_app_people int,
@@ -98,6 +79,14 @@ create table if not exists APPOINTMENT (
     foreign key(sid) references SCHEDULE(id),
     foreign key(cid) references CLIENT(id),
     foreign key(eid) references EMPLOYEE(id)
+);
+
+create table if not exists APPOINTMENT_USER (
+    user_id int,
+    app_id int,
+    primary key (user_id,app_id),
+    foreign key(user_id) references SCH_USER(id),
+    foreign key(app_id) references APPOINTMENT(id)
 );
 
 create table if not exists SERVICE (
@@ -121,11 +110,11 @@ create table if not exists SERVICE_APPOINTMENT(
 
 
 /*N:N relation with employee and service*/
-create table if not exists EMPLOYEE_SERVICE(
-    employee_id int,
+create table if not exists USER_SERVICE(
+    user_id int,
     service_id int,
-    primary key(employee_id, service_id),
-    foreign key (employee_id) references EMPLOYEE(id),
+    primary key(user_id, service_id),
+    foreign key (user_id) references SCH_USER(id),
     foreign key (service_id) references SERVICE(id)
 );
 

@@ -1,6 +1,5 @@
 package backend.jvm.services
 
-import backend.jvm.model.Client
 import backend.jvm.model.Schedule
 import backend.jvm.model.Services
 import backend.jvm.repository.ScheduleRepository

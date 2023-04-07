@@ -30,7 +30,7 @@ class VacationService {
         return vacationRepository.changeEndDate(id,Date.valueOf(date))
     }
 
-   /* private fun validateDataFormat(string: String): Boolean {
+   /*private fun validateDataFormat(string: String): Boolean {
         val regex = """^\d{4}-(0?[1-9]|1[0-2])-([1-9]|[12][0-9]|3[01])$""".toRegex()
         return string.matches(regex)
     }*/

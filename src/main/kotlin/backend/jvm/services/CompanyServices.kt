@@ -30,9 +30,9 @@ class CompanyServices {
         return companyRepository.findCompanyByNif(nif)
     }
 
-    fun getAllEmployees(id: Int): List<Employee>{
+    /*fun getAllEmployees(id: Int): List<Employee>{
         return companyRepository.getAllEmployees(id)
-    }
+    }*/
 
     fun getAllServices(id: Int): List<Services>{
         return companyRepository.getAllServices(id)

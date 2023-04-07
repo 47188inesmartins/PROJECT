@@ -47,26 +47,53 @@ class User {
                 inverseJoinColumns = [JoinColumn(name = "role_id")]
         )
         val role: List<Role>?
+        */
+
+        @ManyToMany
+        @JoinTable(
+                name = "user_service",
+                joinColumns = [JoinColumn(name = "user_id")],
+                inverseJoinColumns = [JoinColumn(name = "service_id")]
+        )
+        val services: List<Services>?
+
+        @ManyToMany
+        @JoinTable(
+                name = "app_user",
+                joinColumns = [JoinColumn(name = "user_id")],
+                inverseJoinColumns = [JoinColumn(name = "app_id")]
+        )
+        val appointment: List<Appointment>?
+
 
         constructor(){
                 this.email = ""
                 this.password = ""
                 this.clientName = ""
                 this.birthday = java.sql.Date.valueOf("2001-01-01")
-                this.role = null
+                this.services = null
+                this.availability = ""
+                this.compId = null
+                this.appointment = null
         }
 
         constructor(email:String,
                     password:String,
                     clientName:String,
                     birth:Date,
-                    role: List<Role>
+                    serv : List<Services>,
+                    availability: String,
+                    company : Company,
+                    appointments: List<Appointment>
         ){
                 this.email = email
                 this.password = password
                 this.clientName = clientName
                 this.birthday = birth
-                this.role = role
+                this.services = serv
+                this.availability = availability
+                this.compId = company
+                this.appointment = appointments
         }
 
 }

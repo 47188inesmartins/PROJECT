@@ -16,7 +16,7 @@ interface AppointmentRepository: JpaRepository<Appointment, Int>{
     fun findAllByAppHourAndCidAndAppDate (appHour: Time, cid: Client, appDate: Date): Appointment
     fun findAllByAppHourAndSidAndAppDate (appHour: Time, sid: Schedule, appDate: Date) : Appointment
 
-    @Query(value =  "select * from company c where c.id = (select comp_id from schedule where id = :id)", nativeQuery = true)
+    @Query(value =  "from company c where c.id = (select comp_id from schedule where id = :id)")
     fun getCompany(@Param("id") id: Int): Company?
 
     @Query(value =  "update appointment a set number_app_people = :numberAppPeople where a.id = :id")
@@ -25,5 +25,9 @@ interface AppointmentRepository: JpaRepository<Appointment, Int>{
     @Query(value =  "update appointment a set availability = :availability where a.id = :id")
     fun editAvailability(@Param("id") id: Int, @Param("availability") availability: String): Appointment
 
+    @Query(value =  "update appointment set number_app_people = number_app_people + 1 where id = :id")
+    fun appointmentNumber(@Param("id") id: Int)
+
+    fun getAppointmentByIdAndAvailability(id: Int, availability: String): Appointment
 
 }

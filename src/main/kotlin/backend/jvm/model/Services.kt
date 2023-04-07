@@ -40,7 +40,7 @@ class Services{
 
 
     @ManyToMany(mappedBy = "services")
-    val employee: List<Employee>
+    val user: List<User>
 
     constructor(){
         this.name = ""
@@ -48,17 +48,17 @@ class Services{
         this.numberMax = 0
         this.price = 0.0
         this.cid = null
-        this.employee = listOf()
+        this.user = listOf()
         this.appointment = listOf()
     }
 
-    constructor(name : String, duration: Time, numberMax: Int, price: Double, company: Company, employee: List<Employee>, appointment: List<Appointment>){
+    constructor(name : String, duration: Time, numberMax: Int, price: Double, company: Company, user: List<User>, appointment: List<Appointment>){
         this.name = name
         this.duration = duration
         this.numberMax = numberMax
         this.price = price
         this.cid = company
-        this.employee = employee
+        this.user = user
         this.appointment = appointment
     }
 }
