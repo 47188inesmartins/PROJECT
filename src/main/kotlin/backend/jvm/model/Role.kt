@@ -5,6 +5,7 @@ import jakarta.persistence.*
 @Entity
 @Table(name = "u_role")
 class Role {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -13,16 +14,18 @@ class Role {
     @Column(name = "name")
     val name: String
 
-   /* @ManyToMany(mappedBy = "role")
-    val user : List<User>
-*/
+    @ManyToOne
+    val user : User?
+
     constructor(){
         this.name = ""
+        this.user = null
        // this.user = listOf()
     }
 
-    constructor(name : String, user: List<User>){
+    constructor(name : String , user: User){
         this.name = name
+        this.user = user
        // this.user = user
     }
 }

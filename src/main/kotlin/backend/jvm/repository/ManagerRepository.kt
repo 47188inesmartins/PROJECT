@@ -1,5 +1,5 @@
 package backend.jvm.repository
-
+/*
 import backend.jvm.model.Manager
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
@@ -14,4 +14,4 @@ interface ManagerRepository : JpaRepository<Manager, Int> {
     fun editAvailability(@Param("id") id:Int)
 
 
-}
+}*/

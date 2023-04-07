@@ -22,7 +22,6 @@ create table if not exists COMPANY_NUMBERS(
     foreign key (cid) references COMPANY(id)
 );
 
-
 /*create table if not exists SCH_USER (
     id serial primary key,
     token UUID unique /*default gen_random_uuid()*/,
@@ -39,7 +38,7 @@ create table if not exists SCH_USER (
     password varchar(30),
     name varchar(30),
     birthday date check (date(CURRENT_TIMESTAMP) >= birthday + interval '18 year'),
-    availability varchar(15) check (availability in ('available','unavailable')),
+    availability varchar(15) default 'none' check (availability in ('available','unavailable','none')),
     comp_id int,
     foreign key(comp_id) references COMPANY(id)
 );
@@ -47,11 +46,13 @@ create table if not exists SCH_USER (
 
 create table if not exists U_ROLE (
     id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    uid int,
+    foreign key(uid) references SCH_USER(id),
     name varchar(20) NOT NULL UNIQUE CHECK ( name IN ('guest', 'user', 'employee', 'manager') )
 );
 
 
-/*N:N relation with user and role*/
+/*N:N relation with user and role
 create table if not exists USER_ROLE(
     role_id int,
     user_id int,
@@ -59,6 +60,7 @@ create table if not exists USER_ROLE(
     foreign key (role_id) references U_ROLE(id),
     foreign key (user_id) references SCH_USER(id)
 );
+*/
 
 create table if not exists SCHEDULE (
     id serial primary key,
@@ -74,11 +76,9 @@ create table if not exists APPOINTMENT (
     availability varchar(11) check (availability like 'available' or availability like 'unavailable'),
     app_date date,
     sid int,
-    cid int,
-    eid int,
+    uid int,
     foreign key(sid) references SCHEDULE(id),
-    foreign key(cid) references CLIENT(id),
-    foreign key(eid) references EMPLOYEE(id)
+    foreign key(uid) references SCH_USER(id)
 );
 
 create table if not exists APPOINTMENT_USER (
@@ -138,3 +138,4 @@ create table if not exists VACATION(
 
 COMMIT;
 
+rollback;

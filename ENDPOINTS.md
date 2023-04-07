@@ -22,21 +22,6 @@
 > change availability [/appointment/{id}/availability]
 
 
-## Client
-
->#### POST
-> add a client [/client]  params in body
-
->#### GET
-> get all appointments [/client/{id}/appointments]
->
-> get client info [/client/{id}]
-
->#### DELETE
-> delete a client [/client/{id}]
-
-
-
 ## COMPANY
 
 >#### POST
@@ -147,7 +132,7 @@
 > change role [/user/{id}/role]
 > 
 > change password [/user/{id}/password]
->
+
 >#### DELETE
 > change role [/user/{id}/role]
 >

@@ -1,9 +1,8 @@
 package backend.jvm.controllers
 
-import backend.jvm.model.Client
 import backend.jvm.model.Schedule
 import backend.jvm.model.Services
-import backend.jvm.services.CompanyServices
+import backend.jvm.model.User
 import backend.jvm.services.ScheduleServices
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/schedule")
 class ScheduleController {
+
     @Autowired
     lateinit var scheduleServices: ScheduleServices
 
@@ -39,7 +39,8 @@ class ScheduleController {
 
     @ResponseBody
     @GetMapping("/{id}/client")
-    fun getAllClientSchedule(@PathVariable id: Int, @RequestParam date: String,@RequestParam hour: String): List<Client>{
+    fun getAllClientSchedule(@PathVariable id: Int, @RequestParam date: String, @RequestParam hour: String): List<User>{
         return scheduleServices.getAllClientSchedule(id,date,hour)
     }
+
 }

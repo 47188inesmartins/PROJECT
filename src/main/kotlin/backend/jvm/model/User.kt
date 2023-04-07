@@ -40,6 +40,14 @@ class User {
         @Column(name = "birthday")
         val birthday: Date
 
+        @Column(name = "availability")
+        val availability: String
+
+        @ManyToOne
+        @JoinColumn(name = "comp_id")
+        val compId: Company?
+
+        /*
         @ManyToMany
         @JoinTable(
                 name = "user_role",

@@ -1,5 +1,6 @@
 package backend.jvm.services
 
+/*
 import backend.jvm.model.Client
 import backend.jvm.repository.ClientRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -32,4 +33,4 @@ class ClientServices {
         return clientRepository.getClientByToken(token)
     }
 
-}
+}*/

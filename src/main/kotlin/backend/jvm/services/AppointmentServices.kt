@@ -2,6 +2,7 @@ package backend.jvm.services
 
 import backend.jvm.model.*
 import backend.jvm.repository.AppointmentRepository
+import backend.jvm.repository.ServiceRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.sql.Time

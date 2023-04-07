@@ -16,6 +16,7 @@ drop table if exists MANAGER cascade;
 drop table if exists VACATION cascade;
 drop table if exists CALENDAR cascade;
 drop table if exists SERVICE_APPOINTMENT cascade;
-
+drop table if exists USER_SERVICE cascade;
+drop table if exists APP_USER cascade;
 
 COMMIT;

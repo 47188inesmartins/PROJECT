@@ -2,6 +2,7 @@ package backend.jvm.services
 
 import backend.jvm.model.Schedule
 import backend.jvm.model.Services
+import backend.jvm.model.User
 import backend.jvm.repository.ScheduleRepository
 import org.springframework.beans.factory.annotation.Autowired
 import java.util.*
@@ -48,7 +49,7 @@ class ScheduleServices {
         return scheduleRepository.getAllServices(idSchedule,idService)
     }
 
-    fun getAllClientSchedule(id:Int,date: String,hour: String): List<Client>{
+    fun getAllClientSchedule(id:Int,date: String,hour: String): List<User>{
         return scheduleRepository.getAllClientSchedule(id,date,hour)
     }
 
