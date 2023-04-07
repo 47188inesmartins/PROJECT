@@ -110,6 +110,36 @@
 > delete a vacation [/vacation/{id}]
 
 
+## Employee 
+>### POST
+> add a new employee [/employee] @Params in body
+> add a new service to employee[/employee/service]
+
+>#### GET
+> get the employee company [/employee/{id}/company]
+> get an employee [/employee/{id}]
+> get employee service [/employee/{id}/service]
+> get employee appointment [/employee/{id}/appointment]
+
+>#### PUT
+> change availability [/employee/availability]
+
+>#### DELETE
+> Delete an employee [/employee/{id}]
+
+
+## Manager
+>### POST
+> add a new manager [/manager] @Params in body
+
+>#### GET
+> get company [/manager/{id}/company]
+
+>#### DELETE
+> Delete a manager [/manager/{id}]
+
+
+
 ## Role
 >#### POST
 > add a role [/role] @Params in body

@@ -49,11 +49,10 @@ class ScheduleServices {
         return scheduleRepository.getAllServices(idSchedule,idService)
     }
 
-      fun getAllClientSchedule(id:Int,date: String,hour: String): List<User>{
-      TODO(
-      )
+    /*  fun getAllClientSchedule(id:Int,date: String,hour: String): List<User>{
+      TODO()
       //return scheduleRepository.getAllClientSchedule(id,date,hour)
-    }
+    }*/
 
     /*fun findScheduleByAppointment(appointment: MutableList<Appointment>): Schedule{
         return scheduleRepository.findScheduleByAppointment(appointment)

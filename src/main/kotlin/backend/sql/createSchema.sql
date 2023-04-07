@@ -33,7 +33,7 @@ create table if not exists COMPANY_NUMBERS(
 
 create table if not exists SCH_USER (
     id serial primary key,
-    token UUID unique /*default gen_random_uuid()*/,
+    token UUID unique default gen_random_uuid(),
     email varchar(50) unique CHECK (email LIKE '%@%'),
     password varchar(30),
     name varchar(30),

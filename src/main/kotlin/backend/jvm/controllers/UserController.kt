@@ -36,10 +36,10 @@ class UserController {
         return userServices.getUserById(id)
     }
 
-    @GetMapping
+    /*@GetMapping
     fun getUserByEmail(@RequestBody email: String): User {
         return userServices.getUserByEmail(email)
-    }
+    }*/
 
     @GetMapping("/{id}/role")
     fun getRole(@PathVariable id: Int): String {

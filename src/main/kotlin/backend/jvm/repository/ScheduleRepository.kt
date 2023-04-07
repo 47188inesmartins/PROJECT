@@ -12,7 +12,7 @@ interface ScheduleRepository: JpaRepository<Schedule, Int> {
          * @param idService
          * @return List<Service>
          */
-        @Query(value = "from service c inner join service_appointment p on p.service_id = :idService inner join appointment a on a.sid = :idSchedule ")
+        @Query(value = "from service c inner join service_appointment p on p.service_id = :idService inner join appointment a on a.sid = :idSchedule ", nativeQuery = true)
         fun getAllServices(@Param("idSchedule") idSchedule: Int, @Param("idService") idService: Int): List<Services>
 
 

@@ -9,11 +9,15 @@ import java.util.*
 
 @Service
 class CompanyServices {
+    companion object{
+        val NIF_NUMBERS = 9
+    }
 
     @Autowired
     lateinit var companyRepository: CompanyRepository
 
     fun addCompany(company: Company): Company {
+        if(company.nif.length != 9 ) throw Exception("Invalid NIF number")
         return companyRepository.save(company)
     }
 

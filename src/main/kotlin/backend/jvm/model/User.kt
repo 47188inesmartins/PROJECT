@@ -32,7 +32,7 @@ class User {
         val email: String
 
         @Column(name = "password")
-        val password: String
+        var password: String
 
         @Column(name = "name")
         val clientName: String

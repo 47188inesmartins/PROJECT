@@ -27,4 +27,6 @@ interface ServiceRepository : JpaRepository<Services, Int> {
     fun updateMaxNumber( @Param("idService") idService: Int, @Param("number") number: Int):Services
 
     fun getServicesByIdAndNumberMax(id: Int, numberMax: Int): Services
+
+    fun getServicesById(id: Int):Services
 }

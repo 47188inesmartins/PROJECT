@@ -13,6 +13,7 @@ class VacationService {
     lateinit var vacationRepository: VacationRepository
 
     fun addVacation(vacation: Vacation):Vacation{
+        if(!vacation.dateBegin.before(vacation.dateEnd)) throw Exception("Invalid dates")
         return vacationRepository.save(vacation)
     }
 
@@ -21,17 +22,16 @@ class VacationService {
     }
 
     fun changeBeginDate(id:Int,date: String): Vacation {
-       // if(!validateDataFormat(date)) throw Exception("Invalid data format")
-        return vacationRepository.changeBeginDate(id, Date.valueOf(date))
+        val getVacation = vacationRepository.getReferenceById(id)
+        val newDate = Date.valueOf(date)?: throw Exception("Invalid new begin date")
+        if(!getVacation.dateEnd.after(newDate)) throw Exception("Invalid new begin date")
+        return vacationRepository.changeBeginDate(id, newDate)
     }
 
     fun changeEndDate(id:Int,date: String): Vacation {
-        //if(!validateDataFormat(date)) throw Exception("Invalid data format")
-        return vacationRepository.changeEndDate(id,Date.valueOf(date))
+        val getVacation = vacationRepository.getReferenceById(id)
+        val newDate = Date.valueOf(date) ?: throw Exception("Invalid new end date")
+        if(!getVacation.dateBegin.before(newDate)) throw Exception("Invalid new end date")
+        return vacationRepository.changeEndDate(id, newDate)
     }
-
-   /*private fun validateDataFormat(string: String): Boolean {
-        val regex = """^\d{4}-(0?[1-9]|1[0-2])-([1-9]|[12][0-9]|3[01])$""".toRegex()
-        return string.matches(regex)
-    }*/
 }

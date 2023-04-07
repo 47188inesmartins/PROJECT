@@ -43,6 +43,9 @@ class AppointmentServices {
     @Autowired
     lateinit var appointmentRepository: AppointmentRepository
 
+    @Autowired
+    lateinit var servicesRepository: ServiceRepository
+
    /* fun addAppointment(appointment: Appointment): Int {
         val id = appointmentRepository.save(appointment).id
         id?.let {
@@ -56,6 +59,19 @@ class AppointmentServices {
         return id
     }*/
 
+
+    fun changeAvailabilityByPeople(appointment: Appointment,services: Services):Appointment{
+        val getAppointment = appointment.id?.let { appointmentRepository.getReferenceById(it) }
+            ?: throw Exception("Appointment does not exists")
+
+        val getService = services.id?.let { servicesRepository.getServicesById(it) }
+            ?: throw Exception("Service does not exists")
+
+        if(getAppointment.numberAppPeople == getService.numberMax){
+            return appointmentRepository.editAvailability(appointment.id!!,"unavailable")
+        }
+        return appointment
+    }
 
     fun addAppointment(appointment: Appointment): Int {
         val existingAppointment = appointmentRepository.findByAppDateAndAppHourAndSid(appointment.appDate!!, appointment.appHour, appointment.sid!!.id!!)

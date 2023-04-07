@@ -37,10 +37,10 @@ class ScheduleController {
         return scheduleServices.getServices(id,ids)
     }
 
-    @ResponseBody
+    /*@ResponseBody
     @GetMapping("/{id}/client")
     fun getAllClientSchedule(@PathVariable id: Int, @RequestParam date: String, @RequestParam hour: String): List<User>{
         return scheduleServices.getAllClientSchedule(id,date,hour)
-    }
+    }*/
 
 }
