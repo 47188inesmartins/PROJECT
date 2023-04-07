@@ -3,7 +3,9 @@ package backend.jvm.services
 import backend.jvm.model.Role
 import backend.jvm.repository.RoleRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Service
 
+@Service
 class RoleServices {
 
 

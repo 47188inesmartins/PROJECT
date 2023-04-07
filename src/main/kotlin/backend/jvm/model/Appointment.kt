@@ -28,14 +28,14 @@ class Appointment {
     @Column(name = "id")
     var id: Int? = null
 
-    @Column(name = "number_app_people")
-    val numberAppPeople: Int
-
-    @Column(name = "app_hour")
-    val appHour : Time
+    @Column(name = "number_app_people", nullable = false)
+    var numberAppPeople: Int? = 0
 
     @Column(name = "availability")
     val availability : String
+
+    @Column(name = "app_hour")
+    val appHour : Time
 
     @Column(name = "app_date")
     @Temporal(TemporalType.DATE)

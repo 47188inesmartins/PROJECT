@@ -36,10 +36,10 @@ class CompanyController {
         return companyServices.findCompanyByNif(nif)
     }
 
-    @GetMapping("/{id}/employees")
+   /* @GetMapping("/{id}/employees")
     fun getAllEmployees(@PathVariable id: Int): List<Employee>{
         return companyServices.getAllEmployees(id)
-    }
+    }*/
 
     @GetMapping("/{id}/services")
     fun getAllServices(@PathVariable id: Int): List<Services>{

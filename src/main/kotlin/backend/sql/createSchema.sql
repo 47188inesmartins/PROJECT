@@ -73,7 +73,7 @@ create table if not exists APPOINTMENT (
     id serial primary key,
     number_app_people int,
     app_hour time,
-    availability varchar(11) check (availability like 'available' or availability like 'unavailable'),
+    availability varchar(11) default 'available' check (availability like 'available' or availability like 'unavailable'),
     app_date date,
     sid int,
     uid int,
@@ -83,10 +83,10 @@ create table if not exists APPOINTMENT (
 
 create table if not exists APPOINTMENT_USER (
     user_id int,
-    app_id int,
-    primary key (user_id,app_id),
+    appointment_id int,
+    primary key (user_id,appointment_id),
     foreign key(user_id) references SCH_USER(id),
-    foreign key(app_id) references APPOINTMENT(id)
+    foreign key(appointment_id) references APPOINTMENT(id)
 );
 
 create table if not exists SERVICE (

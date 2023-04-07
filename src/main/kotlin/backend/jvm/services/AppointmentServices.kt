@@ -43,8 +43,30 @@ class AppointmentServices {
     @Autowired
     lateinit var appointmentRepository: AppointmentRepository
 
-    fun addAppointment(appointment: Appointment): Appointment {
-        return appointmentRepository.save(appointment)
+   /* fun addAppointment(appointment: Appointment): Int {
+        val id = appointmentRepository.save(appointment).id
+        id?.let {
+            appointmentRepository.increaseAppointmentNumber(it)
+            val updatedAppointment = appointmentRepository.findById(it).orElse(null)
+           /* if (updatedAppointment != null && updatedAppointment.numberAppPeople >= max_number) {
+                appointmentRepository.editAvailability(it, "unavailable")
+                updatedAppointment.availability = "unavailable"
+            }*/
+        }
+        return id
+    }*/
+
+
+    fun addAppointment(appointment: Appointment): Int {
+        val existingAppointment = appointmentRepository.findByAppDateAndAppHourAndSid(appointment.appDate!!, appointment.appHour, appointment.sid!!.id!!)
+        if (existingAppointment != null) {
+            appointment.numberAppPeople = existingAppointment.numberAppPeople!!.plus(1)
+        }
+        val savedAppointment = appointmentRepository.save(appointment)
+      /*  if (savedAppointment.number_app_people == max_number) {
+            appointmentRepository.updateAvailability(savedAppointment.id!!, "unavailable")
+        }*/
+        return savedAppointment.id!!
     }
 
     fun deleteAppointment(id: Int): Boolean{
@@ -53,6 +75,7 @@ class AppointmentServices {
     }
 
     fun getAppointment(id: Int): Optional<Appointment> = appointmentRepository.findById(id)
+
 
     /*fun findAppClientByDateAndHour(cid: Client, date: Date, hour: Time) = appointmentRepository.findAllByAppHourAndCidAndAppDate(hour, cid, date)
 
@@ -64,7 +87,7 @@ class AppointmentServices {
 
     fun findAllByAppHourAndSidAndAppDate (appHour: Time, sid: Schedule, appDate: Date) : Appointment = appointmentRepository.findAllByAppHourAndSidAndAppDate(appHour,sid,appDate)
 
-    fun getCompany(id: Int) = appointmentRepository.getCompany(id)
+  //  fun getCompany(id: Int) = appointmentRepository.getCompany(id)
 
     fun editNumberAppPeople(id: Int, numberAppPeople: Int): Appointment = appointmentRepository.editNumberAppPeople(id, numberAppPeople)
 
