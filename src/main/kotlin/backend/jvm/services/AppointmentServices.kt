@@ -90,6 +90,11 @@ class AppointmentServices {
         return true
     }
 
+    fun increaseNumberOfPeopleApp(id:Int,maxNumber:Int){
+        require(id>0&&maxNumber>0)
+        appointmentRepository.increaseAppointmentNumber(id,maxNumber)
+    }
+
     fun getAppointment(id: Int): Optional<Appointment> = appointmentRepository.findById(id)
 
 

@@ -8,12 +8,16 @@ import java.sql.Time
 
 @Service
 class DayServices {
+    companion object{
+        val listDayOfWeek = listOf<String>("MON","TUE","WED","THU","FRI","SAT","SUN")
+    }
 
 
     @Autowired
     lateinit var dayRepository:DayRepository
 
     fun addOpenDay(day: Day):Day{
+        if(!listDayOfWeek.contains(day.weekDays.uppercase())) throw Exception("Invalid day of week")
         return dayRepository.save(day)
     }
 

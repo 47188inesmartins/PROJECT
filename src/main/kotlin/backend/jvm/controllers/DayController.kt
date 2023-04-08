@@ -23,15 +23,15 @@ class DayController {
     fun deleteOpenDay(@RequestBody day: Day) {
         dayService.deleteDay(day)
     }
-
+    @ResponseBody
     @PutMapping("/begin/{id}")
-    fun updateBeginHour(@PathVariable id:Int,@RequestParam begin: String) {
-        dayService.updateBeginHour(id,begin)
+    fun updateBeginHour(@PathVariable id:Int,@RequestParam begin: String):Day {
+        return dayService.updateBeginHour(id,begin)
     }
-
+    @ResponseBody
     @PutMapping("/end/{id}")
-    fun updateEndHour(@PathVariable id:Int,@RequestParam end: String) {
-        dayService.updateBeginHour(id,end)
+    fun updateEndHour(@PathVariable id:Int,@RequestParam end: String): Day {
+        return dayService.updateEndHour(id,end)
     }
 
 }
