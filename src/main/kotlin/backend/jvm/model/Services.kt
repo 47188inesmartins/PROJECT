@@ -9,7 +9,7 @@ import java.sql.Time
 class Services{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     var id: Int? = null
 
@@ -36,11 +36,11 @@ class Services{
         joinColumns = [JoinColumn(name = "service_id")],
         inverseJoinColumns = [JoinColumn(name = "appointment_id")]
     )
-    val appointment: List<Appointment>
+    val appointment: List<Appointment>?
 
 
     @ManyToMany(mappedBy = "services")
-    val user: List<User>
+    val user: List<User>?
 
     constructor(){
         this.name = ""
@@ -52,7 +52,7 @@ class Services{
         this.appointment = listOf()
     }
 
-    constructor(name : String, duration: Time, numberMax: Int, price: Double, company: Company, user: List<User>, appointment: List<Appointment>){
+    constructor(name : String, duration: Time, numberMax: Int, price: Double, company: Company, user: List<User>, appointment: List<Appointment>,days: List<Day> ){
         this.name = name
         this.duration = duration
         this.numberMax = numberMax
@@ -60,5 +60,6 @@ class Services{
         this.cid = company
         this.user = user
         this.appointment = appointment
+        this.day = days
     }
 }

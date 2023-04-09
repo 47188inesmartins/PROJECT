@@ -2,7 +2,6 @@ package backend.jvm.services
 
 
 import backend.jvm.model.Services
-import backend.jvm.repository.ScheduleRepository
 import backend.jvm.repository.ServiceRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -10,6 +9,7 @@ import java.sql.Time
 
 @Service
 class ServServices {
+
     @Autowired
     lateinit var serviceRepository: ServiceRepository
 
@@ -22,7 +22,8 @@ class ServServices {
         return serviceRepository.findById(id).get()
     }
 
-    /*fun findByEmployee(employee: List<Employee>):Services{
+    /*
+    fun findByEmployee(employee: List<Employee>):Services{
         return serviceRepository.findAllByEmployee(employee)
     }*/
 

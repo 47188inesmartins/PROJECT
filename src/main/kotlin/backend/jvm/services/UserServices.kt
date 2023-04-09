@@ -1,8 +1,5 @@
 package backend.jvm.services
 
-import backend.jvm.model.Appointment
-import backend.jvm.model.Company
-import backend.jvm.model.Services
 import backend.jvm.model.User
 import backend.jvm.repository.UserRepository
 import backend.jvm.utils.Hashing

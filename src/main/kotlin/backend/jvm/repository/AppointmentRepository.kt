@@ -12,8 +12,8 @@ interface AppointmentRepository: JpaRepository<Appointment, Int>{
     /*
     fun findAllByCid (cid: Client) : List<Appointment>
     fun findAllByEid (eid: Employee) : List<Appointment>
-    */
 
+    */
     fun findAllBySid (sid: Schedule) : List<Appointment>
 
     fun findAllByAppHourAndUidAndAppDate (appHour: Time, user: User, appDate: Date): Appointment
@@ -26,6 +26,9 @@ interface AppointmentRepository: JpaRepository<Appointment, Int>{
     fun getCompany(@Param("id") id: Int): Company?
 */
 
+    @Query(value = "select service_id from service_appointment where appointment_id=:id", nativeQuery = true)
+    fun getServices(@Param("id") id:Int):List<Services>
+
     @Query(value =  "update appointment set number_app_people = :numberAppPeople where id = :id", nativeQuery = true)
     fun editNumberAppPeople(@Param("id") id: Int, @Param("numberAppPeople") numberAppPeople: Int): Appointment
 
@@ -37,6 +40,5 @@ interface AppointmentRepository: JpaRepository<Appointment, Int>{
 
     @Query(value = "from appointment a where a.availability='available' and a.date=:date", nativeQuery = true)
     fun getAvailableAppointmentByDate(@Param("date") date: Date): Appointment
-
 
 }

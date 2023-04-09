@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.servlet.ModelAndView
-
+/*
 @ControllerAdvice
 internal class ErrorHandling {
     @ExceptionHandler(value = [Exception::class])
@@ -24,4 +24,4 @@ internal class ErrorHandling {
     companion object {
         const val DEFAULT_ERROR_VIEW = "error"
     }
-}
+}*/

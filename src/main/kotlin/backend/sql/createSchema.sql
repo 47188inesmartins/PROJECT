@@ -22,7 +22,8 @@ create table if not exists COMPANY_NUMBERS(
     foreign key (cid) references COMPANY(id)
 );
 
-/*create table if not exists SCH_USER (
+/*
+create table if not exists SCH_USER (
     id serial primary key,
     token UUID unique /*default gen_random_uuid()*/,
     email varchar(50) unique CHECK (email LIKE '%@%'),
@@ -71,9 +72,7 @@ create table if not exists SCHEDULE (
 
 create table if not exists APPOINTMENT (
     id serial primary key,
-    number_app_people int,
     app_hour time,
-    availability varchar(11) default 'available' check (availability like 'available' or availability like 'unavailable'),
     app_date date,
     sid int,
     uid int,
@@ -95,6 +94,7 @@ create table if not exists SERVICE (
     duration time,
     number_max int default 1,
     price float,
+  /*  number_app_people int default 1,*/
     cid int,
     foreign key(cid) references COMPANY(id)
 );
@@ -103,6 +103,7 @@ create table if not exists SERVICE (
 create table if not exists SERVICE_APPOINTMENT(
     service_id int,
     appointment_id int,
+    availability varchar(11) default 'available' check (availability like 'available' or availability like 'unavailable'),
     primary key (service_id,appointment_id),
     foreign key (service_id) references SERVICE(id),
     foreign key (appointment_id) references APPOINTMENT(id)

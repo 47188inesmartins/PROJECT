@@ -67,7 +67,7 @@ class User {
 
         @ManyToMany
         @JoinTable(
-                name = "app_user",
+                name = "appointment_user",
                 joinColumns = [JoinColumn(name = "user_id")],
                 inverseJoinColumns = [JoinColumn(name = "app_id")]
         )

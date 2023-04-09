@@ -11,6 +11,10 @@ import java.sql.Time
 interface ServiceRepository : JpaRepository<Services, Int> {
 
 
+    @Query(value = "select count(id) from service_appointment where service_id=:serviceId and appointment_id=:appointmentId ", nativeQuery = true)
+    fun countAppointments(@Param("serviceId") serviceId: Int, @Param("appointmentId") appointmentId: Int)
+
+
    // fun findAllByEmployee(employee: List<Employee>):Services
     @Query(value ="select * from services s " +
             "inner join employee_service e on e.service_id = :idService " +

@@ -15,7 +15,6 @@ class Schedule {
     @JoinColumn(name = "comp_id")
     val compIdSch : Company?
 
-
     @OneToMany(mappedBy = "sid")
     val appointment: List<Appointment>
 

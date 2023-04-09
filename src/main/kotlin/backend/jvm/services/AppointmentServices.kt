@@ -67,16 +67,17 @@ class AppointmentServices {
         val getService = services.id?.let { servicesRepository.getServicesById(it) }
             ?: throw Exception("Service does not exists")
 
-        if(getAppointment.numberAppPeople == getService.numberMax){
+       /* if(getAppointment.numberAppPeople == getService.numberMax){
             return appointmentRepository.editAvailability(appointment.id!!,"unavailable")
-        }
+        }*/
         return appointment
     }
 
-    fun addAppointment(appointment: Appointment): Int {
-        val existingAppointment = appointmentRepository.findByAppDateAndAppHourAndSid(appointment.appDate!!, appointment.appHour, appointment.sid!!.id!!)
-        if (existingAppointment != null) {
-            appointment.numberAppPeople = existingAppointment.numberAppPeople!!.plus(1)
+    fun addAppointment(appointment: Appointment): Appointment {
+      //  val existingAppointment = appointmentRepository.findAllByAppDateAndAppHourAndSid(appointment.appDate!!, appointment.appHour, appointment.sid!!)?.lastOrNull()
+      /*  if (existingAppointment != null) {
+            println(existingAppointment.numberAppPeople)
+            appointment.numberAppPeople = existingAppointment.numberAppPeople?.plus(1)
         }
         val savedAppointment = appointmentRepository.save(appointment)
       /*  if (savedAppointment.number_app_people == max_number) {
@@ -85,13 +86,17 @@ class AppointmentServices {
         return savedAppointment.id!!
     }
 
+    fun getServices(id: Int){
+        appointmentRepository.getServices(id)
+    }
+
     fun deleteAppointment(id: Int): Boolean{
         appointmentRepository.deleteById(id)
         return true
     }
 
     fun increaseNumberOfPeopleApp(id:Int,maxNumber:Int){
-        require(id>0&&maxNumber>0)
+        require(id>0 && maxNumber>0)
         appointmentRepository.increaseAppointmentNumber(id,maxNumber)
     }
 

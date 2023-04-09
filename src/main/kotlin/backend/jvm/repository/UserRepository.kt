@@ -10,13 +10,13 @@ import org.springframework.data.repository.query.Param
 
 interface UserRepository: JpaRepository<User, Int> {
 
-    // fun getUsersByCompId (compId: Company): User
+     fun getUsersByCompId (compId: Company): User
 
-     //fun getUsersByServices (service: List<Services>): List<User>
+    /* fun getUsersByServices (service: List<Services>): List<User>
 
-   //  fun getUsersByAppointment (appointment: List<Appointment>): List<User>
+     fun getUsersByAppointment (appointment: List<Appointment>): List<User>*/
 
-  //   fun getUsersByEmail (email: String): User
+     fun getUsersByEmail (email: String): User
 
      @Query(value = "select name from role r where r.uid = :id", nativeQuery = true)
      fun getRole (@Param("id") id: Int): String

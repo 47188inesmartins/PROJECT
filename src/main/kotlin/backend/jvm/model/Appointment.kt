@@ -10,11 +10,9 @@ import java.util.Date
  * Appointment entity
  *
  * @property id the appointment primary key
- * @property appNumberPeople represents the number of people scheduled for that appointment hour
  * @property appHour hour of the appointment
- * @property availability 'unavailable' if the max number of people have already scheduled
  * @property sid schedule associated with appointment
- * @property cid company associated with appointment
+ * @property uid company associated with appointment
  *
  */
 
@@ -28,19 +26,16 @@ class Appointment {
     @Column(name = "id")
     var id: Int? = null
 
-    @Column(name = "number_app_people", nullable = false)
-    var numberAppPeople: Int? = 0
-
-    @Column(name = "availability")
-    val availability : String
-
+   /* @Column(name = "number_app_people")
+    @GeneratedValue
+    var numberAppPeople: Int? = 1
+*/
     @Column(name = "app_hour")
     val appHour : Time
 
     @Column(name = "app_date")
     @Temporal(TemporalType.DATE)
     val appDate: Date?
-
 
     @ManyToOne
     @JoinColumn(name = "sid")  // nome da foreign key
@@ -55,19 +50,15 @@ class Appointment {
 
     constructor() {
         this.id = null
-        this.numberAppPeople = 0
         this.appHour = Time.valueOf("00:00:00")
-        this.availability = "unavailable"
         this.appDate = null
-        this.uid = null
         this.sid = null
+        this.uid = null
         this.services = null
     }
 
-    constructor(numberAppPeople: Int, appHour: Time, availability: String, appDate : Date, sid: Schedule, uid: User, services: List<Services>) {
-        this.numberAppPeople = numberAppPeople
+    constructor(appHour: Time, appDate : Date, sid: Schedule?, uid: User?, services: List<Services>?) {
         this.appHour = appHour
-        this.availability = availability
         this.appDate = appDate
         this.sid = sid
         this.uid = uid
