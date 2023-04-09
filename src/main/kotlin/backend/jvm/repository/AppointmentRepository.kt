@@ -20,7 +20,8 @@ interface AppointmentRepository: JpaRepository<Appointment, Int>{
 
     fun findAllByAppHourAndSidAndAppDate (appHour: Time, sid: Schedule, appDate: Date) : Appointment
 
-    fun findByAppDateAndAppHourAndSid(appDate: Date, appHour: Time, sid: Int): Appointment
+
+    fun findAllByAppDateAndAppHourAndSid(appDate: Date, appHour: Time, sid: Schedule): List<Appointment>?
 
  /*   @Query(value =  "from company c where c.id = (select comp_id from schedule where id = :id)")
     fun getCompany(@Param("id") id: Int): Company?

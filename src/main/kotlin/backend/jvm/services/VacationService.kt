@@ -12,6 +12,10 @@ class VacationService {
     @Autowired
     lateinit var vacationRepository: VacationRepository
 
+    fun getVacation(id: Int): Vacation{
+        return vacationRepository.findFirstById(id)
+    }
+
     fun addVacation(vacation: Vacation):Vacation{
         if(!vacation.dateBegin.before(vacation.dateEnd)) throw Exception("Invalid dates")
         return vacationRepository.save(vacation)

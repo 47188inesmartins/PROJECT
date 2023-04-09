@@ -38,6 +38,13 @@ class Services{
     )
     val appointment: List<Appointment>?
 
+    @ManyToMany
+    @JoinTable(
+        name = "service_days",
+        joinColumns = [JoinColumn(name = "id_service")],
+        inverseJoinColumns = [JoinColumn(name = "id_days")]
+    )
+    val day: List<Day>?
 
     @ManyToMany(mappedBy = "services")
     val user: List<User>?
@@ -50,6 +57,7 @@ class Services{
         this.cid = null
         this.user = listOf()
         this.appointment = listOf()
+        this.day = listOf()
     }
 
     constructor(name : String, duration: Time, numberMax: Int, price: Double, company: Company, user: List<User>, appointment: List<Appointment>,days: List<Day> ){

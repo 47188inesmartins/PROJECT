@@ -9,6 +9,8 @@ import java.sql.Date
 
 interface VacationRepository: JpaRepository<Vacation, Int>{
 
+    fun findFirstById(id:Int):Vacation
+
     @Query(value ="update vacation set date_begin =:date where id = :id", nativeQuery = true)
     fun changeBeginDate(@Param("id") id:Int, @Param("date") date:Date):Vacation
 

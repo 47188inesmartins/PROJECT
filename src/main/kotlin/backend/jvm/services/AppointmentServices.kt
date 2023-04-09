@@ -79,11 +79,13 @@ class AppointmentServices {
             println(existingAppointment.numberAppPeople)
             appointment.numberAppPeople = existingAppointment.numberAppPeople?.plus(1)
         }
+        println("id=" + appointment.id)*/
         val savedAppointment = appointmentRepository.save(appointment)
-      /*  if (savedAppointment.number_app_people == max_number) {
+        println("save = ${savedAppointment.id}")
+        /*if (savedAppointment.number_app_people == max_number) {
             appointmentRepository.updateAvailability(savedAppointment.id!!, "unavailable")
         }*/
-        return savedAppointment.id!!
+        return savedAppointment
     }
 
     fun getServices(id: Int){

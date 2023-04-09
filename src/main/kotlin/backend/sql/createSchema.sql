@@ -129,6 +129,17 @@ create table if not exists SCH_DAY(
      foreign key (sid) references SCHEDULE(id)
 );
 
+
+create table if not exists SERVICE_DAYS(
+     id_days int,
+     id_service int,
+     begin_hour time,
+     end_hour time,
+     primary key (id_days,id_service),
+     foreign key (id_days) references SCH_DAY(id),
+     foreign key (id_service) references SERVICE(id)
+);
+
 create table if not exists VACATION(
     id serial primary key,
     date_begin date,
@@ -136,6 +147,7 @@ create table if not exists VACATION(
     sid int,
     foreign key (sid) references SCHEDULE(id)
 );
+
 
 COMMIT;
 

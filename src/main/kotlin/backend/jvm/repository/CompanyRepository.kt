@@ -35,5 +35,4 @@ interface CompanyRepository : JpaRepository<Company, Int>{
 
     @Query(value = "update company c set c.description=:description where c.id = :id", nativeQuery = true)
     fun changeDescription(@Param("id") id: Int, @Param("description") description: String): Company
-
 }
