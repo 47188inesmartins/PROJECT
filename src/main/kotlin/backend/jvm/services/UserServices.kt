@@ -39,7 +39,7 @@ class UserServices {
         return userRepository.getUsersByEmail(email)
     }*/
 
-    fun getRole(id: Int):String{
+    fun getRole(id: Int):String?{
         return userRepository.getRole(id)
     }
 

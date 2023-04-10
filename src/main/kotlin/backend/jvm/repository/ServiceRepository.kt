@@ -12,7 +12,7 @@ interface ServiceRepository : JpaRepository<Services, Int> {
 
 
     @Query(value = "select count(id) from service_appointment where service_id=:serviceId and appointment_id=:appointmentId ", nativeQuery = true)
-    fun countAppointments(@Param("serviceId") serviceId: Int, @Param("appointmentId") appointmentId: Int)
+    fun countAppointments(@Param("serviceId") serviceId: Int, @Param("appointmentId") appointmentId: Int): Int
 
 
    // fun findAllByEmployee(employee: List<Employee>):Services

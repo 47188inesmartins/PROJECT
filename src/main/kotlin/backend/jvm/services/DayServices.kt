@@ -9,7 +9,7 @@ import java.sql.Time
 @Service
 class DayServices {
     companion object{
-        val listDayOfWeek = listOf<String>("MON","TUE","WED","THU","FRI","SAT","SUN")
+        val listDayOfWeek = listOf("MON","TUE","WED","THU","FRI","SAT","SUN")
     }
 
 

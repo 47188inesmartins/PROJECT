@@ -15,9 +15,10 @@ interface CompanyRepository : JpaRepository<Company, Int>{
     @Query(value = "from service s where s.cid = :id", nativeQuery = true)
     fun getAllServices(@Param("id") id: Int): List<Services>
 
-  /*  @Query(value = "from employee e where e.comp_id = :id")
+    /*  @Query(value = "from employee e where e.comp_id = :id")
     fun getAllEmployees(@Param("id") id: Int): List<Employee>
-*/
+    */
+
     @Query(value = "from appointment a where a.sid = (select id from schedule s where s.comp_id = :id)", nativeQuery = true)
     fun getAllAppointments(@Param("id") id: Int): List<Appointment>
 

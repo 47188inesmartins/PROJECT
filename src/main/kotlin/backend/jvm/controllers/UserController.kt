@@ -23,6 +23,7 @@ class UserController {
 
     @PostMapping
     fun addUser(@RequestBody user: User): User{
+        println(user.email+user.password+user.birthday+user.availability)
         return userServices.addUser(user)
     }
 
@@ -42,7 +43,7 @@ class UserController {
     }*/
 
     @GetMapping("/{id}/role")
-    fun getRole(@PathVariable id: Int): String {
+    fun getRole(@PathVariable id: Int): String? {
         return userServices.getRole(id)
     }
 

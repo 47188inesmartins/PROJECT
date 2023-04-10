@@ -17,9 +17,12 @@ interface UserRepository: JpaRepository<User, Int> {
      fun getUsersByAppointment (appointment: List<Appointment>): List<User>*/
 
      fun getUsersByEmail (email: String): User
+     @Query(value = "select availability from SCH_USER u " +
+             "inner join u_role r on  r.id = :id and r.name = 'employee'", nativeQuery = true)
+     fun getEmployeeAvailability(@Param("id") id: Int)
 
-     @Query(value = "select name from role r where r.uid = :id", nativeQuery = true)
-     fun getRole (@Param("id") id: Int): String
+     @Query(value = "select name from u_role r where r.uid = :id", nativeQuery = true)
+     fun getRole (@Param("id") id: Int): String?
 
      @Query(value = "update SCH_USER set password = :pass where id = :id", nativeQuery = true)
      fun changePassword (@Param("pass") pass: String, @Param("id") id: Int): User

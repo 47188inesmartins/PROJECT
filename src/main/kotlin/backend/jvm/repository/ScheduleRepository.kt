@@ -7,6 +7,9 @@ import org.springframework.data.repository.query.Param
 
 interface ScheduleRepository: JpaRepository<Schedule, Int> {
 
+
+
+
         /**
          * @param idSchedule
          * @param idService
@@ -23,8 +26,6 @@ interface ScheduleRepository: JpaRepository<Schedule, Int> {
          * @param hour
          * @return List<Client>
          */
-
-
         /*@Query(value = "from client c inner join appointment a on c.id = a.cid and a.sid = :id and a.hour = :hour and a.app_date = :date ")
         fun getAllClientSchedule(@Param("id") id:Int, @Param("date") date: String, @Param("hour") hour: String): List<User>
 */

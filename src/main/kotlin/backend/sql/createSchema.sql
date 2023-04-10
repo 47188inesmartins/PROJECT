@@ -1,6 +1,6 @@
 BEGIN;
 
-/*create schema if not exists dbo;*/
+create schema if not exists public;
 
 create table if not exists COMPANY (
    id serial primary key,
@@ -36,10 +36,10 @@ create table if not exists SCH_USER (
     id serial primary key,
     token UUID unique default gen_random_uuid(),
     email varchar(50) unique CHECK (email LIKE '%@%'),
-    password varchar(30),
-    name varchar(30),
+    password varchar(250),
+    name varchar(200),
     birthday date check (date(CURRENT_TIMESTAMP) >= birthday + interval '18 year'),
-    availability varchar(15) default 'none' check (availability in ('available','unavailable','none')),
+    availability varchar(15) not null default 'none' /*check (availability in ('available','unavailable','none'))*/,
     comp_id int,
     foreign key(comp_id) references COMPANY(id)
 );

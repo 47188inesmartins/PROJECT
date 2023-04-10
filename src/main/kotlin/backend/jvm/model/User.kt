@@ -1,7 +1,8 @@
 package backend.jvm.model
 
 import jakarta.persistence.*
-import java.util.*
+import java.sql.Date
+import java.util.UUID
 
 /**
  *
@@ -25,8 +26,9 @@ class User {
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         val id: Int? = null
 
+        @GeneratedValue(strategy = GenerationType.UUID)
         @Column(name = "token")
-        val token: String? = null
+        var token: UUID? = null
 
         @Column(name = "email")
         val email: String
@@ -69,7 +71,7 @@ class User {
         @JoinTable(
                 name = "appointment_user",
                 joinColumns = [JoinColumn(name = "user_id")],
-                inverseJoinColumns = [JoinColumn(name = "app_id")]
+                inverseJoinColumns = [JoinColumn(name = "appointment_id")]
         )
         val appointment: List<Appointment>?
 
@@ -78,21 +80,22 @@ class User {
                 this.email = ""
                 this.password = ""
                 this.clientName = ""
-                this.birthday = java.sql.Date.valueOf("2001-01-01")
+                this.birthday = Date.valueOf("2001-01-01")
                 this.services = null
                 this.availability = ""
                 this.compId = null
                 this.appointment = null
         }
 
-        constructor(email:String,
-                    password:String,
-                    clientName:String,
-                    birth:Date,
-                    serv : List<Services>,
-                    availability: String,
-                    company : Company,
-                    appointments: List<Appointment>
+        constructor(
+                email:String,
+                password:String,
+                clientName:String,
+                birth:Date,
+                serv: List<Services>,
+                availability: String,
+                company: Company,
+                appointments: List<Appointment>
         ){
                 this.email = email
                 this.password = password
@@ -101,6 +104,24 @@ class User {
                 this.services = serv
                 this.availability = availability
                 this.compId = company
+                this.appointment = appointments
+        }
+
+        constructor(
+                email:String,
+                password:String,
+                clientName:String,
+                birth:Date,
+                serv: List<Services>,
+                appointments: List<Appointment>
+        ){
+                this.email = email
+                this.password = password
+                this.clientName = clientName
+                this.birthday = birth
+                this.services = serv
+                this.availability = "none"
+                this.compId = null
                 this.appointment = appointments
         }
 

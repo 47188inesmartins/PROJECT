@@ -6,18 +6,18 @@ insert into company_numbers(phone_number, cid)
 values('218536543',1);
 values('961234567',1);
 
-insert into SCH_USER(token,email,password,name,birthday)
-values('4f298735-5893-4199-a179-3af3fabc38b8','user@gmail.com','senha_segura','user','2001-01-01');
+insert into SCH_USER(token,email,password,name,birthday,availability,comp_id)
+values('4f298735-5893-4199-a179-3af3fabc38b8','user@gmail.com','senha_segura','user','2001-01-01','available',1);
 
 
 insert into u_role(name)
-values('user');
+values('employee');
 
 insert into SCHEDULE(comp_id)
 values(1);
 
-insert into APPOINTMENT (number_app_people, app_hour, availability, app_date, sid, uid)
-values(1,'12:00','available','2023-11-11',1,1);
+insert into APPOINTMENT (app_hour, app_date, sid, uid)
+values('12:00','2023-11-11',1,1);
 
 
 insert into SERVICE (service_name, duration, number_max, price, cid)
