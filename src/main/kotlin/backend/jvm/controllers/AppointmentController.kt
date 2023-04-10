@@ -4,6 +4,7 @@ import backend.jvm.controllers.json.AppointmentResponse
 import backend.jvm.model.Appointment
 import backend.jvm.services.AppointmentServices
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -23,6 +24,12 @@ class AppointmentController {
     @Autowired
     lateinit var appointmentServices: AppointmentServices
 
+/*
+
+{
+"id":1
+}
+ */
     @ResponseBody
     @PostMapping
     fun addAppointment(@RequestBody appointment: Appointment): ResponseEntity<AppointmentResponse> {

@@ -24,7 +24,7 @@ class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    var id: Int? = null
+    var id: Int = 0
 
     /*
     @Column(name = "number_app_people")
