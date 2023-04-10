@@ -2,6 +2,8 @@ BEGIN;
 
 create schema if not exists public;
 
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
 create table if not exists COMPANY (
    id serial primary key,
    nif varchar(9) unique,
@@ -34,7 +36,7 @@ create table if not exists SCH_USER (
 
 create table if not exists SCH_USER (
     id serial primary key,
-    token UUID unique default gen_random_uuid(),
+    token UUID unique,
     email varchar(50) unique CHECK (email LIKE '%@%'),
     password varchar(250),
     name varchar(200),

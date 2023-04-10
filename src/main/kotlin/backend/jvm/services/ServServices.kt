@@ -6,6 +6,7 @@ import backend.jvm.repository.ServiceRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.sql.Time
+import java.util.*
 
 @Service
 class ServServices {
@@ -19,7 +20,7 @@ class ServServices {
 
 
     fun getServiceById(id:Int): Services {
-        return serviceRepository.findById(id).get()
+        return serviceRepository.getServicesById(id)
     }
 
     /*

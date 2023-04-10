@@ -11,7 +11,7 @@ class Services{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    var id: Int? = null
+    var id: Int = 0
 
     @Column(name = "service_name")
     val name: String
@@ -26,11 +26,11 @@ class Services{
     @Column(name = "price")
     val price: Double
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cid")
     val cid : Company?
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "service_appointment",
         joinColumns = [JoinColumn(name = "service_id")],
@@ -38,7 +38,7 @@ class Services{
     )
     val appointment: List<Appointment>?
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "service_days",
         joinColumns = [JoinColumn(name = "id_service")],
@@ -46,7 +46,7 @@ class Services{
     )
     val day: List<Day>?
 
-    @ManyToMany(mappedBy = "services")
+    @ManyToMany(mappedBy = "services", fetch = FetchType.LAZY)
     val user: List<User>?
 
     constructor(){
@@ -70,4 +70,5 @@ class Services{
         this.appointment = appointment
         this.day = days
     }
+
 }

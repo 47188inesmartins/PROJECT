@@ -1,5 +1,6 @@
 package backend.jvm.controllers
 
+import backend.jvm.controllers.json.AppointmentResponse
 import backend.jvm.model.Appointment
 import backend.jvm.services.AppointmentServices
 import org.springframework.beans.factory.annotation.Autowired
@@ -24,9 +25,21 @@ class AppointmentController {
 
     @ResponseBody
     @PostMapping
-    fun addAppointment(@RequestBody appointment: Appointment): Appointment{
-        return appointmentServices.addAppointment(appointment)
+    fun addAppointment(@RequestBody appointment: Appointment): ResponseEntity<AppointmentResponse> {
+        return try {
+            //val app1 = Json.decodeFromString<AppointmentRequest>(appointment.toString())
+            //val req = Appointment(appointment.appHour, appointment.appDate, appointment.sid, appointment.uid, listOf())
+            val app = appointmentServices.addAppointment(appointment)
+            val response = AppointmentResponse(app.id, app.appHour, app.appDate!!, app.sid!!.id!!, app.uid?.id)
+            ResponseEntity.status(201)
+                .body(response)
+
+        } catch (e: Exception) {
+            ResponseEntity.status(400)
+                .body(null)
+        }
     }
+
 
     @DeleteMapping("/{id}")
     fun deleteAppointment(@PathVariable id: Int): Boolean {

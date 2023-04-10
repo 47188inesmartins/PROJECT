@@ -2,7 +2,7 @@ package backend.jvm.model
 
 import jakarta.persistence.*
 import java.sql.Time
-import java.util.Date
+import java.sql.Date
 
 
 /**
@@ -26,10 +26,12 @@ class Appointment {
     @Column(name = "id")
     var id: Int? = null
 
-   /* @Column(name = "number_app_people")
+    /*
+    @Column(name = "number_app_people")
     @GeneratedValue
     var numberAppPeople: Int? = 1
-*/
+    */
+
     @Column(name = "app_hour")
     val appHour : Time
 
@@ -37,7 +39,7 @@ class Appointment {
     @Temporal(TemporalType.DATE)
     val appDate: Date?
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sid")  // nome da foreign key
     val sid : Schedule?
 
@@ -49,7 +51,6 @@ class Appointment {
     val services: List<Services>?
 
     constructor() {
-        this.id = null
         this.appHour = Time.valueOf("00:00:00")
         this.appDate = null
         this.sid = null

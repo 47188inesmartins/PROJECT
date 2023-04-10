@@ -9,13 +9,12 @@ import java.util.UUID
  * User entity
  *
  * @property id the User primary key
- * @property token the User token
- * @property email the User email
+ * @property token the user token
+ * @property email the user email
  * @property password the User password
- * @property username the User username
- * @property clientName the User name
+ * @property name the user's name
  * @property birthday the User birthday
- * @property companyId null if the user has the role of 'guest' or 'client'. the company where the user works
+ * @property compId null if the user has the role of 'guest' or 'client'. the company where the user works
  */
 
 @Entity
@@ -26,18 +25,17 @@ class User {
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         val id: Int? = null
 
-        @GeneratedValue(strategy = GenerationType.UUID)
-        @Column(name = "token")
-        var token: UUID? = null
+        @Column(name = "token", unique = true)
+        var token: UUID
 
-        @Column(name = "email")
+        @Column(name = "email", unique = true)
         val email: String
 
         @Column(name = "password")
         var password: String
 
         @Column(name = "name")
-        val clientName: String
+        val name: String
 
         @Column(name = "birthday")
         val birthday: Date
@@ -77,9 +75,10 @@ class User {
 
 
         constructor(){
+                this.token = UUID.randomUUID()
                 this.email = ""
                 this.password = ""
-                this.clientName = ""
+                this.name = ""
                 this.birthday = Date.valueOf("2001-01-01")
                 this.services = null
                 this.availability = ""
@@ -97,9 +96,10 @@ class User {
                 company: Company,
                 appointments: List<Appointment>
         ){
+                this.token = UUID.randomUUID()
                 this.email = email
                 this.password = password
-                this.clientName = clientName
+                this.name = clientName
                 this.birthday = birth
                 this.services = serv
                 this.availability = availability
@@ -115,9 +115,10 @@ class User {
                 serv: List<Services>,
                 appointments: List<Appointment>
         ){
+                this.token = UUID.randomUUID()
                 this.email = email
                 this.password = password
-                this.clientName = clientName
+                this.name = clientName
                 this.birthday = birth
                 this.services = serv
                 this.availability = "none"
