@@ -81,7 +81,7 @@ class User {
                 this.name = ""
                 this.birthday = Date.valueOf("2001-01-01")
                 this.services = null
-                this.availability = ""
+                this.availability = AVAILABILITY_STATE
                 this.compId = null
                 this.appointment = null
         }
@@ -102,7 +102,7 @@ class User {
                 this.name = clientName
                 this.birthday = birth
                 this.services = serv
-                this.availability = availability
+                this.availability = AVAILABILITY_STATE
                 this.compId = company
                 this.appointment = appointments
         }
@@ -121,9 +121,13 @@ class User {
                 this.name = clientName
                 this.birthday = birth
                 this.services = serv
-                this.availability = "none"
+                this.availability = AVAILABILITY_STATE
                 this.compId = null
                 this.appointment = appointments
+        }
+
+        companion object{
+                const val AVAILABILITY_STATE = "none"
         }
 
 }

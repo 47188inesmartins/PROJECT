@@ -10,3 +10,5 @@ quando muda-se de role de client pa employee
 mudar a availability de none pa available
 
 availability do user
+
+nif n ta unique

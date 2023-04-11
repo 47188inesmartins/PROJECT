@@ -32,16 +32,16 @@ class Appointment {
     var numberAppPeople: Int? = 1
     */
 
-    @Column(name = "app_hour")
+    @Column(name = "app_hour", nullable = false)
     val appHour : Time
 
     @Column(name = "app_date")
     @Temporal(TemporalType.DATE)
-    val appDate: Date?
+    val appDate: Date
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sid")  // nome da foreign key
-    val sid : Schedule?
+    val sid : Schedule
 
     @ManyToOne
     @JoinColumn(name = "uid")
@@ -52,11 +52,13 @@ class Appointment {
 
     constructor() {
         this.appHour = Time.valueOf("00:00:00")
-        this.appDate = null
-        this.sid = null
+        this.appDate = Date.valueOf("2000-01-01")
+        this.sid = Schedule()
         this.uid = null
         this.services = listOf()
     }
+
+
 
     constructor(appHour: Time, appDate : Date, sid: Schedule, uid: User?, services: List<Services>) {
         this.appHour = appHour

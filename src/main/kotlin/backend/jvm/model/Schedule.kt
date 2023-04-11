@@ -9,7 +9,7 @@ class Schedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    val id: Int? = null
+    val id: Int = 0
 
     @OneToOne
     @JoinColumn(name = "comp_id")

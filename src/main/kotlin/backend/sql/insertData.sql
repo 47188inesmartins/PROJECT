@@ -10,6 +10,10 @@ insert into SCH_USER(token,email,password,name,birthday,availability,comp_id)
 values('4f298735-5893-4199-a179-3af3fabc38b8','user@gmail.com','senha_segura','user','2001-01-01','available',1);
 
 
+select * from appointment a where a.sid=1 and a.app_date='2001-06-11' and a.app_hour='21:31:34';
+
+
+
 insert into u_role(name)
 values('employee');
 
