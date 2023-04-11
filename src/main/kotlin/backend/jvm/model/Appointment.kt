@@ -48,22 +48,21 @@ class Appointment {
     val uid : User?
 
     @ManyToMany(mappedBy = "appointment")
-    val services: List<Services>?
+    val services: List<Services>
 
     constructor() {
         this.appHour = Time.valueOf("00:00:00")
         this.appDate = null
         this.sid = null
         this.uid = null
-        this.services = null
+        this.services = listOf()
     }
 
-    constructor(appHour: Time, appDate : Date, sid: Schedule?, uid: User?, services: List<Services>?) {
+    constructor(appHour: Time, appDate : Date, sid: Schedule, uid: User?, services: List<Services>) {
         this.appHour = appHour
         this.appDate = appDate
         this.sid = sid
         this.uid = uid
         this.services = services
     }
-
 }
