@@ -45,4 +45,13 @@ class Day {
             this.weekDays = weekDays
             this.sid = sid
         }
+
+        constructor(id: Int, beginHour : Time, endHour: Time, interval: Time, weekDays: String, sid: Schedule){
+            this.id = id
+            this.beginHour = beginHour
+            this.endHour = endHour
+            this.interval = interval
+            this.weekDays = weekDays
+            this.sid = sid
+        }
 }

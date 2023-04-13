@@ -19,57 +19,20 @@ class ServiceController {
     @PostMapping
     fun addService(@RequestBody services: Services): ResponseEntity<ServicesResponse> {
         return try{
-            val service = servServices.addService(services)
-            val listApp = service.appointment?.map {
-                it.id
-            }
+            val response = mapToResponse(servServices.addService(services))
 
-            val dayApp = service.user?.map {
-                it.id!!
-            }
-
-            val userApp = service.day?.map {
-                it.id!!
-            }
-            val response = ServicesResponse(service.id,service.name,service.duration,service.numberMax,service.price, service.cid?.id!!, listApp!!, dayApp!!, userApp!!)
             ResponseEntity.status(201)
                 .body(response)
         }catch (e: Exception){
             ResponseEntity.status(400)
                 .body(null)
         }
-
     }
 
     @GetMapping("/{id}")
     fun getService(@PathVariable id: Int): ResponseEntity<ServicesResponse> {
-
        return try {
-           val service = servServices.getServiceById(id)
-
-           val listApp = service.appointment?.map {
-               it.id
-           }
-
-           val dayApp = service.user?.map {
-               it.id!!
-           }
-
-           val userApp = service.day?.map {
-               it.id!!
-           }
-
-           val response = ServicesResponse(
-               service.id,
-               service.name,
-               service.duration,
-               service.numberMax,
-               service.price,
-               service.cid?.id!!,
-               listApp!!,
-               userApp!!,
-               dayApp!!
-           )
+           val response = mapToResponse(servServices.addService(servServices.getServiceById(id)))
            ResponseEntity.status(200)
                .body(response)
        }catch(e: Exception){
@@ -78,29 +41,85 @@ class ServiceController {
        }
     }
 
-    @GetMapping("/employee/{id}")
-    fun getEmployeeForServices(@PathVariable id: Int): Services {
-        return servServices.getEmployeeForService(id)
+    @GetMapping("/{id}/employee")
+    fun getEmployeeForServices(@PathVariable id: Int): ResponseEntity<ServicesResponse> {
+        return try {
+            val response = mapToResponse(servServices.addService(servServices.getServiceById(id)))
+            ResponseEntity.status(200)
+                .body(response)
+        }catch(e: Exception){
+            ResponseEntity.status(400)
+                .body(null)
+        }
     }
 
-    @PutMapping("/price/{id}")
-    fun updatePrice(@PathVariable id: Int, @RequestParam price: Double): Services {
-        return servServices.updatePrice(id, price)
+    @PutMapping("/{id}/price")
+    fun updatePrice(@PathVariable id: Int, @RequestParam price: Double): ResponseEntity<Long> {
+        return try {
+            val response = servServices.updatePrice(id, price)
+            ResponseEntity.status(200)
+                .body(response)
+        }catch(e: Exception){
+            ResponseEntity.status(400)
+                .body(null)
+        }
     }
 
-    @PutMapping("/duration/{id}")
-    fun updateDuration(@PathVariable id: Int, @RequestParam duration: String): Services {
-        return servServices.updateDuration(id, duration)
+    @PutMapping("/{id}/duration")
+    fun updateDuration(@PathVariable id: Int, @RequestParam duration: String): ResponseEntity<ServicesResponse>{
+        return try {
+            val response = mapToResponse(servServices.updateDuration(id, duration))
+            ResponseEntity.status(200)
+                .body(response)
+        }catch(e: Exception){
+            ResponseEntity.status(400)
+                .body(null)
+        }
     }
 
-    @PutMapping("/people/{id}")
-    fun updateDuration(@PathVariable id: Int, @RequestParam numberPeople: Int): Services {
-        return servServices.updateMaxNumber(id, numberPeople)
+    @GetMapping("/{id}/appointment/{idA}/available")
+    fun verifyAvailability(@PathVariable id: Int, @PathVariable idA: Int): ResponseEntity<String>{
+        return try {
+            val response = servServices.verifyAvailability(id,idA)
+            ResponseEntity.status(200)
+                .body(response)
+        }catch(e: Exception){
+            ResponseEntity.status(400)
+                .body(null)
+        }
+    }
+
+
+    @PutMapping("/{id}/people")
+    fun updateMaxNumber(@PathVariable id: Int, @RequestParam numberPeople: Int): ResponseEntity<ServicesResponse> {
+        return try {
+            val response = mapToResponse(servServices.updateMaxNumber(id, numberPeople))
+            ResponseEntity.status(200)
+                .body(response)
+        }catch(e: Exception){
+            ResponseEntity.status(400)
+                .body(null)
+        }
     }
 
     @DeleteMapping
-    fun deleteServices(@RequestBody service: Services) {
-        servServices.delete(service)
+    fun deleteServices(@RequestBody service: Services): ResponseEntity<String> {
+        return try {
+             servServices.delete(service)
+            ResponseEntity.status(200)
+                .body("Service was deleted")
+        }catch(e: Exception){
+            ResponseEntity.status(400)
+                .body(null)
+        }
+    }
+
+    fun mapToResponse(services: Services): ServicesResponse {
+        val listApp = services.appointment?.map { it.id }
+        val dayApp = services.user?.map { it.id!! }
+        val userApp = services.day?.map { it.id }
+
+        return ServicesResponse(services.id,services.name,services.duration,services.numberMax,services.price, services.cid?.id!!, listApp!!, dayApp!!, userApp!!)
     }
 }
 

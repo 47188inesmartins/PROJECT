@@ -20,4 +20,9 @@ class RoleController {
     fun addRole(@RequestBody role: Role): Role{
         return roleServices.addRole(role)
     }
+
+    fun deleteRole(@RequestBody role: Role): Role{
+        TODO()
+    }
+
 }

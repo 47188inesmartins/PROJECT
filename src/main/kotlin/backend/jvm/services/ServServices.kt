@@ -23,6 +23,14 @@ class ServServices {
         return serviceRepository.getServicesById(id)
     }
 
+    fun verifyAvailability(idService: Int, idApp: Int): String {
+        val countAppointment = serviceRepository.countAppointments(idService, idApp)
+        val getService = getServiceById(idService)
+        if(getService.numberMax == countAppointment){
+            return serviceRepository.updateAvailability(idService, idApp, "unavailable")
+        }
+        return serviceRepository.updateAvailability(idService, idApp, "available")
+    }
     /*
     fun findByEmployee(employee: List<Employee>):Services{
         return serviceRepository.findAllByEmployee(employee)
@@ -38,6 +46,11 @@ class ServServices {
 
     fun updateDuration(idService: Int,duration: String):Services{
         return serviceRepository.updateDuration(idService,Time.valueOf(duration))
+    }
+
+    fun updateAvailability(idService: Int,duration: String){
+    TODO()
+    //  serviceRepository.update
     }
 
     fun updateMaxNumber(idService: Int,number: Int):Services{

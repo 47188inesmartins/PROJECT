@@ -22,3 +22,4 @@ drop table if exists SERVICE_DAYS cascade;
 drop table if exists appointment_user cascade;
 
 COMMIT;
+
