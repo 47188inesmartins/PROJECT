@@ -6,6 +6,7 @@ import backend.jvm.services.VacationService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.sql.Date
 
 
 @RestController
@@ -42,14 +43,23 @@ class VacationController {
         vacationServices.deleteVacation(vacation)
     }
 
-    @PutMapping("/date-begin/{id}")
-    fun updateBeginDate(@PathVariable id: Int, @RequestParam date: String): Vacation {
-        return vacationServices.changeBeginDate(id,date)
+    @PutMapping("/{id}/date-begin")
+    fun updateBeginDate(@PathVariable id: Int, @RequestParam date: String): ResponseEntity<Date> {
+        return try {
+            ResponseEntity.status(200).body(vacationServices.changeBeginDate(id,date))
+        }catch (e: Exception){
+            println("exception = $e")
+            ResponseEntity.status(400).body(null)
+        }
     }
 
-    @PutMapping("/date-end/{id}")
-    fun updateEndDate(@PathVariable id: Int, @RequestParam date: String): Vacation {
-        return vacationServices.changeEndDate(id,date)
+    @PutMapping("/{id}/date-end")
+    fun updateEndDate(@PathVariable id: Int, @RequestParam date: String): ResponseEntity<Date> {
+        return try {
+            ResponseEntity.status(200).body(vacationServices.changeEndDate(id,date))
+        }catch (e: Exception){
+            ResponseEntity.status(400).body(null)
+        }
     }
 
 }

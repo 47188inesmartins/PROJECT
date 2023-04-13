@@ -25,14 +25,14 @@ class VacationService {
         vacationRepository.delete(vacation)
     }
 
-    fun changeBeginDate(id:Int,date: String): Vacation {
+    fun changeBeginDate(id:Int, date: String): Date {
         val getVacation = vacationRepository.getReferenceById(id)
         val newDate = Date.valueOf(date)?: throw Exception("Invalid new begin date")
-        if(!getVacation.dateEnd.after(newDate)) throw Exception("Invalid new begin date")
+        if(!getVacation.dateBegin.after(newDate)) throw Exception("Invalid new begin date")
         return vacationRepository.changeBeginDate(id, newDate)
     }
 
-    fun changeEndDate(id:Int,date: String): Vacation {
+    fun changeEndDate(id:Int,date: String): Date {
         val getVacation = vacationRepository.getReferenceById(id)
         val newDate = Date.valueOf(date) ?: throw Exception("Invalid new end date")
         if(!getVacation.dateBegin.before(newDate)) throw Exception("Invalid new end date")
