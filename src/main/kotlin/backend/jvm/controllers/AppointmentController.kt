@@ -66,7 +66,7 @@ class AppointmentController {
             ResponseEntity.status(200)
                 .body(response)
         }catch (e: Exception){
-            println("erro=")
+            println("exception = $e")
             ResponseEntity.status(400)
                 .body(null)
         }
@@ -78,7 +78,7 @@ class AppointmentController {
             val h = Time.valueOf(hour)
             val d = Date.valueOf(date)
             val app = appointmentServices.getAppointmentByDateAndHour(h, sid, d)
-            app.forEach { println("app= " + it) }
+            app.forEach { println("app = " + it) }
             val response = app.map { AppointmentResponse(it.id, it.appHour, it.appDate, it.sid.id, it.uid?.id) }
             ResponseEntity.status(200)
                 .body(response)
@@ -89,26 +89,6 @@ class AppointmentController {
                 .body(null)
         }
     }
-
-
- /*   @GetMapping
-    fun getAppointmentsByDateAndHour(@RequestBody appointment: Appointment): ResponseEntity<List<AppointmentResponse>>{
-        return try {
-            println("appoint,ent = "+ appointment.appHour + appointment.appDate)
-            val app = appointmentServices.getAppointmentByDateAndHour(appointment.appHour, appointment.sid.id, appointment.appDate)
-            app.forEach { println("app= " + it) }
-            val response = app.map { AppointmentResponse(it.id, it.appHour, it.appDate, it.sid.id, it.uid?.id) }
-            ResponseEntity.status(200)
-                .body(response)
-
-        }catch (e: Exception){
-            println("error=$e")
-            ResponseEntity.status(400)
-                .body(null)
-        }
-    }
-*/
-
 
 
     /*@GetMapping("/client")
@@ -121,15 +101,17 @@ class AppointmentController {
         return appointmentServices.findAllByAppHourAndSidAndAppDate(time, sid, date)
     }
 
-    @PutMapping("/{id}/availability")
-    fun changeAvailability(@PathVariable id: Int, @RequestBody availability: String): Appointment {
-        return appointmentServices.editAvailability(id, availability)
-    }
-
-
     @PutMapping("/{id}/scheduled")
     fun changeNumberOfScheduledPeople(@PathVariable id: Int, @RequestParam number: Int): Appointment{
         return appointmentServices.editNumberAppPeople(id, number)
     }
-     */
+
+    @PutMapping("/{id}/availability")
+    fun changeAvailability(@PathVariable id: Int, @RequestBody availability: String): Appointment {
+        return appointmentServices.editAvailability(id, availability)
+    }
+    */
+
+
+
 }

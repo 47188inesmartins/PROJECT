@@ -1,10 +1,11 @@
 package backend.jvm.controllers
 
+import backend.jvm.controllers.json.ScheduleResponse
 import backend.jvm.model.Schedule
 import backend.jvm.model.Services
-import backend.jvm.model.User
 import backend.jvm.services.ScheduleServices
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 
@@ -17,8 +18,14 @@ class ScheduleController {
 
     @ResponseBody
     @PostMapping
-    fun addNewSchedule(@RequestBody schedule: Schedule):Schedule{
-        return scheduleServices.addSchedule(schedule)
+    fun addNewSchedule(@RequestBody schedule: Schedule): ResponseEntity<ScheduleResponse> {
+        return try{
+            val addedSchedule = scheduleServices.addSchedule(schedule)
+            val response = ScheduleResponse(addedSchedule.id, addedSchedule.compIdSch.id)
+            ResponseEntity.status(201).body(response)
+        }catch (e: Exception){
+            ResponseEntity.status(400).body(null)
+        }
     }
 
     @DeleteMapping("/{id}")

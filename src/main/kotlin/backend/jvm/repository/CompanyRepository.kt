@@ -15,10 +15,6 @@ interface CompanyRepository : JpaRepository<Company, Int>{
     @Query(value = "from service s where s.cid = :id", nativeQuery = true)
     fun getAllServices(@Param("id") id: Int): List<Services>
 
-    /*  @Query(value = "from employee e where e.comp_id = :id")
-    fun getAllEmployees(@Param("id") id: Int): List<Employee>
-    */
-
     @Query(value = "from appointment a where a.sid = (select id from schedule s where s.comp_id = :id)", nativeQuery = true)
     fun getAllAppointments(@Param("id") id: Int): List<Appointment>
 
@@ -30,7 +26,7 @@ interface CompanyRepository : JpaRepository<Company, Int>{
             "from sch_day d inner join schedule s on d.sid = s.id and s.comp_id=:id", nativeQuery = true)
     fun getOpenDays(@Param("id") id: Int): List<String>
 
-    @Query(value = "from vacation v where v.sid = (select id from schedule s where s.comp_id = :id)", nativeQuery = true)
+    @Query(value = "select * from vacation v where v.sid = (select id from schedule s where s.comp_id = :id)", nativeQuery = true)
     fun getVacation(@Param("id") id: Int): List <Vacation>
 
     @Query(value = "update company c set c.address=:address where c.id = :id", nativeQuery = true)

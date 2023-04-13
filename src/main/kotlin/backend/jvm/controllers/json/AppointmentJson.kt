@@ -2,7 +2,7 @@ package backend.jvm.controllers.json
 
 import backend.jvm.model.Services
 import kotlinx.serialization.Serializable
-import java.util.Date
+import java.sql.Date
 import java.sql.Time
 
 

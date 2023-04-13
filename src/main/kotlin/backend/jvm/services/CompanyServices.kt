@@ -50,11 +50,18 @@ class CompanyServices {
         return companyRepository.getAppointment(id, date, time)
     }
 
-    fun getOpenDays(id: Int): List<Day>{
+    fun getOpenDays(id: Int): List<String>{
+        println("id = $id")
         return companyRepository.getOpenDays(id)
     }
 
     fun getVacation(id: Int): List<Vacation>{
+        /*a.map { element ->
+            element[0] as Int
+            element[1] as Time,
+            element[]
+
+        }*/
         return companyRepository.getVacation(id)
     }
 

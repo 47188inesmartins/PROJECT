@@ -9,6 +9,15 @@ values('961234567',1);
 insert into SCH_USER(token,email,password,name,birthday,availability,comp_id)
 values('4f298735-5893-4199-a179-3af3fabc38b8','user@gmail.com','senha_segura','user','2001-01-01','available',1);
 
+begin;
+select * from vacation v where v.sid = (select id from schedule s where s.comp_id = 1);
+commit;
+rollback ;
+
+begin;
+update service set price =40 where id=1;
+commit;
+
 
 select * from appointment a where a.sid=1 and a.app_date='2001-06-11' and a.app_hour='21:31:34';
 

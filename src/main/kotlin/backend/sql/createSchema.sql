@@ -67,7 +67,7 @@ create table if not exists USER_ROLE(
 
 create table if not exists SCHEDULE (
     id serial primary key,
-    comp_id int,
+    comp_id int unique,
     foreign key(comp_id) references COMPANY(id)
 );
 

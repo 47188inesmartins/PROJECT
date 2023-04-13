@@ -20,7 +20,7 @@ class ServServices {
 
 
     fun getServiceById(id:Int): Services {
-        return serviceRepository.getServicesById(id)
+     return serviceRepository.getServicesById(id)
     }
 
     fun verifyAvailability(idService: Int, idApp: Int): String {
@@ -40,7 +40,7 @@ class ServServices {
         return serviceRepository.getEmployeeForService(idService)
     }
 
-    fun updatePrice(idService: Int,price: Double):Services{
+    fun updatePrice(idService: Int,price: Double):Long{
         return serviceRepository.updatePrice(idService,price)
     }
 

@@ -9,19 +9,19 @@ class Day {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         @Column(name = "id")
-        var id: Int? = null
+        var id: Int = 0
 
         @Temporal(TemporalType.TIME)
         @Column(name = "begin_hour")
-        val beginHour: Time?
+        val beginHour: Time
 
         @Temporal(TemporalType.TIME)
         @Column(name = "end_hour")
-        val endHour: Time?
+        val endHour: Time
 
         @Temporal(TemporalType.TIME)
         @Column(name = "day_interval")
-        val interval: Time?
+        val interval: Time
 
         @Column(name = "week_days")
         val weekDays: String
@@ -31,9 +31,9 @@ class Day {
         val sid : Schedule?
 
         constructor(){
-            this.beginHour = null
-            this.endHour = null
-            this.interval = null
+            this.beginHour = Time.valueOf("00:00:00")
+            this.endHour = Time.valueOf("00:00:00")
+            this.interval = Time.valueOf("00:00:00")
             this.weekDays = "MON"
             this.sid = null
         }

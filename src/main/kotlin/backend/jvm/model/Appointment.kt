@@ -58,8 +58,6 @@ class Appointment {
         this.services = listOf()
     }
 
-
-
     constructor(appHour: Time, appDate : Date, sid: Schedule, uid: User?, services: List<Services>) {
         this.appHour = appHour
         this.appDate = appDate

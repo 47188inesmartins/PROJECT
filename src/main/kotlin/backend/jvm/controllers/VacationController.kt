@@ -1,8 +1,10 @@
 package backend.jvm.controllers
 
+import backend.jvm.controllers.json.VacationResponse
 import backend.jvm.model.Vacation
 import backend.jvm.services.VacationService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 
@@ -14,8 +16,25 @@ class VacationController {
     lateinit var vacationServices:VacationService
 
     @PostMapping
-    fun addVacation(@RequestBody vacation: Vacation):Vacation {
-        return vacationServices.addVacation(vacation)
+    fun addVacation(@RequestBody vacation: Vacation): ResponseEntity<VacationResponse> {
+        return try {
+            val vac = vacationServices.addVacation(vacation)
+            val response = VacationResponse(vac.id, vac.dateBegin, vac.dateEnd, vac.sid.id)
+            ResponseEntity.status(201).body(response)
+        }catch (e: Exception){
+            ResponseEntity.status(400).body(null)
+        }
+    }
+
+    @GetMapping("/{id}")
+    fun getVacation(@PathVariable id: Int): ResponseEntity<VacationResponse>{
+        return try{
+            val vac = vacationServices.getVacation(id)
+            val response = VacationResponse(vac.id, vac.dateBegin, vac.dateEnd, vac.sid.id)
+            ResponseEntity.status(200).body(response)
+        }catch (e: Exception){
+            ResponseEntity.status(400).body(null)
+        }
     }
 
     @DeleteMapping

@@ -13,7 +13,7 @@ class VacationService {
     lateinit var vacationRepository: VacationRepository
 
     fun getVacation(id: Int): Vacation{
-        return vacationRepository.findFirstById(id)
+        return vacationRepository.findById(id).get()
     }
 
     fun addVacation(vacation: Vacation):Vacation{
