@@ -6,6 +6,7 @@ import backend.jvm.services.ServServices
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.time.Duration
 import java.util.*
 
 
@@ -20,7 +21,6 @@ class ServiceController {
     fun addService(@RequestBody services: Services): ResponseEntity<ServicesResponse> {
         return try{
             val response = mapToResponse(servServices.addService(services))
-
             ResponseEntity.status(201)
                 .body(response)
         }catch (e: Exception){
@@ -65,10 +65,22 @@ class ServiceController {
         }
     }
 
-    @PutMapping("/{id}/duration")
-    fun updateDuration(@PathVariable id: Int, @RequestParam duration: String): ResponseEntity<ServicesResponse>{
+    @PutMapping("/{id}/apointment/{idA}/avaibility")
+    fun updateAvailability(@PathVariable id: Int,@PathVariable idA: Int, @RequestParam price: String): ResponseEntity<String> {
         return try {
-            val response = mapToResponse(servServices.updateDuration(id, duration))
+            val response = servServices.updateAvailability(id,idA, price)
+            ResponseEntity.status(200)
+                .body(response)
+        }catch(e: Exception){
+            ResponseEntity.status(400)
+                .body(null)
+        }
+    }
+
+    @PutMapping("/{id}/duration")
+    fun updateDuration(@PathVariable id: Int, @RequestParam duration: String): ResponseEntity<Duration>{
+        return try {
+            val response = servServices.updateDuration(id, duration)
             ResponseEntity.status(200)
                 .body(response)
         }catch(e: Exception){
@@ -89,11 +101,10 @@ class ServiceController {
         }
     }
 
-
-    @PutMapping("/{id}/people")
-    fun updateMaxNumber(@PathVariable id: Int, @RequestParam numberPeople: Int): ResponseEntity<ServicesResponse> {
+    @PutMapping("/{id}/appointment/{idA}/availability")
+    fun updateMaxNumber(@PathVariable id: Int,@PathVariable idA: Int, @RequestBody availability: String): ResponseEntity<String> {
         return try {
-            val response = mapToResponse(servServices.updateMaxNumber(id, numberPeople))
+            val response = servServices.updateAvailability(id,idA,availability)
             ResponseEntity.status(200)
                 .body(response)
         }catch(e: Exception){

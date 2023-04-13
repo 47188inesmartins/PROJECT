@@ -47,15 +47,7 @@ class User {
         @JoinColumn(name = "comp_id")
         val compId: Company?
 
-        /*
-        @ManyToMany
-        @JoinTable(
-                name = "user_role",
-                joinColumns = [JoinColumn(name = "user_id")],
-                inverseJoinColumns = [JoinColumn(name = "role_id")]
-        )
-        val role: List<Role>?
-        */
+
 
         @ManyToMany
         @JoinTable(

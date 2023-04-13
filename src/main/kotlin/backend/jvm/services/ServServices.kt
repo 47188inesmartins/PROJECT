@@ -6,6 +6,7 @@ import backend.jvm.repository.ServiceRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.sql.Time
+import java.time.Duration
 import java.util.*
 
 @Service
@@ -17,8 +18,6 @@ class ServServices {
     fun addService(services: Services):Services{
         return serviceRepository.save(services)
     }
-
-
     fun getServiceById(id:Int): Services {
      return serviceRepository.getServicesById(id)
     }
@@ -44,16 +43,15 @@ class ServServices {
         return serviceRepository.updatePrice(idService,price)
     }
 
-    fun updateDuration(idService: Int,duration: String):Services{
+    fun updateDuration(idService: Int,duration: String): Duration {
         return serviceRepository.updateDuration(idService,Time.valueOf(duration))
     }
 
-    fun updateAvailability(idService: Int,duration: String){
-    TODO()
-    //  serviceRepository.update
+    fun updateAvailability(idService: Int,idApp: Int,availability: String): String{
+        return serviceRepository.updateAvailability(idService,idApp,availability)
     }
 
-    fun updateMaxNumber(idService: Int,number: Int):Services{
+    fun updateMaxNumber(idService: Int,number: Int):Double{
         return serviceRepository.updateMaxNumber(idService,number)
     }
 

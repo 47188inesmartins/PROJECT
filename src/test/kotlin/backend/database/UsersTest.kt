@@ -1,7 +1,9 @@
 package backend.database
 
 import backend.jvm.model.Company
+import backend.jvm.model.Role
 import backend.jvm.model.User
+import backend.jvm.repository.RoleRepository
 import backend.jvm.repository.UserRepository
 import org.junit.jupiter.api.Test
 import org.junit.runner.RunWith
@@ -23,6 +25,9 @@ class UsersTest {
     private lateinit var userRepository: UserRepository
 
     @Autowired
+    private lateinit var roleRepository: RoleRepository
+
+    @Autowired
     private lateinit var entityManager: TestEntityManager
 
 
@@ -37,7 +42,10 @@ class UsersTest {
             listOf()
         )
 
+        val role = Role("user",user)
+
         val userInsert = entityManager.persist(user)
+        val roleInsert = entityManager.persist(role)
         entityManager.flush()
 
         println(userInsert.id)
