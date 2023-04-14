@@ -3,6 +3,7 @@ package backend.jvm.services
 import backend.jvm.model.*
 import backend.jvm.repository.AppointmentRepository
 import backend.jvm.repository.ServiceRepository
+import backend.jvm.services.dto.AppointmentInputDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.sql.Time
@@ -60,6 +61,17 @@ class AppointmentServices {
         return id
     }*/
 
+    fun toAppointment(dto: AppointmentInputDto): Appointment {
+        val appointment = Appointment(
+            dto.appHour,
+            dto.appDate,
+            dto.sid,
+            dto.uid,
+            dto.services
+
+
+        )
+    }
 
     fun changeAvailabilityByPeople(appointment: Appointment,services: Services):Appointment{
         val getAppointment = appointment.id?.let { appointmentRepository.getReferenceById(it) }
@@ -74,18 +86,16 @@ class AppointmentServices {
         return appointment
     }
 
-    fun addAppointment(appointment: Appointment): Appointment {
+    fun addAppointment(appointment: AppointmentInputDto): Appointment {
       //  val existingAppointment = appointmentRepository.findAllByAppDateAndAppHourAndSid(appointment.appDate!!, appointment.appHour, appointment.sid!!)?.lastOrNull()
       /*  if (existingAppointment != null) {
             println(existingAppointment.numberAppPeople)
             appointment.numberAppPeople = existingAppointment.numberAppPeople?.plus(1)
         }
         println("id=" + appointment.id)*/
-        val savedAppointment = appointmentRepository.save(appointment)
+        val app = appointment.toAppointment()
+        val savedAppointment = appointmentRepository.save(app)
         println("save = ${savedAppointment.id}")
-        /*if (savedAppointment.number_app_people == max_number) {
-            appointmentRepository.updateAvailability(savedAppointment.id!!, "unavailable")
-        }*/
         return savedAppointment
     }
 
