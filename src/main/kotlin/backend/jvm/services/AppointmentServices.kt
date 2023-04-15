@@ -3,6 +3,7 @@ package backend.jvm.services
 import backend.jvm.model.*
 import backend.jvm.repository.AppointmentRepository
 import backend.jvm.services.dto.AppointmentInputDto
+import backend.jvm.services.dto.AppointmentOutputDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.sql.Time
@@ -93,13 +94,10 @@ class AppointmentServices {
         return appointment
     }*/
 
-    fun addAppointment(appointment: AppointmentInputDto): Appointment {
+    fun addAppointment(appointment: AppointmentInputDto): AppointmentOutputDto {
         val service = servicesService.getServiceById(appointment.service)
-println(service)
-        val user = if(appointment.userId != null) userService.getUserById(appointment.userId).get() else null
-      println(user)
+        val user = if (appointment.userId != null) userService.getUserById(appointment.userId).get() else null
         val schedule = scheduleService.getSchedule(appointment.scheduleId)!!
-        println("pedido = ${ Time.valueOf(appointment.appHour)}, ${Date.valueOf(appointment.appDate)}, $service, $user, $schedule")
         val app = Appointment(
             appHour = Time.valueOf(appointment.appHour),
             appDate = Date.valueOf(appointment.appDate),
@@ -107,9 +105,17 @@ println(service)
             userId = user,
             serviceDB = service
         )
+
         val savedAppointment = appointmentRepository.save(app)
-        println("save = ${savedAppointment.id}")
-        return savedAppointment
+
+        return AppointmentOutputDto(
+            savedAppointment.id,
+            savedAppointment.appHour,
+            savedAppointment.appDate,
+            savedAppointment.scheduleId.id,
+            savedAppointment.userId?.id,
+            savedAppointment.service.id
+        )
     }
 
     fun getServices(id: Int): List<Int> {
@@ -146,6 +152,12 @@ println(service)
     fun editNumberAppPeople(id: Int, numberAppPeople: Int): Appointment = appointmentRepository.editNumberAppPeople(id, numberAppPeople)
 
  //   fun editAvailability(id: Int, availability: String): Appointment = appointmentRepository.editAvailability(id, availability)
+
+
+
+    fun mapToResponse(appointmentBD : Appointment): AppointmentOutputDto{
+        TODO()
+    }
 
 
 }

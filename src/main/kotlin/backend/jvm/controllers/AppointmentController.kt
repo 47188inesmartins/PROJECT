@@ -4,6 +4,7 @@ import backend.jvm.controllers.json.AppointmentResponse
 import backend.jvm.model.Appointment
 import backend.jvm.services.AppointmentServices
 import backend.jvm.services.dto.AppointmentInputDto
+import backend.jvm.services.dto.AppointmentOutputDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -27,10 +28,9 @@ class AppointmentController {
 
     @ResponseBody
     @PostMapping
-    fun addAppointment(@RequestBody appointment: AppointmentInputDto): ResponseEntity<AppointmentResponse> {
+    fun addAppointment(@RequestBody appointment: AppointmentInputDto): ResponseEntity<AppointmentOutputDto> {
         return try {
-            val app = appointmentServices.addAppointment(appointment)
-            val response = AppointmentResponse(app.id, app.appHour, app.appDate, app.scheduleId.id, app.userId?.id)
+            val response = appointmentServices.addAppointment(appointment)
             ResponseEntity.status(201)
                 .body(response)
 

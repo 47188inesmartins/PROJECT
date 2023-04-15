@@ -1,10 +1,15 @@
 package backend.jvm.services.dto
 
+import java.sql.Date
+import java.sql.Time
+
 
 //data class AppointmentResponse(val id: Int, val appHour: Time, val appDate: Date, val sid: Int, val uid: Int?)
 
 
 data class AppointmentInputDto(val appHour: String, val appDate: String, val scheduleId: Int, val userId: Int?, val service: Int)
+
+data class AppointmentOutputDto(val id: Int, val appHour: Time, val appDate: Date, val scheduleId: Int, val userId: Int?, val service: Int)
 
 
 //class AppointmentInputDto
