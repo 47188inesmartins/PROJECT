@@ -4,7 +4,6 @@ import backend.jvm.model.ServiceDB
 import backend.jvm.model.User
 
 
-
 data class UserOutputDto(
         val id: Int,
         val email: String,
@@ -22,10 +21,9 @@ data class UserOutputDto(
                 name = user.name,
                 birthday = user.birthday.toString(),
                 availability = user.availability,
-                companyId = user.companyId?.id,
-                services = user.service?.map { it.id }?: emptyList()
+                companyId = user.company?.id,
+                services = user.services?.map { it.id }?: emptyList()
         )
-
 
         private fun mapToInt(list: List<ServiceDB>?):List<Int>{
                 if(list == null) return emptyList()

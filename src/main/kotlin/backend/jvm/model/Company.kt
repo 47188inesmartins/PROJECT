@@ -26,13 +26,13 @@ class Company {
         @Column(name = "description")
         val description:String
 
-        @OneToMany(mappedBy = "companyId")
+        @OneToMany(mappedBy = "company")
         val serviceDBS: List<ServiceDB>?
 
-        @OneToOne(mappedBy = "companyId")
+        @OneToOne(mappedBy = "company")
         val schedule: Schedule?
 
-        @OneToMany(mappedBy = "companyId")
+        @OneToMany(mappedBy = "company")
         val users: List<User>?
 
         constructor() {

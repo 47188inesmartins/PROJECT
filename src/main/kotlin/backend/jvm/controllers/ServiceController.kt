@@ -1,9 +1,10 @@
 package backend.jvm.controllers
 
-import backend.jvm.controllers.json.ServicesResponse
 import backend.jvm.model.ServiceDB
 import backend.jvm.services.ServServices
 import backend.jvm.services.dto.ServiceInputDto
+import backend.jvm.services.dto.ServiceOutputDto
+import backend.jvm.services.dto.UserOutputDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -19,9 +20,9 @@ class ServiceController {
     lateinit var servServices: ServServices
 
     @PostMapping
-    fun addService(@RequestBody service: ServiceInputDto): ResponseEntity<ServicesResponse> {
+    fun addService(@RequestBody service: ServiceInputDto): ResponseEntity<ServiceOutputDto> {
         return try{
-            val response = mapToResponse(servServices.addService(service))
+            val response = servServices.addService(service)
             ResponseEntity.status(201)
                 .body(response)
         }catch (e: Exception){
@@ -32,12 +33,11 @@ class ServiceController {
     }
 
     @GetMapping("/{id}")
-    fun getService(@PathVariable id: Int): ResponseEntity<ServicesResponse> {
+    fun getService(@PathVariable id: Int): ResponseEntity<ServiceOutputDto> {
        return try {
-           TODO()
-        //   val response = mapToResponse(servServices.addService(servServices.getServiceById(id)))
-          /* ResponseEntity.status(200)
-               .body(response)*/
+           val response = servServices.getServiceById(id)
+           ResponseEntity.status(200)
+               .body(response)
        }catch(e: Exception){
            ResponseEntity.status(400)
                .body(null)
@@ -45,13 +45,13 @@ class ServiceController {
     }
 
     @GetMapping("/{id}/employee")
-    fun getEmployeeForServices(@PathVariable id: Int): ResponseEntity<ServicesResponse> {
+    fun getEmployeesForService(@PathVariable id: Int): ResponseEntity<List<UserOutputDto>> {
         return try {
-            TODO()
-          /*  val response = mapToResponse(servServices.addService(servServices.getServiceById(id)))
+            val response = servServices.getAvailableEmployees(id)
             ResponseEntity.status(200)
-                .body(response)*/
+                .body(response)
         }catch(e: Exception){
+            println("exception = $e")
             ResponseEntity.status(400)
                 .body(null)
         }
@@ -69,7 +69,7 @@ class ServiceController {
         }
     }
 
-    @PutMapping("/{id}/apointment/{idA}/avaibility")
+    /*   @PutMapping("/{id}/apointment/{idA}/avaibility")
     fun updateAvailability(@PathVariable id: Int,@PathVariable idA: Int, @RequestParam price: String): ResponseEntity<String> {
         return try {
             val response = servServices.updateAvailability(id,idA, price)
@@ -80,6 +80,7 @@ class ServiceController {
                 .body(null)
         }
     }
+    */
 
     @PutMapping("/{id}/duration")
     fun updateDuration(@PathVariable id: Int, @RequestParam duration: String): ResponseEntity<Duration>{
@@ -93,7 +94,7 @@ class ServiceController {
         }
     }
 
-    @GetMapping("/{id}/appointment/{idA}/available")
+  /*  @GetMapping("/{id}/appointment/{idA}/available")
     fun verifyAvailability(@PathVariable id: Int, @PathVariable idA: Int): ResponseEntity<String>{
         return try {
             val response = servServices.verifyAvailability(id,idA)
@@ -103,9 +104,9 @@ class ServiceController {
             ResponseEntity.status(400)
                 .body(null)
         }
-    }
+    }*/
 
-    @PutMapping("/{id}/appointment/{idA}/availability")
+   /* @PutMapping("/{id}/appointment/{idA}/availability")
     fun updateMaxNumber(@PathVariable id: Int,@PathVariable idA: Int, @RequestBody availability: String): ResponseEntity<String> {
         return try {
             val response = servServices.updateAvailability(id,idA,availability)
@@ -115,7 +116,7 @@ class ServiceController {
             ResponseEntity.status(400)
                 .body(null)
         }
-    }
+    }*/
 
     @DeleteMapping
     fun deleteServices(@RequestBody serviceDB: ServiceDB): ResponseEntity<String> {
@@ -129,15 +130,6 @@ class ServiceController {
         }
     }
 
-    fun mapToResponse(serviceDB: ServiceDB): ServicesResponse {
-        val listApp = serviceDB.appointment?.map { it.id }
-        val dayApp = serviceDB.user?.map { it.id!! }
-        val userApp = serviceDB.day?.map { it.id }
-
-        return ServicesResponse(serviceDB.id,serviceDB.name,serviceDB.duration,serviceDB.numberMax,serviceDB.price,
-            serviceDB.companyId.id, listApp!!, dayApp!!, userApp!!)
-
-    }
 }
 
 

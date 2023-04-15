@@ -1,7 +1,5 @@
 package backend.jvm.controllers
 
-import backend.jvm.controllers.json.AppointmentResponse
-import backend.jvm.model.Appointment
 import backend.jvm.services.AppointmentServices
 import backend.jvm.services.dto.AppointmentInputDto
 import backend.jvm.services.dto.AppointmentOutputDto
@@ -16,8 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
-import java.sql.Date
-import java.sql.Time
+
 
 @RestController
 @RequestMapping(("/appointment"))
@@ -48,10 +45,9 @@ class AppointmentController {
     }
 
     @GetMapping("/{id}")
-    fun getAppointment(@PathVariable id: Int): ResponseEntity<AppointmentResponse>{
+    fun getAppointment(@PathVariable id: Int): ResponseEntity<AppointmentOutputDto>{
         return try {
-            val app = appointmentServices.getAppointment(id).get()
-            val response = AppointmentResponse(app.id, app.appHour, app.appDate, app.scheduleId.id, app.userId?.id)
+            val response = appointmentServices.getAppointment(id)
             ResponseEntity.status(200)
                 .body(response)
 
@@ -61,10 +57,10 @@ class AppointmentController {
         }
     }
 
-    @GetMapping("/{id}/services")
+    /*@GetMapping("/{id}/services")
     fun getServices(@PathVariable id: Int): ResponseEntity<List<Int>>{
         return try {
-            val response = appointmentServices.getServices(id)
+            val response = appointmentServices.(id)
             ResponseEntity.status(200)
                 .body(response)
         }catch (e: Exception){
@@ -72,16 +68,12 @@ class AppointmentController {
             ResponseEntity.status(400)
                 .body(null)
         }
-    }
+    }*/
 
     @GetMapping
-    fun getAppointmentsByDateAndHour(@RequestParam("sid") sid: Int, @RequestParam("hour") hour: String, @RequestParam("date") date: String): ResponseEntity<List<AppointmentResponse>>{
+    fun getAppointmentsByDateAndHour(@RequestParam("schedule_id") schedule_id: Int, @RequestParam("hour") hour: String, @RequestParam("date") date: String): ResponseEntity<List<AppointmentOutputDto>>{
         return try {
-            val h = Time.valueOf(hour)
-            val d = Date.valueOf(date)
-            val app = appointmentServices.getAppointmentByDateAndHour(h, sid, d)
-            app.forEach { println("app = " + it) }
-            val response = app.map { AppointmentResponse(it.id, it.appHour, it.appDate, it.scheduleId.id, it.userId?.id) }
+            val response = appointmentServices.getAppointmentByDateAndHour(schedule_id, hour, date)
             ResponseEntity.status(200)
                 .body(response)
 
@@ -90,6 +82,19 @@ class AppointmentController {
             ResponseEntity.status(400)
                 .body(null)
         }
+    }
+
+    @GetMapping("/services")
+    fun getNumberOfServicesByDateAndHour(@RequestParam("service_id") service_id: Int, @RequestParam("date") date: String, @RequestParam("hour") hour: String):ResponseEntity<Int>{
+        return try{
+            val response = appointmentServices.getNumberOfServicesByDateAndHour(service_id, date, hour)
+            ResponseEntity.status(200)
+                .body(response)
+        }catch (e: Exception){
+            ResponseEntity.status(400)
+                .body(null)
+        }
+
     }
 
 

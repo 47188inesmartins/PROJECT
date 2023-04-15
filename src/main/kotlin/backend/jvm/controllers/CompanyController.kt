@@ -1,11 +1,9 @@
 package backend.jvm.controllers
 
 
-import backend.jvm.controllers.json.AppointmentResponse
-import backend.jvm.controllers.json.ServicesResponse
-import backend.jvm.controllers.json.VacationResponse
 import backend.jvm.model.*
 import backend.jvm.services.CompanyServices
+import backend.jvm.services.dto.ServiceOutputDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -22,13 +20,13 @@ class CompanyController {
     @ResponseBody
     @PostMapping
     fun addCompany(@RequestBody company: Company): ResponseEntity<Company> {
-        return try{
+        return try {
             val response = companyServices.addCompany(company)
             ResponseEntity
                 .status(201)
                 .body(response)
 
-        }catch (e: Exception){
+        } catch (e: Exception) {
             println("Exception = $e")
             ResponseEntity
                 .status(400)
@@ -44,37 +42,37 @@ class CompanyController {
     @ResponseBody
     @GetMapping("/{id}")
     fun getCompany(@PathVariable id: Int): ResponseEntity<Company> {
-        return try{
+        return try {
             val response = companyServices.getCompany(id)
             ResponseEntity.status(200).body(response.get())
-        }catch (e: Exception){
+        } catch (e: Exception) {
             ResponseEntity.status(400).body(null)
         }
     }
 
     @GetMapping
     fun findCompanyByNif(@RequestParam nif: String): ResponseEntity<Company> {
-        return try{
+        return try {
             val response = companyServices.findCompanyByNif(nif)
             ResponseEntity
                 .status(200)
                 .body(response)
-        }catch (e: Exception){
+        } catch (e: Exception) {
             ResponseEntity
                 .status(400)
                 .body(null)
         }
     }
 
-   /* @GetMapping("/{id}/employees")
+    /* @GetMapping("/{id}/employees")
     fun getAllEmployees(@PathVariable id: Int): List<Employee>{
         return companyServices.getAllEmployees(id)
     }*/
 
     @GetMapping("/{id}/services")
-    fun getAllServices(@PathVariable id: Int): ResponseEntity<List<ServicesResponse>>{
+    fun getAllServices(@PathVariable id: Int): ResponseEntity<List<ServiceOutputDto>> {
         TODO()
-      /*  return try {
+        /*  return try {
             val servs = companyServices.getAllServices(id)
             val response = servs.map { ServicesResponse(it.id, it.name, it.duration, it.numberMax, it.price, it.cid?.id!!, it.appointment, it.day.id, it.user.id) }
             ResponseEntity.status(200).body(response)
@@ -83,12 +81,13 @@ class CompanyController {
                 .body(null)
         }*/
     }
+}
 
-    @GetMapping("/{id}/appointments")
+   /* @GetMapping("/{id}/appointments")
     fun getAllAppointments(@PathVariable id: Int): ResponseEntity<List<AppointmentResponse>>{
         return try {
             val servs = companyServices.getAllAppointments(id)
-            val response = servs.map { AppointmentResponse(it.id, it.appHour, it.appDate, it.scheduleId.id, it.userId?.id) }
+            val response = servs.map { AppointmentResponse(it.id, it.appHour, it.appDate, it.schedule.id, it.user?.id) }
             ResponseEntity.status(200).body(response)
         }catch (e: Exception){
             ResponseEntity.status(400)
@@ -118,7 +117,7 @@ class CompanyController {
     fun getVacation(@PathVariable id: Int): ResponseEntity<List<VacationResponse>>{
         return try{
             val vacationList = companyServices.getVacation(id)
-            val response = vacationList.map { VacationResponse(it.id, it.dateBegin, it.dateEnd, it.scheduleId.id) }
+            val response = vacationList.map { VacationResponse(it.id, it.dateBegin, it.dateEnd, it.schedule.id) }
             ResponseEntity.status(200).body(response)
         }catch(e: Exception){
             println("exception = $e")
@@ -136,4 +135,4 @@ class CompanyController {
         return companyServices.changeAddress(id, address)
     }
 
-}
+}  */

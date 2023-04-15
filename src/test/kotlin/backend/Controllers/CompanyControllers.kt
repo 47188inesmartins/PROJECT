@@ -32,7 +32,7 @@ class CompanyControllersTest {
                     "rua adelaide",
                     "corte e costura",
                     "cabeleireiro",
-                    "so cabelos",
+                    "cabeleireiro",
                 listOf(),
                 null,
                 listOf()

@@ -1,6 +1,5 @@
 package backend.jvm.controllers
 
-import backend.jvm.controllers.json.ScheduleResponse
 import backend.jvm.model.Schedule
 import backend.jvm.model.ServiceDB
 import backend.jvm.services.ScheduleServices
@@ -18,14 +17,15 @@ class ScheduleController {
 
     @ResponseBody
     @PostMapping
-    fun addNewSchedule(@RequestBody schedule: Schedule): ResponseEntity<ScheduleResponse> {
-        return try{
+    fun addNewSchedule(@RequestBody schedule: Schedule): ResponseEntity<Int> {
+       /* return try{
             val addedSchedule = scheduleServices.addSchedule(schedule)
-            val response = ScheduleResponse(addedSchedule.id, addedSchedule.companyId.id)
+            val response = ScheduleResponse(addedSchedule.id, addedSchedule.company.id)
             ResponseEntity.status(201).body(response)
         }catch (e: Exception){
             ResponseEntity.status(400).body(null)
-        }
+        }*/
+        TODO()
     }
 
     @DeleteMapping("/{id}")

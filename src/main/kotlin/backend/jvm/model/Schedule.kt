@@ -13,26 +13,26 @@ class Schedule {
 
     @OneToOne
     @JoinColumn(name = "company_id", unique = true)
-    val companyId : Company
+    val company : Company
 
-    @OneToMany(mappedBy = "scheduleId")
+    @OneToMany(mappedBy = "schedule")
     val appointment: List<Appointment>
 
-    @OneToMany(mappedBy = "scheduleId")
+    @OneToMany(mappedBy = "schedule")
     val day: List<Day>
 
-    @OneToMany(mappedBy = "scheduleId")
+    @OneToMany(mappedBy = "schedule")
     val vacation: List<Vacation>
 
     constructor(){
-        this.companyId = Company()
+        this.company = Company()
         this.appointment = listOf()
         this.day = listOf()
         this.vacation = listOf()
     }
 
     constructor(companyId: Company,appointment: List<Appointment>,day: List<Day>,vacation: List<Vacation>){
-        this.companyId = companyId
+        this.company = companyId
         this.appointment = appointment
         this.day = day
         this.vacation = vacation

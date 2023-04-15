@@ -28,16 +28,7 @@ class ServiceDB{
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
-    val companyId : Company
-
-  /*  @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "service_appointment",
-        joinColumns = [JoinColumn(name = "service_id")],
-        inverseJoinColumns = [JoinColumn(name = "appointment_id")]
-    )
-    val appointment: List<Appointment>?*/
-
+    val company : Company
 
     @OneToMany(mappedBy = "service")
     val appointment: List<Appointment>?
@@ -51,7 +42,12 @@ class ServiceDB{
     )
     val day: List<Day>?
 
-    @ManyToMany(mappedBy = "service", fetch = FetchType.LAZY)
+    @ManyToMany
+    @JoinTable(
+        name = "user_service",
+        joinColumns = [JoinColumn(name = "service_id")],
+        inverseJoinColumns = [JoinColumn(name = "user_id")]
+    )
     val user: List<User>?
 
     constructor(){
@@ -59,18 +55,18 @@ class ServiceDB{
         this.duration = Time.valueOf("00:00:00")
         this.numberMax = 0
         this.price = 0.0
-        this.companyId = Company()
+        this.company = Company()
         this.user = listOf()
         this.appointment = listOf()
         this.day = listOf()
     }
 
-    constructor(name : String, duration: Time, numberMax: Int, price: Double, companyId: Company){
+    constructor(name : String, duration: Time, numberMax: Int, price: Double, company: Company){
         this.name = name
         this.duration = duration
         this.numberMax = numberMax
         this.price = price
-        this.companyId = companyId
+        this.company = company
         this.user = null
         this.appointment = null
         this.day = null

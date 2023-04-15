@@ -11,8 +11,8 @@ import java.sql.Date
  *
  * @property id the appointment primary key
  * @property appHour hour of the appointment
- * @property scheduleId schedule associated with appointment
- * @property userId company associated with appointment
+ * @property schedule schedule associated with appointment
+ * @property user company associated with appointment
  *
  */
 
@@ -26,12 +26,6 @@ class Appointment {
     @Column(name = "id")
     var id: Int = 0
 
-    /*
-    @Column(name = "number_app_people")
-    @GeneratedValue
-    var numberAppPeople: Int? = 1
-    */
-
     @Column(name = "app_hour", nullable = false)
     val appHour : Time
 
@@ -41,11 +35,11 @@ class Appointment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "schedule_id")  // nome da foreign key
-    val scheduleId : Schedule
+    val schedule : Schedule
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    val userId : User?
+    val user : User?
 
     @ManyToOne
     @JoinColumn(name = "service_id")
@@ -54,16 +48,16 @@ class Appointment {
     constructor() {
         this.appHour = Time.valueOf("00:00:00")
         this.appDate = Date.valueOf("2000-01-01")
-        this.scheduleId = Schedule()
-        this.userId = null
+        this.schedule = Schedule()
+        this.user = null
         this.service = ServiceDB()
     }
 
     constructor(appHour: Time, appDate : Date, scheduleId: Schedule, userId: User?, serviceDB: ServiceDB) {
         this.appHour = appHour
         this.appDate = appDate
-        this.scheduleId = scheduleId
-        this.userId = userId
+        this.schedule = scheduleId
+        this.user = userId
         this.service = serviceDB
     }
 }

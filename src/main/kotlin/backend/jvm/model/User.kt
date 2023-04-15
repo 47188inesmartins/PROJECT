@@ -45,7 +45,7 @@ class User {
 
         @ManyToOne
         @JoinColumn(name = "company_id")
-        val companyId: Company?
+        val company: Company?
 
         @ManyToMany
         @JoinTable(
@@ -53,7 +53,7 @@ class User {
                 joinColumns = [JoinColumn(name = "user_id")],
                 inverseJoinColumns = [JoinColumn(name = "service_id")]
         )
-        val service: List<ServiceDB>?
+        val services: List<ServiceDB>?
 
         @ManyToMany
         @JoinTable(
@@ -69,9 +69,9 @@ class User {
                 this.password = ""
                 this.name = ""
                 this.birthday = Date.valueOf("2001-01-01")
-                this.service = null
+                this.services = null
                 this.availability = AVAILABILITY_STATE
-                this.companyId = null
+                this.company = null
                 this.appointment = null
         }
 
@@ -90,9 +90,9 @@ class User {
                 this.password = password
                 this.name = clientName
                 this.birthday = birth
-                this.service = serv
+                this.services = serv
                 this.availability = AVAILABILITY_STATE
-                this.companyId = company
+                this.company = company
                 this.appointment = appointments
         }
 
@@ -109,9 +109,9 @@ class User {
                 this.password = password
                 this.name = clientName
                 this.birthday = birth
-                this.service = serv
+                this.services = serv
                 this.availability = AVAILABILITY_STATE
-                this.companyId = null
+                this.company = null
                 this.appointment = appointments
         }
 

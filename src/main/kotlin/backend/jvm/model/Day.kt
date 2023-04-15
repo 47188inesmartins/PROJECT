@@ -28,14 +28,14 @@ class Day {
 
         @ManyToOne
         @JoinColumn(name = "schedule_id")
-        val scheduleId : Schedule?
+        val schedule : Schedule?
 
         constructor(){
             this.beginHour = Time.valueOf("00:00:00")
             this.endHour = Time.valueOf("00:00:00")
             this.interval = Time.valueOf("00:00:00")
             this.weekDays = "MON"
-            this.scheduleId = null
+            this.schedule = null
         }
 
         constructor(beginHour : Time, endHour: Time, interval: Time, weekDays: String, sid: Schedule){
@@ -43,7 +43,7 @@ class Day {
             this.endHour = endHour
             this.interval = interval
             this.weekDays = weekDays
-            this.scheduleId = sid
+            this.schedule = sid
         }
 
         constructor(id: Int, beginHour : Time, endHour: Time, interval: Time, weekDays: String, sid: Schedule){
@@ -52,6 +52,6 @@ class Day {
             this.endHour = endHour
             this.interval = interval
             this.weekDays = weekDays
-            this.scheduleId = sid
+            this.schedule = sid
         }
 }
