@@ -23,7 +23,7 @@ class User {
         @Id
         @Column(name = "id")
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        val id: Int? = null
+        val id: Int = 0
 
         @Column(name = "token", unique = true)
         var token: UUID
@@ -41,7 +41,7 @@ class User {
         val birthday: Date
 
         @Column(name = "availability")
-        val availability: String
+        val availability: String?
 
         @ManyToOne
         @JoinColumn(name = "company_id")

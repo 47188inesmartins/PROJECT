@@ -9,7 +9,6 @@ delete from SCH_USER cascade;
 delete from COMPANY_NUMBERS cascade;
 delete from SCH_DAY cascade;
 delete from VACATION cascade;
-delete from SERVICE_APPOINTMENT cascade;
 delete from USER_SERVICE cascade;
 
 delete from SCH_USER where email = 'grupo18@gmail.com';

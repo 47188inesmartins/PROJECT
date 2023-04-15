@@ -12,15 +12,11 @@ import java.util.*
 @Service
 class UserServices {
 
-    companion object{
-        val EMAIL_FORMAT = Regex("""^\w+@\w+\.\w+$""")
-    }
-
     @Autowired
     lateinit var userRepository: UserRepository
 
     fun addUser(user: User): User {
-        if(!EMAIL_FORMAT.matches(user.email)) throw Exception("Invalid email format")
+        //if(!EMAIL_FORMAT.matches(user.email)) throw Exception("Invalid email format")
         val pass = Hashing().encodePass(user.password) ?: throw Exception("Password isn't save")
         user.password = pass
         return userRepository.save(user)
