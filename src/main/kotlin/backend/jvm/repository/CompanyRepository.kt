@@ -12,21 +12,21 @@ interface CompanyRepository : JpaRepository<Company, Int>{
     fun findAllById(id: Int): Company
     fun findCompanyByNif(nif:String): Company
 
-    @Query(value = "from service s where s.cid = :id", nativeQuery = true)
-    fun getAllServices(@Param("id") id: Int): List<Services>
+    @Query(value = "from service s where s.company_id = :id", nativeQuery = true)
+    fun getAllServices(@Param("id") id: Int): List<ServiceDB>
 
-    @Query(value = "from appointment a where a.sid = (select id from schedule s where s.comp_id = :id)", nativeQuery = true)
+    @Query(value = "from appointment a where a.sid = (select id from schedule s where s.company_id = :id)", nativeQuery = true)
     fun getAllAppointments(@Param("id") id: Int): List<Appointment>
 
-    @Query(value = "from appointment a where a.sid = (select id from schedule s where s.comp_id = :id) and a.app_date = :date and a.app_hour = :time", nativeQuery = true)
+    @Query(value = "from appointment a where a.sid = (select id from schedule s where s.company_id = :id) and a.app_date = :date and a.app_hour = :time", nativeQuery = true)
     fun getAppointment(@Param("id") id: Int, @Param("date") date: Date, @Param("time") time: Time): Appointment
 
     //from sch_day d where d.sid = (select id from schedule s where s.comp_id = :id)
     @Query(value = "select week_days " +
-            "from sch_day d inner join schedule s on d.sid = s.id and s.comp_id=:id", nativeQuery = true)
+            "from sch_day d inner join schedule s on d.schedule_id = s.id and s.company_id=:id", nativeQuery = true)
     fun getOpenDays(@Param("id") id: Int): List<String>
 
-    @Query(value = "select * from vacation v where v.sid = (select id from schedule s where s.comp_id = :id)", nativeQuery = true)
+    @Query(value = "select * from vacation v where v.schedule_id = (select id from schedule s where s.company_id = :id)", nativeQuery = true)
     fun getVacation(@Param("id") id: Int): List <Vacation>
 
     @Query(value = "update company c set c.address=:address where c.id = :id", nativeQuery = true)

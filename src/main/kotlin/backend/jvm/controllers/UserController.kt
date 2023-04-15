@@ -35,12 +35,7 @@ class UserController {
     @GetMapping("/{id}")
     fun getUserById(@PathVariable id: Int): Optional<User> {
         return userServices.getUserById(id)
-    }
-
-    /*@GetMapping
-    fun getUserByEmail(@RequestBody email: String): User {
-        return userServices.getUserByEmail(email)
-    }*/
+}
 
     @GetMapping("/{id}/role")
     fun getRole(@PathVariable id: Int): String? {
@@ -62,3 +57,5 @@ class UserController {
         return userServices.changePassword(password, id)
     }
 }
+
+

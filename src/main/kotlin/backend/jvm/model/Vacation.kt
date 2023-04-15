@@ -35,20 +35,20 @@ class Vacation {
     val dateEnd: Date
 
     @ManyToOne
-    @JoinColumn(name = "sid")
-    val sid: Schedule
+    @JoinColumn(name = "schedule_id")
+    val scheduleId: Schedule
 
 
     constructor(){
         this.dateBegin = Date.valueOf("2001-01-1")
         this.dateEnd =  Date.valueOf("2001-01-1")
-        this.sid = Schedule()
+        this.scheduleId = Schedule()
     }
 
     constructor(dateBegin: Date, dateEnd: Date, schedule: Int){
         this.dateBegin = dateBegin
         this.dateEnd = dateEnd
-        this.sid = Schedule()
+        this.scheduleId = Schedule()
     }
 
 }

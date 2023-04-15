@@ -30,11 +30,12 @@ class AppointmentController {
     fun addAppointment(@RequestBody appointment: AppointmentInputDto): ResponseEntity<AppointmentResponse> {
         return try {
             val app = appointmentServices.addAppointment(appointment)
-            val response = AppointmentResponse(app.id, app.appHour, app.appDate, app.sid.id, app.uid?.id)
+            val response = AppointmentResponse(app.id, app.appHour, app.appDate, app.scheduleId.id, app.userId?.id)
             ResponseEntity.status(201)
                 .body(response)
 
         }catch (e: Exception) {
+            println("exception = $e")
             ResponseEntity.status(400)
                 .body(null)
         }
@@ -50,7 +51,7 @@ class AppointmentController {
     fun getAppointment(@PathVariable id: Int): ResponseEntity<AppointmentResponse>{
         return try {
             val app = appointmentServices.getAppointment(id).get()
-            val response = AppointmentResponse(app.id, app.appHour, app.appDate, app.sid.id, app.uid?.id)
+            val response = AppointmentResponse(app.id, app.appHour, app.appDate, app.scheduleId.id, app.userId?.id)
             ResponseEntity.status(200)
                 .body(response)
 
@@ -80,7 +81,7 @@ class AppointmentController {
             val d = Date.valueOf(date)
             val app = appointmentServices.getAppointmentByDateAndHour(h, sid, d)
             app.forEach { println("app = " + it) }
-            val response = app.map { AppointmentResponse(it.id, it.appHour, it.appDate, it.sid.id, it.uid?.id) }
+            val response = app.map { AppointmentResponse(it.id, it.appHour, it.appDate, it.scheduleId.id, it.userId?.id) }
             ResponseEntity.status(200)
                 .body(response)
 

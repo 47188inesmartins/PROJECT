@@ -12,7 +12,7 @@ class  CompanyNumbers{
         val phoneNumber:String
 
         @Id
-        @Column(name = "cid")
+        @Column(name = "company_id")
         @ManyToOne
         val companyId: Company?
 

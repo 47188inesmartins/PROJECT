@@ -2,9 +2,10 @@ package backend.jvm.services.dto
 
 import java.sql.Time
 
-class ServicesInputDto {
-    val name: String
-    val duration: Time
-    val
-
-}
+data class ServiceInputDto(
+    val serviceName: String,
+    val duration: String,
+    val numberMax: Int,
+    val price: Double,
+    val companyId: Int
+)

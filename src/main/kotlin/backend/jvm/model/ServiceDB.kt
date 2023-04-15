@@ -6,7 +6,7 @@ import java.sql.Time
 
 @Entity
 @Table(name = "service")
-class Services{
+class ServiceDB{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,26 +27,31 @@ class Services{
     val price: Double
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cid")
-    val cid : Company?
+    @JoinColumn(name = "company_id")
+    val companyId : Company
 
-    @ManyToMany(fetch = FetchType.LAZY)
+  /*  @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "service_appointment",
         joinColumns = [JoinColumn(name = "service_id")],
         inverseJoinColumns = [JoinColumn(name = "appointment_id")]
     )
+    val appointment: List<Appointment>?*/
+
+
+    @OneToMany(mappedBy = "service")
     val appointment: List<Appointment>?
+
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-        name = "service_days",
-        joinColumns = [JoinColumn(name = "id_service")],
-        inverseJoinColumns = [JoinColumn(name = "id_days")]
+        name = "service_day",
+        joinColumns = [JoinColumn(name = "service_id")],
+        inverseJoinColumns = [JoinColumn(name = "days_id")]
     )
     val day: List<Day>?
 
-    @ManyToMany(mappedBy = "services", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "service", fetch = FetchType.LAZY)
     val user: List<User>?
 
     constructor(){
@@ -54,21 +59,21 @@ class Services{
         this.duration = Time.valueOf("00:00:00")
         this.numberMax = 0
         this.price = 0.0
-        this.cid = null
+        this.companyId = Company()
         this.user = listOf()
         this.appointment = listOf()
         this.day = listOf()
     }
 
-    constructor(name : String, duration: Time, numberMax: Int, price: Double, company: Company, user: List<User>, appointment: List<Appointment>,days: List<Day> ){
+    constructor(name : String, duration: Time, numberMax: Int, price: Double, companyId: Company){
         this.name = name
         this.duration = duration
         this.numberMax = numberMax
         this.price = price
-        this.cid = company
-        this.user = user
-        this.appointment = appointment
-        this.day = days
+        this.companyId = companyId
+        this.user = null
+        this.appointment = null
+        this.day = null
     }
 
 }

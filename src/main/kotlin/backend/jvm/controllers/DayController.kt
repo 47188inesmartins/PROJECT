@@ -1,6 +1,5 @@
 package backend.jvm.controllers
 
-import backend.jvm.controllers.json.DayResponse
 import backend.jvm.model.Day
 import backend.jvm.services.DayServices
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,12 +16,13 @@ class DayController {
 
     @ResponseBody
     @PostMapping
-    fun addOpenDay(@RequestBody day: Day): ResponseEntity<DayResponse> {
+    fun addOpenDay(@RequestBody day: Day): ResponseEntity<Day> {
         return try{
             val addedDay = dayService.addOpenDay(day)
-            val response = DayResponse(addedDay.id, addedDay.beginHour, addedDay.endHour, addedDay.interval, addedDay.weekDays, addedDay.sid?.id!!)
-            ResponseEntity.status(201).body(response)
+           // val response = DayResponse(addedDay.id, addedDay.beginHour, addedDay.endHour, addedDay.interval, addedDay.weekDays, addedDay.scheduleId?.id!!)
+            ResponseEntity.status(201).body(addedDay)
         }catch(e: Exception){
+            println("exception = $e")
             ResponseEntity.status(400).body(null)
         }
     }

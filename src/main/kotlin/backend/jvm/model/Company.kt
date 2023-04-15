@@ -26,13 +26,13 @@ class Company {
         @Column(name = "description")
         val description:String
 
-        @OneToMany(mappedBy = "cid")
-        val services: List<Services>?
+        @OneToMany(mappedBy = "companyId")
+        val serviceDBS: List<ServiceDB>?
 
-        @OneToOne(mappedBy = "compIdSch")
+        @OneToOne(mappedBy = "companyId")
         val schedule: Schedule?
 
-        @OneToMany(mappedBy = "compId")
+        @OneToMany(mappedBy = "companyId")
         val users: List<User>?
 
         constructor() {
@@ -41,18 +41,18 @@ class Company {
                 this.name = ""
                 this.type = ""
                 this.description = ""
-                this.services = null
+                this.serviceDBS = null
                 this.schedule = null
                 this.users = null
         }
 
-        constructor(nif: String, address: String, compName: String, compType: String, description: String, services: List<Services>, schedule: Schedule?, users: List<User>){
+        constructor(nif: String, address: String, compName: String, compType: String, description: String, serviceDBS: List<ServiceDB>, schedule: Schedule?, users: List<User>){
                 this.nif = nif
                 this.address = address
                 this.name = compName
                 this.type = compType
                 this.description = description
-                this.services = services
+                this.serviceDBS = serviceDBS
                 this.schedule = schedule
                 this.users = users
         }

@@ -1,27 +1,25 @@
 package backend.jvm.services.dto
 
-import backend.jvm.model.Appointment
-import backend.jvm.model.Services
-import java.sql.Date
-import java.sql.Time
-import java.util.ListResourceBundle
-
 
 //data class AppointmentResponse(val id: Int, val appHour: Time, val appDate: Date, val sid: Int, val uid: Int?)
 
-class AppointmentInputDto
+
+data class AppointmentInputDto(val appHour: String, val appDate: String, val scheduleId: Int, val userId: Int?, val service: Int)
+
+
+//class AppointmentInputDto
 /*    val appHour: Time,
     val appDate: Date,
     val sid: Int,
     val uid: Int,
     val services: List<Services>*/
-    {
-    val appHour: Time
+  //  {
+ /*   val appHour: Time
     val appDate: Date
     val sid: Int
     val uid: Int
     val services: List<Int>
-
+u
     constructor(){
         this.appHour = Time.valueOf("00:00:00")
         this.appDate = Date.valueOf("2000-01-01")
@@ -40,4 +38,4 @@ class AppointmentInputDto
     }
 
 
-}
+}*/

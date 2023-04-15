@@ -88,7 +88,7 @@ class CompanyController {
     fun getAllAppointments(@PathVariable id: Int): ResponseEntity<List<AppointmentResponse>>{
         return try {
             val servs = companyServices.getAllAppointments(id)
-            val response = servs.map { AppointmentResponse(it.id, it.appHour, it.appDate, it.sid.id, it.uid?.id) }
+            val response = servs.map { AppointmentResponse(it.id, it.appHour, it.appDate, it.scheduleId.id, it.userId?.id) }
             ResponseEntity.status(200).body(response)
         }catch (e: Exception){
             ResponseEntity.status(400)
@@ -118,7 +118,7 @@ class CompanyController {
     fun getVacation(@PathVariable id: Int): ResponseEntity<List<VacationResponse>>{
         return try{
             val vacationList = companyServices.getVacation(id)
-            val response = vacationList.map { VacationResponse(it.id, it.dateBegin, it.dateEnd, it.sid.id) }
+            val response = vacationList.map { VacationResponse(it.id, it.dateBegin, it.dateEnd, it.scheduleId.id) }
             ResponseEntity.status(200).body(response)
         }catch(e: Exception){
             println("exception = $e")

@@ -1,24 +1,37 @@
 package backend.jvm.services
 
 
-import backend.jvm.model.Services
+import backend.jvm.model.ServiceDB
 import backend.jvm.repository.ServiceRepository
+import backend.jvm.services.dto.ServiceInputDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.sql.Time
 import java.time.Duration
-import java.util.*
 
 @Service
 class ServServices {
 
     @Autowired
     lateinit var serviceRepository: ServiceRepository
+    @Autowired
+    lateinit var companyServices : CompanyServices
 
-    fun addService(services: Services):Services{
-        return serviceRepository.save(services)
+    fun addService(service: ServiceInputDto): ServiceDB {
+        val company = companyServices.getCompany(service.companyId).get()
+        println("company = $company")
+        val serv = ServiceDB(
+            name = service.serviceName,
+            duration = Time.valueOf(service.duration),
+            numberMax = service.numberMax,
+            price = service.price,
+            companyId= company
+        )
+        println("company = $company, ${serv.name}, ${serv.duration}, ${serv.numberMax}, ${serv.price}, ${serv.companyId.address}, ")
+        return serviceRepository.save(serv)
     }
-    fun getServiceById(id:Int): Services {
+
+    fun getServiceById(id:Int): backend.jvm.model.ServiceDB {
      return serviceRepository.getServicesById(id)
     }
 
@@ -35,7 +48,7 @@ class ServServices {
         return serviceRepository.findAllByEmployee(employee)
     }*/
 
-    fun getEmployeeForService(idService:Int):Services{
+    fun getEmployeeForService(idService:Int): backend.jvm.model.ServiceDB {
         return serviceRepository.getEmployeeForService(idService)
     }
 
@@ -55,8 +68,8 @@ class ServServices {
         return serviceRepository.updateMaxNumber(idService,number)
     }
 
-    fun delete(services: Services){
-        serviceRepository.delete(services)
+    fun delete(serviceDB: backend.jvm.model.ServiceDB){
+        serviceRepository.delete(serviceDB)
     }
 
 }

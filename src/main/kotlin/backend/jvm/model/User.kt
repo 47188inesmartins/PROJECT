@@ -14,7 +14,7 @@ import java.util.UUID
  * @property password the User password
  * @property name the user's name
  * @property birthday the User birthday
- * @property compId null if the user has the role of 'guest' or 'client'. the company where the user works
+ * @property companyId null if the user has the role of 'guest' or 'client'. the company where the user works
  */
 
 @Entity
@@ -44,10 +44,8 @@ class User {
         val availability: String
 
         @ManyToOne
-        @JoinColumn(name = "comp_id")
-        val compId: Company?
-
-
+        @JoinColumn(name = "company_id")
+        val companyId: Company?
 
         @ManyToMany
         @JoinTable(
@@ -55,7 +53,7 @@ class User {
                 joinColumns = [JoinColumn(name = "user_id")],
                 inverseJoinColumns = [JoinColumn(name = "service_id")]
         )
-        val services: List<Services>?
+        val service: List<ServiceDB>?
 
         @ManyToMany
         @JoinTable(
@@ -65,16 +63,15 @@ class User {
         )
         val appointment: List<Appointment>?
 
-
         constructor(){
                 this.token = UUID.randomUUID()
                 this.email = ""
                 this.password = ""
                 this.name = ""
                 this.birthday = Date.valueOf("2001-01-01")
-                this.services = null
+                this.service = null
                 this.availability = AVAILABILITY_STATE
-                this.compId = null
+                this.companyId = null
                 this.appointment = null
         }
 
@@ -83,7 +80,7 @@ class User {
                 password:String,
                 clientName:String,
                 birth:Date,
-                serv: List<Services>,
+                serv: List<ServiceDB>,
                 availability: String,
                 company: Company,
                 appointments: List<Appointment>
@@ -93,9 +90,9 @@ class User {
                 this.password = password
                 this.name = clientName
                 this.birthday = birth
-                this.services = serv
+                this.service = serv
                 this.availability = AVAILABILITY_STATE
-                this.compId = company
+                this.companyId = company
                 this.appointment = appointments
         }
 
@@ -104,7 +101,7 @@ class User {
                 password:String,
                 clientName:String,
                 birth:Date,
-                serv: List<Services>,
+                serv: List<ServiceDB>,
                 appointments: List<Appointment>
         ){
                 this.token = UUID.randomUUID()
@@ -112,9 +109,9 @@ class User {
                 this.password = password
                 this.name = clientName
                 this.birthday = birth
-                this.services = serv
+                this.service = serv
                 this.availability = AVAILABILITY_STATE
-                this.compId = null
+                this.companyId = null
                 this.appointment = appointments
         }
 

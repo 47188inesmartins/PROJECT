@@ -38,7 +38,7 @@ class CompanyServices {
         return companyRepository.getAllEmployees(id)
     }*/
 
-    fun getAllServices(id: Int): List<Services>{
+    fun getAllServices(id: Int): List<backend.jvm.model.ServiceDB>{
         return companyRepository.getAllServices(id)
     }
 

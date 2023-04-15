@@ -12,3 +12,11 @@ mudar a availability de none pa available
 availability do user
 
 nif n ta unique
+
+
+meter as ferias em casa employee
+
+
+base de dados nas variaveis de ambiente
+
+para cada company só pode haver um day com o mesmo week_day

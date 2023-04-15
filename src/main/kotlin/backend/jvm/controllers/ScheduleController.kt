@@ -2,7 +2,7 @@ package backend.jvm.controllers
 
 import backend.jvm.controllers.json.ScheduleResponse
 import backend.jvm.model.Schedule
-import backend.jvm.model.Services
+import backend.jvm.model.ServiceDB
 import backend.jvm.services.ScheduleServices
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -21,7 +21,7 @@ class ScheduleController {
     fun addNewSchedule(@RequestBody schedule: Schedule): ResponseEntity<ScheduleResponse> {
         return try{
             val addedSchedule = scheduleServices.addSchedule(schedule)
-            val response = ScheduleResponse(addedSchedule.id, addedSchedule.compIdSch.id)
+            val response = ScheduleResponse(addedSchedule.id, addedSchedule.companyId.id)
             ResponseEntity.status(201).body(response)
         }catch (e: Exception){
             ResponseEntity.status(400).body(null)
@@ -40,14 +40,8 @@ class ScheduleController {
 
     @ResponseBody
     @GetMapping("/{id}/services/{ids}")
-    fun getServices(@PathVariable id: Int,@PathVariable ids: Int): List<Services>{
+    fun getServices(@PathVariable id: Int,@PathVariable ids: Int): List<ServiceDB>{
         return scheduleServices.getServices(id,ids)
     }
-
-    /*@ResponseBody
-    @GetMapping("/{id}/client")
-    fun getAllClientSchedule(@PathVariable id: Int, @RequestParam date: String, @RequestParam hour: String): List<User>{
-        return scheduleServices.getAllClientSchedule(id,date,hour)
-    }*/
 
 }

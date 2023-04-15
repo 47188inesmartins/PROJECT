@@ -1,7 +1,6 @@
 package backend.jvm.services
 
 import backend.jvm.model.Schedule
-import backend.jvm.model.Services
 import backend.jvm.repository.ScheduleRepository
 import org.springframework.beans.factory.annotation.Autowired
 import java.util.*
@@ -44,7 +43,7 @@ class ScheduleServices {
         return scheduleRepository.findById(id).get()
     }
 
-    fun getServices(idSchedule: Int,idService: Int): List<Services>{
+    fun getServices(idSchedule: Int,idService: Int): List<backend.jvm.model.ServiceDB>{
        TODO()// return scheduleRepository.getAllServices(idSchedule,idService)
     }
 

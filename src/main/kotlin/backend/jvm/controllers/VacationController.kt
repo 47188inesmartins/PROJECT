@@ -20,7 +20,7 @@ class VacationController {
     fun addVacation(@RequestBody vacation: Vacation): ResponseEntity<VacationResponse> {
         return try {
             val vac = vacationServices.addVacation(vacation)
-            val response = VacationResponse(vac.id, vac.dateBegin, vac.dateEnd, vac.sid.id)
+            val response = VacationResponse(vac.id, vac.dateBegin, vac.dateEnd, vac.scheduleId.id)
             ResponseEntity.status(201).body(response)
         }catch (e: Exception){
             ResponseEntity.status(400).body(null)
@@ -31,7 +31,7 @@ class VacationController {
     fun getVacation(@PathVariable id: Int): ResponseEntity<VacationResponse>{
         return try{
             val vac = vacationServices.getVacation(id)
-            val response = VacationResponse(vac.id, vac.dateBegin, vac.dateEnd, vac.sid.id)
+            val response = VacationResponse(vac.id, vac.dateBegin, vac.dateEnd, vac.scheduleId.id)
             ResponseEntity.status(200).body(response)
         }catch (e: Exception){
             ResponseEntity.status(400).body(null)

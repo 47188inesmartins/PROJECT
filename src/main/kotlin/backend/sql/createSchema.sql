@@ -19,9 +19,9 @@ create table if not exists COMPANY (
 */
 create table if not exists COMPANY_NUMBERS(
     phone_number varchar(13),
-    cid int,
+    company_id int,
     primary key (phone_number),
-    foreign key (cid) references COMPANY(id)
+    foreign key (company_id) references COMPANY(id)
 );
 
 /*
@@ -42,15 +42,15 @@ create table if not exists SCH_USER (
     name varchar(200),
     birthday date check (date(CURRENT_TIMESTAMP) >= birthday + interval '18 year'),
     availability varchar(15) not null default 'none' /*check (availability in ('available','unavailable','none'))*/,
-    comp_id int,
-    foreign key(comp_id) references COMPANY(id)
+    company_id int,
+    foreign key(company_id) references COMPANY(id)
 );
 
 
 create table if not exists U_ROLE (
     id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    uid int,
-    foreign key(uid) references SCH_USER(id),
+    user_id int,
+    foreign key(user_id) references SCH_USER(id),
     name varchar(20) NOT NULL UNIQUE CHECK ( name IN ('guest', 'user', 'employee', 'manager') )
 );
 
@@ -67,28 +67,21 @@ create table if not exists USER_ROLE(
 
 create table if not exists SCHEDULE (
     id serial primary key,
-    comp_id int unique,
-    foreign key(comp_id) references COMPANY(id)
+    company_id int unique,
+    foreign key(company_id) references COMPANY(id)
 );
 
 
-create table if not exists APPOINTMENT (
+create table if not exists UNAVAILABILITY(
     id serial primary key,
-    app_hour time,
-    app_date date,
-    sid int,
-    uid int,
-    foreign key(sid) references SCHEDULE(id),
-    foreign key(uid) references SCH_USER(id)
+    date_begin date,
+    date_end date,
+    hour_begin time,
+    hour_end time,
+    user_id int,
+    foreign key (user_id) references SCH_USER (id)
 );
 
-create table if not exists APPOINTMENT_USER (
-    user_id int,
-    appointment_id int,
-    primary key (user_id,appointment_id),
-    foreign key(user_id) references SCH_USER(id),
-    foreign key(appointment_id) references APPOINTMENT(id)
-);
 
 create table if not exists SERVICE (
     id serial primary key,
@@ -97,11 +90,33 @@ create table if not exists SERVICE (
     number_max int default 1,
     price float,
   /*  number_app_people int default 1,*/
-    cid int,
-    foreign key(cid) references COMPANY(id)
+    company_id int,
+    foreign key(company_id) references COMPANY(id)
 );
 
-/*N:N relation with service and appointment*/
+create table if not exists APPOINTMENT (
+    id serial primary key,
+    app_hour time,
+    app_date date,
+    schedule_id int,
+    service_id int,
+    user_id int,
+    foreign key(service_id) references SERVICE(id),
+    foreign key(schedule_id) references SCHEDULE(id),
+    foreign key(user_id) references SCH_USER(id)
+);
+
+
+create table if not exists APPOINTMENT_USER (
+    user_id int,
+    appointment_id int,
+    primary key (user_id, appointment_id),
+    foreign key(user_id) references SCH_USER(id),
+    foreign key(appointment_id) references APPOINTMENT(id)
+);
+
+
+/*N:N relation with service and appointment
 create table if not exists SERVICE_APPOINTMENT(
     service_id int,
     appointment_id int,
@@ -110,6 +125,7 @@ create table if not exists SERVICE_APPOINTMENT(
     foreign key (service_id) references SERVICE(id),
     foreign key (appointment_id) references APPOINTMENT(id)
 );
+*/
 
 
 /*N:N relation with employee and service*/
@@ -127,27 +143,27 @@ create table if not exists SCH_DAY(
      end_hour time,
      day_interval time,
      week_days char(4) CHECK (week_days in ('MON','TUE','WED','THU','FRI','SAT','SUN')),
-     sid int,
-     foreign key (sid) references SCHEDULE(id)
+     schedule_id int,
+     foreign key (schedule_id) references SCHEDULE(id)
 );
 
 
-create table if not exists SERVICE_DAYS(
-     id_days int,
-     id_service int,
+create table if not exists SERVICE_DAY(
+     days_id int,
+     service_id int,
      begin_hour time,
      end_hour time,
-     primary key (id_days,id_service),
-     foreign key (id_days) references SCH_DAY(id),
-     foreign key (id_service) references SERVICE(id)
+     primary key (days_id, service_id),
+     foreign key (days_id) references SCH_DAY(id),
+     foreign key (service_id) references SERVICE(id)
 );
 
 create table if not exists VACATION(
     id serial primary key,
     date_begin date,
     date_end date check ( date_end > date_begin ),
-    sid int,
-    foreign key (sid) references SCHEDULE(id)
+    schedule_id int,
+    foreign key (schedule_id) references SCHEDULE(id)
 );
 
 

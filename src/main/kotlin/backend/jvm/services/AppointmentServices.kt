@@ -2,7 +2,6 @@ package backend.jvm.services
 
 import backend.jvm.model.*
 import backend.jvm.repository.AppointmentRepository
-import backend.jvm.repository.ServiceRepository
 import backend.jvm.services.dto.AppointmentInputDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -46,7 +45,14 @@ class AppointmentServices {
     lateinit var appointmentRepository: AppointmentRepository
 
     @Autowired
-    lateinit var servicesRepository: ServiceRepository
+    lateinit var servicesService: ServServices
+
+    @Autowired
+    lateinit var userService: UserServices
+
+    @Autowired
+    lateinit var scheduleService: ScheduleServices
+
 
    /* fun addAppointment(appointment: Appointment): Int {
         val id = appointmentRepository.save(appointment).id
@@ -62,7 +68,7 @@ class AppointmentServices {
     }*/
 
     fun toAppointment(dto: AppointmentInputDto): Appointment {
-        val appointment = Appointment(
+     /*   val appointment = Appointment(
             dto.appHour,
             dto.appDate,
             dto.sid,
@@ -70,10 +76,11 @@ class AppointmentServices {
             dto.services
 
 
-        )
+        )*/
+        TODO()
     }
 
-    fun changeAvailabilityByPeople(appointment: Appointment,services: Services):Appointment{
+ /*   fun changeAvailabilityByPeople(appointment: Appointment,services: Services):Appointment{
         val getAppointment = appointment.id?.let { appointmentRepository.getReferenceById(it) }
             ?: throw Exception("Appointment does not exists")
 
@@ -84,16 +91,22 @@ class AppointmentServices {
             return appointmentRepository.editAvailability(appointment.id!!,"unavailable")
         }*/
         return appointment
-    }
+    }*/
 
     fun addAppointment(appointment: AppointmentInputDto): Appointment {
-      //  val existingAppointment = appointmentRepository.findAllByAppDateAndAppHourAndSid(appointment.appDate!!, appointment.appHour, appointment.sid!!)?.lastOrNull()
-      /*  if (existingAppointment != null) {
-            println(existingAppointment.numberAppPeople)
-            appointment.numberAppPeople = existingAppointment.numberAppPeople?.plus(1)
-        }
-        println("id=" + appointment.id)*/
-        val app = appointment.toAppointment()
+        val service = servicesService.getServiceById(appointment.service)
+println(service)
+        val user = if(appointment.userId != null) userService.getUserById(appointment.userId).get() else null
+      println(user)
+        val schedule = scheduleService.getSchedule(appointment.scheduleId)!!
+        println("pedido = ${ Time.valueOf(appointment.appHour)}, ${Date.valueOf(appointment.appDate)}, $service, $user, $schedule")
+        val app = Appointment(
+            appHour = Time.valueOf(appointment.appHour),
+            appDate = Date.valueOf(appointment.appDate),
+            scheduleId = schedule,
+            userId = user,
+            serviceDB = service
+        )
         val savedAppointment = appointmentRepository.save(app)
         println("save = ${savedAppointment.id}")
         return savedAppointment

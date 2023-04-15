@@ -11,8 +11,8 @@ import java.sql.Date
  *
  * @property id the appointment primary key
  * @property appHour hour of the appointment
- * @property sid schedule associated with appointment
- * @property uid company associated with appointment
+ * @property scheduleId schedule associated with appointment
+ * @property userId company associated with appointment
  *
  */
 
@@ -40,29 +40,30 @@ class Appointment {
     val appDate: Date
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sid")  // nome da foreign key
-    val sid : Schedule
+    @JoinColumn(name = "schedule_id")  // nome da foreign key
+    val scheduleId : Schedule
 
     @ManyToOne
-    @JoinColumn(name = "uid")
-    val uid : User?
+    @JoinColumn(name = "user_id")
+    val userId : User?
 
-    @ManyToMany(mappedBy = "appointment")
-    val services: List<Services>
+    @ManyToOne
+    @JoinColumn(name = "service_id")
+    val service: ServiceDB
 
     constructor() {
         this.appHour = Time.valueOf("00:00:00")
         this.appDate = Date.valueOf("2000-01-01")
-        this.sid = Schedule()
-        this.uid = null
-        this.services = listOf()
+        this.scheduleId = Schedule()
+        this.userId = null
+        this.service = ServiceDB()
     }
 
-    constructor(appHour: Time, appDate : Date, sid: Schedule, uid: User?, services: List<Services>) {
+    constructor(appHour: Time, appDate : Date, scheduleId: Schedule, userId: User?, serviceDB: ServiceDB) {
         this.appHour = appHour
         this.appDate = appDate
-        this.sid = sid
-        this.uid = uid
-        this.services = services
+        this.scheduleId = scheduleId
+        this.userId = userId
+        this.service = serviceDB
     }
 }

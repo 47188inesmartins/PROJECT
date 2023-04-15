@@ -1,8 +1,9 @@
 package backend.jvm.controllers
 
 import backend.jvm.controllers.json.ServicesResponse
-import backend.jvm.model.Services
+import backend.jvm.model.ServiceDB
 import backend.jvm.services.ServServices
+import backend.jvm.services.dto.ServiceInputDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -18,12 +19,13 @@ class ServiceController {
     lateinit var servServices: ServServices
 
     @PostMapping
-    fun addService(@RequestBody services: Services): ResponseEntity<ServicesResponse> {
+    fun addService(@RequestBody service: ServiceInputDto): ResponseEntity<ServicesResponse> {
         return try{
-            val response = mapToResponse(servServices.addService(services))
+            val response = mapToResponse(servServices.addService(service))
             ResponseEntity.status(201)
                 .body(response)
         }catch (e: Exception){
+            println("exception = $e")
             ResponseEntity.status(400)
                 .body(null)
         }
@@ -32,9 +34,10 @@ class ServiceController {
     @GetMapping("/{id}")
     fun getService(@PathVariable id: Int): ResponseEntity<ServicesResponse> {
        return try {
-           val response = mapToResponse(servServices.addService(servServices.getServiceById(id)))
-           ResponseEntity.status(200)
-               .body(response)
+           TODO()
+        //   val response = mapToResponse(servServices.addService(servServices.getServiceById(id)))
+          /* ResponseEntity.status(200)
+               .body(response)*/
        }catch(e: Exception){
            ResponseEntity.status(400)
                .body(null)
@@ -44,9 +47,10 @@ class ServiceController {
     @GetMapping("/{id}/employee")
     fun getEmployeeForServices(@PathVariable id: Int): ResponseEntity<ServicesResponse> {
         return try {
-            val response = mapToResponse(servServices.addService(servServices.getServiceById(id)))
+            TODO()
+          /*  val response = mapToResponse(servServices.addService(servServices.getServiceById(id)))
             ResponseEntity.status(200)
-                .body(response)
+                .body(response)*/
         }catch(e: Exception){
             ResponseEntity.status(400)
                 .body(null)
@@ -114,9 +118,9 @@ class ServiceController {
     }
 
     @DeleteMapping
-    fun deleteServices(@RequestBody service: Services): ResponseEntity<String> {
+    fun deleteServices(@RequestBody serviceDB: ServiceDB): ResponseEntity<String> {
         return try {
-             servServices.delete(service)
+             servServices.delete(serviceDB)
             ResponseEntity.status(200)
                 .body("Service was deleted")
         }catch(e: Exception){
@@ -125,12 +129,14 @@ class ServiceController {
         }
     }
 
-    fun mapToResponse(services: Services): ServicesResponse {
-        val listApp = services.appointment?.map { it.id }
-        val dayApp = services.user?.map { it.id!! }
-        val userApp = services.day?.map { it.id }
+    fun mapToResponse(serviceDB: ServiceDB): ServicesResponse {
+        val listApp = serviceDB.appointment?.map { it.id }
+        val dayApp = serviceDB.user?.map { it.id!! }
+        val userApp = serviceDB.day?.map { it.id }
 
-        return ServicesResponse(services.id,services.name,services.duration,services.numberMax,services.price, services.cid?.id!!, listApp!!, dayApp!!, userApp!!)
+        return ServicesResponse(serviceDB.id,serviceDB.name,serviceDB.duration,serviceDB.numberMax,serviceDB.price,
+            serviceDB.companyId.id, listApp!!, dayApp!!, userApp!!)
+
     }
 }
 
