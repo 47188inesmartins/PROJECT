@@ -45,10 +45,10 @@ class Vacation {
         this.schedule = Schedule()
     }
 
-    constructor(dateBegin: Date, dateEnd: Date, schedule: Int){
+    constructor(dateBegin: Date, dateEnd: Date, schedule: Schedule){
         this.dateBegin = dateBegin
         this.dateEnd = dateEnd
-        this.schedule = Schedule()
+        this.schedule = schedule
     }
 
 }

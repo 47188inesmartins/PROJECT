@@ -80,10 +80,9 @@ class User {
                 password:String,
                 clientName:String,
                 birth:Date,
-                serv: List<ServiceDB>,
-                availability: String,
-                company: Company,
-                appointments: List<Appointment>
+                serv: List<ServiceDB>?,
+                company: Company?,
+                appointments: List<Appointment>?
         ){
                 this.token = UUID.randomUUID()
                 this.email = email
@@ -101,8 +100,8 @@ class User {
                 password:String,
                 clientName:String,
                 birth:Date,
-                serv: List<ServiceDB>,
-                appointments: List<Appointment>
+                serv: List<ServiceDB>?,
+                appointments: List<Appointment>?
         ){
                 this.token = UUID.randomUUID()
                 this.email = email

@@ -1,12 +1,19 @@
 package backend.jvm.services
 
-import backend.jvm.model.User
+import backend.jvm.model.Appointment
+import backend.jvm.model.ServiceDB
+import backend.jvm.repository.AppointmentRepository
+import backend.jvm.repository.CompanyRepository
+import backend.jvm.repository.ServiceRepository
 import backend.jvm.repository.UserRepository
+import backend.jvm.services.dto.UserInputDto
+import backend.jvm.services.dto.UserOutputDto
 import backend.jvm.utils.Hashing
 import backend.jvm.utils.UserRoles
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
+import kotlin.collections.List
 
 
 @Service
@@ -14,54 +21,61 @@ class UserServices {
 
     @Autowired
     lateinit var userRepository: UserRepository
+    @Autowired
+    lateinit var servicesRepository: ServiceRepository
+    @Autowired
+    lateinit var appointmentRepository: AppointmentRepository
+    @Autowired
+    lateinit var companyRepository: CompanyRepository
 
-    fun addUser(user: User): User {
-        //if(!EMAIL_FORMAT.matches(user.email)) throw Exception("Invalid email format")
-        val pass = Hashing().encodePass(user.password) ?: throw Exception("Password isn't save")
-        user.password = pass
-        return userRepository.save(user)
+    fun addUser(user: UserInputDto): UserOutputDto {
+        val servicesList = mutableListOf<ServiceDB>()
+        val appList =  mutableListOf<Appointment>()
+
+        if(user.services != null ) user.services.forEach { servicesList.add(servicesRepository.findById(it).get()) }
+        if(user.appointment != null ) user.appointment.forEach { appList.add(appointmentRepository.findById(it).get()) }
+        val comp = if(user.companyId != null )companyRepository.findById(user.companyId).get() else null
+
+        val returnUser = userRepository.save(
+            user.mapToUser(user,Hashing.encodePass(user.password),servicesList,appList,comp)
+        )
+
+        return UserOutputDto(returnUser)
     }
 
-    fun deleteUser(id: Int): Boolean{
+    fun deleteUser(id: Int): Boolean {
+        if(userRepository.findById(id).isEmpty) return false
         userRepository.deleteById(id)
         return true
     }
 
-    fun getUserById(id: Int): Optional<User> {
-        return userRepository.findById(id)
+    fun getUserById(id: Int): UserOutputDto {
+        val getUser = userRepository.findById(id)
+        if(getUser.isEmpty) throw Exception("the user doesn´t exists")
+        return UserOutputDto(getUser.get())
     }
-
-    /*fun getUserByEmail(email: String): User{
-        return userRepository.getUsersByEmail(email)
-    }*/
 
     fun getRole(id: Int):String?{
         return userRepository.getRole(id)
     }
 
-    fun changeRole(id: Int, roleName: String): User{
+    fun changeRole(id: Int, roleName: String): String{
         UserRoles.valueOf(roleName.uppercase(Locale.getDefault()))
         return userRepository.changeRole(id, roleName)
     }
 
-    fun changeAvailability(availability: String, id: Int): User{
+    fun changeAvailability(availability: String, id: Int): String{
         return userRepository.changeAvailability(availability,id)
     }
 
-    fun changePassword(password: String, id: Int): User{
-        val pass = Hashing().encodePass(password) ?: throw Exception("Password isn't save")
+    fun changePassword(password: String, id: Int): String{
+        if(!Hashing.verifyPasswordSecure(password)) throw   Exception("Password isn´t save")
+        val pass = Hashing.encodePass(password)
         return userRepository.changePassword(pass, id)
     }
 
-    /*fun getUsersByServices (service: List<Services>): List<User>{
-        return userRepository.getUsersByServices(service)
-    }*/
-
-    /*fun getUsersByAppointment(appointment: List<Appointment>): List<User>{
-        return userRepository.getUsersByAppointment(appointment)
+    fun getUsersByCompId (compId: Int): List<UserOutputDto> {
+        val repoList = userRepository.getUsersByCompanyId(compId)
+        return repoList.map { UserOutputDto(it) }
     }
-
-    fun getUsersByCompId (compId: Company): User{
-        return userRepository.getUsersByCompId(compId)
-    }*/
 }

@@ -1,7 +1,10 @@
 package backend.jvm.services.dto
 
+import backend.jvm.model.Appointment
+import backend.jvm.model.Company
 import backend.jvm.model.ServiceDB
 import backend.jvm.model.User
+import java.sql.Date
 
 
 data class UserOutputDto(
@@ -38,7 +41,8 @@ data class UserInputDto(
         val birthday: String,
         val availability: String?,
         val companyId: Int?,
-        val services: List<Int>
+        val services: List<Int>?,
+        val appointment: List<Int>?,
 ){
         companion object{
                 val EMAIL_FORMAT = Regex("""^\w+@\w+\.\w+$""")
@@ -49,4 +53,17 @@ data class UserInputDto(
                 require(EMAIL_FORMAT.matches(email)){ "Invalid email"}
                 require(PASSWORD_FORMAT.matches(password)){ "Insecure password"}
         }
+
+        fun mapToUser(dto: UserInputDto,pass: String,services: List<ServiceDB>?,appointment: List<Appointment>?,comp: Company?):User{
+              return User(
+                      dto.email,
+                      pass,
+                      dto.name,
+                      Date.valueOf(dto.birthday),
+                      services,
+                      comp,
+                      appointment
+                )
+        }
+
 }
