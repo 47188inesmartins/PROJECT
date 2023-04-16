@@ -13,4 +13,4 @@ base de dados nas variaveis de ambiente
 para cada company só pode haver um day com o mesmo week_day
 
 
-mudar availability do service 
+mudar availability do service

@@ -46,13 +46,13 @@ class Company {
                 this.users = null
         }
 
-        constructor(nif: String, address: String, compName: String, compType: String, description: String, serviceDBS: List<ServiceDB>, schedule: Schedule?, users: List<User>){
+        constructor(nif: String, address: String, compName: String, compType: String, description: String, serviceDB: List<ServiceDB>?, schedule: Schedule?, users: List<User>?){
                 this.nif = nif
                 this.address = address
                 this.name = compName
                 this.type = compType
                 this.description = description
-                this.serviceDBS = serviceDBS
+                this.serviceDBS = serviceDB
                 this.schedule = schedule
                 this.users = users
         }

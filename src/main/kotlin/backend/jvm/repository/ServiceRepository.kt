@@ -31,9 +31,4 @@ interface ServiceRepository : JpaRepository<ServiceDB, Int> {
     @Query(value = "update service set number_max =:number where id=:idService returning number_max  ", nativeQuery = true)
     fun updateMaxNumber( @Param("idService") idService: Int, @Param("number") number: Int):Double
 
-    //@Query(value = "")
-
-   /* @Query(value = "update SERVICE_APPOINTMENT set availability =:availability where service_id =:idService and appointment_id=:idApp returning availability", nativeQuery = true)
-    fun updateAvailability( @Param("idService") idService: Int,@Param("idApp") idApp: Int, @Param("availability") availability: String): String
-    */
 }

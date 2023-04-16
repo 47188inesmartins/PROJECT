@@ -63,7 +63,4 @@ class AppointmentServices {
         val appointments = appointmentRepository.getAppointmentByDateAndHour(sid, date, hour)
         return appointments.map{ AppointmentOutputDto(it) }
     }
-
-    fun editNumberAppPeople(id: Int, numberAppPeople: Int): Appointment = appointmentRepository.editNumberAppPeople(id, numberAppPeople)
-
 }

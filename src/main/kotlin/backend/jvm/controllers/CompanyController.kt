@@ -3,7 +3,10 @@ package backend.jvm.controllers
 
 import backend.jvm.model.*
 import backend.jvm.services.CompanyServices
+import backend.jvm.services.dto.CompanyInputDto
+import backend.jvm.services.dto.CompanyOutputDto
 import backend.jvm.services.dto.ServiceOutputDto
+import org.apache.catalina.connector.Response
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -19,7 +22,7 @@ class CompanyController {
 
     @ResponseBody
     @PostMapping
-    fun addCompany(@RequestBody company: Company): ResponseEntity<Company> {
+    fun addCompany(@RequestBody company: CompanyInputDto): ResponseEntity<CompanyOutputDto> {
         return try {
             val response = companyServices.addCompany(company)
             ResponseEntity
@@ -71,19 +74,28 @@ class CompanyController {
 
     @GetMapping("/{id}/services")
     fun getAllServices(@PathVariable id: Int): ResponseEntity<List<ServiceOutputDto>> {
-        TODO()
-        /*  return try {
-            val servs = companyServices.getAllServices(id)
-            val response = servs.map { ServicesResponse(it.id, it.name, it.duration, it.numberMax, it.price, it.cid?.id!!, it.appointment, it.day.id, it.user.id) }
+        return try {
+            val response = companyServices.getAllServices(id)
             ResponseEntity.status(200).body(response)
-        }catch (e: Exception){
+        } catch (e: Exception) {
             ResponseEntity.status(400)
                 .body(null)
-        }*/
+        }
     }
-}
 
-   /* @GetMapping("/{id}/appointments")
+    @PutMapping("/{id}/address")
+    fun changeAddress(@PathVariable id: Int, @RequestBody address: String): ResponseEntity<Nothing> {
+        return try {
+            companyServices.changeAddress(id, address)
+            ResponseEntity.status(200).body(null)
+        } catch (e: Exception) {
+            ResponseEntity.status(400).body(null)
+        }
+    }
+
+}
+/*
+    @GetMapping("/{id}/appointments")
     fun getAllAppointments(@PathVariable id: Int): ResponseEntity<List<AppointmentResponse>>{
         return try {
             val servs = companyServices.getAllAppointments(id)
@@ -125,14 +137,9 @@ class CompanyController {
         }
     }
 
-    @PutMapping("/{id}/address")
-    fun changeAddress(@PathVariable id: Int, @RequestBody address: String): Company{
-        return companyServices.changeAddress(id, address)
-    }
-
     @PutMapping("/{id}/description")
     fun changeDescription(@PathVariable id: Int, @RequestBody address: String): Company{
         return companyServices.changeAddress(id, address)
     }
 
-}  */
+}*/

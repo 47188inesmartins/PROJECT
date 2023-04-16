@@ -2,6 +2,12 @@ package backend.jvm.services
 
 import backend.jvm.model.*
 import backend.jvm.repository.CompanyRepository
+import backend.jvm.repository.ScheduleRepository
+import backend.jvm.repository.ServiceRepository
+import backend.jvm.repository.UserRepository
+import backend.jvm.services.dto.CompanyInputDto
+import backend.jvm.services.dto.CompanyOutputDto
+import backend.jvm.services.dto.ServiceOutputDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.sql.Time
@@ -16,9 +22,38 @@ class CompanyServices {
     @Autowired
     lateinit var companyRepository: CompanyRepository
 
-    fun addCompany(company: Company): Company {
+    @Autowired
+    lateinit var scheduleRepository: ScheduleRepository
+
+    @Autowired
+    lateinit var usersRepository: UserRepository
+
+    @Autowired
+    lateinit var serviceRepository: ServiceRepository
+
+    fun addCompany(company: CompanyInputDto): CompanyOutputDto {
         if(company.nif.length != NIF_NUMBERS ) throw Exception("Invalid NIF number")
-        return companyRepository.save(company)
+/*
+* verificar se os users tem o role "cliente" e mudar para role employee quando
+* sao adicionados
+*
+* */
+        val schedule = company.schedule?.let { scheduleRepository.getReferenceById(it) }
+        val users = company.users?.map { usersRepository.getById(it) }
+        val services = company.service?.map { serviceRepository.getById(it) }
+        val comp = companyRepository.save(
+            Company(
+                nif = company.nif,
+                address = company.address,
+                compName = company.name,
+                compType = company.type,
+                description = company.description,
+                serviceDB = services,
+                schedule = schedule,
+                users = users
+            )
+        )
+        return CompanyOutputDto(comp)
     }
 
     fun deleteCompany(id: Int): Boolean{
@@ -38,8 +73,8 @@ class CompanyServices {
         return companyRepository.getAllEmployees(id)
     }*/
 
-    fun getAllServices(id: Int): List<backend.jvm.model.ServiceDB>{
-        return companyRepository.getAllServices(id)
+    fun getAllServices(id: Int): List<ServiceOutputDto>{
+        return companyRepository.getAllServices(id).map { ServiceOutputDto(it) }
     }
 
     fun getAllAppointments(id: Int):List<Appointment>{
@@ -51,7 +86,6 @@ class CompanyServices {
     }
 
     fun getOpenDays(id: Int): List<String>{
-        println("id = $id")
         return companyRepository.getOpenDays(id)
     }
 
@@ -65,8 +99,8 @@ class CompanyServices {
         return companyRepository.getVacation(id)
     }
 
-    fun changeAddress(id: Int, address: String): Company{
-        return companyRepository.changeAddress(id, address)
+    fun changeAddress(id: Int, address: String){
+        companyRepository.changeAddress(id, address)
     }
 
     fun changeDescription(id: Int, description: String): Company{
@@ -74,10 +108,3 @@ class CompanyServices {
     }
 
 }
-
-/*
->#### PUT
-> change company's address [/company/{id}] @RequestBody address
->
-> change company's description [/company/{id}] @RequestBody description
-*/

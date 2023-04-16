@@ -14,7 +14,7 @@ import java.util.UUID
  * @property password the User password
  * @property name the user's name
  * @property birthday the User birthday
- * @property companyId null if the user has the role of 'guest' or 'client'. the company where the user works
+ * @property company null if the user has the role of 'guest' or 'client'. the company where the user works
  */
 
 @Entity
