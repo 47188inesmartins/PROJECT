@@ -31,4 +31,10 @@ interface UserRepository: JpaRepository<User, Int> {
      fun changeRole (@Param("id") id: Int, @Param("nameRole") name: String): String
 
      fun getUsersByCompanyId(company_id: Int):List<User>
+
+     @Query(value = "select user_id from unavailability where user_id= :id", nativeQuery = true)
+     fun getUnavailableDays(@Param("id")id: Int): List<Int>
+
+     @Query(value = "select * from SCH_USER where email = :email and password = :pass", nativeQuery = true)
+     fun getUsersByEmailPass(@Param("pass") pass: String, @Param("email") email: String): User?
 }

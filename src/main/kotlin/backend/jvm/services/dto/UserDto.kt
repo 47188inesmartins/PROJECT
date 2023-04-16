@@ -28,7 +28,7 @@ data class UserOutputDto(
                 services = user.services?.map { it.id }?: emptyList()
         )
 
-        private fun mapToInt(list: List<ServiceDB>?):List<Int>{
+        private fun mapToUserOutput(list: List<ServiceDB>?):List<Int>{
                 if(list == null) return emptyList()
                 return list.map { it.id }
         }

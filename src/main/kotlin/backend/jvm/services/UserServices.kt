@@ -2,6 +2,7 @@ package backend.jvm.services
 
 import backend.jvm.model.Appointment
 import backend.jvm.model.ServiceDB
+import backend.jvm.model.User
 import backend.jvm.repository.AppointmentRepository
 import backend.jvm.repository.CompanyRepository
 import backend.jvm.repository.ServiceRepository
@@ -68,6 +69,10 @@ class UserServices {
         return userRepository.changeAvailability(availability,id)
     }
 
+    fun findById(id:Int): User {
+        return userRepository.findById(id).get()
+    }
+
     fun changePassword(password: String, id: Int): String{
         if(!Hashing.verifyPasswordSecure(password)) throw   Exception("Password isn´t save")
         val pass = Hashing.encodePass(password)
@@ -78,4 +83,12 @@ class UserServices {
         val repoList = userRepository.getUsersByCompanyId(compId)
         return repoList.map { UserOutputDto(it) }
     }
+
+    fun getUsersByEmailAndPass (email: String, password: String): UserOutputDto {
+        val user = userRepository.getUsersByEmailPass(Hashing.encodePass(password),email)
+            ?: throw Exception("Invalid email or password")
+        println("here")
+        return UserOutputDto(user)
+    }
+
 }

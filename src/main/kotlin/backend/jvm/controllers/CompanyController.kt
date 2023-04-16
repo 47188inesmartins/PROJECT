@@ -3,9 +3,12 @@ package backend.jvm.controllers
 
 import backend.jvm.model.*
 import backend.jvm.services.CompanyServices
+import backend.jvm.services.dto.CompanyAddress
 import backend.jvm.services.dto.CompanyInputDto
 import backend.jvm.services.dto.CompanyOutputDto
 import backend.jvm.services.dto.ServiceOutputDto
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonArray
 import org.apache.catalina.connector.Response
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -84,12 +87,17 @@ class CompanyController {
     }
 
     @PutMapping("/{id}/address")
-    fun changeAddress(@PathVariable id: Int, @RequestBody address: String): ResponseEntity<Nothing> {
+    fun changeAddress(@PathVariable id: Int, @RequestBody companyAddress: CompanyAddress): ResponseEntity<String> {
         return try {
-            companyServices.changeAddress(id, address)
-            ResponseEntity.status(200).body(null)
-        } catch (e: Exception) {
-            ResponseEntity.status(400).body(null)
+        println(id)
+            companyServices.changeAddress(id, companyAddress.address)
+           ResponseEntity
+                .status(200)
+                .body("The address of the company was updated")
+       } catch (e: Exception) {
+            ResponseEntity
+                .status(400)
+                .body(e.toString())
         }
     }
 

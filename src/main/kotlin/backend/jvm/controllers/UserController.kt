@@ -4,6 +4,9 @@ import backend.jvm.model.User
 import backend.jvm.services.UserServices
 import backend.jvm.services.dto.UserInputDto
 import backend.jvm.services.dto.UserOutputDto
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -28,6 +31,7 @@ class UserController {
     fun addUser(@RequestBody user: UserInputDto): ResponseEntity<UserOutputDto> {
         return try {
             val response = userServices.addUser(user)
+            println("Exception = $response")
             ResponseEntity
                 .status(201)
                 .body(response)
@@ -40,33 +44,132 @@ class UserController {
     }
 
     @DeleteMapping("/{id}")
-    fun deleteUser(@PathVariable id: Int): Boolean{
-        return userServices.deleteUser(id)
+    fun deleteUser(@PathVariable id: Int): ResponseEntity<Boolean>{
+        return try {
+            val response = userServices.deleteUser(id)
+            ResponseEntity
+                .status(201)
+                .body(response)
+        }catch (e: Exception) {
+            ResponseEntity
+                .status(400)
+                .body(null)
+        }
+
     }
 
     @GetMapping("/{id}")
-    fun getUserById(@PathVariable id: Int): UserOutputDto {
-        return userServices.getUserById(id)
-}
+    fun getUserById(@PathVariable id: Int): ResponseEntity<UserOutputDto> {
+        return try {
+            val response = userServices.getUserById(id)
+            ResponseEntity
+                .status(200)
+                .body(response)
+        }catch (e: Exception) {
+            ResponseEntity
+                .status(400)
+                .body(null)
+        }
+    }
 
     @GetMapping("/{id}/role")
-    fun getRole(@PathVariable id: Int): String? {
-        return userServices.getRole(id)
+    fun getRole(@PathVariable id: Int): ResponseEntity<String?> {
+        return try {
+            val response = userServices.getRole(id)
+            ResponseEntity
+                .status(200)
+                .body(response)
+        }catch (e: Exception) {
+            ResponseEntity
+                .status(400)
+                .body(null)
+        }
     }
 
     @PutMapping("/{id}/role")
-    fun changeRole(@PathVariable id: Int, @RequestBody roleName: String): String {
-        return userServices.changeRole(id, roleName)
+    fun changeRole(@PathVariable id: Int, @RequestBody roleName: String):  ResponseEntity<String> {
+        return try {
+            val json = Json.parseToJsonElement(roleName)
+            val request = json.jsonObject["roleName"]?.jsonPrimitive?.content
+                ?: return ResponseEntity
+                    .status(400)
+                    .body(null)
+
+            val response = userServices.changeRole(id, request)
+            ResponseEntity
+                .status(200)
+                .body(response)
+        }catch (e: Exception) {
+            ResponseEntity
+                .status(400)
+                .body(null)
+        }
     }
 
     @PutMapping("/{id}/availability")
-    fun changeAvailability(@PathVariable id: Int, @RequestBody availability: String): String {
-        return userServices.changeAvailability(availability, id)
+    fun changeAvailability(@PathVariable id: Int, @RequestBody availability: String): ResponseEntity<String> {
+        return try {
+            val json = Json.parseToJsonElement(availability)
+            val request = json.jsonObject["availability"]?.jsonPrimitive?.content
+                ?: return ResponseEntity
+                    .status(400)
+                    .body(null)
+
+            val response = userServices.changeAvailability(request, id)
+            ResponseEntity
+                .status(200)
+                .body(response)
+        }catch (e: Exception) {
+            ResponseEntity
+                .status(400)
+                .body(null)
+        }
     }
 
     @PutMapping("/{id}/password")
-    fun changePassword(@PathVariable id: Int, @RequestBody password: String): String {
-        return userServices.changePassword(password, id)
+    fun changePassword(@PathVariable id: Int, @RequestBody password: String): ResponseEntity<String> {
+        return try {
+            val json = Json.parseToJsonElement(password)
+            val request = json.jsonObject["password"]?.jsonPrimitive?.content
+                ?: return ResponseEntity
+                    .status(400)
+                    .body(null)
+
+            val response = userServices.changePassword(request, id)
+            ResponseEntity
+                .status(200)
+                .body(response)
+        }catch (e: Exception) {
+            ResponseEntity
+                .status(400)
+                .body(null)
+        }
+    }
+    @GetMapping("/log")
+    fun getUserByEmailPass(@RequestBody password: String,@RequestBody email: String): ResponseEntity<UserOutputDto> {
+       // return try {
+            val jsonPass = Json.parseToJsonElement(password)
+            val requestPass = jsonPass.jsonObject["password"]?.jsonPrimitive?.content
+                ?: return ResponseEntity
+                    .status(400)
+                    .body(null)
+            val jsonEmail = Json.parseToJsonElement(email)
+            val requestEmail = jsonEmail.jsonObject["email"]?.jsonPrimitive?.content
+                ?: return ResponseEntity
+                    .status(400)
+                    .body(null)
+
+            val response = userServices.getUsersByEmailAndPass(requestEmail,requestPass)
+
+            println(response)
+            return ResponseEntity
+                .status(200)
+                .body(response)
+        /*}catch (e: Exception) {
+            ResponseEntity
+                .status(400)
+                .body(null)
+        }*/
     }
 }
 

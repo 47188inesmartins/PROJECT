@@ -2,6 +2,7 @@ package backend.jvm.services.dto
 
 import backend.jvm.model.Company
 
+data class CompanyAddress(val address: String)
 data class CompanyInputDto(
     val nif: String,
     val address: String,

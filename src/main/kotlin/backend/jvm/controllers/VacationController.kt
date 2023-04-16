@@ -1,5 +1,12 @@
 package backend.jvm.controllers
 
+import backend.jvm.services.VacationService
+import backend.jvm.services.dto.VacationInputDto
+import backend.jvm.services.dto.VacationOutputDto
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.sql.Date
@@ -9,40 +16,48 @@ import java.sql.Date
 @RequestMapping("/vacation")
 class VacationController {
 
-  /*  @Autowired
-    lateinit var vacationServices:VacationService
+     @Autowired
+    lateinit var vacationServices: VacationService
 
     @PostMapping
-    fun addVacation(@RequestBody vacation: Vacation): ResponseEntity<VacationResponse> {
+    fun addVacation(@RequestBody vacation: VacationInputDto): ResponseEntity<VacationOutputDto> {
         return try {
-            val vac = vacationServices.addVacation(vacation)
-            val response = VacationResponse(vac.id, vac.dateBegin, vac.dateEnd, vac.schedule.id)
-            ResponseEntity.status(201).body(response)
+            val response = vacationServices.addVacation(vacation)
+            ResponseEntity
+                .status(201)
+                .body(response)
         }catch (e: Exception){
             ResponseEntity.status(400).body(null)
         }
     }
 
     @GetMapping("/{id}")
-    fun getVacation(@PathVariable id: Int): ResponseEntity<VacationResponse>{
+    fun getVacation(@PathVariable id: Int): ResponseEntity<VacationOutputDto>{
         return try{
-            val vac = vacationServices.getVacation(id)
-            val response = VacationResponse(vac.id, vac.dateBegin, vac.dateEnd, vac.schedule.id)
-            ResponseEntity.status(200).body(response)
+            val response = vacationServices.getVacation(id)
+            ResponseEntity
+                .status(200)
+                .body(response)
         }catch (e: Exception){
             ResponseEntity.status(400).body(null)
         }
     }
 
-    @DeleteMapping
-    fun deleteVacation(@RequestBody vacation: Vacation){
-        vacationServices.deleteVacation(vacation)
+    @DeleteMapping("/{id}")
+    fun deleteVacation(@PathVariable  id: Int){
+        vacationServices.deleteVacation(id)
     }
 
     @PutMapping("/{id}/date-begin")
     fun updateBeginDate(@PathVariable id: Int, @RequestParam date: String): ResponseEntity<Date> {
         return try {
-            ResponseEntity.status(200).body(vacationServices.changeBeginDate(id,date))
+            val json = Json.parseToJsonElement(date)
+            val request = json.jsonObject["date"]?.jsonPrimitive?.content
+                ?: return ResponseEntity
+                    .status(400)
+                    .body(null)
+
+            ResponseEntity.status(200).body(vacationServices.changeBeginDate(id,request))
         }catch (e: Exception){
             println("exception = $e")
             ResponseEntity.status(400).body(null)
@@ -52,10 +67,15 @@ class VacationController {
     @PutMapping("/{id}/date-end")
     fun updateEndDate(@PathVariable id: Int, @RequestParam date: String): ResponseEntity<Date> {
         return try {
-            ResponseEntity.status(200).body(vacationServices.changeEndDate(id,date))
+            val json = Json.parseToJsonElement(date)
+            val request = json.jsonObject["date"]?.jsonPrimitive?.content
+                ?: return ResponseEntity
+                    .status(400)
+                    .body(null)
+
+            ResponseEntity.status(200).body(vacationServices.changeEndDate(id,request))
         }catch (e: Exception){
             ResponseEntity.status(400).body(null)
         }
     }
-*/
 }

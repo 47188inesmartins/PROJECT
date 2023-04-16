@@ -1,7 +1,10 @@
 package backend.jvm.services
 
 import backend.jvm.model.Vacation
+import backend.jvm.repository.ScheduleRepository
 import backend.jvm.repository.VacationRepository
+import backend.jvm.services.dto.VacationInputDto
+import backend.jvm.services.dto.VacationOutputDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.sql.Date
@@ -12,17 +15,24 @@ class VacationService {
     @Autowired
     lateinit var vacationRepository: VacationRepository
 
-    fun getVacation(id: Int): Vacation{
-        return vacationRepository.findById(id).get()
+    @Autowired
+    lateinit var scheduleRepository: ScheduleRepository
+
+    fun getVacation(id: Int): VacationOutputDto {
+        val vacation = vacationRepository.findById(id)
+        if(vacation.isEmpty) throw Exception("The company doesn´t has vacation")
+        return VacationOutputDto(vacation.get())
     }
 
-    fun addVacation(vacation: Vacation):Vacation{
-        if(!vacation.dateBegin.before(vacation.dateEnd)) throw Exception("Invalid dates")
-        return vacationRepository.save(vacation)
+    fun addVacation(vacation: VacationInputDto):VacationOutputDto {
+        val schedule = scheduleRepository.findById(vacation.schedule).get()
+        val db = vacation.mapToVacationDb(vacation,schedule)
+        if(!db.dateBegin.before(db.dateEnd)) throw Exception("Invalid dates")
+        return VacationOutputDto(vacationRepository.save(db))
     }
 
-    fun deleteVacation(vacation: Vacation){
-        vacationRepository.delete(vacation)
+    fun deleteVacation(vacation: Int){
+        vacationRepository.deleteById(vacation)
     }
 
     fun changeBeginDate(id:Int, date: String): Date {

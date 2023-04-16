@@ -9,7 +9,7 @@ import java.sql.Time
 data class VacationInputDto(
     val dateBegin: String,
     val dateEnd: String,
-    val schedule: Int?
+    val schedule: Int
 ){
     fun mapToVacationDb(dto: VacationInputDto,schedule: Schedule): Vacation {
         val begin = Date.valueOf(dto.dateBegin)?: throw Exception("invalid date")

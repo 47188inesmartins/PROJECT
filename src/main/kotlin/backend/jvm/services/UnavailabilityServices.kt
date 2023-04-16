@@ -1,6 +1,5 @@
 package backend.jvm.services
 
-import backend.jvm.repository.ServiceRepository
 import backend.jvm.repository.UnavailabilityRepository
 import backend.jvm.repository.UserRepository
 import backend.jvm.services.dto.UnavailabilityInputDto

@@ -27,7 +27,7 @@ class AppointmentServices {
 
     fun addAppointment(appointment: AppointmentInputDto): AppointmentOutputDto {
         val service = servicesRepository.getServiceDBById(appointment.service)
-        val user = if (appointment.user != null) userService.getUserById(appointment.user).get() else null
+        val user = if (appointment.user != null)userService.findById(appointment.user) else null
         val schedule = scheduleService.getSchedule(appointment.schedule)!!
         val app = Appointment(
             appHour = Time.valueOf(appointment.appHour),

@@ -100,6 +100,7 @@ class CompanyServices {
     }
 
     fun changeAddress(id: Int, address: String){
+        println("services"+ address)
         companyRepository.changeAddress(id, address)
     }
 

@@ -2,9 +2,15 @@ package backend.jvm.controllers
 
 import backend.jvm.model.Day
 import backend.jvm.services.DayServices
+import backend.jvm.services.dto.DayInputDto
+import backend.jvm.services.dto.DayOutputDto
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.sql.Time
 
 
 @RestController
@@ -16,7 +22,7 @@ class DayController {
 
     @ResponseBody
     @PostMapping
-    fun addOpenDay(@RequestBody day: Day): ResponseEntity<Day> {
+    fun addOpenDay(@RequestBody day: DayInputDto): ResponseEntity<DayOutputDto> {
         return try{
             val addedDay = dayService.addOpenDay(day)
            // val response = DayResponse(addedDay.id, addedDay.beginHour, addedDay.endHour, addedDay.interval, addedDay.weekDays, addedDay.scheduleId?.id!!)
@@ -27,19 +33,57 @@ class DayController {
         }
     }
 
-    @DeleteMapping
-    fun deleteOpenDay(@RequestBody day: Day) {
-        dayService.deleteDay(day)
+    @DeleteMapping("/{id}")
+    fun deleteOpenDay(@PathVariable id: Int): ResponseEntity<String> {
+        return try{
+            dayService.deleteDay(id)
+            ResponseEntity.status(200)
+                .body("Open day deleted")
+        }catch(e: Exception){
+            println("exception = $e")
+            ResponseEntity
+                .status(400)
+                .body(e.toString())
+        }
     }
     @ResponseBody
-    @PutMapping("/begin/{id}")
-    fun updateBeginHour(@PathVariable id:Int,@RequestParam begin: String):Day {
-        return dayService.updateBeginHour(id,begin)
+    @PutMapping("/{id}/begin")
+    fun updateBeginHour(@PathVariable id:Int,@RequestParam begin: String): ResponseEntity<Time> {
+        return try{
+            val json = Json.parseToJsonElement(begin)
+            val request = json.jsonObject["begin"]?.jsonPrimitive?.content
+                ?: return ResponseEntity
+                    .status(400)
+                    .body(null)
+            val response = dayService.updateBeginHour(id,request)
+            ResponseEntity.status(200)
+                .body(response)
+        }catch(e: Exception){
+            println("exception = $e")
+            ResponseEntity
+                .status(400)
+                .body(null)
+        }
     }
     @ResponseBody
-    @PutMapping("/end/{id}")
-    fun updateEndHour(@PathVariable id:Int,@RequestParam end: String): Day {
-        return dayService.updateEndHour(id,end)
+    @PutMapping("/{id}/end")
+    fun updateEndHour(@PathVariable id:Int,@RequestParam end: String): ResponseEntity<Time> {
+        return try{
+            val json = Json.parseToJsonElement(end)
+            val request = json.jsonObject["end"]?.jsonPrimitive?.content
+                ?: return ResponseEntity
+                    .status(400)
+                    .body(null)
+
+            val response = dayService.updateEndHour(id,request)
+            ResponseEntity.status(200)
+                .body(response)
+        }catch(e: Exception){
+            println("exception = $e")
+            ResponseEntity
+                .status(400)
+                .body(null)
+        }
     }
 
 }
