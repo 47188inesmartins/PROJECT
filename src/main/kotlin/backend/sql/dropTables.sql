@@ -24,3 +24,4 @@ drop table if exists UNAVAILABILITY cascade;
 
 COMMIT;
 
+

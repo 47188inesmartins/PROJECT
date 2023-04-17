@@ -110,4 +110,9 @@ class UserServices {
         return AppointmentOutputDto(com)
     }
 
+    fun getUserByToken(token: String):User?{
+        val t = UUID.fromString(token)
+        return userRepository.getUserByToken(t)
+    }
+
 }

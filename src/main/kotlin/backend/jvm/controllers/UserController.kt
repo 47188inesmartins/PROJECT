@@ -164,12 +164,13 @@ class UserController {
 
     @GetMapping("/log")
     fun getUserByEmailPass(@RequestBody password: String,@RequestBody email: String): ResponseEntity<UserOutputDto> {
-       // return try {
+        return try {
             val jsonPass = Json.parseToJsonElement(password)
             val requestPass = jsonPass.jsonObject["password"]?.jsonPrimitive?.content
                 ?: return ResponseEntity
                     .status(400)
                     .body(null)
+
             val jsonEmail = Json.parseToJsonElement(email)
             val requestEmail = jsonEmail.jsonObject["email"]?.jsonPrimitive?.content
                 ?: return ResponseEntity
@@ -179,14 +180,15 @@ class UserController {
             val response = userServices.getUsersByEmailAndPass(requestEmail,requestPass)
 
             println(response)
-            return ResponseEntity
+            ResponseEntity
                 .status(200)
                 .body(response)
-        /*}catch (e: Exception) {
+        }catch (e: Exception) {
+            println("here$e")
             ResponseEntity
                 .status(400)
                 .body(null)
-        }*/
+        }
     }
 }
 

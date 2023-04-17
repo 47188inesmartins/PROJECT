@@ -20,7 +20,7 @@ select * from sch_user where id in (select id from user_service where service_id
 commit;
 rollback ;
 
-
+select a.id,a.app_hour,a.app_date,a.schedule_id,a.service_id,a.user_id from appointment a inner join schedule s on s.company_id = 1;
 
 
 select * from appointment a where a.schedule_id=1 and a.app_date='2001-06-11' and a.app_hour='21:31:34';
