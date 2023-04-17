@@ -5,9 +5,12 @@ import backend.jvm.model.User
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
+import java.util.UUID
 
 interface UserRepository: JpaRepository<User, Int> {
 
+
+     fun getUserByToken(token: UUID): User?
 
     /* fun getUsersByServices (service: List<Services>): List<User>
 

@@ -152,15 +152,14 @@ class CompanyController {
     }
 
 
-   /* @GetMapping("/{id}/vacation")
-    fun getVacation(@PathVariable id: Int): ResponseEntity<List<VacationResponse>>{
+    @GetMapping("/{id}/vacation")
+    fun getVacation(@PathVariable id: Int): ResponseEntity<List<VacationOutputDto>>{
         return try{
-            val vacationList = companyServices.getVacation(id)
-            val response = vacationList.map { VacationResponse(it.id, it.dateBegin, it.dateEnd, it.schedule.id) }
+            val response = companyServices.getVacation(id)
             ResponseEntity.status(200).body(response)
         }catch(e: Exception){
             println("exception = $e")
             ResponseEntity.status(400).body(null)
         }
-    }*/
+    }
 }

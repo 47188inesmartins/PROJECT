@@ -33,6 +33,10 @@ class CompanyServices {
     @Autowired
     lateinit var dayRepository: DayRepository
 
+    @Autowired
+    lateinit var vacationRepository: VacationRepository
+
+
     fun addCompany(company: CompanyInputDto): CompanyOutputDto {
         if(company.nif.length != NIF_NUMBERS ) throw Exception("Invalid NIF number")
 /*
@@ -93,14 +97,8 @@ class CompanyServices {
         return dayRepository.getOpenDays(id).map { DayOutputDto(it) }
     }
 
-    fun getVacation(id: Int): List<Vacation>{
-        /*a.map { element ->
-            element[0] as Int
-            element[1] as Time,
-            element[]
-
-        }*/
-        return companyRepository.getVacation(id)
+    fun getVacation(id: Int): List<VacationOutputDto>{
+        return vacationRepository.getVacationsByCompany(id).map { VacationOutputDto(it) }
     }
 
     fun changeAddress(id: Int, address: String){
