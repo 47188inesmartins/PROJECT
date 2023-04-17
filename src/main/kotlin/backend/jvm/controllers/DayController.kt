@@ -46,6 +46,7 @@ class DayController {
                 .body(e.toString())
         }
     }
+
     @ResponseBody
     @PutMapping("/{id}/begin")
     fun updateBeginHour(@PathVariable id:Int,@RequestParam begin: String): ResponseEntity<Time> {
@@ -65,6 +66,7 @@ class DayController {
                 .body(null)
         }
     }
+
     @ResponseBody
     @PutMapping("/{id}/end")
     fun updateEndHour(@PathVariable id:Int,@RequestParam end: String): ResponseEntity<Time> {

@@ -38,12 +38,14 @@ class Appointment {
     val schedule : Schedule
 
     @ManyToOne
+    @JoinColumn(name = "service_id")
+    val service: ServiceDB
+
+    @ManyToOne
     @JoinColumn(name = "user_id")
     val user : User?
 
-    @ManyToOne
-    @JoinColumn(name = "service_id")
-    val service: ServiceDB
+
 
     constructor() {
         this.appHour = Time.valueOf("00:00:00")

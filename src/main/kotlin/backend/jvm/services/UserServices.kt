@@ -28,6 +28,8 @@ class UserServices {
     lateinit var appointmentRepository: AppointmentRepository
     @Autowired
     lateinit var companyRepository: CompanyRepository
+    @Autowired
+    lateinit var scheduleRepository: ScheduleRepository
 
     fun addUser(user: UserInputDto): UserOutputDto {
         val servicesList = mutableListOf<ServiceDB>()
@@ -89,6 +91,22 @@ class UserServices {
             ?: throw Exception("Invalid email or password")
         println("here")
         return UserOutputDto(user)
+    }
+
+    fun scheduleAnAppointment(id:Int,appointment: AppointmentInputDto): AppointmentOutputDto {
+        val getUser = userRepository.findById(id)
+        if(getUser.isEmpty) throw Exception("Invalid user")
+        val serviceDb = servicesRepository.findById(appointment.service).get()
+        val schedule = scheduleRepository.findById(appointment.schedule).get()
+        val app = Appointment(
+            appHour = Time.valueOf(appointment.appHour),
+            appDate = Date.valueOf(appointment.appDate),
+            scheduleId = schedule,
+            userId = getUser.get(),
+            serviceDB = serviceDb
+        )
+        val com = appointmentRepository.save(app)
+        return AppointmentOutputDto(com)
     }
 
 }

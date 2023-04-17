@@ -1,6 +1,6 @@
 package backend.jvm.controllers
 
-
+import kotlinx.serialization.json.Json
 import backend.jvm.model.*
 import backend.jvm.services.CompanyServices
 import backend.jvm.services.dto.CompanyAddress
@@ -87,11 +87,16 @@ class CompanyController {
     }
 
     @PutMapping("/{id}/address")
-    fun changeAddress(@PathVariable id: Int, @RequestBody companyAddress: CompanyAddress): ResponseEntity<String> {
+    fun changeAddress(@PathVariable id: Int, @RequestBody companyAddress: String): ResponseEntity<String> {
         return try {
-        println(id)
-            companyServices.changeAddress(id, companyAddress.address)
-           ResponseEntity
+            val json = Json.parseToJsonElement(companyAddress)
+            val request = json.jsonObject["companyAddress"]?.jsonPrimitive?.content
+                ?: return ResponseEntity
+                    .status(400)
+                    .body(null)
+
+            companyServices.changeAddress(id, request)
+            ResponseEntity
                 .status(200)
                 .body("The address of the company was updated")
        } catch (e: Exception) {
