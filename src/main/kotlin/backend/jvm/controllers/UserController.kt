@@ -2,6 +2,8 @@ package backend.jvm.controllers
 
 import backend.jvm.model.User
 import backend.jvm.services.UserServices
+import backend.jvm.services.dto.AppointmentInputDto
+import backend.jvm.services.dto.AppointmentOutputDto
 import backend.jvm.services.dto.UserInputDto
 import backend.jvm.services.dto.UserOutputDto
 import kotlinx.serialization.json.Json

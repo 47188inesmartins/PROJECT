@@ -3,17 +3,12 @@ package backend.jvm.controllers
 import kotlinx.serialization.json.Json
 import backend.jvm.model.*
 import backend.jvm.services.CompanyServices
-import backend.jvm.services.dto.CompanyAddress
-import backend.jvm.services.dto.CompanyInputDto
-import backend.jvm.services.dto.CompanyOutputDto
-import backend.jvm.services.dto.ServiceOutputDto
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.jsonArray
-import org.apache.catalina.connector.Response
+import backend.jvm.services.dto.*
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import java.sql.Time
 import java.util.*
 
 @RestController
@@ -70,7 +65,7 @@ class CompanyController {
         }
     }
 
-    /* @GetMapping("/{id}/employees")
+  /*  @GetMapping("/{id}/employees")
     fun getAllEmployees(@PathVariable id: Int): List<Employee>{
         return companyServices.getAllEmployees(id)
     }*/
@@ -106,31 +101,48 @@ class CompanyController {
         }
     }
 
-}
-/*
+    @PutMapping("/{id}/description")
+    fun changeDescription(@PathVariable id: Int, @RequestBody address: String){
+    TODO()
+    //  return companyServices.changeAddress(id, address)
+    }
+
+
     @GetMapping("/{id}/appointments")
-    fun getAllAppointments(@PathVariable id: Int): ResponseEntity<List<AppointmentResponse>>{
+    fun getAllOnGoingAppointments(@PathVariable id: Int): ResponseEntity<List<AppointmentOutputDto>>{
         return try {
-            val servs = companyServices.getAllAppointments(id)
-            val response = servs.map { AppointmentResponse(it.id, it.appHour, it.appDate, it.schedule.id, it.user?.id) }
+            val response = companyServices.getAllAppointments(id)
             ResponseEntity.status(200).body(response)
         }catch (e: Exception){
+            println("exception= $e")
             ResponseEntity.status(400)
                 .body(null)
         }
     }
 
+
     @GetMapping("/{id}/appointment")
-    fun getAppointment(@PathVariable id: Int, @RequestBody date: Date, @RequestBody time: Time): Appointment {
-        return companyServices.getAppointment(id,date,time)
+    fun getAppointmentByDateAndHour(@PathVariable id: Int, @RequestParam date: String, hour: String): ResponseEntity<List<AppointmentOutputDto>> {
+        return try {
+            val response = companyServices.getAppointment(id,date,hour)
+            ResponseEntity
+                .status(200)
+                .body(response)
+        }catch (e: Exception){
+            ResponseEntity
+                .status(400)
+                .body(null)
+        }
     }
 
+
     @GetMapping("/{id}/days")
-    fun getOpenDays(@PathVariable id: Int): ResponseEntity<List<String>>{
+    fun getOpenDays(@PathVariable id: Int): ResponseEntity<List<DayOutputDto>>{
         return try {
-            val openDays = companyServices.getOpenDays(id)
-           // /*val response = openDays.map { DayResponse(it.id, it.beginHour, it.endHour, it.interval, it.weekDays, it.sid?.id!!) }
-                ResponseEntity.status(200).body(openDays)
+            val response = companyServices.getOpenDays(id)
+            ResponseEntity
+                .status(200)
+                .body(response)
         }catch (e: Exception){
             println("exception = $e")
             ResponseEntity.status(400)
@@ -138,7 +150,8 @@ class CompanyController {
         }
     }
 
-    @GetMapping("/{id}/vacation")
+
+   /* @GetMapping("/{id}/vacation")
     fun getVacation(@PathVariable id: Int): ResponseEntity<List<VacationResponse>>{
         return try{
             val vacationList = companyServices.getVacation(id)
@@ -148,11 +161,5 @@ class CompanyController {
             println("exception = $e")
             ResponseEntity.status(400).body(null)
         }
-    }
-
-    @PutMapping("/{id}/description")
-    fun changeDescription(@PathVariable id: Int, @RequestBody address: String): Company{
-        return companyServices.changeAddress(id, address)
-    }
-
-}*/
+    }*/
+}

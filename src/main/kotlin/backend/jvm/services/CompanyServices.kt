@@ -1,16 +1,12 @@
 package backend.jvm.services
 
 import backend.jvm.model.*
-import backend.jvm.repository.CompanyRepository
-import backend.jvm.repository.ScheduleRepository
-import backend.jvm.repository.ServiceRepository
-import backend.jvm.repository.UserRepository
-import backend.jvm.services.dto.CompanyInputDto
-import backend.jvm.services.dto.CompanyOutputDto
-import backend.jvm.services.dto.ServiceOutputDto
+import backend.jvm.repository.*
+import backend.jvm.services.dto.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.sql.Time
+import java.sql.Date
 import java.util.*
 
 @Service
@@ -30,6 +26,12 @@ class CompanyServices {
 
     @Autowired
     lateinit var serviceRepository: ServiceRepository
+
+    @Autowired
+    lateinit var appointmentRepository: AppointmentRepository
+
+    @Autowired
+    lateinit var dayRepository: DayRepository
 
     fun addCompany(company: CompanyInputDto): CompanyOutputDto {
         if(company.nif.length != NIF_NUMBERS ) throw Exception("Invalid NIF number")
@@ -74,19 +76,21 @@ class CompanyServices {
     }*/
 
     fun getAllServices(id: Int): List<ServiceOutputDto>{
-        return companyRepository.getAllServices(id).map { ServiceOutputDto(it) }
+        return serviceRepository.getAllServicesFromACompany(id).map { ServiceOutputDto(it) }
     }
 
-    fun getAllAppointments(id: Int):List<Appointment>{
-        return companyRepository.getAllAppointments(id)
+    fun getAllAppointments(id: Int):List<AppointmentOutputDto>{
+        return appointmentRepository.getAllOnGoingAppointments(id).map { AppointmentOutputDto(it) }
     }
 
-    fun getAppointment(id: Int, date: Date, time: Time): Appointment{
-        return companyRepository.getAppointment(id, date, time)
+    fun getAppointment(id: Int, date: String, hour: String): List<AppointmentOutputDto>{
+        val d = Date.valueOf(date)
+        val h = Time.valueOf(hour)
+        return companyRepository.getAppointmentsByDateAndHour(id, d, h).map { AppointmentOutputDto(it) }
     }
 
-    fun getOpenDays(id: Int): List<String>{
-        return companyRepository.getOpenDays(id)
+    fun getOpenDays(id: Int): List<DayOutputDto>{
+        return dayRepository.getOpenDays(id).map { DayOutputDto(it) }
     }
 
     fun getVacation(id: Int): List<Vacation>{

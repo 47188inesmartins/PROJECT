@@ -9,26 +9,15 @@ import java.sql.Date
 
 interface AppointmentRepository: JpaRepository<Appointment, Int>{
 
-    /*
-    fun findAllByCid (cid: Client) : List<Appointment>
-    fun findAllByEid (eid: Employee) : List<Appointment>
+    fun getByScheduleId(id: Int): List<Appointment>
 
-    fun findAllBySid (sid: Schedule) : List<Appointment>
 
-    fun findAllByAppHourAndUidAndAppDate (appHour: Time, user: User, appDate: Date): Appointment
+    @Query(value = "select * from appointment where schedule_id = (select id from schedule s where s.company_id = :id)", nativeQuery = true)
+    fun getAllOnGoingAppointments (@Param("id")id:Int): List<Appointment>
 
-    fun findAllByAppHourAndSidAndAppDate (appHour: Time, sid: Schedule, appDate: Date) : Appointment
-    */
 
     @Query(value = "select * from appointment a where a.schedule_id=:sid and a.app_date=:date and a.app_hour=:hour", nativeQuery = true)
     fun getAppointmentByDateAndHour (@Param("sid")id:Int, @Param("date")date:Date, @Param("hour")hour:Time): List<Appointment>
-
- /*
-    fun findAllByAppDateAndAppHourAndSid(appDate: Date, appHour: Time, sid: Schedule): List<Appointment>?
-
-    @Query(value =  "from company c where c.id = (select comp_id from schedule where id = :id)")
-    fun getCompany(@Param("id") id: Int): Company?
-*/
 
     @Query(value = "select service_id from service_appointment where appointment_id=:id", nativeQuery = true)
     fun getServices(@Param("id") id:Int):List<Int>

@@ -3,16 +3,17 @@ package backend.jvm.services
 import backend.jvm.model.Appointment
 import backend.jvm.model.ServiceDB
 import backend.jvm.model.User
-import backend.jvm.repository.AppointmentRepository
-import backend.jvm.repository.CompanyRepository
-import backend.jvm.repository.ServiceRepository
-import backend.jvm.repository.UserRepository
+import backend.jvm.repository.*
+import backend.jvm.services.dto.AppointmentInputDto
+import backend.jvm.services.dto.AppointmentOutputDto
 import backend.jvm.services.dto.UserInputDto
 import backend.jvm.services.dto.UserOutputDto
 import backend.jvm.utils.Hashing
 import backend.jvm.utils.UserRoles
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.sql.Time
+import java.sql.Date
 import java.util.*
 import kotlin.collections.List
 

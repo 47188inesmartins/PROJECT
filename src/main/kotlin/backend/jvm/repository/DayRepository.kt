@@ -8,6 +8,11 @@ import org.springframework.data.repository.query.Param
 import java.sql.Time
 
 interface DayRepository : JpaRepository<Day, Int> {
+
+
+    @Query(value = "select d.id, d.begin_hour, d.end_hour, d.day_interval, week_days, schedule_id from sch_day d inner join schedule s on d.schedule_id = s.id and s.company_id = :id", nativeQuery = true)
+    fun getOpenDays(@Param("id") id: Int): List<Day>
+
     @Query(value = "update sch_day set begin_hour =:hour where id = :id returning begin_hour", nativeQuery = true)
     fun updateBeginHour(@Param("id") id: Int, @Param("hour") hour: Time): Time
 

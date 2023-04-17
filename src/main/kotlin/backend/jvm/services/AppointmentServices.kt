@@ -11,7 +11,7 @@ import java.sql.Time
 import java.sql.Date
 
 @Service
-class AppointmentServices {
+class AppointmentServices{
 
     @Autowired
     lateinit var appointmentRepository: AppointmentRepository

@@ -11,9 +11,9 @@ values('4f298735-5893-4199-a179-3af3fabc38b8','user@gmail.com','senha_segura','u
 
 
 begin;
-update company set address='rua nova' where id = 1;
+select * from appointment a where a.schedule_id = (select id from schedule s where s.company_id = 1) and a.app_date = '2001-06-11' and a.app_hour = '20:30:00';
 commit;
-rollback ;
+rollback;
 
 begin;
 select * from sch_user where id in (select id from user_service where service_id = :idService);
