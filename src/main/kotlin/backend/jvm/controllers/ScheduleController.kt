@@ -3,6 +3,8 @@ package backend.jvm.controllers
 import backend.jvm.model.Schedule
 import backend.jvm.model.ServiceDB
 import backend.jvm.services.ScheduleServices
+import backend.jvm.services.dto.ScheduleInputDto
+import backend.jvm.services.dto.ScheduleOutputDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -17,15 +19,14 @@ class ScheduleController {
 
     @ResponseBody
     @PostMapping
-    fun addNewSchedule(@RequestBody schedule: Schedule): ResponseEntity<Int> {
-       /* return try{
-            val addedSchedule = scheduleServices.addSchedule(schedule)
-            val response = ScheduleResponse(addedSchedule.id, addedSchedule.company.id)
+    fun addNewSchedule(@RequestBody schedule: ScheduleInputDto): ResponseEntity<ScheduleOutputDto> {
+        return try{
+            val response = scheduleServices.addSchedule(schedule)
+            //val response = ScheduleResponse(addedSchedule.id, addedSchedule.company.id)
             ResponseEntity.status(201).body(response)
         }catch (e: Exception){
             ResponseEntity.status(400).body(null)
-        }*/
-        TODO()
+        }
     }
 
     @DeleteMapping("/{id}")
@@ -34,14 +35,14 @@ class ScheduleController {
     }
 
     @GetMapping("/{id}")
-    fun getSchedule(@PathVariable id:Int):Schedule?{
+    fun getSchedule(@PathVariable id:Int):ScheduleOutputDto?{
         return scheduleServices.getSchedule(id)
     }
 
-    @ResponseBody
+    /*@ResponseBody
     @GetMapping("/{id}/services/{ids}")
     fun getServices(@PathVariable id: Int,@PathVariable ids: Int): List<ServiceDB>{
         return scheduleServices.getServices(id,ids)
-    }
+    }*/
 
 }

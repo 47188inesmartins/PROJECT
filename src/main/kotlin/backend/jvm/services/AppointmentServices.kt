@@ -2,6 +2,7 @@ package backend.jvm.services
 
 import backend.jvm.model.*
 import backend.jvm.repository.AppointmentRepository
+import backend.jvm.repository.ScheduleRepository
 import backend.jvm.repository.ServiceRepository
 import backend.jvm.services.dto.AppointmentInputDto
 import backend.jvm.services.dto.AppointmentOutputDto
@@ -23,12 +24,12 @@ class AppointmentServices{
     lateinit var userService: UserServices
 
     @Autowired
-    lateinit var scheduleService: ScheduleServices
+    lateinit var scheduleRepository: ScheduleRepository
 
     fun addAppointment(appointment: AppointmentInputDto): AppointmentOutputDto {
         val service = servicesRepository.getServiceDBById(appointment.service)
-        val user = if (appointment.user != null)userService.findById(appointment.user) else null
-        val schedule = scheduleService.getSchedule(appointment.schedule)!!
+        val user = if (appointment.user != null) userService.findById(appointment.user) else null
+        val schedule = scheduleRepository.getReferenceById(appointment.schedule)//scheduleService.getSchedule(appointment.schedule)!!
         val app = Appointment(
             appHour = Time.valueOf(appointment.appHour),
             appDate = Date.valueOf(appointment.appDate),

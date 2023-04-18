@@ -45,8 +45,8 @@ class CompanyServices {
 *
 * */
         val schedule = company.schedule?.let { scheduleRepository.getReferenceById(it) }
-        val users = company.users?.map { usersRepository.getById(it) }
-        val services = company.service?.map { serviceRepository.getById(it) }
+        val users = company.users?.map { usersRepository.getReferenceById(it) }
+        val services = company.service?.map { serviceRepository.getReferenceById(it) }
         val comp = companyRepository.save(
             Company(
                 nif = company.nif,
