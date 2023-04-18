@@ -37,6 +37,11 @@ dependencies {
 	testImplementation(kotlin("test"))
 	testImplementation ("junit:junit:4.12")
 	testImplementation ("com.h2database:h2:2.1.214")
+
+	// JWT
+	implementation ("io.jsonwebtoken:jjwt:0.9.1")
+	implementation ("javax.servlet:javax.servlet-api:4.0.1")
+	implementation ("javax.servlet:jstl:1.2")
 }
 
 tasks.withType<KotlinCompile> {
