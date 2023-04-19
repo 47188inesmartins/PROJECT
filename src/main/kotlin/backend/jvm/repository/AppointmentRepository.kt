@@ -11,6 +11,8 @@ interface AppointmentRepository: JpaRepository<Appointment, Int>{
 
     fun getByScheduleId(id: Int): List<Appointment>
 
+   // fun getAppoitmentByUser
+
 
     @Query(value = "select * from appointment where schedule_id = (select id from schedule s where s.company_id = :id)", nativeQuery = true)
     fun getAllOnGoingAppointments (@Param("id")id:Int): List<Appointment>

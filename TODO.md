@@ -3,8 +3,7 @@ logica o serviço do appointment tem de ser num dia que em que o serviço seja f
 
 erro nos ids
 
-quando muda-se de role de client pa employee
-mudar a availability de none pa available
+quando muda-se de role de client pa employee mudar a availability de none pa available
 
 availability do user
 
@@ -19,5 +18,18 @@ meter hour e date no get employees do service
 
 quando add uma company add automaticamente um schedule associado
 
-
 add employee
+
+getappointmentsbyuser
+
+empresa define numero maximo de clientes ha mesma hora
+
+
+/home
+
+
+appointement - get dos services didsponiveis
+
+
+
+schedule tem get vacation e get open days
