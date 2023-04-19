@@ -10,6 +10,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 class AppConfig :
     WebMvcConfigurer {
 
+    companion object{
+        val MANAGER = listOf("/appointment", "/company")
+        val EMPLOYEE = listOf("/vacation", "/schedule", "/service")
+    }
+
     @Autowired
     lateinit var authenticationInterceptor: AuthenticationInterceptor
 

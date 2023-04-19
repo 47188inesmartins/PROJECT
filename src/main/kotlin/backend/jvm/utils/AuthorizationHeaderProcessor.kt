@@ -18,6 +18,7 @@ class AuthorizationHeaderProcessor(
 
         return userServices.getUserByToken(parts[1])
     }
+
     companion object{
         const val SCHEMA = "bearer"
     }

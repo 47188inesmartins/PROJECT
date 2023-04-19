@@ -27,6 +27,7 @@ class AuthenticationInterceptor(
                 response.addHeader(NAME_WWW_AUTHENTICATE_HEADER, AuthorizationHeaderProcessor.SCHEMA)
                 false
             }else{
+                println(user?.second)
                 //PlayerArgumentResolver.addPlayerTo(player,request)
                 true
             }
