@@ -4,11 +4,12 @@ import kotlinx.serialization.json.Json
 import backend.jvm.model.*
 import backend.jvm.services.CompanyServices
 import backend.jvm.services.dto.*
+import backend.jvm.utils.RoleManager
+import backend.jvm.utils.UserRoles
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
-import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
@@ -19,6 +20,8 @@ class CompanyController {
     @Autowired
     lateinit var companyServices: CompanyServices
 
+
+    @RoleManager(["guest"])
     @ResponseBody
     @PostMapping
     fun addCompany(@RequestBody company: CompanyInputDto): ResponseEntity<CompanyOutputDto> {
@@ -40,6 +43,7 @@ class CompanyController {
     fun deleteCompany(@PathVariable id: Int): Boolean {
         return companyServices.deleteCompany(id)
     }
+
 
     @ResponseBody
     @GetMapping("/{id}")

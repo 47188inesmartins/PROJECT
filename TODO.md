@@ -14,3 +14,10 @@ para cada company só pode haver um day com o mesmo week_day
 
 
 mudar availability do service
+
+meter hour e date no get employees do service
+
+quando add uma company add automaticamente um schedule associado
+
+
+add employee

@@ -26,7 +26,22 @@ class AuthenticationInterceptor(
                 response.addHeader(NAME_WWW_AUTHENTICATE_HEADER, AuthorizationHeaderProcessor.SCHEMA)
                 false
             }else{
-                println(user?.second)
+                val roleAllowed = handler.getMethodAnnotation(RoleManager::class.java)
+                if(roleAllowed == null){
+                    response.status = 200
+                    return true
+                }
+                println("roles ====" + roleAllowed.roleList[0] + user?.second)
+                return if(user?.second in roleAllowed.roleList){
+
+                    response.status = 200
+                    true
+
+                } else{
+                    response.status = 401
+                    false
+                }
+
                 //PlayerArgumentResolver.addPlayerTo(player,request)
                 true
             }

@@ -20,17 +20,22 @@ class AppConfig :
 
     override fun addInterceptors(registry: InterceptorRegistry) {
         registry.addInterceptor(authenticationInterceptor)
-            .addPathPatterns(getPathPatternsForRole("manager"))
-            .addPathPatterns(getPathPatternsForRole("employee"))
+            .addPathPatterns(listOf(
+                "/appointment",
+                "/company",
+                "/vacation",
+                "/schedule",
+                "/service"
+            ))
     }
 
-    private fun getPathPatternsForRole(role: String): List<String> {
+   /* private fun getPathPatternsForRole(role: String): List<String> {
         return when (role) {
-            "manager" -> listOf("/appointment", "/company")
-            "employee" -> listOf("/vacation", "/schedule", "/service")
+            "manager" -> listOf()
+            "employee" -> listOf()
             else -> emptyList()
         }
-    }
+    }*/
 
     /*override fun addInterceptors(registry: InterceptorRegistry) {
         registry.addInterceptor(authenticationInterceptor)

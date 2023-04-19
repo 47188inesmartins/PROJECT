@@ -87,6 +87,7 @@ class UserController {
         }
     }
 
+
     @PutMapping("/{id}/role")
     fun changeRole(@PathVariable id: Int, @RequestBody roleName: String):  ResponseEntity<String> {
         return try {

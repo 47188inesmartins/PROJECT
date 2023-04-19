@@ -55,6 +55,12 @@ class UserServices {
         return UserOutputDto(returnUser)
     }
 
+
+  /*  fun getRoleByToken(token: UUID): String{
+        return userRepository.getRoleByToken(token)
+    }
+*/
+
     fun deleteUser(id: Int): Boolean {
         if(userRepository.findById(id).isEmpty) return false
         userRepository.deleteById(id)
