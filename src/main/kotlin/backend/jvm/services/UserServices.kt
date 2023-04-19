@@ -1,6 +1,7 @@
 package backend.jvm.services
 
 import backend.jvm.model.Appointment
+import backend.jvm.model.Role
 import backend.jvm.model.ServiceDB
 import backend.jvm.model.User
 import backend.jvm.repository.*
@@ -113,6 +114,11 @@ class UserServices {
     fun getUserByToken(token: String):User?{
         val t = UUID.fromString(token)
         return userRepository.getUserByToken(t)
+    }
+
+    fun getRoleByToken(token: String): String? {
+        val user = userRepository.getUserByToken(UUID.fromString(token))?.id!!
+        return  userRepository.getRole(user)
     }
 
 }

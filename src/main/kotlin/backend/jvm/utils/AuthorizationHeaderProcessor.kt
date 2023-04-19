@@ -1,5 +1,6 @@
 package backend.jvm.utils
 
+import backend.jvm.model.Role
 import backend.jvm.model.User
 import backend.jvm.services.UserServices
 import org.springframework.stereotype.Component
@@ -9,14 +10,14 @@ class AuthorizationHeaderProcessor(
     val userServices: UserServices
 ) {
 
-    fun process(credentials : String?) : User?{
+    fun process(credentials : String?) : Pair <User?, String>?{
         if(credentials == null) return null
 
         val parts = credentials.trim().split(" ")
 
-        if(parts.size != 2 || parts[0].lowercase() != SCHEMA) return null
+        if(parts.size != 2 || parts[0].lowercase() != SCHEMA) return Pair(null,"GUEST")
 
-        return userServices.getUserByToken(parts[1])
+        return Pair (userServices.getUserByToken(parts[1]),userServices.getRoleByToken(parts[1])?:"GUEST")
     }
 
     companion object{

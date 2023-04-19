@@ -40,4 +40,6 @@ interface UserRepository: JpaRepository<User, Int> {
 
      @Query(value = "select * from SCH_USER where email = :email and password = :pass", nativeQuery = true)
      fun getUsersByEmailPass(@Param("pass") pass: String, @Param("email") email: String): User?
+
+     fun getRoleByToken()
 }

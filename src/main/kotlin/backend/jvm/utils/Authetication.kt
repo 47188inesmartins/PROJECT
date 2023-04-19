@@ -16,13 +16,12 @@ class AuthenticationInterceptor(
     private val NAME_AUTHORIZATION_HEADER = "Authorization"
     private val NAME_WWW_AUTHENTICATE_HEADER = "WWW-Authenticate"
 
-    override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean{
-
+    override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
         if(handler is HandlerMethod ){
-            log.info("Aqui")
+
             val user = authorizationHeaderProcessor.process(request.getHeader(NAME_AUTHORIZATION_HEADER))
-            log.info(user)
-            return if(user == null){
+
+            return if(user != null && user.first == null){
                 response.status = 401
                 response.addHeader(NAME_WWW_AUTHENTICATE_HEADER, AuthorizationHeaderProcessor.SCHEMA)
                 false
@@ -35,7 +34,6 @@ class AuthenticationInterceptor(
         }
         return true
     }
-
 }
 
 
