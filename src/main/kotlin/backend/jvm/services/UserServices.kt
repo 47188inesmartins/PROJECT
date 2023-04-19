@@ -33,6 +33,13 @@ class UserServices {
     @Autowired
     lateinit var scheduleRepository: ScheduleRepository
 
+    fun getUserByEmailAnnPassword(email:String ,password: String):UserOutputDto {
+        val hash = Hashing.encodePass(password)
+        val getUser = userRepository.getUsersByEmailAndPassword(email, hash)
+            ?: throw Exception("Invalid email or password")
+        return UserOutputDto(getUser)
+    }
+
     fun addUser(user: UserInputDto): UserOutputDto {
         val servicesList = mutableListOf<ServiceDB>()
         val appList =  mutableListOf<Appointment>()

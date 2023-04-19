@@ -12,6 +12,8 @@ interface UserRepository: JpaRepository<User, Int> {
 
      fun getUserByToken(token: UUID): User?
 
+     fun getUsersByEmailAndPassword(email: String, password: String):User?
+
     /* fun getUsersByServices (service: List<Services>): List<User>
 
      fun getUsersByAppointment (appointment: List<Appointment>): List<User>*/
