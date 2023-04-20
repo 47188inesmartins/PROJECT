@@ -45,9 +45,9 @@ class ServiceController {
     }
 
     @GetMapping("/{id}/employee")
-    fun getEmployeesForService(@PathVariable id: Int): ResponseEntity<List<UserOutputDto>> {
+    fun getEmployeesForService(@PathVariable id: Int, @RequestParam hourBegin: String, hourEnd: String, date: String): ResponseEntity<List<UserOutputDto>> {
         return try {
-            val response = servServices.getAvailableEmployees(id)
+            val response = servServices.getAvailableEmployees(id, hourBegin, hourEnd, date)
             ResponseEntity.status(200)
                 .body(response)
         }catch(e: Exception){

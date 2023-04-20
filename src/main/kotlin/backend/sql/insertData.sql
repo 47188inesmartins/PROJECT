@@ -10,6 +10,15 @@ insert into SCH_USER(token,email,password,name,birthday,availability,company_id)
 values('4f298735-5893-4199-a179-3af3fabc38b8','user@gmail.com','senha_segura','user','2001-01-01','available',1);
 
 
+
+begin;
+select * from sch_user where id in (select user_id from user_service where service_id = 1)
+            and id not in (select user_id from unavailability where hour_begin between '10:00:00' and '11:00:00');
+commit;
+
+
+
+
 begin;
 select * from appointment a where a.schedule_id = (select id from schedule s where s.company_id = 1) and a.app_date = '2001-06-11' and a.app_hour = '20:30:00';
 commit;

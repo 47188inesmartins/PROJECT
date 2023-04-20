@@ -5,27 +5,25 @@ import backend.jvm.model.User
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
+import java.sql.Date
 import java.sql.Time
 import java.time.Duration
 
 
 interface ServiceRepository : JpaRepository<ServiceDB, Int> {
 
-
     fun getServiceDBById(id: Int): ServiceDB
-
-
 
     @Query(value = "select * from service s where s.company_id = :id", nativeQuery = true)
     fun getAllServicesFromACompany(@Param("id") id: Int): List<ServiceDB>
 
-
     @Query(value = "select count(appointment_id) from service_appointment where service_id=:serviceId and appointment_id=:appointmentId ", nativeQuery = true)
     fun countAppointments(@Param("serviceId") serviceId: Int, @Param("appointmentId") appointmentId: Int): Int
 
-   // fun findAllByEmployee(employee: List<Employee>):Services
-    @Query(value ="select * from sch_user where id in (select id from user_service where service_id = :idService)", nativeQuery = true)
-    fun getEmployeesForService(@Param("idService") idService:Int):List<User>
+    @Query(value ="select * from sch_user where id in " +
+            "(select user_id from user_service where service_id = :idService) " +
+            "and id not in (select user_id from unavailability where hour_begin between :hourBegin and :hourEnd and (date_begin <= :date and date_end >= :date));", nativeQuery = true)
+    fun getAvailableEmployeesForServiceByDateAndHour(@Param("idService") idService:Int, @Param("hourBegin") hourBegin: Time, @Param("hourEnd") hourEnd: Time, @Param("date") date: Date):List<User>
 
     @Query(value ="update service set price =:price where id=:idService returning price", nativeQuery = true)
     fun updatePrice( @Param("idService") idService: Int, @Param("price") price: Double): Long
@@ -37,3 +35,9 @@ interface ServiceRepository : JpaRepository<ServiceDB, Int> {
     fun updateMaxNumber( @Param("idService") idService: Int, @Param("number") number: Int):Double
 
 }
+
+//9:00:00 11:00:00 -- 12:00:00 13:00:00 unavail
+
+//11:30:00 - 13:30:00
+
+// if in 11:30:00 - 13:30:00 houver um begin hour no unavailable retorna false

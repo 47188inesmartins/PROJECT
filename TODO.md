@@ -11,7 +11,6 @@ base de dados nas variaveis de ambiente
 
 para cada company só pode haver um day com o mesmo week_day
 
-
 mudar availability do service
 
 meter hour e date no get employees do service
@@ -24,12 +23,12 @@ getappointmentsbyuser
 
 empresa define numero maximo de clientes ha mesma hora
 
-
 /home
 
-
-appointement - get dos services didsponiveis
-
-
+appointment - get dos services didsponiveis
 
 schedule tem get vacation e get open days
+
+
+receber apenas hour begin no pedido do appointment e depoois
+consoante a duracao do service calcular hour end

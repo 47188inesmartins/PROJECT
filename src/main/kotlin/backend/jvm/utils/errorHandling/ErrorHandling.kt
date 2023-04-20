@@ -1,27 +1,24 @@
 package backend.jvm.utils.errorHandling
 
-import jakarta.servlet.http.HttpServletRequest
-import org.springframework.core.annotation.AnnotationUtils
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
-import org.springframework.web.bind.annotation.ResponseStatus
-import org.springframework.web.servlet.ModelAndView
-/*
+import org.springframework.web.context.request.WebRequest
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
+
+
 @ControllerAdvice
-internal class ErrorHandling {
-    @ExceptionHandler(value = [Exception::class])
-    @Throws(Exception::class)
-    fun defaultErrorHandler(req: HttpServletRequest, e: Exception): ModelAndView {
-        if (AnnotationUtils.findAnnotation(e.javaClass, ResponseStatus::class.java) != null) throw e
-
-        val mav = ModelAndView()
-        mav.addObject("exception", e)
-        mav.addObject("url", req.requestURL)
-        mav.viewName = DEFAULT_ERROR_VIEW
-        return mav
+class RestResponseEntityExceptionHandler : ResponseEntityExceptionHandler() {
+    @ExceptionHandler(value = [IllegalArgumentException::class, IllegalStateException::class])
+    protected fun handleConflict(
+        ex: RuntimeException?, request: WebRequest?
+    ): ResponseEntity<Any>? {
+        val bodyOfResponse = "This should be application specific"
+        return handleExceptionInternal(
+            ex!!, bodyOfResponse,
+            HttpHeaders(), HttpStatus.CONFLICT, request!!
+        )
     }
-
-    companion object {
-        const val DEFAULT_ERROR_VIEW = "error"
-    }
-}*/
+}
