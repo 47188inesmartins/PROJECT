@@ -6,10 +6,12 @@ import backend.jvm.repository.ScheduleRepository
 import backend.jvm.repository.ServiceRepository
 import backend.jvm.services.dto.AppointmentInputDto
 import backend.jvm.services.dto.AppointmentOutputDto
+import backend.jvm.services.dto.ServiceOutputDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.sql.Time
 import java.sql.Date
+import java.util.LinkedList
 
 @Service
 class AppointmentServices{
@@ -63,5 +65,22 @@ class AppointmentServices{
         val hour = Time.valueOf(appHour)
         val appointments = appointmentRepository.getAppointmentByDateAndHour(sid, date, hour)
         return appointments.map{ AppointmentOutputDto(it) }
+    }
+
+    fun getAvailableServices(appHour:String, hourEnd:String, date:String):List<ServiceOutputDto>{
+        val hour = Time.valueOf(appHour)
+        val end = Time.valueOf(hourEnd)
+        val d = Date.valueOf(date)
+        val availableServices = LinkedList<ServiceOutputDto>()
+
+        appointmentRepository.getServices(hour,d)
+            .forEach {
+             val getEmployeeAvailable = servicesRepository.getAvailableEmployeesForServiceByDateAndHour(it,hour,end,d)
+             if(getEmployeeAvailable.isNotEmpty())
+                 availableServices.add(
+                        ServiceOutputDto(servicesRepository.getServiceDBById(it))
+                 )
+        }
+        return availableServices
     }
 }

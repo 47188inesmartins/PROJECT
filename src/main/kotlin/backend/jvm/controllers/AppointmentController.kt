@@ -3,6 +3,7 @@ package backend.jvm.controllers
 import backend.jvm.services.AppointmentServices
 import backend.jvm.services.dto.AppointmentInputDto
 import backend.jvm.services.dto.AppointmentOutputDto
+import backend.jvm.services.dto.ServiceOutputDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -96,6 +97,20 @@ class AppointmentController {
         }
 
     }
+
+    @GetMapping("/services/availability")
+    fun getAvailableServices(@RequestParam("hour") h :String,@RequestParam("hour_end") h_end :String,@RequestParam("date") date :String ) :ResponseEntity<List<ServiceOutputDto>>{
+        return try{
+            val response = appointmentServices.getAvailableServices(h,h_end,date)
+            ResponseEntity.status(200)
+                .body(response)
+        }catch (e: Exception){
+            ResponseEntity.status(400)
+                .body(null)
+        }
+    }
+
+
 
 
     /*@GetMapping("/client")

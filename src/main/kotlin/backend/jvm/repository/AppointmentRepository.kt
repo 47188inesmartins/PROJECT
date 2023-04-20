@@ -21,8 +21,8 @@ interface AppointmentRepository: JpaRepository<Appointment, Int>{
     @Query(value = "select * from appointment a where a.schedule_id=:sid and a.app_date=:date and a.app_hour=:hour", nativeQuery = true)
     fun getAppointmentByDateAndHour (@Param("sid")id:Int, @Param("date")date:Date, @Param("hour")hour:Time): List<Appointment>
 
-    @Query(value = "select service_id from service_appointment where appointment_id=:id", nativeQuery = true)
-    fun getServices(@Param("id") id:Int):List<Int>
+    @Query(value = "select service_id from appointment where app_hour=:hour and app_date=:date", nativeQuery = true)
+    fun getServices(@Param("hour") hour: Time,@Param("date") date: Date):List<Int>
 
     @Query(value = "select count(service_id) from appointment a where a.service_id = :serviceId and app_hour = :appHour and app_date = :appDate", nativeQuery = true)
     fun getNumberOfServicesByDateAndHour(@Param("serviceId") serviceId: Int, @Param("appDate") appDate: Date, @Param("appHour") appHour: Time): Int
@@ -35,5 +35,7 @@ interface AppointmentRepository: JpaRepository<Appointment, Int>{
 
     @Query(value = "from appointment a where a.availability='available' and a.date=:date", nativeQuery = true)
     fun getAvailableAppointmentByDate(@Param("date") date: Date): Appointment
+
+
 
 }

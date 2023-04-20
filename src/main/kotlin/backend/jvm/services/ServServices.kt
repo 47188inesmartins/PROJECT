@@ -8,6 +8,7 @@ import backend.jvm.services.dto.ServiceOutputDto
 import backend.jvm.services.dto.UserOutputDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.sql.Date
 import java.sql.Time
 import java.time.Duration
 
@@ -37,8 +38,12 @@ class ServServices {
         return ServiceOutputDto(serv)
     }
 
-    fun getAvailableEmployees(id: Int): List<UserOutputDto>{
-        val users = serviceRepository.getEmployeesForService(id)
+    fun getAvailableEmployees(id: Int,hourBegin: String,hourEnd: String,date: String): List<UserOutputDto>{
+        val begin = Time.valueOf(hourBegin)
+        val end = Time.valueOf(hourEnd)
+        val d = Date.valueOf(date)
+
+        val users = serviceRepository.getAvailableEmployeesForServiceByDateAndHour(id,begin,end,d)
         return users.map { UserOutputDto(it) }
     }
 
@@ -53,5 +58,6 @@ class ServServices {
     fun delete(serviceDB: ServiceDB){
         serviceRepository.delete(serviceDB)
     }
+
 
 }
