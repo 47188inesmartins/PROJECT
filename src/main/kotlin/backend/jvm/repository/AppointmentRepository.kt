@@ -24,8 +24,8 @@ interface AppointmentRepository: JpaRepository<Appointment, Int>{
     @Query(value = "select service_id from appointment where app_hour=:hour and app_date=:date", nativeQuery = true)
     fun getServices(@Param("hour") hour: Time,@Param("date") date: Date):List<Int>
 
-    @Query(value = "select count(service_id) from appointment a where a.service_id = :serviceId and app_hour = :appHour and app_date = :appDate", nativeQuery = true)
-    fun getNumberOfServicesByDateAndHour(@Param("serviceId") serviceId: Int, @Param("appDate") appDate: Date, @Param("appHour") appHour: Time): Int
+    /*@Query(value = "select count(service_id) from appointment a where a.service_id = :serviceId and app_hour = :appHour and app_date = :appDate", nativeQuery = true)
+    fun getNumberOfServicesByDateAndHour(@Param("serviceId") serviceId: Int, @Param("appDate") appDate: Date, @Param("appHour") appHour: Time): Int*/
 
     @Query(value =  "update appointment set number_app_people = :numberAppPeople where id = :id", nativeQuery = true)
     fun editNumberAppPeople(@Param("id") id: Int, @Param("numberAppPeople") numberAppPeople: Int): Appointment

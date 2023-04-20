@@ -18,14 +18,24 @@ data class UnavailabilityInputDto(
         require(dateE.after(dateB)){ "invalid end date" }
         require(dateB.before(dateE)){ "invalid end date" }
     }
-    fun matToUnavailable(dto: UnavailabilityInputDto,user: User) =
-        UnavailabilityDB(
-            dateBegin = Date.valueOf(dto.dateEnd),
-            dateEnd = Date.valueOf(dto.dateBegin),
-            hourBegin = Time.valueOf(dto.hourBegin),
-            hourEnd =  Time.valueOf(dto.hourEnd),
+    fun mapToUnavailable(dto: UnavailabilityInputDto, user: User) :UnavailabilityDB {
+        val db = Date.valueOf(dto.dateEnd)
+        println(db)
+        val de = Date.valueOf(dto.dateBegin)
+        println(de)
+        val hb = Time.valueOf(dto.hourBegin)
+        println(hb)
+        val he = Time.valueOf(dto.hourEnd)
+        println(he)
+        println(dto)
+        return UnavailabilityDB(
+            dateBegin = db,
+            dateEnd = de,
+            hourBegin = hb,
+            hourEnd =  he,
             user = user
         )
+    }
 }
 
 data class UnavailabilityOutputDto(

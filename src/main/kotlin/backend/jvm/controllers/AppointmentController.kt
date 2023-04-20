@@ -85,8 +85,8 @@ class AppointmentController {
         }
     }
 
-    @GetMapping("/services")
-    fun getNumberOfServicesByDateAndHour(@RequestParam("service_id") service_id: Int, @RequestParam("date") date: String, @RequestParam("hour") hour: String):ResponseEntity<Int>{
+    /*@GetMapping("/services")
+    fun getServicesByDateAndHour(@RequestParam("date") date: String, @RequestParam("hour") hour: String):ResponseEntity<Int>{
         return try{
             val response = appointmentServices.getNumberOfServicesByDateAndHour(service_id, date, hour)
             ResponseEntity.status(200)
@@ -96,7 +96,7 @@ class AppointmentController {
                 .body(null)
         }
 
-    }
+    }*/
 
     @GetMapping("/services/availability")
     fun getAvailableServices(@RequestParam("hour") h :String,@RequestParam("hour_end") h_end :String,@RequestParam("date") date :String ) :ResponseEntity<List<ServiceOutputDto>>{

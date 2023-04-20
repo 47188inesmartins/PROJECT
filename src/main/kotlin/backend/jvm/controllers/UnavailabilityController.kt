@@ -24,6 +24,7 @@ class UnavailabilityController {
                 .status(201)
                 .body(response)
         } catch (e: Exception) {
+            println(e.toString())
             ResponseEntity
                 .status(400)
                 .body(null)

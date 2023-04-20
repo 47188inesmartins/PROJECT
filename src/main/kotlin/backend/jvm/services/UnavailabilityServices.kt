@@ -19,9 +19,14 @@ class UnavailabilityServices {
 
     fun addUnavailability(unavailability: UnavailabilityInputDto): UnavailabilityOutputDto {
         val getUser = userRepository.findById(unavailability.user).get()
+        println(getUser)
+
+        val a = unavailability.mapToUnavailable(unavailability,getUser)
+        println("maf bruxa"+ a)
         val addUnavailability = unavailabilityRepository.save(
-            unavailability.matToUnavailable(unavailability,getUser)
+            a
         )
+        println(addUnavailability)
         return UnavailabilityOutputDto(addUnavailability)
     }
 

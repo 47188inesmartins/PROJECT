@@ -130,7 +130,7 @@ class UserServices {
     }
 
     fun getRoleByToken(token: String): String? {
-        val user = userRepository.getUserByToken(UUID.fromString(token))?.id!!
+        val user = userRepository.getUserByToken(UUID.fromString(token))?.id ?: throw Exception("The user does not exists")
         return  userRepository.getRole(user)
     }
 

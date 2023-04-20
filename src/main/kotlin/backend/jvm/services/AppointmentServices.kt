@@ -43,11 +43,11 @@ class AppointmentServices{
         return AppointmentOutputDto(savedAppointment)
     }
 
-    fun getNumberOfServicesByDateAndHour(serviceId: Int, appDate: String, appHour: String): Int {
+   /* fun getServicesByDateAndHour(appDate: String, appHour: String): Int {
         val date = Date.valueOf(appDate)
         val hour = Time.valueOf(appHour)
         return appointmentRepository.getNumberOfServicesByDateAndHour(serviceId, date, hour)
-    }
+    }*/
 
     fun deleteAppointment(id: Int){
         appointmentRepository.deleteById(id)

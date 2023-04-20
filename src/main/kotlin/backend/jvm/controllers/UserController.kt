@@ -148,7 +148,7 @@ class UserController {
         }
     }
 
-    @PostMapping("/{id}/appointment")
+    /*@PostMapping("/{id}/appointment")
     fun scheduleAnAppointment(@PathVariable id:Int, @RequestBody appointment: AppointmentInputDto): ResponseEntity<AppointmentOutputDto>{
         return try {
             val response = userServices.scheduleAnAppointment(id,appointment)
@@ -160,7 +160,7 @@ class UserController {
                 .status(400)
                 .body(null)
         }
-    }
+    }*/
 
     @GetMapping("/log")
     fun getUserByEmailPass(@RequestBody password: String,@RequestBody email: String): ResponseEntity<UserOutputDto> {
