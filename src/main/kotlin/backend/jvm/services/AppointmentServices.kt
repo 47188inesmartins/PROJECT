@@ -67,7 +67,7 @@ class AppointmentServices{
         return appointments.map{ AppointmentOutputDto(it) }
     }
 
-    fun getAvailableServices(appHour:String, hourEnd:String, date:String):List<ServiceOutputDto>{
+    fun getAvailableServices(appHour:String, hourEnd:String, date:String, companyId: Int):List<ServiceOutputDto>{
         val hour = Time.valueOf(appHour)
         val end = Time.valueOf(hourEnd)
         val d = Date.valueOf(date)
@@ -75,7 +75,7 @@ class AppointmentServices{
 
         appointmentRepository.getServices(hour,d)
             .forEach {
-             val getEmployeeAvailable = servicesRepository.getAvailableEmployeesForServiceByDateAndHour(it,hour,end,d)
+             val getEmployeeAvailable = servicesRepository.getAvailableEmployeesForServiceByDateAndHourAndCompany(it,hour,end,d, companyId)
              if(getEmployeeAvailable.isNotEmpty())
                  availableServices.add(
                         ServiceOutputDto(servicesRepository.getServiceDBById(it))

@@ -38,14 +38,14 @@ class ServServices {
         return ServiceOutputDto(serv)
     }
 
-    fun getAvailableEmployees(id: Int,hourBegin: String,hourEnd: String,date: String): List<UserOutputDto>{
+   /* fun getAvailableEmployees(id: Int,hourBegin: String,hourEnd: String,date: String): List<UserOutputDto>{
         val begin = Time.valueOf(hourBegin)
         val end = Time.valueOf(hourEnd)
         val d = Date.valueOf(date)
 
         val users = serviceRepository.getAvailableEmployeesForServiceByDateAndHour(id,begin,end,d)
         return users.map { UserOutputDto(it) }
-    }
+    }*/
 
     fun updatePrice(idService: Int,price: Double):Long{
         return serviceRepository.updatePrice(idService,price)

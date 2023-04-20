@@ -44,7 +44,7 @@ class ServiceController {
        }
     }
 
-    @GetMapping("/{id}/employee")
+  /*  @GetMapping("/{id}/employee")
     fun getEmployeesForService(@PathVariable id: Int, @RequestParam hourBegin: String, hourEnd: String, date: String): ResponseEntity<List<UserOutputDto>> {
         return try {
             val response = servServices.getAvailableEmployees(id, hourBegin, hourEnd, date)
@@ -55,7 +55,7 @@ class ServiceController {
             ResponseEntity.status(400)
                 .body(null)
         }
-    }
+    }*/
 
     @PutMapping("/{id}/price")
     fun updatePrice(@PathVariable id: Int, @RequestParam price: Double): ResponseEntity<Long> {

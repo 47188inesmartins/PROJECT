@@ -22,13 +22,13 @@ class UnavailabilityDB {
 
     @Temporal(TemporalType.DATE)
     @Column(name = "date_end")
-    val dateEnd: Date
+    val dateEnd: Date?
 
     @Column(name = "hour_begin")
-    val hourBegin : Time
+    val hourBegin : Time?
 
     @Column(name = "hour_end")
-    val hourEnd : Time
+    val hourEnd : Time?
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -42,7 +42,7 @@ class UnavailabilityDB {
         this.userId = User()
     }
 
-    constructor(dateBegin: Date,dateEnd: Date,hourBegin: Time,hourEnd: Time,user: User){
+    constructor(dateBegin: Date,dateEnd: Date?,hourBegin: Time?,hourEnd: Time?,user: User){
         this.dateBegin = dateBegin
         this.dateEnd = dateEnd
         this.hourBegin = hourBegin

@@ -18,6 +18,31 @@ commit;
 
 
 
+select * from sch_user where id in
+            (select user_id from user_service where service_id = 1 and
+            service_id in (select id from service where company_id = 1))
+             and id not in (select user_id from unavailability where hour_begin between '12:00:00' and '13:00:00' and
+            (date_begin <= '2001-06-01' and date_end >= '2001-06-1'));
+
+
+select user_id from unavailability where hour_begin
+    between '12:00:00' and '13:00:00' and
+    (date_begin <= '2001-06-01' and date_end >= '2001-06-1');
+
+
+
+
+
+select * from unavailability where (date_end is null and date_begin ='2023-04-21'
+                                        and hour_begin  between '12:00:00' and '13:00:00'
+                                        or hour_end >= '12:00:00' and hour_end < '13:00:00')
+        or ('2001-02-03' <= date_begin and '2001-02-03' >= date_end);
+
+/*
+
+
+
+*/
 
 begin;
 select * from appointment a where a.schedule_id = (select id from schedule s where s.company_id = 1) and a.app_date = '2001-06-11' and a.app_hour = '20:30:00';

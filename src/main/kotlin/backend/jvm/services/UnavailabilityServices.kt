@@ -17,9 +17,15 @@ class UnavailabilityServices {
     @Autowired
     lateinit var userRepository: UserRepository
 
+    @Throws
     fun addUnavailability(unavailability: UnavailabilityInputDto): UnavailabilityOutputDto {
         val getUser = userRepository.findById(unavailability.user).get()
-        println(getUser)
+        println("getuser====="+getUser)
+
+        if(unavailability.dateEnd == null){
+            if(unavailability.hourEnd == null || unavailability.hourBegin == null) throw Exception("hour end and hour begin can't be null")
+        }
+        println("maf nao bruxa")
 
         val a = unavailability.mapToUnavailable(unavailability,getUser)
         println("maf bruxa"+ a)

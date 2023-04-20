@@ -23,8 +23,8 @@ interface ServiceRepository : JpaRepository<ServiceDB, Int> {
 
     @Query(value ="select * from sch_user where id in " +
             "(select user_id from user_service where service_id = :idService) " +
-            "and id not in (select user_id from unavailability where hour_begin between :hourBegin and :hourEnd and (date_begin <= :date and date_end >= :date));", nativeQuery = true)
-    fun getAvailableEmployeesForServiceByDateAndHour(@Param("idService") idService:Int, @Param("hourBegin") hourBegin: Time, @Param("hourEnd") hourEnd: Time, @Param("date") date: Date):List<User>
+            "and id not in (select user_id from unavailability where hour_begin between :hourBegin and :hourEnd and (date_begin <= :date and date_end >= :date)) and service_id in (select id from service where company_id = :companyId);", nativeQuery = true)
+    fun getAvailableEmployeesForServiceByDateAndHourAndCompany(@Param("idService") idService:Int, @Param("hourBegin") hourBegin: Time, @Param("hourEnd") hourEnd: Time, @Param("date") date: Date, @Param("companyId") companyId: Int):List<User>
 
     @Query(value ="update service set price =:price where id=:idService returning price", nativeQuery = true)
     fun updatePrice( @Param("idService") idService: Int, @Param("price") price: Double): Long
