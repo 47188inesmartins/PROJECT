@@ -1,7 +1,7 @@
 package backend.jvm.services.dto
 
 import backend.jvm.model.UnavailabilityDB
-import backend.jvm.model.User
+import backend.jvm.model.UserDB
 import java.sql.Date
 import java.sql.Time
 
@@ -18,7 +18,7 @@ data class UnavailabilityInputDto(
         require(dateE.after(dateB)){ "invalid end date" }
         require(dateB.before(dateE)){ "invalid end date" }
     }*/
-    fun mapToUnavailable(dto: UnavailabilityInputDto, user: User) :UnavailabilityDB {
+    fun mapToUnavailable(dto: UnavailabilityInputDto, userDB: UserDB) :UnavailabilityDB {
         val db = Date.valueOf(dto.dateBegin)
         println(db)
         val de = if(dto.dateEnd != null )Date.valueOf(dto.dateEnd) else null
@@ -33,7 +33,7 @@ data class UnavailabilityInputDto(
             dateEnd = de,
             hourBegin = hb,
             hourEnd =  he,
-            user = user
+            userDB = userDB
         )
     }
 }
@@ -52,7 +52,7 @@ data class UnavailabilityOutputDto(
         dateEnd = unavailability.dateEnd.toString(),
         hourBegin = unavailability.hourBegin.toString(),
         hourEnd = unavailability.hourEnd.toString(),
-        user = unavailability.userId.id
+        user = unavailability.userDBId.id
     )
 }
 

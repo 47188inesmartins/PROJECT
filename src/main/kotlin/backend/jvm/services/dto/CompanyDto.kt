@@ -34,6 +34,6 @@ data class CompanyOutputDto(
         description = company.description,
         service = company.serviceDBS?.map { it.id },
         schedule = company.schedule?.id,
-        users = company.users?.map { it.id }
+        users = company.userDBS?.map { it.id }
     )
 }

@@ -2,7 +2,7 @@ package backend.database
 
 import backend.jvm.model.Company
 import backend.jvm.model.Role
-import backend.jvm.model.User
+import backend.jvm.model.UserDB
 import backend.jvm.repository.RoleRepository
 import backend.jvm.repository.UserRepository
 import org.junit.jupiter.api.Test
@@ -33,7 +33,7 @@ class UsersTest {
 
     @Test
     fun `get user`(){
-        val user = User(
+        val userDB = UserDB(
             "test@123.com",
             "123456",
             "test",
@@ -42,9 +42,9 @@ class UsersTest {
             listOf()
         )
 
-        val role = Role("user",user)
+        val role = Role("user",userDB)
 
-        val userInsert = entityManager.persist(user)
+        val userInsert = entityManager.persist(userDB)
         val roleInsert = entityManager.persist(role)
         entityManager.flush()
 

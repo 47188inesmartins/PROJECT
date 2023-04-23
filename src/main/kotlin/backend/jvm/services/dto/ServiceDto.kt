@@ -13,6 +13,7 @@ data class ServiceInputDto(
 )
 
 data class ServiceOutputDto(
+    val id: Int,
     val serviceName: String,
     val duration: Time,
     val numberMax: Int,
@@ -20,6 +21,7 @@ data class ServiceOutputDto(
     val company: Int
 ){
     constructor(service : ServiceDB): this(
+        id = service.id,
         serviceName = service.name,
         duration = service.duration,
         numberMax = service.numberMax,

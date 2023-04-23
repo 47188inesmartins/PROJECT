@@ -4,6 +4,12 @@ import jakarta.persistence.*
 
 @Entity(name = "Schedule")
 @Table(name = "schedule")
+@org.hibernate.annotations.NamedQuery(
+    name = "getScheduleById",
+    query = "from Schedule where id = :id",
+    cacheable = true,
+    timeout = 1
+)
 class Schedule {
 
     @Id

@@ -1,9 +1,6 @@
 package backend.jvm.controllers
 
-import backend.jvm.model.User
 import backend.jvm.services.UserServices
-import backend.jvm.services.dto.AppointmentInputDto
-import backend.jvm.services.dto.AppointmentOutputDto
 import backend.jvm.services.dto.UserInputDto
 import backend.jvm.services.dto.UserOutputDto
 import backend.jvm.utils.RoleManager
@@ -19,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
@@ -214,6 +212,7 @@ class UserController {
                 .body(null)
         }
     }
+
 }
 
 

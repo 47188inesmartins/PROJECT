@@ -19,7 +19,14 @@ import java.util.UUID
 
 @Entity
 @Table(name = "sch_user")
-class User {
+@org.hibernate.annotations.NamedQuery(
+        name = "getUserById",
+        query = "from UserDB where id = :id",
+        cacheable = true,
+        timeout = 1
+)
+
+class UserDB {
         @Id
         @Column(name = "id")
         @GeneratedValue(strategy = GenerationType.IDENTITY)

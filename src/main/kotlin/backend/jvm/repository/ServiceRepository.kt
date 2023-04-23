@@ -1,7 +1,7 @@
 package backend.jvm.repository
 
 import backend.jvm.model.ServiceDB
-import backend.jvm.model.User
+import backend.jvm.model.UserDB
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
@@ -12,7 +12,9 @@ import java.time.Duration
 
 interface ServiceRepository : JpaRepository<ServiceDB, Int> {
 
-    fun getServiceDBById(id: Int): ServiceDB
+
+    @Query(name = "getServiceById")
+    fun getServiceDBById(@Param("id") id: Int): ServiceDB
 
     @Query(value = "select * from service s where s.company_id = :id", nativeQuery = true)
     fun getAllServicesFromACompany(@Param("id") id: Int): List<ServiceDB>
@@ -20,11 +22,6 @@ interface ServiceRepository : JpaRepository<ServiceDB, Int> {
 
     @Query(value = "select count(appointment_id) from service_appointment where service_id=:serviceId and appointment_id=:appointmentId ", nativeQuery = true)
     fun countAppointments(@Param("serviceId") serviceId: Int, @Param("appointmentId") appointmentId: Int): Int
-
-    @Query(value ="select * from sch_user where id in " +
-            "(select user_id from user_service where service_id = :idService) " +
-            "and id not in (select user_id from unavailability where hour_begin between :hourBegin and :hourEnd and (date_begin <= :date and date_end >= :date)) and service_id in (select id from service where company_id = :companyId);", nativeQuery = true)
-    fun getAvailableEmployeesForServiceByDateAndHourAndCompany(@Param("idService") idService:Int, @Param("hourBegin") hourBegin: Time, @Param("hourEnd") hourEnd: Time, @Param("date") date: Date, @Param("companyId") companyId: Int):List<User>
 
     @Query(value ="update service set price =:price where id=:idService returning price", nativeQuery = true)
     fun updatePrice( @Param("idService") idService: Int, @Param("price") price: Double): Long

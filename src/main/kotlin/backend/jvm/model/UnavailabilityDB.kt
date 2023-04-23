@@ -9,6 +9,12 @@ import java.sql.Time
 
 @Entity
 @Table(name = "unavailability")
+@org.hibernate.annotations.NamedQuery(
+    name = "getUnavailabilityById",
+    query = "from UnavailabilityDB where id = :id",
+    cacheable = true,
+    timeout = 1
+)
 class UnavailabilityDB {
 
     @Id
@@ -32,22 +38,22 @@ class UnavailabilityDB {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    val userId : User
+    val userDBId : UserDB
 
     constructor(){
         this.dateBegin = Date.valueOf(getCurrentDate())
         this.dateEnd = Date.valueOf(getCurrentDate())
         this.hourBegin = Time.valueOf(getCurrentTime())
         this.hourEnd = Time.valueOf(getCurrentTime())
-        this.userId = User()
+        this.userDBId = UserDB()
     }
 
-    constructor(dateBegin: Date,dateEnd: Date?,hourBegin: Time?,hourEnd: Time?,user: User){
+    constructor(dateBegin: Date, dateEnd: Date?, hourBegin: Time?, hourEnd: Time?, userDB: UserDB){
         this.dateBegin = dateBegin
         this.dateEnd = dateEnd
         this.hourBegin = hourBegin
         this.hourEnd = hourEnd
-        this.userId = user
+        this.userDBId = userDB
     }
 
 }

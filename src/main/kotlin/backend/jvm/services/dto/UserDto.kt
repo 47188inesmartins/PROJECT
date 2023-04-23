@@ -3,7 +3,7 @@ package backend.jvm.services.dto
 import backend.jvm.model.Appointment
 import backend.jvm.model.Company
 import backend.jvm.model.ServiceDB
-import backend.jvm.model.User
+import backend.jvm.model.UserDB
 import java.sql.Date
 
 
@@ -17,15 +17,15 @@ data class UserOutputDto(
         val companyId: Int?,
         val services: List<Int>
 ){
-        constructor(user: User): this(
-                id = user.id,
-                email = user.email,
-                password = user.password,
-                name = user.name,
-                birthday = user.birthday.toString(),
-                availability = user.availability,
-                companyId = user.company?.id,
-                services = user.services?.map { it.id }?: emptyList()
+        constructor(userDB: UserDB): this(
+                id = userDB.id,
+                email = userDB.email,
+                password = userDB.password,
+                name = userDB.name,
+                birthday = userDB.birthday.toString(),
+                availability = userDB.availability,
+                companyId = userDB.company?.id,
+                services = userDB.services?.map { it.id }?: emptyList()
         )
 
         private fun mapToUserOutput(list: List<ServiceDB>?):List<Int>{
@@ -54,8 +54,8 @@ data class UserInputDto(
                 require(PASSWORD_FORMAT.matches(password)){ "Insecure password"}
         }
 
-        fun mapToUser(dto: UserInputDto,pass: String,services: List<ServiceDB>?,appointment: List<Appointment>?,comp: Company?):User{
-              return User(
+        fun mapToUser(dto: UserInputDto,pass: String,services: List<ServiceDB>?,appointment: List<Appointment>?,comp: Company?):UserDB{
+              return UserDB(
                       dto.email,
                       pass,
                       dto.name,

@@ -4,9 +4,11 @@ import backend.jvm.model.*
 import backend.jvm.repository.AppointmentRepository
 import backend.jvm.repository.ScheduleRepository
 import backend.jvm.repository.ServiceRepository
+import backend.jvm.repository.UserRepository
 import backend.jvm.services.dto.AppointmentInputDto
 import backend.jvm.services.dto.AppointmentOutputDto
 import backend.jvm.services.dto.ServiceOutputDto
+import jakarta.persistence.TypedQuery
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.sql.Time
@@ -23,20 +25,23 @@ class AppointmentServices{
     lateinit var servicesRepository: ServiceRepository
 
     @Autowired
-    lateinit var userService: UserServices
+    lateinit var userRepository: UserRepository
 
     @Autowired
     lateinit var scheduleRepository: ScheduleRepository
 
-    fun addAppointment(appointment: AppointmentInputDto): AppointmentOutputDto {
+     fun addAppointment(appointment: AppointmentInputDto): AppointmentOutputDto {
+
+
+        println("appointmentinputdto "+ appointment.service + appointment.schedule)
         val service = servicesRepository.getServiceDBById(appointment.service)
-        val user = if (appointment.user != null) userService.findById(appointment.user) else null
-        val schedule = scheduleRepository.getReferenceById(appointment.schedule)//scheduleService.getSchedule(appointment.schedule)!!
+        val user = if (appointment.user != null) userRepository.getUserById(appointment.user) else null
+        val schedule = scheduleRepository.getScheduleById(appointment.schedule)//scheduleService.getSchedule(appointment.schedule)!!
         val app = Appointment(
             appHour = Time.valueOf(appointment.appHour),
             appDate = Date.valueOf(appointment.appDate),
             scheduleId = schedule,
-            userId = user,
+            userDBId = user,
             serviceDB = service
         )
         val savedAppointment = appointmentRepository.save(app)
@@ -67,20 +72,15 @@ class AppointmentServices{
         return appointments.map{ AppointmentOutputDto(it) }
     }
 
-    fun getAvailableServices(appHour:String, hourEnd:String, date:String, companyId: Int):List<ServiceOutputDto>{
-        val hour = Time.valueOf(appHour)
-        val end = Time.valueOf(hourEnd)
+    fun getAvailableServices(beginHour:String, date:String, companyId: Int):List<ServiceOutputDto>{
+        val bh = Time.valueOf(beginHour)
         val d = Date.valueOf(date)
-        val availableServices = LinkedList<ServiceOutputDto>()
 
-        appointmentRepository.getServices(hour,d)
-            .forEach {
-             val getEmployeeAvailable = servicesRepository.getAvailableEmployeesForServiceByDateAndHourAndCompany(it,hour,end,d, companyId)
-             if(getEmployeeAvailable.isNotEmpty())
-                 availableServices.add(
-                        ServiceOutputDto(servicesRepository.getServiceDBById(it))
-                 )
+        val services = servicesRepository.getAllServicesFromACompany(companyId)
+
+        services.map {
+             userRepository.getAvailableEmployeesByService(it.id, d, bh, Time(bh.time+it.duration.time)).isNotEmpty()
         }
-        return availableServices
+        return services.map { ServiceOutputDto(it) }
     }
 }

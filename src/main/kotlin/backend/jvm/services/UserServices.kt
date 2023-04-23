@@ -1,9 +1,8 @@
 package backend.jvm.services
 
 import backend.jvm.model.Appointment
-import backend.jvm.model.Role
 import backend.jvm.model.ServiceDB
-import backend.jvm.model.User
+import backend.jvm.model.UserDB
 import backend.jvm.repository.*
 import backend.jvm.services.dto.AppointmentInputDto
 import backend.jvm.services.dto.AppointmentOutputDto
@@ -87,7 +86,7 @@ class UserServices {
         return userRepository.changeAvailability(availability,id)
     }
 
-    fun findById(id:Int): User {
+    fun findById(id:Int): UserDB {
         return userRepository.findById(id).get()
     }
 
@@ -118,14 +117,14 @@ class UserServices {
             appHour = Time.valueOf(appointment.appHour),
             appDate = Date.valueOf(appointment.appDate),
             scheduleId = schedule,
-            userId = getUser.get(),
+            userDBId = getUser.get(),
             serviceDB = serviceDb
         )
         val com = appointmentRepository.save(app)
         return AppointmentOutputDto(com)
     }
 
-    fun getUserByToken(token: String):User?{
+    fun getUserByToken(token: String):UserDB?{
         val t = UUID.fromString(token)
         return userRepository.getUserByToken(t)
     }

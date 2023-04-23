@@ -15,17 +15,17 @@ class Role {
     val name: String
 
     @ManyToOne
-    val user : User?
+    val userDB : UserDB?
 
     constructor(){
         this.name = ""
-        this.user = null
+        this.userDB = null
        // this.user = listOf()
     }
 
-    constructor(name : String , user: User){
+    constructor(name : String, userDB: UserDB){
         this.name = name
-        this.user = user
+        this.userDB = userDB
        // this.user = user
     }
 }

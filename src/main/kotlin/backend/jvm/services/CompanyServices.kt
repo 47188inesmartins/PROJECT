@@ -44,6 +44,7 @@ class CompanyServices {
 * sao adicionados
 *
 * */
+
         val schedule = company.schedule?.let { scheduleRepository.getReferenceById(it) }
         val users = company.users?.map { usersRepository.getReferenceById(it) }
         val services = company.service?.map { serviceRepository.getReferenceById(it) }
@@ -56,7 +57,7 @@ class CompanyServices {
                 description = company.description,
                 serviceDB = services,
                 schedule = schedule,
-                users = users
+                userDBS = users
             )
         )
         return CompanyOutputDto(comp)

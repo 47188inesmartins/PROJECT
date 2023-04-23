@@ -5,6 +5,21 @@ import java.sql.Time
 
 @Entity
 @Table(name = "sch_day")
+
+@org.hibernate.annotations.NamedQuery(
+    name = "getDayById",
+    query = "from Day where id = :id",
+    cacheable = true,
+    timeout = 1
+)
+
+@org.hibernate.annotations.NamedQuery(
+    name = "getDayBySchedule",
+    query = "from Day where schedule = :schedule",
+    cacheable = true,
+    timeout = 1
+)
+
 class Day {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)

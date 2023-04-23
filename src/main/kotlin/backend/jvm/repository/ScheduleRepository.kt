@@ -8,6 +8,8 @@ import org.springframework.data.repository.query.Param
 interface ScheduleRepository: JpaRepository<Schedule, Int> {
 
 
+        @Query(name = "getScheduleById")
+        fun getScheduleById(@Param("id") id: Int): Schedule
 
 
         /**

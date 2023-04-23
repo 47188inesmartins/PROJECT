@@ -2,10 +2,10 @@
 ### Project and Seminar
 
 >Our project is a web api for scheduling services.
-We have as a base scenario hairdressers.
+We have as a base scenario hairdressers. Hope you like it ;)
 
-**Contributors**
+**Made with love by**
 
-Mafalda Rodrigues nº 41784
+project manager: Mafalda Rodrigues nº 41784
 
-Inês Martins nº 41788
+viceboss : Inês Martins nº 41788

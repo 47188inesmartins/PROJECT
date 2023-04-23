@@ -24,7 +24,7 @@ data class AppointmentOutputDto(val id: Int,
         appHour = appointment.appHour,
         appDate = appointment.appDate,
         schedule = appointment.schedule.id,
-        user = appointment.user?.id,
+        user = appointment.userDB?.id,
         service = appointment.service.id
     )
 }

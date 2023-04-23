@@ -4,8 +4,17 @@ import jakarta.persistence.*
 import java.sql.Time
 
 
+
+
 @Entity
 @Table(name = "service")
+@org.hibernate.annotations.NamedQuery(
+    name = "getServiceById",
+    query = "from ServiceDB where id = :id",
+    cacheable = true,
+    timeout = 1
+)
+
 class ServiceDB{
 
     @Id
@@ -48,7 +57,7 @@ class ServiceDB{
         joinColumns = [JoinColumn(name = "service_id")],
         inverseJoinColumns = [JoinColumn(name = "user_id")]
     )
-    val user: List<User>?
+    val userDB: List<UserDB>?
 
     constructor(){
         this.name = ""
@@ -56,7 +65,7 @@ class ServiceDB{
         this.numberMax = 0
         this.price = 0.0
         this.company = Company()
-        this.user = listOf()
+        this.userDB = listOf()
         this.appointment = listOf()
         this.day = listOf()
     }
@@ -67,7 +76,7 @@ class ServiceDB{
         this.numberMax = numberMax
         this.price = price
         this.company = company
-        this.user = null
+        this.userDB = null
         this.appointment = null
         this.day = null
     }

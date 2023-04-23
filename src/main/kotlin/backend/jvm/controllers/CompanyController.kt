@@ -5,7 +5,6 @@ import backend.jvm.model.*
 import backend.jvm.services.CompanyServices
 import backend.jvm.services.dto.*
 import backend.jvm.utils.RoleManager
-import backend.jvm.utils.UserRoles
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import org.springframework.beans.factory.annotation.Autowired
@@ -101,7 +100,7 @@ class CompanyController {
             ResponseEntity
                 .status(200)
                 .body("The address of the company was updated")
-       } catch (e: Exception) {
+        }catch (e: Exception) {
             ResponseEntity
                 .status(400)
                 .body(e.toString())
@@ -110,7 +109,7 @@ class CompanyController {
     @RoleManager(["manager"])
     @PutMapping("/{id}/description")
     fun changeDescription(@PathVariable id: Int, @RequestBody address: String){
-    TODO()
+       TODO()
     //  return companyServices.changeAddress(id, address)
     }
 

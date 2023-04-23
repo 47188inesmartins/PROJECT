@@ -32,11 +32,31 @@ select user_id from unavailability where hour_begin
 
 
 
+select * from sch_user where id not in
+(select user_id from unavailability where (date_end is null and date_begin ='2023-04-21'
+                                        and ((hour_begin  >= '12:30:00' and  hour_begin < '14:00:00')
+                                        or (hour_end >= '12:30:00' and hour_end < '14:00:00')))
+        or ('2023-04-21' <= date_begin and '2001-02-03' >= date_end))
+and id in (select user_id from user_service where service_id = 1);
 
-select * from unavailability where (date_end is null and date_begin ='2023-04-21'
-                                        and hour_begin  between '12:00:00' and '13:00:00'
-                                        or hour_end >= '12:00:00' and hour_end < '13:00:00')
-        or ('2001-02-03' <= date_begin and '2001-02-03' >= date_end);
+
+SELECT u.*
+FROM sch_user u
+         JOIN user_service us ON u.id = us.user_id
+         LEFT JOIN (
+    SELECT user_id
+    FROM unavailability
+    WHERE date_end IS NULL
+        AND date_begin = '2023-04-21'
+        AND (
+                  (hour_begin >= '12:30:00' AND hour_begin < '14:00:00')
+                  OR (hour_end >= '12:30:00' AND hour_end < '14:00:00')
+              )
+       OR ('2023-04-21' BETWEEN date_begin AND date_end)
+) ua ON u.id = ua.user_id
+WHERE ua.user_id IS NULL
+  AND us.service_id = 1;
+
 
 /*
 

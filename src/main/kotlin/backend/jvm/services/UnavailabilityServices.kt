@@ -39,7 +39,7 @@ class UnavailabilityServices {
     fun getUnavailabilityByUser(user: Int): UnavailabilityOutputDto{
         val getUser = userRepository.findById(user).get()
         return UnavailabilityOutputDto(
-            unavailabilityRepository.getUnavailabilityDBByUserId(getUser)
+            unavailabilityRepository.getUnavailabilityDBByUserDBId(getUser)
         )
     }
 

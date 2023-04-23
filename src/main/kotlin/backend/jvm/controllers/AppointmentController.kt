@@ -102,12 +102,13 @@ class AppointmentController {
     }*/
     @RoleManager(["manager,employee,client"])
     @GetMapping("/services/availability")
-    fun getAvailableServices(@RequestParam("hour") h :String,@RequestParam("hour_end") h_end :String,@RequestParam("date") date :String, @RequestParam("companyId") companyId :Int ) :ResponseEntity<List<ServiceOutputDto>>{
+    fun getAvailableServices(@RequestParam("hour_begin") hourBegin :String, @RequestParam("date") date :String, @RequestParam("companyId") companyId :Int ) :ResponseEntity<List<ServiceOutputDto>>{
         return try{
-            val response = appointmentServices.getAvailableServices(h, h_end, date, companyId)
+            val response = appointmentServices.getAvailableServices(hourBegin, date, companyId)
             ResponseEntity.status(200)
                 .body(response)
         }catch (e: Exception){
+            println("exception = $e")
             ResponseEntity.status(400)
                 .body(null)
         }

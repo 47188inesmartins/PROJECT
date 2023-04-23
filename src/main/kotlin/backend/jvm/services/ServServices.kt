@@ -3,6 +3,7 @@ package backend.jvm.services
 
 import backend.jvm.model.ServiceDB
 import backend.jvm.repository.ServiceRepository
+import backend.jvm.repository.UserRepository
 import backend.jvm.services.dto.ServiceInputDto
 import backend.jvm.services.dto.ServiceOutputDto
 import backend.jvm.services.dto.UserOutputDto
@@ -19,6 +20,8 @@ class ServServices {
     lateinit var serviceRepository: ServiceRepository
     @Autowired
     lateinit var companyServices : CompanyServices
+    @Autowired
+    lateinit var userRepository : UserRepository
 
     fun addService(service: ServiceInputDto): ServiceOutputDto {
         val company = companyServices.getCompany(service.company).get()
@@ -38,14 +41,15 @@ class ServServices {
         return ServiceOutputDto(serv)
     }
 
-   /* fun getAvailableEmployees(id: Int,hourBegin: String,hourEnd: String,date: String): List<UserOutputDto>{
-        val begin = Time.valueOf(hourBegin)
-        val end = Time.valueOf(hourEnd)
+    fun getAvailableEmployees(id: Int, hourBegin: String, hourEnd: String, date: String): List<UserOutputDto>{
+        val hb = Time.valueOf(hourBegin)
+        val he = Time.valueOf(hourEnd)
         val d = Date.valueOf(date)
 
-        val users = serviceRepository.getAvailableEmployeesForServiceByDateAndHour(id,begin,end,d)
+
+        val users = userRepository.getAvailableEmployeesByService(id, d, hb, he)
         return users.map { UserOutputDto(it) }
-    }*/
+    }
 
     fun updatePrice(idService: Int,price: Double):Long{
         return serviceRepository.updatePrice(idService,price)

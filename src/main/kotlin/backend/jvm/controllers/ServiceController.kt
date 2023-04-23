@@ -57,6 +57,26 @@ class ServiceController {
         }
     }*/
 
+
+
+    @GetMapping("{id}/employees")
+    fun getAvailableEmployees(@RequestParam("date") date: String, @RequestParam("beginHour") beginHour: String, @RequestParam("endHour") endHour: String,
+                              @PathVariable id: Int
+    ): ResponseEntity<List<UserOutputDto>>{
+        println("id = $id")
+        return try{
+            val response = servServices.getAvailableEmployees(id, beginHour, endHour, date)
+            ResponseEntity.status(200)
+                .body(response)
+        }catch (e: Exception){
+            println("exception = $e")
+            ResponseEntity.status(400).body(null)
+        }
+    }
+
+
+
+
     @PutMapping("/{id}/price")
     fun updatePrice(@PathVariable id: Int, @RequestParam price: Double): ResponseEntity<Long> {
         return try {

@@ -9,9 +9,8 @@ import java.sql.Date
 
 interface AppointmentRepository: JpaRepository<Appointment, Int>{
 
-    fun getByScheduleId(id: Int): List<Appointment>
-
-   // fun getAppoitmentByUser
+    @Query(name = "getAppointmentById")
+    fun getAppointmentById(@Param("id") id: Int): Appointment
 
 
     @Query(value = "select * from appointment where schedule_id = (select id from schedule s where s.company_id = :id)", nativeQuery = true)

@@ -5,6 +5,12 @@ import javax.persistence.Column
 
 @Entity
 @Table(name = "company")
+@org.hibernate.annotations.NamedQuery(
+        name = "getCompanyById",
+        query = "from Company where id = :id",
+        cacheable = true,
+        timeout = 1
+)
 class Company {
 
         @Id
@@ -33,7 +39,7 @@ class Company {
         val schedule: Schedule?
 
         @OneToMany(mappedBy = "company")
-        val users: List<User>?
+        val userDBS: List<UserDB>?
 
         constructor() {
                 this.nif = ""
@@ -43,10 +49,10 @@ class Company {
                 this.description = ""
                 this.serviceDBS = null
                 this.schedule = null
-                this.users = null
+                this.userDBS = null
         }
 
-        constructor(nif: String, address: String, compName: String, compType: String, description: String, serviceDB: List<ServiceDB>?, schedule: Schedule?, users: List<User>?){
+        constructor(nif: String, address: String, compName: String, compType: String, description: String, serviceDB: List<ServiceDB>?, schedule: Schedule?, userDBS: List<UserDB>?){
                 this.nif = nif
                 this.address = address
                 this.name = compName
@@ -54,7 +60,7 @@ class Company {
                 this.description = description
                 this.serviceDBS = serviceDB
                 this.schedule = schedule
-                this.users = users
+                this.userDBS = userDBS
         }
 }
 

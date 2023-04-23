@@ -12,13 +12,19 @@ import java.sql.Date
  * @property id the appointment primary key
  * @property appHour hour of the appointment
  * @property schedule schedule associated with appointment
- * @property user company associated with appointment
+ * @property userDB company associated with appointment
  *
  */
 
 
 @Entity
 @Table(name = "appointment")
+@org.hibernate.annotations.NamedQuery(
+    name = "getAppointmentById",
+    query = "from Appointment where id = :id",
+    cacheable = true,
+    timeout = 1
+)
 class Appointment {
 
     @Id
@@ -43,7 +49,7 @@ class Appointment {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    val user : User?
+    val userDB : UserDB?
 
 
 
@@ -51,15 +57,15 @@ class Appointment {
         this.appHour = Time.valueOf("00:00:00")
         this.appDate = Date.valueOf("2000-01-01")
         this.schedule = Schedule()
-        this.user = null
+        this.userDB = null
         this.service = ServiceDB()
     }
 
-    constructor(appHour: Time, appDate : Date, scheduleId: Schedule, userId: User?, serviceDB: ServiceDB) {
+    constructor(appHour: Time, appDate : Date, scheduleId: Schedule, userDBId: UserDB?, serviceDB: ServiceDB) {
         this.appHour = appHour
         this.appDate = appDate
         this.schedule = scheduleId
-        this.user = userId
+        this.userDB = userDBId
         this.service = serviceDB
     }
 }
