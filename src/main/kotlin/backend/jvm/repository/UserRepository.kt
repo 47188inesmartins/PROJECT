@@ -24,7 +24,7 @@ interface UserRepository: JpaRepository<User, Int> {
      fun getUsersByEmail (email: String): User?
      @Query(value = "select availability from SCH_USER u " +
              "inner join u_role r on r.id = :id and r.name = 'employee'", nativeQuery = true)
-     fun getEmployeeAvailability(@Param("id") id: Int)
+     fun getEmployeeAvailability(@Param(" id ") id: Int)
 
      @Query(value = "select name from u_role r where r.user_id = :id", nativeQuery = true)
      fun getRole (@Param("id") id: Int): String?
