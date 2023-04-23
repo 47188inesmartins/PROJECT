@@ -5,6 +5,7 @@ import backend.jvm.model.ServiceDB
 import backend.jvm.services.ScheduleServices
 import backend.jvm.services.dto.ScheduleInputDto
 import backend.jvm.services.dto.ScheduleOutputDto
+import backend.jvm.utils.RoleManager
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -17,6 +18,7 @@ class ScheduleController {
     @Autowired
     lateinit var scheduleServices: ScheduleServices
 
+    @RoleManager(["manager"])
     @ResponseBody
     @PostMapping
     fun addNewSchedule(@RequestBody schedule: ScheduleInputDto): ResponseEntity<ScheduleOutputDto> {
@@ -29,11 +31,13 @@ class ScheduleController {
         }
     }
 
+    @RoleManager(["manager"])
     @DeleteMapping("/{id}")
     fun deleteSchedule(@PathVariable id:Int){
         scheduleServices.deleteSchedule(id)
     }
 
+    @RoleManager(["manager"])
     @GetMapping("/{id}")
     fun getSchedule(@PathVariable id:Int):ScheduleOutputDto?{
         return scheduleServices.getSchedule(id)

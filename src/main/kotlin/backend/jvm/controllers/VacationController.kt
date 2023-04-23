@@ -3,6 +3,7 @@ package backend.jvm.controllers
 import backend.jvm.services.VacationService
 import backend.jvm.services.dto.VacationInputDto
 import backend.jvm.services.dto.VacationOutputDto
+import backend.jvm.utils.RoleManager
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
@@ -19,6 +20,7 @@ class VacationController {
      @Autowired
     lateinit var vacationServices: VacationService
 
+    @RoleManager(["manager"])
     @PostMapping
     fun addVacation(@RequestBody vacation: VacationInputDto): ResponseEntity<VacationOutputDto> {
         return try {
@@ -31,6 +33,7 @@ class VacationController {
         }
     }
 
+    @RoleManager(["manager,employee,client"])
     @GetMapping("/{id}")
     fun getVacation(@PathVariable id: Int): ResponseEntity<VacationOutputDto>{
         return try{
@@ -43,11 +46,13 @@ class VacationController {
         }
     }
 
+    @RoleManager(["manager"])
     @DeleteMapping("/{id}")
     fun deleteVacation(@PathVariable  id: Int){
         vacationServices.deleteVacation(id)
     }
 
+    @RoleManager(["manager"])
     @PutMapping("/{id}/date-begin")
     fun updateBeginDate(@PathVariable id: Int, @RequestParam date: String): ResponseEntity<Date> {
         return try {
@@ -64,6 +69,7 @@ class VacationController {
         }
     }
 
+    @RoleManager(["manager"])
     @PutMapping("/{id}/date-end")
     fun updateEndDate(@PathVariable id: Int, @RequestParam date: String): ResponseEntity<Date> {
         return try {

@@ -1,6 +1,4 @@
 package backend.jvm.utils
 
 
-annotation class RoleManager(val roleList: Array<String>){
-
-}
+annotation class RoleManager(val roleList: Array<String>)

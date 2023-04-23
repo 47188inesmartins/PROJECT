@@ -33,6 +33,7 @@ class UserServices {
     @Autowired
     lateinit var scheduleRepository: ScheduleRepository
 
+
     fun getUserByEmailAnnPassword(email:String ,password: String):UserOutputDto {
         val hash = Hashing.encodePass(password)
         val getUser = userRepository.getUsersByEmailAndPassword(email, hash)
@@ -132,6 +133,12 @@ class UserServices {
     fun getRoleByToken(token: String): String? {
         val user = userRepository.getUserByToken(UUID.fromString(token))?.id ?: throw Exception("The user does not exists")
         return  userRepository.getRole(user)
+    }
+
+    fun addEmployee(user: UserInputDto): UserOutputDto{
+        val getUser = userRepository.getUsersByEmail(user.email) ?: throw Exception("Invalid User")
+        userRepository.changeRole(getUser.id,"employee")
+        return UserOutputDto(getUser)
     }
 
 }

@@ -4,6 +4,7 @@ import backend.jvm.services.AppointmentServices
 import backend.jvm.services.dto.AppointmentInputDto
 import backend.jvm.services.dto.AppointmentOutputDto
 import backend.jvm.services.dto.ServiceOutputDto
+import backend.jvm.utils.RoleManager
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -24,6 +25,7 @@ class AppointmentController {
     @Autowired
     lateinit var appointmentServices: AppointmentServices
 
+    @RoleManager(["manager,client"])
     @ResponseBody
     @PostMapping
     fun addAppointment(@RequestBody appointment: AppointmentInputDto): ResponseEntity<AppointmentOutputDto> {
@@ -39,12 +41,12 @@ class AppointmentController {
         }
     }
 
-
+    @RoleManager(["manager"])
     @DeleteMapping("/{id}")
     fun deleteAppointment(@PathVariable id: Int){
         appointmentServices.deleteAppointment(id)
     }
-
+    @RoleManager(["manager,employee,client"])
     @GetMapping("/{id}")
     fun getAppointment(@PathVariable id: Int): ResponseEntity<AppointmentOutputDto>{
         return try {
@@ -70,7 +72,7 @@ class AppointmentController {
                 .body(null)
         }
     }*/
-
+    @RoleManager(["manager,employee,client"])
     @GetMapping
     fun getAppointmentsByDateAndHour(@RequestParam("schedule_id") schedule_id: Int, @RequestParam("hour") hour: String, @RequestParam("date") date: String): ResponseEntity<List<AppointmentOutputDto>>{
         return try {
@@ -97,7 +99,7 @@ class AppointmentController {
         }
 
     }*/
-
+    @RoleManager(["manager,employee,client"])
     @GetMapping("/services/availability")
     fun getAvailableServices(@RequestParam("hour") h :String,@RequestParam("hour_end") h_end :String,@RequestParam("date") date :String, @RequestParam("companyId") companyId :Int ) :ResponseEntity<List<ServiceOutputDto>>{
         return try{

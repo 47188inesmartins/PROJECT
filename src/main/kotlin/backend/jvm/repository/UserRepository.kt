@@ -21,7 +21,7 @@ interface UserRepository: JpaRepository<User, Int> {
 /*     @Query(value = "select name from u_role where user_id = (select id from sch_user where token = :token)")
      fun getRoleByToken(@Param("token") token: UUID): String
 */
-     fun getUsersByEmail (email: String): User
+     fun getUsersByEmail (email: String): User?
      @Query(value = "select availability from SCH_USER u " +
              "inner join u_role r on r.id = :id and r.name = 'employee'", nativeQuery = true)
      fun getEmployeeAvailability(@Param("id") id: Int)

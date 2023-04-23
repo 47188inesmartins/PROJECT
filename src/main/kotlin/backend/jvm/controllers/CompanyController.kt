@@ -21,7 +21,7 @@ class CompanyController {
     lateinit var companyServices: CompanyServices
 
 
-    @RoleManager(["guest"])
+    @RoleManager(["manager"])
     @ResponseBody
     @PostMapping
     fun addCompany(@RequestBody company: CompanyInputDto): ResponseEntity<CompanyOutputDto> {
@@ -39,12 +39,13 @@ class CompanyController {
         }
     }
 
+    @RoleManager(["manager"])
     @DeleteMapping("/{id}")
     fun deleteCompany(@PathVariable id: Int): Boolean {
         return companyServices.deleteCompany(id)
     }
 
-
+    @RoleManager(["manager,employee,guest,client"])
     @ResponseBody
     @GetMapping("/{id}")
     fun getCompany(@PathVariable id: Int): ResponseEntity<Company> {
@@ -55,7 +56,7 @@ class CompanyController {
             ResponseEntity.status(400).body(null)
         }
     }
-
+    @RoleManager(["manager,employee"])
     @GetMapping
     fun findCompanyByNif(@RequestParam nif: String): ResponseEntity<Company> {
         return try {
@@ -74,7 +75,7 @@ class CompanyController {
     fun getAllEmployees(@PathVariable id: Int): List<Employee>{
         return companyServices.getAllEmployees(id)
     }*/
-
+    @RoleManager(["manager,employee,guest,client"])
     @GetMapping("/{id}/services")
     fun getAllServices(@PathVariable id: Int): ResponseEntity<List<ServiceOutputDto>> {
         return try {
@@ -86,6 +87,7 @@ class CompanyController {
         }
     }
 
+    @RoleManager(["manager"])
     @PutMapping("/{id}/address")
     fun changeAddress(@PathVariable id: Int, @RequestBody companyAddress: String): ResponseEntity<String> {
         return try {
@@ -105,7 +107,7 @@ class CompanyController {
                 .body(e.toString())
         }
     }
-
+    @RoleManager(["manager"])
     @PutMapping("/{id}/description")
     fun changeDescription(@PathVariable id: Int, @RequestBody address: String){
     TODO()
@@ -113,6 +115,7 @@ class CompanyController {
     }
 
 
+    @RoleManager(["manager,employee,client"])
     @GetMapping("/{id}/appointments")
     fun getAllOnGoingAppointments(@PathVariable id: Int): ResponseEntity<List<AppointmentOutputDto>>{
         return try {
@@ -125,7 +128,7 @@ class CompanyController {
         }
     }
 
-
+    @RoleManager(["manager,employee,client"])
     @GetMapping("/{id}/appointment")
     fun getAppointmentByDateAndHour(@PathVariable id: Int, @RequestParam date: String, hour: String): ResponseEntity<List<AppointmentOutputDto>> {
         return try {
@@ -140,7 +143,7 @@ class CompanyController {
         }
     }
 
-
+    @RoleManager(["manager,employee,guest,client"])
     @GetMapping("/{id}/days")
     fun getOpenDays(@PathVariable id: Int): ResponseEntity<List<DayOutputDto>>{
         return try {
@@ -155,7 +158,7 @@ class CompanyController {
         }
     }
 
-
+    @RoleManager(["manager,employee,guest,client"])
     @GetMapping("/{id}/vacation")
     fun getVacation(@PathVariable id: Int): ResponseEntity<List<VacationOutputDto>>{
         return try{

@@ -6,6 +6,7 @@ import backend.jvm.services.dto.AppointmentInputDto
 import backend.jvm.services.dto.AppointmentOutputDto
 import backend.jvm.services.dto.UserInputDto
 import backend.jvm.services.dto.UserOutputDto
+import backend.jvm.utils.RoleManager
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
@@ -29,6 +30,7 @@ class UserController {
     @Autowired
     lateinit var userServices: UserServices
 
+    @RoleManager(["manager,employee,guest,client"])
     @PostMapping
     fun addUser(@RequestBody user: UserInputDto): ResponseEntity<UserOutputDto> {
         return try {
@@ -44,6 +46,7 @@ class UserController {
         }
     }
 
+    @RoleManager(["manager,employee,client"])
     @DeleteMapping("/{id}")
     fun deleteUser(@PathVariable id: Int): ResponseEntity<Boolean>{
         return try {
@@ -58,7 +61,7 @@ class UserController {
         }
 
     }
-
+    @RoleManager(["manager,employee,client"])
     @GetMapping("/{id}")
     fun getUserById(@PathVariable id: Int): ResponseEntity<UserOutputDto> {
         return try {
@@ -73,6 +76,7 @@ class UserController {
         }
     }
 
+    @RoleManager(["manager,employee,client"])
     @GetMapping("/{id}/role")
     fun getRole(@PathVariable id: Int): ResponseEntity<String?> {
         return try {
@@ -87,7 +91,7 @@ class UserController {
         }
     }
 
-
+    @RoleManager(["manager,employee"])
     @PutMapping("/{id}/role")
     fun changeRole(@PathVariable id: Int, @RequestBody roleName: String):  ResponseEntity<String> {
         return try {
@@ -108,6 +112,7 @@ class UserController {
         }
     }
 
+    @RoleManager(["manager,employee"])
     @PutMapping("/{id}/availability")
     fun changeAvailability(@PathVariable id: Int, @RequestBody availability: String): ResponseEntity<String> {
         return try {
@@ -128,6 +133,7 @@ class UserController {
         }
     }
 
+    @RoleManager(["manager,employee,client"])
     @PutMapping("/{id}/password")
     fun changePassword(@PathVariable id: Int, @RequestBody password: String): ResponseEntity<String> {
         return try {
@@ -162,6 +168,23 @@ class UserController {
         }
     }*/
 
+
+    @RoleManager(["manager"])
+    @GetMapping("/employee")
+    fun addEmployee(@RequestBody employee: UserInputDto): ResponseEntity<UserOutputDto> {
+        return try {
+            val response = userServices.addEmployee(employee)
+            ResponseEntity
+                .status(200)
+                .body(response)
+        }catch (e: Exception) {
+            ResponseEntity
+                .status(400)
+                .body(null)
+        }
+    }
+
+    @RoleManager(["manager,employee,client"])
     @GetMapping("/log")
     fun getUserByEmailPass(@RequestBody password: String,@RequestBody email: String): ResponseEntity<UserOutputDto> {
         return try {

@@ -4,6 +4,7 @@ import backend.jvm.model.Day
 import backend.jvm.services.DayServices
 import backend.jvm.services.dto.DayInputDto
 import backend.jvm.services.dto.DayOutputDto
+import backend.jvm.utils.RoleManager
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
@@ -19,7 +20,7 @@ class DayController {
 
     @Autowired
     lateinit var dayService:DayServices
-
+    @RoleManager(["manager"])
     @ResponseBody
     @PostMapping
     fun addOpenDay(@RequestBody day: DayInputDto): ResponseEntity<DayOutputDto> {
@@ -33,6 +34,7 @@ class DayController {
         }
     }
 
+    @RoleManager(["manager"])
     @DeleteMapping("/{id}")
     fun deleteOpenDay(@PathVariable id: Int): ResponseEntity<String> {
         return try{
@@ -47,6 +49,7 @@ class DayController {
         }
     }
 
+    @RoleManager(["manager"])
     @ResponseBody
     @PutMapping("/{id}/begin")
     fun updateBeginHour(@PathVariable id:Int,@RequestParam begin: String): ResponseEntity<Time> {
@@ -67,6 +70,7 @@ class DayController {
         }
     }
 
+    @RoleManager(["manager"])
     @ResponseBody
     @PutMapping("/{id}/end")
     fun updateEndHour(@PathVariable id:Int,@RequestParam end: String): ResponseEntity<Time> {

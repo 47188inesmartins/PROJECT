@@ -3,6 +3,7 @@ package backend.jvm.controllers
 import backend.jvm.services.UnavailabilityServices
 import backend.jvm.services.dto.UnavailabilityInputDto
 import backend.jvm.services.dto.UnavailabilityOutputDto
+import backend.jvm.utils.RoleManager
 import org.apache.catalina.connector.Response
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -16,6 +17,7 @@ class UnavailabilityController {
     @Autowired
     lateinit var unavailabilityServices: UnavailabilityServices
 
+    @RoleManager(["manager,employee"])
     @PostMapping
     fun addUserUnavailability(@RequestBody unavailability: UnavailabilityInputDto): ResponseEntity<UnavailabilityOutputDto> {
         return try {
@@ -36,6 +38,7 @@ class UnavailabilityController {
         }
     }
 
+    @RoleManager(["manager,employee"])
     @GetMapping("/{id}/user")
     fun getUnavailabilityByUser(@PathVariable id: Int): ResponseEntity<UnavailabilityOutputDto> {
         return try {
@@ -50,6 +53,7 @@ class UnavailabilityController {
         }
     }
 
+    @RoleManager(["manager,employee"])
     @DeleteMapping("/{id}")
     fun deleteUnavailability(@PathVariable id: Int): ResponseEntity<String> {
         return try {
