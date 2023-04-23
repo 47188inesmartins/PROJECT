@@ -77,6 +77,7 @@ class AppointmentController {
     fun getAppointmentsByDateAndHour(@RequestParam("schedule_id") schedule_id: Int, @RequestParam("hour") hour: String, @RequestParam("date") date: String): ResponseEntity<List<AppointmentOutputDto>>{
         return try {
             val response = appointmentServices.getAppointmentByDateAndHour(schedule_id, hour, date)
+
             ResponseEntity.status(200)
                 .body(response)
 

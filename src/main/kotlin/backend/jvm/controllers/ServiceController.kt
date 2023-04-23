@@ -122,7 +122,8 @@ class ServiceController {
     fun deleteServices(@RequestBody serviceDB: ServiceDB): ResponseEntity<String> {
         return try {
              servServices.delete(serviceDB)
-            ResponseEntity.status(200)
+
+             ResponseEntity.status(200)
                 .body("Service was deleted")
         }catch(e: Exception){
             ResponseEntity.status(400)

@@ -57,6 +57,7 @@ class VacationController {
     fun updateBeginDate(@PathVariable id: Int, @RequestParam date: String): ResponseEntity<Date> {
         return try {
             val json = Json.parseToJsonElement(date)
+
             val request = json.jsonObject["date"]?.jsonPrimitive?.content
                 ?: return ResponseEntity
                     .status(400)

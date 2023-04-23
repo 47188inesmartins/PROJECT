@@ -35,6 +35,7 @@ class UserController {
     fun addUser(@RequestBody user: UserInputDto): ResponseEntity<UserOutputDto> {
         return try {
             val response = userServices.addUser(user)
+
             ResponseEntity
                 .status(201)
                 .body(response)

@@ -40,7 +40,7 @@ class ScheduleController {
     @RoleManager(["manager"])
     @GetMapping("/{id}")
     fun getSchedule(@PathVariable id:Int):ScheduleOutputDto?{
-        return scheduleServices.getSchedule(id)
+          return scheduleServices.getSchedule(id)
     }
 
     /*@ResponseBody

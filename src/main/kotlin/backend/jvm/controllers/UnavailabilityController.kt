@@ -43,6 +43,7 @@ class UnavailabilityController {
     fun getUnavailabilityByUser(@PathVariable id: Int): ResponseEntity<UnavailabilityOutputDto> {
         return try {
             val response = unavailabilityServices.getUnavailabilityByUser(id)
+
             ResponseEntity
                 .status(201)
                 .body(response)

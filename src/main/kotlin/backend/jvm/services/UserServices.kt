@@ -138,7 +138,7 @@ class UserServices {
     fun addEmployee(user: UserInputDto): UserOutputDto{
         val getUser = userRepository.getUsersByEmail(user.email) ?: throw Exception("Invalid User")
         userRepository.changeRole(getUser.id,"employee")
-        return UserOutputDto(getUser)
+        return UserOutputDto( getUser )
     }
 
 }

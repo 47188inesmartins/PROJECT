@@ -80,7 +80,6 @@ class DayController {
                 ?: return ResponseEntity
                     .status(400)
                     .body(null)
-
             val response = dayService.updateEndHour(id,request)
             ResponseEntity.status(200)
                 .body(response)
