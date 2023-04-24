@@ -1,6 +1,6 @@
 package backend.jvm.services
 
-import backend.jvm.model.*
+import backend.jvm.model.Appointment
 import backend.jvm.repository.AppointmentRepository
 import backend.jvm.repository.ScheduleRepository
 import backend.jvm.repository.ServiceRepository
@@ -8,12 +8,11 @@ import backend.jvm.repository.UserRepository
 import backend.jvm.services.dto.AppointmentInputDto
 import backend.jvm.services.dto.AppointmentOutputDto
 import backend.jvm.services.dto.ServiceOutputDto
-import jakarta.persistence.TypedQuery
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.sql.Time
 import java.sql.Date
-import java.util.LinkedList
+import java.sql.Time
+
 
 @Service
 class AppointmentServices{
@@ -75,12 +74,33 @@ class AppointmentServices{
     fun getAvailableServices(beginHour:String, date:String, companyId: Int):List<ServiceOutputDto>{
         val bh = Time.valueOf(beginHour)
         val d = Date.valueOf(date)
+        val dur = Time.valueOf("00:30:00")
 
         val services = servicesRepository.getAllServicesFromACompany(companyId)
 
-        services.map {
-             userRepository.getAvailableEmployeesByService(it.id, d, bh, Time(bh.time+it.duration.time)).isNotEmpty()
+        services.forEach { println(  userRepository.getAvailableEmployeesByService(it.id, d, bh, Time(bh.time+it.duration.time)).isNotEmpty()) }
+        println("time " + Time(bh.time - dur.time))
+        println("bh " + Time(bh.time))
+        val serv = services.filter {
+             userRepository.getAvailableEmployeesByService(it.id, d, bh, getEndHour(bh, dur)).isNotEmpty()
         }
-        return services.map { ServiceOutputDto(it) }
+        println("hello")
+
+        serv.forEach { println(it.id) }
+
+        return serv.map { ServiceOutputDto(it) }
     }
+
+
+
+    fun getEndHour(tempo1: Time, tempo2: Time): Time {
+        val additionalTime = tempo2.time - tempo2.timezoneOffset * 60 * 1000
+        println(Time(tempo1.time + additionalTime))
+      /*  val totalMillis = tempo1.time - tempo2.time
+        val t = Time(totalMillis)
+        println(t)
+        return t*/
+        return Time(tempo1.time + additionalTime)
+    }
+
 }

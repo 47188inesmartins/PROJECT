@@ -36,7 +36,7 @@ class Day {
 
         @Temporal(TemporalType.TIME)
         @Column(name = "day_interval")
-        val interval: Time
+        val interval: Time?
 
         @Column(name = "week_days")
         val weekDays: String
@@ -45,28 +45,25 @@ class Day {
         @JoinColumn(name = "schedule_id")
         val schedule : Schedule?
 
+        @ManyToOne
+        @JoinTable(name = "service_id")
+        val service: ServiceDB?
+
         constructor(){
             this.beginHour = Time.valueOf("00:00:00")
             this.endHour = Time.valueOf("00:00:00")
             this.interval = Time.valueOf("00:00:00")
             this.weekDays = "MON"
             this.schedule = null
+            this.service = null
         }
 
-        constructor(beginHour : Time, endHour: Time, interval: Time, weekDays: String, sid: Schedule){
+        constructor(beginHour : Time, endHour: Time, interval: Time, weekDays: String, schedule: Schedule?, service: ServiceDB?){
             this.beginHour = beginHour
             this.endHour = endHour
             this.interval = interval
             this.weekDays = weekDays
-            this.schedule = sid
-        }
-
-        constructor(id: Int, beginHour : Time, endHour: Time, interval: Time, weekDays: String, sid: Schedule){
-            this.id = id
-            this.beginHour = beginHour
-            this.endHour = endHour
-            this.interval = interval
-            this.weekDays = weekDays
-            this.schedule = sid
+            this.schedule = schedule
+            this.service = service
         }
 }

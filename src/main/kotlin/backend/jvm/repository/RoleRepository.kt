@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface RoleRepository : JpaRepository<Role, Int>{
 
-    fun getRoleById(id:Int):Role
+    fun getRoleByName(name:String):Role
 
 }

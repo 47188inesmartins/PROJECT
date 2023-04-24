@@ -31,6 +31,8 @@ class UserServices {
     lateinit var companyRepository: CompanyRepository
     @Autowired
     lateinit var scheduleRepository: ScheduleRepository
+    @Autowired
+    lateinit var roleRepository: RoleRepository
 
 
     fun getUserByEmailAnnPassword(email:String ,password: String):UserOutputDto {
@@ -47,9 +49,12 @@ class UserServices {
         if(user.services != null ) user.services.forEach { servicesList.add(servicesRepository.findById(it).get()) }
         if(user.appointment != null ) user.appointment.forEach { appList.add(appointmentRepository.findById(it).get()) }
         val comp = if(user.companyId != null )companyRepository.findById(user.companyId).get() else null
+        val role = roleRepository.getRoleByName("client")
+
+        println("role ${role.name}")
 
         val returnUser = userRepository.save(
-            user.mapToUser(user,Hashing.encodePass(user.password),servicesList,appList,comp)
+            user.mapToUser(user,Hashing.encodePass(user.password),servicesList,appList,comp, listOf(role))
         )
 
         return UserOutputDto(returnUser)

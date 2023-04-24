@@ -37,15 +37,15 @@ data class ScheduleInputDto(
 data class ScheduleOutputDto(
     val id: Int,
     val companyId: Int,
-    val appointment: List<Int>,
-    val day: List<Int>,
-    val vacation: List<Int>
+    val appointment: List<Int>?,
+    val day: List<Int>?,
+    val vacation: List<Int>?
     ){
     constructor( scheduleDb: Schedule):this(
         id = scheduleDb.id,
         companyId = scheduleDb.company.id,
-        appointment = scheduleDb.appointment.map { it.id },
-        day = scheduleDb.day.map { it.id },
-        vacation = scheduleDb.vacation.map { it.id }
+        appointment = scheduleDb.appointment?.map { it.id },
+        day = scheduleDb.day?.map { it.id },
+        vacation = scheduleDb.vacation?.map { it.id }
     )
 }

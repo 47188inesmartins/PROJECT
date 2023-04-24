@@ -28,7 +28,6 @@ class UserController {
     @Autowired
     lateinit var userServices: UserServices
 
-    @RoleManager(["manager,employee,guest,client"])
     @PostMapping
     fun addUser(@RequestBody user: UserInputDto): ResponseEntity<UserOutputDto> {
         return try {

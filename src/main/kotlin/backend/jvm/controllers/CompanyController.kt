@@ -20,7 +20,7 @@ class CompanyController {
     lateinit var companyServices: CompanyServices
 
 
-    @RoleManager(["manager"])
+    @RoleManager(["client"])
     @ResponseBody
     @PostMapping
     fun addCompany(@RequestBody company: CompanyInputDto): ResponseEntity<CompanyOutputDto> {

@@ -19,30 +19,20 @@ interface UserRepository: JpaRepository<UserDB, Int> {
 
      fun getUsersByEmail (email: String): UserDB?
 
-     @Query(value = "SELECT u.* " +
-             "FROM sch_user u " +
-             "JOIN user_service us ON u.id = us.user_id " +
-             "LEFT JOIN (" +
-             "SELECT user_id " +
-             "FROM unavailability " +
-             "WHERE date_end IS NULL " +
-             "AND date_begin = :date " +
-             "AND (" +
-             "(hour_begin >= :beginHour AND hour_begin < :endHour) " +
-             "OR (hour_end >= :beginHour AND hour_end < :endHour)" +
-             ") " +
-             "OR (:date BETWEEN date_begin AND date_end) " +
-             ") ua ON u.id = ua.user_id " +
-             "WHERE ua.user_id IS NULL " +
-             "AND us.service_id = :id", nativeQuery = true)
+     @Query(value = "select * from sch_user where id not in " +
+             "(select user_id from unavailability where (date_end is null and date_begin =:date" +
+             "                                        and ((hour_begin  >= :beginHour and hour_begin < :endHour)" +
+             "                                        or (hour_end > :beginHour and hour_end <= :endHour)))" +
+             "        or (:date <= date_begin and :date >= date_end))" +
+             "and id in (select user_id from user_service where service_id = :id)", nativeQuery = true)
      fun getAvailableEmployeesByService(@Param("id") serviceId: Int, @Param("date") date: Date, @Param("beginHour") beginHour: Time, @Param("endHour") endHour: Time): List<UserDB>
 
 
-     @Query(value = "select availability from SCH_USER u " +
+    /* @Query(value = "select availability from SCH_USER u " +
              "inner join u_role r on r.id = :id and r.name = 'employee'", nativeQuery = true)
      fun getEmployeeAvailability(@Param(" id ") id: Int)
 
-     fun getBy()
+     fun getBy()*/
 
      @Query(value = "select name from u_role r where r.user_id = :id", nativeQuery = true)
      fun getRole (@Param("id") id: Int): String?

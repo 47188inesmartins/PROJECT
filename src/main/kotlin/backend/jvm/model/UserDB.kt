@@ -50,6 +50,15 @@ class UserDB {
         @Column(name = "availability")
         val availability: String?
 
+        @ManyToMany
+        @JoinTable(
+                name = "user_role",
+                joinColumns = [JoinColumn(name = "user_id")],
+                inverseJoinColumns = [JoinColumn(name = "role_name")]
+        )
+        val roles: List<Role>
+
+
         @ManyToOne
         @JoinColumn(name = "company_id")
         val company: Company?
@@ -80,6 +89,7 @@ class UserDB {
                 this.availability = AVAILABILITY_STATE
                 this.company = null
                 this.appointment = null
+                this.roles = listOf()
         }
 
         constructor(
@@ -89,7 +99,8 @@ class UserDB {
                 birth:Date,
                 serv: List<ServiceDB>?,
                 company: Company?,
-                appointments: List<Appointment>?
+                appointments: List<Appointment>?,
+                roles: List<Role>
         ){
                 this.token = UUID.randomUUID()
                 this.email = email
@@ -100,6 +111,7 @@ class UserDB {
                 this.availability = AVAILABILITY_STATE
                 this.company = company
                 this.appointment = appointments
+                this.roles = roles
         }
 
         constructor(
@@ -108,7 +120,8 @@ class UserDB {
                 clientName:String,
                 birth:Date,
                 serv: List<ServiceDB>?,
-                appointments: List<Appointment>?
+                appointments: List<Appointment>?,
+                roles: List<Role>
         ){
                 this.token = UUID.randomUUID()
                 this.email = email
@@ -119,6 +132,7 @@ class UserDB {
                 this.availability = AVAILABILITY_STATE
                 this.company = null
                 this.appointment = appointments
+                this.roles = roles
         }
 
         companion object{

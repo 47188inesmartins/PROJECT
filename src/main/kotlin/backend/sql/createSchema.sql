@@ -49,22 +49,19 @@ create table if not exists SCH_USER (
 
 
 create table if not exists U_ROLE (
-    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    user_id int,
-    foreign key(user_id) references SCH_USER(id),
-    name varchar(20) NOT NULL UNIQUE CHECK ( name IN ('guest', 'user', 'employee', 'manager') )
+    name varchar(20) primary key CHECK ( name IN ('guest', 'client', 'employee', 'manager'))
 );
 
 
-/*N:N relation with user and role
+
 create table if not exists USER_ROLE(
-    role_id int,
+    role_name varchar(20),
     user_id int,
-    primary key (role_id, user_id),
-    foreign key (role_id) references U_ROLE(id),
+    primary key (role_name, user_id),
+    foreign key (role_name) references U_ROLE(name),
     foreign key (user_id) references SCH_USER(id)
 );
-*/
+
 
 create table if not exists SCHEDULE (
     id serial primary key,
@@ -145,10 +142,12 @@ create table if not exists SCH_DAY(
      day_interval time,
      week_days char(4) CHECK (week_days in ('MON','TUE','WED','THU','FRI','SAT','SUN')),
      schedule_id int,
-     foreign key (schedule_id) references SCHEDULE(id)
+     service_id int,
+     foreign key (schedule_id) references SCHEDULE(id),
+     foreign key (service_id) references SERVICE(id)
 );
 
-
+/*
 create table if not exists SERVICE_DAY(
      days_id int,
      service_id int,
@@ -157,7 +156,7 @@ create table if not exists SERVICE_DAY(
      primary key (days_id, service_id),
      foreign key (days_id) references SCH_DAY(id),
      foreign key (service_id) references SERVICE(id)
-);
+);*/
 
 create table if not exists VACATION(
     id serial primary key,
@@ -166,6 +165,13 @@ create table if not exists VACATION(
     schedule_id int,
     foreign key (schedule_id) references SCHEDULE(id)
 );
+
+
+insert into u_role (name) values ('guest');
+insert into u_role (name) values ('client');
+insert into u_role (name) values ('manager');
+insert into u_role (name) values ('employee');
+
 
 
 COMMIT;

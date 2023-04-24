@@ -1,7 +1,5 @@
 package backend.jvm.controllers
 
-import backend.jvm.model.Schedule
-import backend.jvm.model.ServiceDB
 import backend.jvm.services.ScheduleServices
 import backend.jvm.services.dto.ScheduleInputDto
 import backend.jvm.services.dto.ScheduleOutputDto
@@ -42,11 +40,4 @@ class ScheduleController {
     fun getSchedule(@PathVariable id:Int):ScheduleOutputDto?{
           return scheduleServices.getSchedule(id)
     }
-
-    /*@ResponseBody
-    @GetMapping("/{id}/services/{ids}")
-    fun getServices(@PathVariable id: Int,@PathVariable ids: Int): List<ServiceDB>{
-        return scheduleServices.getServices(id,ids)
-    }*/
-
 }

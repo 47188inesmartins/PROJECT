@@ -60,6 +60,7 @@ class CompanyServices {
                 userDBS = users
             )
         )
+       // scheduleRepository.save(Schedule(comp))
         return CompanyOutputDto(comp)
     }
 

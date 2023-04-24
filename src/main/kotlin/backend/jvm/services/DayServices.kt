@@ -3,6 +3,7 @@ package backend.jvm.services
 import backend.jvm.model.Day
 import backend.jvm.repository.DayRepository
 import backend.jvm.repository.ScheduleRepository
+import backend.jvm.repository.ServiceRepository
 import backend.jvm.services.dto.DayInputDto
 import backend.jvm.services.dto.DayOutputDto
 import org.springframework.beans.factory.annotation.Autowired
@@ -20,11 +21,14 @@ class DayServices {
 
     @Autowired
     lateinit var scheduleRepository: ScheduleRepository
+    @Autowired
+    lateinit var serviceRepository: ServiceRepository
 
     fun addOpenDay(day: DayInputDto):DayOutputDto{
         if(!listDayOfWeek.contains(day.weekDays.uppercase())) throw Exception("Invalid day of week")
-        val schedule = scheduleRepository.findById(day.schedule).get()
-        val db = dayRepository.save(day.mapToDayDb(day,schedule))
+        val schedule = day.schedule?.let { scheduleRepository.findById(it).get() }
+        val service = day.service?.let { serviceRepository.findById(it).get() }
+        val db = dayRepository.save(day.mapToDayDb(day,schedule,service))
         return  DayOutputDto(db)
     }
 

@@ -21,16 +21,11 @@ class UnavailabilityController {
     @PostMapping
     fun addUserUnavailability(@RequestBody unavailability: UnavailabilityInputDto): ResponseEntity<UnavailabilityOutputDto> {
         return try {
-            println("tas a gozar")
-            println(""+unavailability.user+unavailability.dateBegin+unavailability.dateEnd+unavailability.hourBegin+unavailability.hourEnd)
             val response = unavailabilityServices.addUnavailability(unavailability)
             ResponseEntity
                 .status(201)
                 .body(response)
         } catch (e: Exception) {
-            println("tas a gozar v2")
-            println("no ctatchhhhhh"+unavailability.user+unavailability.dateBegin+unavailability.dateEnd+unavailability.hourBegin+unavailability.hourEnd)
-
             println(e.toString())
             ResponseEntity
                 .status(400)
@@ -58,7 +53,7 @@ class UnavailabilityController {
     @DeleteMapping("/{id}")
     fun deleteUnavailability(@PathVariable id: Int): ResponseEntity<String> {
         return try {
-            val response = unavailabilityServices.deleteUnavailability(id)
+            unavailabilityServices.deleteUnavailability(id)
             ResponseEntity
                 .status(201)
                 .body("Deleted")

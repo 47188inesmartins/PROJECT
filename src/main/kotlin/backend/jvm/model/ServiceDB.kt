@@ -43,12 +43,7 @@ class ServiceDB{
     val appointment: List<Appointment>?
 
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "service_day",
-        joinColumns = [JoinColumn(name = "service_id")],
-        inverseJoinColumns = [JoinColumn(name = "days_id")]
-    )
+    @OneToMany(mappedBy = "service")
     val day: List<Day>?
 
     @ManyToMany

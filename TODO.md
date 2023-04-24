@@ -9,8 +9,6 @@ base de dados nas variaveis de ambiente
 
 para cada company só pode haver um day com o mesmo week_day
 
-meter hour e date no get employees do service
-
 quando add uma company add automaticamente um schedule associado
 
 manager add employee
@@ -24,7 +22,6 @@ empresa define numero maximo de clientes ha mesma hora
 appointment - get dos services didsponiveis
 
 schedule tem get vacation e get open days
-
 
 receber apenas hour begin no pedido do appointment e depoois
 consoante a duracao do service calcular hour end

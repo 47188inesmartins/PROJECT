@@ -22,13 +22,13 @@ class Schedule {
     val company : Company
 
     @OneToMany(mappedBy = "schedule")
-    val appointment: List<Appointment>
+    val appointment: List<Appointment>?
 
     @OneToMany(mappedBy = "schedule")
-    val day: List<Day>
+    val day: List<Day>?
 
     @OneToMany(mappedBy = "schedule")
-    val vacation: List<Vacation>
+    val vacation: List<Vacation>?
 
     constructor(){
         this.company = Company()
@@ -37,7 +37,7 @@ class Schedule {
         this.vacation = listOf()
     }
 
-    constructor(companyId: Company,appointment: List<Appointment>,day: List<Day>,vacation: List<Vacation>){
+    constructor(companyId: Company,appointment: List<Appointment>?,day: List<Day>?,vacation: List<Vacation>?){
         this.company = companyId
         this.appointment = appointment
         this.day = day

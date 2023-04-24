@@ -1,14 +1,13 @@
 package backend.jvm.services.dto
 
-import backend.jvm.model.Appointment
-import backend.jvm.model.Company
-import backend.jvm.model.ServiceDB
-import backend.jvm.model.UserDB
+import backend.jvm.model.*
 import java.sql.Date
+import java.util.*
 
 
 data class UserOutputDto(
         val id: Int,
+        val token: UUID,
         val email: String,
         val password: String,
         val name: String,
@@ -19,6 +18,7 @@ data class UserOutputDto(
 ){
         constructor(userDB: UserDB): this(
                 id = userDB.id,
+                token = userDB.token,
                 email = userDB.email,
                 password = userDB.password,
                 name = userDB.name,
@@ -42,7 +42,7 @@ data class UserInputDto(
         val availability: String?,
         val companyId: Int?,
         val services: List<Int>?,
-        val appointment: List<Int>?,
+        val appointment: List<Int>?
 ){
         companion object{
                 val EMAIL_FORMAT = Regex("""^\w+@\w+\.\w+$""")
@@ -53,16 +53,24 @@ data class UserInputDto(
                 require(EMAIL_FORMAT.matches(email)){ "Invalid email"}
                 require(PASSWORD_FORMAT.matches(password)){ "Insecure password"}
         }
-
-        fun mapToUser(dto: UserInputDto,pass: String,services: List<ServiceDB>?,appointment: List<Appointment>?,comp: Company?):UserDB{
+      /*  email:String,
+        password:String,
+        clientName:String,
+        birth:Date,
+        serv: List<ServiceDB>?,
+        company: Company?,
+        appointments: List<Appointment>?,
+        roles: List<Role>*/
+        fun mapToUser(dto: UserInputDto,pass: String,services: List<ServiceDB>?,appointment: List<Appointment>?,comp: Company?, roles: List<Role>):UserDB{
               return UserDB(
-                      dto.email,
-                      pass,
-                      dto.name,
-                      Date.valueOf(dto.birthday),
-                      services,
-                      comp,
-                      appointment
+                      email = dto.email,
+                      password = pass,
+                      clientName = dto.name,
+                      birth = Date.valueOf(dto.birthday),
+                      serv = services,
+                      company = comp,
+                      appointments = appointment,
+                      roles = roles
                 )
         }
 

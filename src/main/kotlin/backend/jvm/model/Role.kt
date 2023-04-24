@@ -6,26 +6,25 @@ import jakarta.persistence.*
 @Table(name = "u_role")
 class Role {
 
-    @Id
+    /*@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    var id: Int? = null
+    var id: Int? = null*/
 
+    @Id
     @Column(name = "name")
     val name: String
 
-    @ManyToOne
-    val userDB : UserDB?
 
     constructor(){
         this.name = ""
-        this.userDB = null
+     //   this.userDB = null
        // this.user = listOf()
     }
 
-    constructor(name : String, userDB: UserDB){
+    constructor(name : String){
         this.name = name
-        this.userDB = userDB
+      //  this.userDB = userDB
        // this.user = user
     }
 }
