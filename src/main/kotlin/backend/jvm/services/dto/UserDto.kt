@@ -45,15 +45,6 @@ data class UserInputDto(
         val services: List<Int>?,
         val appointment: List<Int>?
 ){
-        companion object{
-                val EMAIL_FORMAT = Regex("""^\w+@\w+\.\w+$""")
-                val PASSWORD_FORMAT = Regex("^(?=.*\\d)(?=.*[!@#\$%^&*])(?=.*[a-zA-Z]).{8,}$")
-        }
-
-        init {
-                require(EMAIL_FORMAT.matches(email)){ InvalidCredentials("Invalid email") }
-                require(PASSWORD_FORMAT.matches(password)){ InvalidCredentials("Insecure password") }
-        }
         fun mapToUser(dto: UserInputDto,pass: String,services: List<ServiceDB>?,appointment: List<Appointment>?,comp: Company?, roles: List<Role>):UserDB{
               return UserDB(
                       email = dto.email,
@@ -66,5 +57,4 @@ data class UserInputDto(
                       roles = roles
                 )
         }
-
 }

@@ -33,12 +33,14 @@ class UserController {
     fun addUser(@RequestBody user: UserInputDto): ResponseEntity<UserOutputDto> {
         return try {
             val response = userServices.addUser(user)
-
             ResponseEntity
                 .status(201)
                 .body(response)
-        } catch (e: UserNotFound) {
-                throw ResponseStatusException(HttpStatus.NOT_FOUND,"User not found",e)
+        } catch (e: Exception) {
+            when(e){
+                is InvalidCredentials -> throw ResponseStatusException(HttpStatus.BAD_REQUEST,"Bad credentials",e)
+                else -> throw ResponseStatusException(HttpStatus.CONFLICT,"Email already exits",e)
+            }
         }
     }
 
@@ -50,13 +52,11 @@ class UserController {
             ResponseEntity
                 .status(201)
                 .body(response)
-        }catch (e: Exception) {
-            ResponseEntity
-                .status(400)
-                .body(null)
+        } catch (e: Exception) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST,"User not deleted",e)
         }
-
     }
+
     @RoleManager(["manager,employee,client"])
     @GetMapping("/{id}")
     fun getUserById(@PathVariable id: Int): ResponseEntity<UserOutputDto> {
@@ -65,7 +65,7 @@ class UserController {
             ResponseEntity
                 .status(200)
                 .body(response)
-        }catch (e: Exception) {
+        }catch (e: UserNotFound) {
             throw ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found", e)
         }
     }
@@ -78,10 +78,8 @@ class UserController {
             ResponseEntity
                 .status(200)
                 .body(response)
-        }catch (e: Exception) {
-            ResponseEntity
-                .status(400)
-                .body(null)
+        }catch (e: UserNotFound) {
+            throw ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found", e)
         }
     }
 

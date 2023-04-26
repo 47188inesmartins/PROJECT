@@ -32,8 +32,6 @@ class AppointmentServices{
     lateinit var scheduleRepository: ScheduleRepository
 
      fun addAppointment(appointment: AppointmentInputDto): AppointmentOutputDto {
-
-
         println("appointmentinputdto "+ appointment.service + appointment.schedule)
         val service = servicesRepository.getServiceDBById(appointment.service)
         val user = if (appointment.user != null) userRepository.getUserById(appointment.user) else null

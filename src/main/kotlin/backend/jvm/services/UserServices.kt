@@ -10,7 +10,6 @@ import backend.jvm.services.dto.AppointmentOutputDto
 import backend.jvm.services.dto.UserInputDto
 import backend.jvm.services.dto.UserOutputDto
 import backend.jvm.utils.Hashing
-import backend.jvm.utils.UserRoles
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.sql.Time
@@ -35,24 +34,24 @@ class UserServices {
     @Autowired
     lateinit var roleRepository: RoleRepository
 
-
-    fun getUserByEmailAnnPassword(email:String ,password: String):UserOutputDto {
-        val hash = Hashing.encodePass(password)
-        val getUser = userRepository.getUsersByEmailAndPassword(email, hash)
-            ?: throw Exception("Invalid email or password")
-        return UserOutputDto(getUser)
+    companion object{
+        val EMAIL_FORMAT = Regex("""^\w+@\w+\.\w+$""")
+        val PASSWORD_FORMAT = Regex("^(?=.*\\d)(?=.*[!@#\$%^&*])(?=.*[a-zA-Z]).{8,}$")
     }
 
     fun addUser(user: UserInputDto): UserOutputDto {
+        if(!EMAIL_FORMAT.matches(user.email)) throw InvalidCredentials("Invalid email")
+        if(!PASSWORD_FORMAT.matches(user.password)) throw InvalidCredentials("Insecure password")
+
+        if(userRepository.getUsersByEmail(user.email) == null) throw EmailAlreadyExists()
+
         val servicesList = mutableListOf<ServiceDB>()
         val appList =  mutableListOf<Appointment>()
 
         if(user.services != null ) user.services.forEach { servicesList.add(servicesRepository.findById(it).get()) }
         if(user.appointment != null ) user.appointment.forEach { appList.add(appointmentRepository.findById(it).get()) }
-        val comp = if(user.companyId != null )companyRepository.findById(user.companyId).get() else null
+        val comp = if(user.companyId != null ) companyRepository.findById(user.companyId).get() else null
         val role = roleRepository.getRoleByName("client")
-
-        println("role ${role.name}")
 
         val returnUser = userRepository.save(
             user.mapToUser(user,Hashing.encodePass(user.password),servicesList,appList,comp, listOf(role))
@@ -60,12 +59,6 @@ class UserServices {
 
         return UserOutputDto(returnUser)
     }
-
-
-  /*  fun getRoleByToken(token: UUID): String{
-        return userRepository.getRoleByToken(token)
-    }
-*/
 
     fun deleteUser(id: Int): Boolean {
         if(userRepository.findById(id).isEmpty) return false
@@ -80,7 +73,7 @@ class UserServices {
     }
 
     fun getRole(id: Int):String?{
-        return userRepository.getRole(id)
+        return userRepository.getRole(id)?: throw UserNotFound()
     }
 
    /* fun changeRole(id: Int, roleName: String): String{
@@ -92,12 +85,9 @@ class UserServices {
         return userRepository.changeAvailability(availability,id)
     }
 
-    fun findById(id:Int): UserDB {
-        return userRepository.findById(id).get()
-    }
 
     fun changePassword(password: String, id: Int): String{
-        if(!Hashing.verifyPasswordSecure(password)) throw   Exception("Password isn´t save")
+        if(!Hashing.verifyPasswordSecure(password)) throw InvalidPassword()
         val pass = Hashing.encodePass(password)
         return userRepository.changePassword(pass, id)
     }
@@ -109,14 +99,14 @@ class UserServices {
 
     fun getUsersByEmailAndPass (email: String, password: String): UserOutputDto {
         val user = userRepository.getUsersByEmailPass(Hashing.encodePass(password),email)
-            ?: throw Exception("Invalid email or password")
+            ?: throw InvalidCredentials("Invalid email or password")
         println("here")
         return UserOutputDto(user)
     }
 
     fun scheduleAnAppointment(id:Int,appointment: AppointmentInputDto): AppointmentOutputDto {
         val getUser = userRepository.findById(id)
-        if(getUser.isEmpty) throw Exception("Invalid user")
+        if(getUser.isEmpty) throw UserNotFound()
         val serviceDb = servicesRepository.findById(appointment.service).get()
         val schedule = scheduleRepository.findById(appointment.schedule).get()
         val app = Appointment(
@@ -132,21 +122,20 @@ class UserServices {
 
     fun getUserByToken(token: String):UserDB?{
         val t = UUID.fromString(token)
-        return userRepository.getUserByToken(t)
+        return userRepository.getUserByToken(t) ?: throw InvalidToken()
     }
 
     fun getRoleByToken(token: String): String? {
-        val user = userRepository.getUserByToken(UUID.fromString(token))?.id ?: throw Exception("The user does not exists")
+        val user = userRepository.getUserByToken(UUID.fromString(token))?.id ?: throw UserNotFound()
         return  userRepository.getRole(user)
     }
 
     fun addEmployee(id: Int, user: String): UserOutputDto{
-        val getUser = userRepository.getUsersByEmail(user) ?: throw Exception("Invalid User")
+        val getUser = userRepository.getUsersByEmail(user) ?: throw UserNotFound()
        // userRepository.changeRole(getUser.id,"employee") ??
         userRepository.changeAvailability("available",getUser.id)
         userRepository.changeMaxNumber(1,getUser.id)
         userRepository.changeCompany(id,getUser.id)
         return UserOutputDto( getUser )
     }
-
 }

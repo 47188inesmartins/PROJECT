@@ -1,5 +1,6 @@
 package backend.jvm.utils
 
+import backend.jvm.services.UserServices
 import backend.jvm.services.dto.UserInputDto
 import java.security.MessageDigest
 
@@ -12,7 +13,7 @@ object Hashing{
         return digest.fold("") { str, it -> str + "%02x".format(it) }
     }
 
-    fun verifyPasswordSecure(pass: String) = UserInputDto.PASSWORD_FORMAT.matches(pass)
+    fun verifyPasswordSecure(pass: String) = UserServices.PASSWORD_FORMAT.matches(pass)
 
 
 }
