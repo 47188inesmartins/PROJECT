@@ -83,10 +83,10 @@ class UserServices {
         return userRepository.getRole(id)
     }
 
-    fun changeRole(id: Int, roleName: String): String{
+   /* fun changeRole(id: Int, roleName: String): String{
         UserRoles.valueOf(roleName.uppercase(Locale.getDefault()))
         return userRepository.changeRole(id, roleName)
-    }
+    }*/
 
     fun changeAvailability(availability: String, id: Int): String{
         return userRepository.changeAvailability(availability,id)

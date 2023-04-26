@@ -37,14 +37,13 @@ class CompanyServices {
     lateinit var vacationRepository: VacationRepository
 
 
+    /*
+    * change role
+    * no interceptor
+    */
+
     fun addCompany(company: CompanyInputDto): CompanyOutputDto {
         if(company.nif.length != NIF_NUMBERS ) throw Exception("Invalid NIF number")
-/*
-* verificar se os users tem o role "cliente" e mudar para role employee quando
-* sao adicionados
-*
-* */
-
         val schedule = company.schedule?.let { scheduleRepository.getReferenceById(it) }
         val users = company.users?.map { usersRepository.getReferenceById(it) }
         val services = company.service?.map { serviceRepository.getReferenceById(it) }
@@ -104,7 +103,7 @@ class CompanyServices {
     }
 
     fun changeAddress(id: Int, address: String){
-        println("services"+ address)
+        println("services = $address")
         companyRepository.changeAddress(id, address)
     }
 

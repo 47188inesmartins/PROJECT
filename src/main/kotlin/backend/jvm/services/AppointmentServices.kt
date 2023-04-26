@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.sql.Date
 import java.sql.Time
+import java.util.*
+import java.util.Calendar.*
 
 
 @Service
@@ -71,7 +73,7 @@ class AppointmentServices{
         return appointments.map{ AppointmentOutputDto(it) }
     }
 
-    fun getAvailableServices(beginHour:String, date:String, companyId: Int):List<ServiceOutputDto>{
+    fun getAvailableServicesByEmployees(beginHour:String, date:String, companyId: Int):List<ServiceOutputDto>{
         val bh = Time.valueOf(beginHour)
         val d = Date.valueOf(date)
         val dur = Time.valueOf("00:30:00")
@@ -91,6 +93,19 @@ class AppointmentServices{
         return serv.map { ServiceOutputDto(it) }
     }
 
+ /*   fun getAvailableServicesByDay(beginHour:String, date:String, companyId: Int){
+        val bh = Time.valueOf(beginHour)
+        val d = Date.valueOf(date)
+        val dur = Time.valueOf("00:30:00")
+        val response = servicesRepository.getAvailableServicesByDay(companyId)
+
+        val serv = services.filter {
+            servicesRepository.getAvailableServicesByDay(com, d, bh, getEndHour(bh, dur)).isNotEmpty()
+        }
+        val weekDay = getDayOfWeek(d)
+
+    }
+*/
 
 
     fun getEndHour(tempo1: Time, tempo2: Time): Time {
@@ -101,6 +116,27 @@ class AppointmentServices{
         println(t)
         return t*/
         return Time(tempo1.time + additionalTime)
+    }
+
+    fun getDayOfWeek(date : Date): String{
+
+        val utilDate = java.util.Date(date.time)
+        val calendar = Calendar.getInstance()
+        calendar.time = utilDate
+        val dayOfWeek = calendar[Calendar.DAY_OF_WEEK]
+        println("Dia da semana: $dayOfWeek")
+
+        return when(dayOfWeek) {
+            SUNDAY -> "SUN"
+            MONDAY -> "MON"
+            TUESDAY -> "TUE"
+            WEDNESDAY -> "WED"
+            THURSDAY -> "THU"
+            FRIDAY -> "FRI"
+            SATURDAY -> "SAT"
+            else -> "invalid data"
+        }
+
     }
 
 }

@@ -46,7 +46,7 @@ class Day {
         val schedule : Schedule?
 
         @ManyToOne
-        @JoinTable(name = "service_id")
+        @JoinColumn(name = "service_id")
         val service: ServiceDB?
 
         constructor(){

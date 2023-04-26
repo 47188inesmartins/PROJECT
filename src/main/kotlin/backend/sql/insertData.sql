@@ -58,6 +58,22 @@ WHERE ua.user_id IS NULL
   AND us.service_id = 1;
 
 
+
+select * from service where id not in (select service_id from sch_day where )
+
+
+SELECT *
+FROM service s
+WHERE s.company_id = 1
+  AND s.id IN (
+    SELECT service_id
+    FROM sch_day
+    WHERE week_days = 'TUE'
+      AND '9:30:00' BETWEEN begin_hour AND end_hour
+      AND ('9:30:00' + INTERVAL s.duration MINUTE) BETWEEN begin_hour AND end_hour
+);
+
+
 /*
 
 

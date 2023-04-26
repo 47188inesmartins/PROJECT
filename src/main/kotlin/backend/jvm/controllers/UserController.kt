@@ -85,7 +85,7 @@ class UserController {
         }
     }
 
-    @RoleManager(["manager,employee"])
+   /* @RoleManager(["manager,employee"])
     @PutMapping("/{id}/role")
     fun changeRole(@PathVariable id: Int, @RequestBody roleName: String):  ResponseEntity<String> {
         return try {
@@ -104,7 +104,7 @@ class UserController {
                 .status(400)
                 .body(null)
         }
-    }
+    }*/
 
     @RoleManager(["manager,employee"])
     @PutMapping("/{id}/availability")

@@ -27,14 +27,13 @@ interface UserRepository: JpaRepository<UserDB, Int> {
              "and id in (select user_id from user_service where service_id = :id)", nativeQuery = true)
      fun getAvailableEmployeesByService(@Param("id") serviceId: Int, @Param("date") date: Date, @Param("beginHour") beginHour: Time, @Param("endHour") endHour: Time): List<UserDB>
 
-
     /* @Query(value = "select availability from SCH_USER u " +
              "inner join u_role r on r.id = :id and r.name = 'employee'", nativeQuery = true)
      fun getEmployeeAvailability(@Param(" id ") id: Int)
 
      fun getBy()*/
 
-     @Query(value = "select role_name from user_role  where user_id = :id", nativeQuery = true)
+     @Query(value = "select role_name from user_role r where r.user_id = :id", nativeQuery = true)
      fun getRole (@Param("id") id: Int): String?
 
      @Query(value = "update SCH_USER set password = :pass where id = :id returning name", nativeQuery = true)
@@ -48,6 +47,7 @@ interface UserRepository: JpaRepository<UserDB, Int> {
 
      @Query(value = "update SCH_USER set max_number_people = :number where id = :id returning max_number_people", nativeQuery = true)
      fun changeMaxNumber (@Param("number") number: Int, @Param("id") id: Int): String
+
      @Query(value = "update USER_ROLE set role_name= :nameRole where user_id=:id returning name", nativeQuery = true)
      fun changeRole (@Param("id") id: Int, @Param("nameRole") name: String): String
 
