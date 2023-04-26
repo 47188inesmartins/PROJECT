@@ -135,7 +135,7 @@ class UserDB {
         }
 
         companion object{
-                const val AVAILABILITY_STATE = "none"
+                const val AVAILABILITY_STATE = "NONE"
         }
 
 }

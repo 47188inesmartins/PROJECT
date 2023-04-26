@@ -9,8 +9,6 @@ para cada company só pode haver um day com o mesmo week_day
 
 quando add uma company add automaticamente um schedule associado
 
-manager add employee
-
 getappointmentsbyuser
 
 empresa define numero maximo de clientes ha mesma hora

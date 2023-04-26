@@ -11,7 +11,7 @@ import java.util.UUID
 interface UserRepository: JpaRepository<UserDB, Int> {
 
      @Query(name = "getUserById")
-     fun getUserById(@Param("id") id: Int): UserDB
+     fun getUserById(@Param("id") id: Int): UserDB?
 
      fun getUserByToken(token: UUID): UserDB?
 

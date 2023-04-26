@@ -7,6 +7,7 @@ import backend.jvm.repository.UserRepository
 import backend.jvm.services.dto.ServiceInputDto
 import backend.jvm.services.dto.ServiceOutputDto
 import backend.jvm.services.dto.UserOutputDto
+import backend.jvm.utils.errorHandling.CompanyNotFound
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.sql.Date
@@ -24,13 +25,14 @@ class ServServices {
     lateinit var userRepository : UserRepository
 
     fun addService(service: ServiceInputDto): ServiceOutputDto {
-        val company = companyServices.getCompany(service.company).get()
+        val company = companyServices.getCompany(service.company)
+        if(company.isEmpty) throw CompanyNotFound()
         val serv = ServiceDB(
             name = service.serviceName,
             duration = Time.valueOf(service.duration),
             numberMax = service.numberMax,
             price = service.price,
-            company= company
+            company= company.get()
         )
         val savedService = serviceRepository.save(serv)
         return ServiceOutputDto(savedService)

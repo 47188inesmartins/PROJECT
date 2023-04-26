@@ -29,8 +29,9 @@ select user_id from unavailability where hour_begin
     between '12:00:00' and '13:00:00' and
     (date_begin <= '2001-06-01' and date_end >= '2001-06-1');
 
-
-
+begin;
+insert into sch_user(email,password,name,birthday) values ('email@gmail.com', 'Email123@', 'Email', '2001-05-15');
+commit;
 
 select * from sch_user where id not in
 (select user_id from unavailability where (date_end is null and date_begin ='2000-01-01'

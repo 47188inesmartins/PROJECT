@@ -9,7 +9,9 @@ import java.util.*
 
 interface CompanyRepository : JpaRepository<Company, Int>{
 
-    fun findAllById(id: Int): Company
+    @Query(name = "getCompanyById")
+    fun findAllById(id: Int): Company?
+
     fun findCompanyByNif(nif:String): Company?
 
 

@@ -71,8 +71,10 @@ class UserController {
             throw ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found", e)
         }
     }
-    eu mafalda adoro a ines
-    @RoleManager(["manager,employee,client"])
+
+
+
+    @RoleManager(["MANAGER,EMPLOYEE,CLIENT"])
     @GetMapping("/{id}/role")
     fun getRole(@PathVariable id: Int): ResponseEntity<String?> {
         return try {
@@ -163,7 +165,7 @@ class UserController {
         return try {
             val json = Json.parseToJsonElement(email)
             val request = json.jsonObject["email"]?.jsonPrimitive?.content
-                ?: throw InvalidCredentials("Invalid email")
+                ?: throw InvalidCredentials()
             val response = userServices.addEmployee(cid,request)
             ResponseEntity
                 .status(200)
@@ -178,8 +180,8 @@ class UserController {
         }
     }
 
-    @RoleManager(["manager,employee,client"])
-    @GetMapping("/log")
+    @RoleManager(["MANAGER,EMPLOYEE,CLIENT"])
+    @GetMapping("/login")
     fun getUserByEmailPass(@RequestBody password: String,@RequestBody email: String): ResponseEntity<UserOutputDto> {
         return try {
             val jsonPass = Json.parseToJsonElement(password)

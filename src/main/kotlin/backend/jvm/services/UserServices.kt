@@ -54,10 +54,12 @@ class UserServices {
         if(user.services != null ) user.services.forEach { servicesList.add(servicesRepository.findById(it).get()) }
         if(user.appointment != null ) user.appointment.forEach { appList.add(appointmentRepository.findById(it).get()) }
         val comp = if(user.companyId != null ) companyRepository.findById(user.companyId).get() else null
-        val role = roleRepository.getRoleByName("client")
+        val a = UserRoles.CLIENT.name
+        val b = UserAvailability.AVAILABLE.name
+        val role = roleRepository.getRoleByName(UserRoles.CLIENT.name)
 
         val returnUser = userRepository.save(
-            user.mapToUser(user,Hashing.encodePass(user.password),servicesList,appList,comp, listOf(role))
+            user.mapToUser(user,Hashing.encodePass(user.password),servicesList,appList, comp, listOf(role))
         )
 
         return UserOutputDto(returnUser)
