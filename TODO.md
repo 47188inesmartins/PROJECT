@@ -3,8 +3,6 @@ logica o serviço do appointment tem de ser num dia que em que o serviço seja f
 
 erro nos ids
 
-availability do user
-
 base de dados nas variaveis de ambiente
 
 para cada company só pode haver um day com o mesmo week_day
@@ -18,8 +16,6 @@ getappointmentsbyuser
 empresa define numero maximo de clientes ha mesma hora
 
 /home
-
-appointment - get dos services didsponiveis
 
 schedule tem get vacation e get open days
 

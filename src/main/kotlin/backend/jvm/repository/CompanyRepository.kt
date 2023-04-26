@@ -10,7 +10,7 @@ import java.util.*
 interface CompanyRepository : JpaRepository<Company, Int>{
 
     fun findAllById(id: Int): Company
-    fun findCompanyByNif(nif:String): Company
+    fun findCompanyByNif(nif:String): Company?
 
 
     @Query(value = "select * from appointment a where a.schedule_id = (select id from schedule s where s.company_id = :id) and a.app_date = :date and a.app_hour = :hour", nativeQuery = true)

@@ -1,6 +1,6 @@
 package backend.jvm.services
 
-import backend.jvm.controllers.UserNotFound
+import backend.jvm.controllers.*
 import backend.jvm.model.Appointment
 import backend.jvm.model.ServiceDB
 import backend.jvm.model.UserDB

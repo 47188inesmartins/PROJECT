@@ -5,11 +5,14 @@ import backend.jvm.model.*
 import backend.jvm.services.CompanyServices
 import backend.jvm.services.dto.*
 import backend.jvm.utils.RoleManager
+import backend.jvm.utils.errorHandling.NifAlreadyExist
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.server.ResponseStatusException
 import java.util.*
 
 @RestController
@@ -29,12 +32,13 @@ class CompanyController {
             ResponseEntity
                 .status(201)
                 .body(response)
-
         } catch (e: Exception) {
-            println("Exception = $e")
-            ResponseEntity
-                .status(400)
-                .body(null)
+            println("ex= $e")
+            when(e){
+                is NifAlreadyExist -> throw ResponseStatusException(HttpStatus.CONFLICT, "Nif already exists", e)
+                else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Nif is invalid", e)
+            }
+
         }
     }
 

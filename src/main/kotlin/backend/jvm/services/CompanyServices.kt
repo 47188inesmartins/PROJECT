@@ -3,6 +3,9 @@ package backend.jvm.services
 import backend.jvm.model.*
 import backend.jvm.repository.*
 import backend.jvm.services.dto.*
+import backend.jvm.utils.errorHandling.CompanyNotFound
+import backend.jvm.utils.errorHandling.InvalidNif
+import backend.jvm.utils.errorHandling.NifAlreadyExist
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.sql.Time
@@ -43,7 +46,8 @@ class CompanyServices {
     */
 
     fun addCompany(company: CompanyInputDto): CompanyOutputDto {
-        if(company.nif.length != NIF_NUMBERS ) throw Exception("Invalid NIF number")
+        if(company.nif.length != NIF_NUMBERS ) throw InvalidNif()
+        if(companyRepository.findCompanyByNif(company.nif) != null) throw NifAlreadyExist()
         val schedule = company.schedule?.let { scheduleRepository.getReferenceById(it) }
         val users = company.users?.map { usersRepository.getReferenceById(it) }
         val services = company.service?.map { serviceRepository.getReferenceById(it) }
@@ -69,10 +73,12 @@ class CompanyServices {
     }
 
     fun getCompany(id: Int): Optional<Company> {
-        return companyRepository.findById(id)
+        val comp = companyRepository.findById(id)
+        if(comp.isEmpty) throw CompanyNotFound()
+        return comp
     }
 
-    fun findCompanyByNif(nif: String): Company {
+    fun findCompanyByNif(nif: String): Company? {
         return companyRepository.findCompanyByNif(nif)
     }
 
