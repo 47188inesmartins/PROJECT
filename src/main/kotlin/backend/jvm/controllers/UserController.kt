@@ -4,6 +4,7 @@ import backend.jvm.services.UserServices
 import backend.jvm.services.dto.UserInputDto
 import backend.jvm.services.dto.UserOutputDto
 import backend.jvm.utils.RoleManager
+import backend.jvm.utils.errorHandling.*
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
@@ -38,13 +39,14 @@ class UserController {
                 .body(response)
         } catch (e: Exception) {
             when(e){
-                is InvalidCredentials -> throw ResponseStatusException(HttpStatus.BAD_REQUEST,"Bad credentials",e)
+                is InvalidEmail -> throw ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid Email",e)
+                is PasswordInsecure -> throw ResponseStatusException(HttpStatus.BAD_REQUEST,"Insecure Password",e)
                 else -> throw ResponseStatusException(HttpStatus.CONFLICT,"Email already exits",e)
             }
         }
     }
 
-    @RoleManager(["manager,employee,client"])
+    @RoleManager(["MANAGER,EMPLOYEE,CLIENT"])
     @DeleteMapping("/{id}")
     fun deleteUser(@PathVariable id: Int): ResponseEntity<Boolean>{
         return try {
@@ -57,7 +59,7 @@ class UserController {
         }
     }
 
-    @RoleManager(["manager,employee,client"])
+    @RoleManager(["MANAGER,EMPLOYEE,CLIENT"])
     @GetMapping("/{id}")
     fun getUserById(@PathVariable id: Int): ResponseEntity<UserOutputDto> {
         return try {
@@ -104,7 +106,7 @@ class UserController {
         }
     }*/
 
-    @RoleManager(["manager,employee"])
+    @RoleManager(["MANAGER,EMPLOYEE,CLIENT"])
     @PutMapping("/{id}/availability")
     fun changeAvailability(@PathVariable id: Int, @RequestBody availability: String): ResponseEntity<String> {
         return try {
@@ -119,13 +121,11 @@ class UserController {
                 .status(200)
                 .body(response)
         }catch (e: Exception) {
-            ResponseEntity
-                .status(400)
-                .body(null)
+            throw  ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid user",e)
         }
     }
 
-    @RoleManager(["manager,employee,client"])
+    @RoleManager(["MANAGER,EMPLOYEE,CLIENT"])
     @PutMapping("/{id}/password")
     fun changePassword(@PathVariable id: Int, @RequestBody password: String): ResponseEntity<String> {
         return try {
@@ -138,7 +138,7 @@ class UserController {
                 .status(200)
                 .body(response)
         }catch (e: Exception) {
-            throw InvalidPassword()
+            throw  ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid user",e)
         }
     }
 
@@ -157,7 +157,7 @@ class UserController {
     }*/
 
 
-    @RoleManager(["manager"])
+    @RoleManager(["MANAGER"])
     @PostMapping("/company/{cid}/employee")
     fun addEmployee(@PathVariable cid: Int,@RequestBody email: String): ResponseEntity<UserOutputDto> {
         return try {
@@ -169,9 +169,12 @@ class UserController {
                 .status(200)
                 .body(response)
         }catch (e: Exception) {
-            ResponseEntity
-                .status(400)
-                .body(null)
+            when(e){
+                is UserNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "User not found", e)
+                is CompanyNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "Company not found", e)
+                is AlreadyEmployee -> throw ResponseStatusException(HttpStatus.CONFLICT, "Already Employee", e)
+                else -> throw  ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid user",e)
+            }
         }
     }
 
@@ -197,14 +200,10 @@ class UserController {
             ResponseEntity
                 .status(200)
                 .body(response)
-        }catch (e: Exception) {
-            println("here$e")
-            ResponseEntity
-                .status(400)
-                .body(null)
+        }catch (e: InvalidCredentials) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Email or password invalid", e)
         }
     }
-
 }
 
 

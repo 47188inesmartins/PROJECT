@@ -1,6 +1,5 @@
 package backend.jvm.services
 
-import backend.jvm.controllers.*
 import backend.jvm.model.Appointment
 import backend.jvm.model.ServiceDB
 import backend.jvm.model.UserDB
@@ -10,6 +9,9 @@ import backend.jvm.services.dto.AppointmentOutputDto
 import backend.jvm.services.dto.UserInputDto
 import backend.jvm.services.dto.UserOutputDto
 import backend.jvm.utils.Hashing
+import backend.jvm.utils.UserAvailability
+import backend.jvm.utils.UserRoles
+import backend.jvm.utils.errorHandling.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.sql.Time
@@ -40,10 +42,11 @@ class UserServices {
     }
 
     fun addUser(user: UserInputDto): UserOutputDto {
-        if(!EMAIL_FORMAT.matches(user.email)) throw InvalidCredentials("Invalid email")
-        if(!PASSWORD_FORMAT.matches(user.password)) throw InvalidCredentials("Insecure password")
+        if(!EMAIL_FORMAT.matches(user.email)) throw InvalidEmail()
+        if(!PASSWORD_FORMAT.matches(user.password)) throw PasswordInsecure()
 
-        if(userRepository.getUsersByEmail(user.email) == null) throw EmailAlreadyExists()
+        if(userRepository.getUsersByEmail(user.email) != null)
+            throw EmailAlreadyExists()
 
         val servicesList = mutableListOf<ServiceDB>()
         val appList =  mutableListOf<Appointment>()
@@ -76,11 +79,6 @@ class UserServices {
         return userRepository.getRole(id)?: throw UserNotFound()
     }
 
-   /* fun changeRole(id: Int, roleName: String): String{
-        UserRoles.valueOf(roleName.uppercase(Locale.getDefault()))
-        return userRepository.changeRole(id, roleName)
-    }*/
-
     fun changeAvailability(availability: String, id: Int): String{
         return userRepository.changeAvailability(availability,id)
     }
@@ -99,26 +97,12 @@ class UserServices {
 
     fun getUsersByEmailAndPass (email: String, password: String): UserOutputDto {
         val user = userRepository.getUsersByEmailPass(Hashing.encodePass(password),email)
-            ?: throw InvalidCredentials("Invalid email or password")
+            ?: throw InvalidCredentials()
         println("here")
         return UserOutputDto(user)
     }
 
-    fun scheduleAnAppointment(id:Int,appointment: AppointmentInputDto): AppointmentOutputDto {
-        val getUser = userRepository.findById(id)
-        if(getUser.isEmpty) throw UserNotFound()
-        val serviceDb = servicesRepository.findById(appointment.service).get()
-        val schedule = scheduleRepository.findById(appointment.schedule).get()
-        val app = Appointment(
-            appHour = Time.valueOf(appointment.appHour),
-            appDate = Date.valueOf(appointment.appDate),
-            scheduleId = schedule,
-            userDBId = getUser.get(),
-            serviceDB = serviceDb
-        )
-        val com = appointmentRepository.save(app)
-        return AppointmentOutputDto(com)
-    }
+
 
     fun getUserByToken(token: String):UserDB?{
         val t = UUID.fromString(token)
@@ -132,10 +116,36 @@ class UserServices {
 
     fun addEmployee(id: Int, user: String): UserOutputDto{
         val getUser = userRepository.getUsersByEmail(user) ?: throw UserNotFound()
-       // userRepository.changeRole(getUser.id,"employee") ??
-        userRepository.changeAvailability("available",getUser.id)
+        companyRepository.findAllById(id) ?: throw CompanyNotFound()
+
+        val name = roleRepository.getRoleByUserId(getUser.id)
+        if(name == UserRoles.EMPLOYEE.name) throw AlreadyEmployee()
+        if(name != UserRoles.CLIENT.name) throw InvalidUser()
+
+        userRepository.changeRole(getUser.id,UserRoles.EMPLOYEE.name)
+        userRepository.changeAvailability(UserAvailability.AVAILABLE.name,getUser.id)
         userRepository.changeMaxNumber(1,getUser.id)
         userRepository.changeCompany(id,getUser.id)
-        return UserOutputDto( getUser )
+
+        val updatedUser = userRepository.getUserById(getUser.id)!!
+        return UserOutputDto(updatedUser)
     }
+
+    /*
+    fun scheduleAnAppointment(id:Int,appointment: AppointmentInputDto): AppointmentOutputDto {
+             val getUser = userRepository.findById(id)
+             if(getUser.isEmpty) throw UserNotFound()
+             val serviceDb = servicesRepository.findById(appointment.service).get()
+             val schedule = scheduleRepository.findById(appointment.schedule).get()
+             val app = Appointment(
+                 appHour = Time.valueOf(appointment.appHour),
+                 appDate = Date.valueOf(appointment.appDate),
+                 scheduleId = schedule,
+                 userDBId = getUser.get(),
+                 serviceDB = serviceDb
+             )
+             val com = appointmentRepository.save(app)
+             return AppointmentOutputDto(com)
+    }
+    */
 }

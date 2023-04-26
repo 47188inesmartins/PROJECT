@@ -48,7 +48,7 @@ interface UserRepository: JpaRepository<UserDB, Int> {
      @Query(value = "update SCH_USER set max_number_people = :number where id = :id returning max_number_people", nativeQuery = true)
      fun changeMaxNumber (@Param("number") number: Int, @Param("id") id: Int): String
 
-     @Query(value = "update USER_ROLE set role_name= :nameRole where user_id=:id returning name", nativeQuery = true)
+     @Query(value = "update USER_ROLE set role_name= :nameRole where user_id=:id returning role_name", nativeQuery = true)
      fun changeRole (@Param("id") id: Int, @Param("nameRole") name: String): String
 
      fun getUsersByCompanyId(company_id: Int):List<UserDB>

@@ -41,7 +41,7 @@ create table if not exists SCH_USER (
     password varchar(250),
     name varchar(200),
     birthday date check (date(CURRENT_TIMESTAMP) >= birthday + interval '18 year'),
-    availability varchar(15) not null default 'none' check (availability in ('available','unavailable','none')),
+    availability varchar(15) not null default 'NONE' check (availability in ('AVAILABLE','UNAVAILABLE','NONE')),
     max_number_people int default 1,
     company_id int,
     foreign key(company_id) references COMPANY(id)
@@ -49,7 +49,7 @@ create table if not exists SCH_USER (
 
 
 create table if not exists U_ROLE (
-    name varchar(20) primary key CHECK ( name IN ('guest', 'client', 'employee', 'manager'))
+    name varchar(20) primary key CHECK ( name IN ('GUEST', 'CLIENT', 'EMPLOYEE', 'MANAGER'))
 );
 
 
@@ -168,10 +168,10 @@ create table if not exists VACATION(
 );
 
 
-insert into u_role (name) values ('guest');
-insert into u_role (name) values ('client');
-insert into u_role (name) values ('manager');
-insert into u_role (name) values ('employee');
+insert into u_role (name) values ('GUEST');
+insert into u_role (name) values ('CLIENT');
+insert into u_role (name) values ('MANAGER');
+insert into u_role (name) values ('EMPLOYEE');
 
 
 

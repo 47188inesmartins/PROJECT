@@ -1,8 +1,6 @@
 package backend.jvm.services.dto
 
-import backend.jvm.controllers.InvalidCredentials
 import backend.jvm.model.*
-import backend.jvm.services.UserServices.Companion.EMAIL_FORMAT
 import java.sql.Date
 import java.util.*
 
