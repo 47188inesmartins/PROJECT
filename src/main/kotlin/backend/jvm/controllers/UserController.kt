@@ -69,7 +69,7 @@ class UserController {
             throw ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found", e)
         }
     }
-
+    eu mafalda adoro a ines
     @RoleManager(["manager,employee,client"])
     @GetMapping("/{id}/role")
     fun getRole(@PathVariable id: Int): ResponseEntity<String?> {
