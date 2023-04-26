@@ -5,6 +5,7 @@ import backend.jvm.services.ServServices
 import backend.jvm.services.dto.ServiceInputDto
 import backend.jvm.services.dto.ServiceOutputDto
 import backend.jvm.services.dto.UserOutputDto
+import backend.jvm.utils.RoleManager
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -19,6 +20,7 @@ class ServiceController {
     @Autowired
     lateinit var servServices: ServServices
 
+    @RoleManager(["manager,employee"])
     @PostMapping
     fun addService(@RequestBody service: ServiceInputDto): ResponseEntity<ServiceOutputDto> {
         return try{
@@ -32,6 +34,7 @@ class ServiceController {
         }
     }
 
+    @RoleManager(["manager,employee,guest,client"])
     @GetMapping("/{id}")
     fun getService(@PathVariable id: Int): ResponseEntity<ServiceOutputDto> {
        return try {
@@ -56,7 +59,7 @@ class ServiceController {
                 .body(null)
         }
     }*/
-
+    @RoleManager(["manager,employee"])
 
 
     @GetMapping("{id}/employees")
@@ -101,7 +104,7 @@ class ServiceController {
         }
     }
     */
-
+    @RoleManager(["manager,employee"])
     @PutMapping("/{id}/duration")
     fun updateDuration(@PathVariable id: Int, @RequestParam duration: String): ResponseEntity<Duration>{
         return try {
@@ -137,7 +140,7 @@ class ServiceController {
                 .body(null)
         }
     }*/
-
+    @RoleManager(["manager"])
     @DeleteMapping
     fun deleteServices(@RequestBody serviceDB: ServiceDB): ResponseEntity<String> {
         return try {

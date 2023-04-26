@@ -25,7 +25,6 @@ import java.util.UUID
         cacheable = true,
         timeout = 1
 )
-
 class UserDB {
         @Id
         @Column(name = "id")

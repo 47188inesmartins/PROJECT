@@ -42,7 +42,7 @@ class AppointmentServices{
             scheduleId = schedule,
             userDBId = user,
             serviceDB = service
-        )
+        )//service.duration
         val savedAppointment = appointmentRepository.save(app)
         return AppointmentOutputDto(savedAppointment)
     }

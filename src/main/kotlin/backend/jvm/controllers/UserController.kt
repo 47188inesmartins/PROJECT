@@ -8,6 +8,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -16,8 +17,8 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.server.ResponseStatusException
 import java.util.*
 
 
@@ -36,11 +37,8 @@ class UserController {
             ResponseEntity
                 .status(201)
                 .body(response)
-        } catch (e: Exception) {
-            println("Exception = $e")
-            ResponseEntity
-                .status(400)
-                .body(null)
+        } catch (e: UserNotFound) {
+                throw ResponseStatusException(HttpStatus.NOT_FOUND,"User not found",e)
         }
     }
 
@@ -68,9 +66,7 @@ class UserController {
                 .status(200)
                 .body(response)
         }catch (e: Exception) {
-            ResponseEntity
-                .status(400)
-                .body(null)
+            throw ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found", e)
         }
     }
 
@@ -137,18 +133,14 @@ class UserController {
         return try {
             val json = Json.parseToJsonElement(password)
             val request = json.jsonObject["password"]?.jsonPrimitive?.content
-                ?: return ResponseEntity
-                    .status(400)
-                    .body(null)
+                ?: throw InvalidPassword()
 
             val response = userServices.changePassword(request, id)
             ResponseEntity
                 .status(200)
                 .body(response)
         }catch (e: Exception) {
-            ResponseEntity
-                .status(400)
-                .body(null)
+            throw InvalidPassword()
         }
     }
 
@@ -168,10 +160,13 @@ class UserController {
 
 
     @RoleManager(["manager"])
-    @GetMapping("/employee")
-    fun addEmployee(@RequestBody employee: UserInputDto): ResponseEntity<UserOutputDto> {
+    @PostMapping("/company/{cid}/employee")
+    fun addEmployee(@PathVariable cid: Int,@RequestBody email: String): ResponseEntity<UserOutputDto> {
         return try {
-            val response = userServices.addEmployee(employee)
+            val json = Json.parseToJsonElement(email)
+            val request = json.jsonObject["email"]?.jsonPrimitive?.content
+                ?: throw InvalidCredentials("Invalid email")
+            val response = userServices.addEmployee(cid,request)
             ResponseEntity
                 .status(200)
                 .body(response)

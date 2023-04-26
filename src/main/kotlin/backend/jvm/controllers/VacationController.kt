@@ -79,7 +79,6 @@ class VacationController {
                 ?: return ResponseEntity
                     .status(400)
                     .body(null)
-
             ResponseEntity.status(200).body(vacationServices.changeEndDate(id,request))
         }catch (e: Exception){
             ResponseEntity.status(400).body(null)

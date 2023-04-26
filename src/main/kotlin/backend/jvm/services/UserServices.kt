@@ -1,5 +1,6 @@
 package backend.jvm.services
 
+import backend.jvm.controllers.UserNotFound
 import backend.jvm.model.Appointment
 import backend.jvm.model.ServiceDB
 import backend.jvm.model.UserDB
@@ -74,7 +75,7 @@ class UserServices {
 
     fun getUserById(id: Int): UserOutputDto {
         val getUser = userRepository.findById(id)
-        if(getUser.isEmpty) throw Exception("the user doesn´t exists")
+        if(getUser.isEmpty) throw UserNotFound()
         return UserOutputDto(getUser.get())
     }
 
@@ -139,9 +140,12 @@ class UserServices {
         return  userRepository.getRole(user)
     }
 
-    fun addEmployee(user: UserInputDto): UserOutputDto{
-        val getUser = userRepository.getUsersByEmail(user.email) ?: throw Exception("Invalid User")
-        userRepository.changeRole(getUser.id,"employee")
+    fun addEmployee(id: Int, user: String): UserOutputDto{
+        val getUser = userRepository.getUsersByEmail(user) ?: throw Exception("Invalid User")
+       // userRepository.changeRole(getUser.id,"employee") ??
+        userRepository.changeAvailability("available",getUser.id)
+        userRepository.changeMaxNumber(1,getUser.id)
+        userRepository.changeCompany(id,getUser.id)
         return UserOutputDto( getUser )
     }
 

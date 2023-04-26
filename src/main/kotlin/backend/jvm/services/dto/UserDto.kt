@@ -1,5 +1,6 @@
 package backend.jvm.services.dto
 
+import backend.jvm.controllers.InvalidCredentials
 import backend.jvm.model.*
 import java.sql.Date
 import java.util.*
@@ -50,17 +51,9 @@ data class UserInputDto(
         }
 
         init {
-                require(EMAIL_FORMAT.matches(email)){ "Invalid email"}
-                require(PASSWORD_FORMAT.matches(password)){ "Insecure password"}
+                require(EMAIL_FORMAT.matches(email)){ InvalidCredentials("Invalid email") }
+                require(PASSWORD_FORMAT.matches(password)){ InvalidCredentials("Insecure password") }
         }
-      /*  email:String,
-        password:String,
-        clientName:String,
-        birth:Date,
-        serv: List<ServiceDB>?,
-        company: Company?,
-        appointments: List<Appointment>?,
-        roles: List<Role>*/
         fun mapToUser(dto: UserInputDto,pass: String,services: List<ServiceDB>?,appointment: List<Appointment>?,comp: Company?, roles: List<Role>):UserDB{
               return UserDB(
                       email = dto.email,
