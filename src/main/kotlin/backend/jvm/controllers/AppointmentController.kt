@@ -25,7 +25,7 @@ class AppointmentController {
     @Autowired
     lateinit var appointmentServices: AppointmentServices
 
-    @RoleManager(["manager,client"])
+    @RoleManager(["MANAGER","CLIENT"])
     @ResponseBody
     @PostMapping
     fun addAppointment(@RequestBody appointment: AppointmentInputDto): ResponseEntity<AppointmentOutputDto> {
@@ -33,9 +33,7 @@ class AppointmentController {
             val response = appointmentServices.addAppointment(appointment)
             ResponseEntity.status(201)
                 .body(response)
-
         }catch (e: Exception) {
-            println("exception = $e")
             ResponseEntity.status(400)
                 .body(null)
         }

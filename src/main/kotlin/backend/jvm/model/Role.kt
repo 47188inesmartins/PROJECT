@@ -15,7 +15,6 @@ class Role {
     @Column(name = "name")
     val name: String
 
-
     constructor(){
         this.name = ""
      //   this.userDB = null

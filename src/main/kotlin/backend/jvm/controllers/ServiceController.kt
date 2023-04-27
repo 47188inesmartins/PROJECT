@@ -20,7 +20,7 @@ class ServiceController {
     @Autowired
     lateinit var servServices: ServServices
 
-    @RoleManager(["manager,employee"])
+    @RoleManager(["MANAGER","EMPLOYEE"])
     @PostMapping
     fun addService(@RequestBody service: ServiceInputDto): ResponseEntity<ServiceOutputDto> {
         return try{

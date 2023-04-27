@@ -1,6 +1,7 @@
 package backend.jvm.controllers
 
 import backend.jvm.services.UserServices
+import backend.jvm.services.dto.AppointmentOutputDto
 import backend.jvm.services.dto.UserInputDto
 import backend.jvm.services.dto.UserOutputDto
 import backend.jvm.utils.RoleManager
@@ -204,6 +205,19 @@ class UserController {
                 .body(response)
         }catch (e: InvalidCredentials) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Email or password invalid", e)
+        }
+    }
+
+    @RoleManager(["CLIENT"])
+    @GetMapping("/{id}/appointments")
+    fun getAllEmployee(@PathVariable id: Int): ResponseEntity<List<AppointmentOutputDto>> {
+        return try {
+            val response = userServices.getAllAppointments(id)
+            ResponseEntity
+                .status(200)
+                .body(response)
+        }catch (e: InvalidCredentials) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Not appointment", e)
         }
     }
 }

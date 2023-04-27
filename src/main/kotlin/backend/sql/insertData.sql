@@ -116,3 +116,7 @@ values ('9:30:00','17:30:00','01:30:00','MON',1);
 
 insert into vacation(date_begin,date_end,schedule_id)
 values ('2023-11-11','2023-11-17',1);
+
+select * from service s where s.company_id = 1 and s.id in
+             (select service_id from sch_day where week_days = 'MON' and '9:30:00' between begin_hour and end_hour
+            and (begin_hour)as time + s.duration as time between begin_hour and end_hour)

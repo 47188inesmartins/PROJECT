@@ -67,6 +67,4 @@ interface UserRepository: JpaRepository<UserDB, Int> {
                                                                 @Param("hourEnd") hourEnd: Time,
                                                                 @Param("date") date: Date
           /*, @Param("companyId") companyId: Int*/):List<UserDB>
-
-
 }

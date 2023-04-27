@@ -9,6 +9,7 @@ import backend.jvm.services.dto.ServiceOutputDto
 import backend.jvm.services.dto.UserOutputDto
 import backend.jvm.utils.errorHandling.CompanyNotFound
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Service
 import java.sql.Date
 import java.sql.Time
@@ -40,7 +41,7 @@ class ServServices {
 
     fun getServiceById(id: Int): ServiceOutputDto {
         val serv = serviceRepository.getServiceDBById(id)
-        return ServiceOutputDto(serv)
+        return ServiceOutputDto(serv!!)
     }
 
     fun getAvailableEmployees(id: Int, hourBegin: String, hourEnd: String, date: String): List<UserOutputDto>{
@@ -64,6 +65,8 @@ class ServServices {
     fun delete(serviceDB: ServiceDB){
         serviceRepository.delete(serviceDB)
     }
-
+    fun availableServicesByDay(companyId: Int, day: String,  beginHour: Time, endHour: Time){
+        
+    }
 
 }

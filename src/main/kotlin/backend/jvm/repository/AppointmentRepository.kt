@@ -35,6 +35,6 @@ interface AppointmentRepository: JpaRepository<Appointment, Int>{
     @Query(value = "from appointment a where a.availability='available' and a.date=:date", nativeQuery = true)
     fun getAvailableAppointmentByDate(@Param("date") date: Date): Appointment
 
-
-
+    @Query(value = "select * from appointment a where a.user_id =:id", nativeQuery = true)
+    fun getAppointmentByUserDB(@Param("id") id: Int): List<Appointment>
 }

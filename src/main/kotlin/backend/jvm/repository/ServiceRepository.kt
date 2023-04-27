@@ -33,7 +33,8 @@ interface ServiceRepository : JpaRepository<ServiceDB, Int> {
     fun updateMaxNumber( @Param("idService") idService: Int, @Param("number") number: Int):Double
 
 
-    @Query(value = "select * from service s where s.company_id = :companyId and s.id in (select service_id from sch_day where week_days = :day and :beginHour between begin_hour and end_hour " +
+    @Query(value = "select * from service s where s.company_id = :companyId and s.id in" +
+            " (select service_id from sch_day where week_days = :day and :beginHour between begin_hour and end_hour " +
             "and :endHour between begin_hour and end_hour)", nativeQuery = true)
     fun getAvailableServicesByDay( @Param("companyId") companyId: Int, @Param("day") day: String, @Param("beginHour") beginHour: Time, @Param("endHour") endHour: Time):Double
 

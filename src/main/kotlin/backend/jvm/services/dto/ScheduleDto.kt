@@ -19,12 +19,12 @@ import backend.jvm.model.*
  */
 data class ScheduleInputDto(
     val companyId: Int,
-    val appointment: List<Int>,
-    val day: List<Int>,
-    val vacation: List<Int>
+    val appointment: List<Int>?,
+    val day: List<Int>?,
+    val vacation: List<Int>?
     ){
 
-    fun mapToSchedule(company: Company, appointment: List<Appointment>, day: List<Day>, vacation: List<Vacation> ): Schedule =
+    fun mapToSchedule(company: Company, appointment: List<Appointment>?, day: List<Day>?, vacation: List<Vacation>? ): Schedule =
         Schedule(
                 company,
                 appointment,

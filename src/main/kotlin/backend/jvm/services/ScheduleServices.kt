@@ -31,9 +31,9 @@ class ScheduleServices {
 
     fun addSchedule(schedule: ScheduleInputDto): ScheduleOutputDto {
         val company = companyRepository.getReferenceById(schedule.companyId)
-        val day = schedule.day.map { dayRepository.getReferenceById(it) }
-        val app = schedule.appointment.map { appointmentRepository.getReferenceById(it) }
-        val vacation = schedule.vacation.map { vacationRepository.getReferenceById(it) }
+        val day = schedule.day?.map { dayRepository.getReferenceById(it) }
+        val app = schedule.appointment?.map { appointmentRepository.getReferenceById(it) }
+        val vacation = schedule.vacation?.map { vacationRepository.getReferenceById(it) }
 
         val scheduleDb = schedule.mapToSchedule(company ,app ,day ,vacation)
         return ScheduleOutputDto(scheduleRepository.save(scheduleDb))

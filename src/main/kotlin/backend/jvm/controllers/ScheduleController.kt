@@ -16,7 +16,7 @@ class ScheduleController {
     @Autowired
     lateinit var scheduleServices: ScheduleServices
 
-    @RoleManager(["manager"])
+    @RoleManager(["MANAGER"])
     @ResponseBody
     @PostMapping
     fun addNewSchedule(@RequestBody schedule: ScheduleInputDto): ResponseEntity<ScheduleOutputDto> {

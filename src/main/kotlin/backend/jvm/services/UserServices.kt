@@ -14,8 +14,6 @@ import backend.jvm.utils.UserRoles
 import backend.jvm.utils.errorHandling.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.sql.Time
-import java.sql.Date
 import java.util.*
 import kotlin.collections.List
 
@@ -116,7 +114,7 @@ class UserServices {
         return  userRepository.getRole(user)
     }
 
-    fun addEmployee(id: Int, user: String): UserOutputDto{
+    fun addEmployee(id: Int, user: String): UserOutputDto {
         val getUser = userRepository.getUsersByEmail(user) ?: throw UserNotFound()
         companyRepository.findAllById(id) ?: throw CompanyNotFound()
 
@@ -133,21 +131,26 @@ class UserServices {
         return UserOutputDto(updatedUser)
     }
 
-    /*
-    fun scheduleAnAppointment(id:Int,appointment: AppointmentInputDto): AppointmentOutputDto {
-             val getUser = userRepository.findById(id)
-             if(getUser.isEmpty) throw UserNotFound()
-             val serviceDb = servicesRepository.findById(appointment.service).get()
-             val schedule = scheduleRepository.findById(appointment.schedule).get()
-             val app = Appointment(
-                 appHour = Time.valueOf(appointment.appHour),
-                 appDate = Date.valueOf(appointment.appDate),
-                 scheduleId = schedule,
-                 userDBId = getUser.get(),
-                 serviceDB = serviceDb
-             )
-             val com = appointmentRepository.save(app)
-             return AppointmentOutputDto(com)
+    fun getAllAppointments(id: Int): List<AppointmentOutputDto>{
+        val listAppointment = appointmentRepository.getAppointmentByUserDB(id)
+        return listAppointment.map { AppointmentOutputDto(it) }
     }
-    */
 }
+
+/*
+fun scheduleAnAppointment(id:Int,appointment: AppointmentInputDto): AppointmentOutputDto {
+         val getUser = userRepository.findById(id)
+         if(getUser.isEmpty) throw UserNotFound()
+         val serviceDb = servicesRepository.findById(appointment.service).get()
+         val schedule = scheduleRepository.findById(appointment.schedule).get()
+         val app = Appointment(
+             appHour = Time.valueOf(appointment.appHour),
+             appDate = Date.valueOf(appointment.appDate),
+             scheduleId = schedule,
+             userDBId = getUser.get(),
+             serviceDB = serviceDb
+         )
+         val com = appointmentRepository.save(app)
+         return AppointmentOutputDto(com)
+}
+*/
