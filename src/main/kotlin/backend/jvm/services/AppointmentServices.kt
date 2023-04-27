@@ -8,6 +8,7 @@ import backend.jvm.repository.UserRepository
 import backend.jvm.services.dto.AppointmentInputDto
 import backend.jvm.services.dto.AppointmentOutputDto
 import backend.jvm.services.dto.ServiceOutputDto
+import backend.jvm.utils.errorHandling.ServiceNotFound
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.sql.Date
@@ -34,7 +35,7 @@ class AppointmentServices{
      fun addAppointment(appointment: AppointmentInputDto): AppointmentOutputDto {
         val service = servicesRepository.getServiceDBById(appointment.service)?: throw ServiceNotFound()
         val user = if (appointment.user != null) userRepository.getUserById(appointment.user) else null
-        val schedule = scheduleRepository.getScheduleById(appointment.schedule)//scheduleService.getSchedule(appointment.schedule)!!
+        val schedule = scheduleRepository.getScheduleById(appointment.schedule)
         val app = Appointment(
             appHour = Time.valueOf(appointment.appHour),
             appDate = Date.valueOf(appointment.appDate),

@@ -14,7 +14,7 @@ interface ServiceRepository : JpaRepository<ServiceDB, Int> {
 
 
     @Query(name = "getServiceById")
-    fun getServiceDBById(@Param("id") id: Int): ServiceDB
+    fun getServiceDBById(@Param("id") id: Int): ServiceDB?
 
     @Query(value = "select * from service s where s.company_id = :id", nativeQuery = true)
     fun getAllServicesFromACompany(@Param("id") id: Int): List<ServiceDB>
