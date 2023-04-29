@@ -35,8 +35,12 @@ class Day {
         val endHour: Time
 
         @Temporal(TemporalType.TIME)
-        @Column(name = "day_interval")
-        val interval: Time?
+        @Column(name = "interval_end")
+        val intervalEnd: Time?
+
+        @Temporal(TemporalType.TIME)
+        @Column(name = "interval_begin")
+        val intervalBegin: Time?
 
         @Column(name = "week_days")
         val weekDays: String
@@ -52,16 +56,18 @@ class Day {
         constructor(){
             this.beginHour = Time.valueOf("00:00:00")
             this.endHour = Time.valueOf("00:00:00")
-            this.interval = Time.valueOf("00:00:00")
+            this.intervalBegin = Time.valueOf("00:00:00")
+            this.intervalEnd = Time.valueOf("00:00:00")
             this.weekDays = "MON"
             this.schedule = null
             this.service = null
         }
 
-        constructor(beginHour : Time, endHour: Time, interval: Time, weekDays: String, schedule: Schedule?, service: ServiceDB?){
+        constructor(beginHour : Time, endHour: Time, intervalBegin: Time, intervalEnd: Time, weekDays: String, schedule: Schedule?, service: ServiceDB?){
             this.beginHour = beginHour
             this.endHour = endHour
-            this.interval = interval
+            this.intervalEnd = intervalEnd
+            this.intervalBegin = intervalBegin
             this.weekDays = weekDays
             this.schedule = schedule
             this.service = service

@@ -1,5 +1,6 @@
 package backend.jvm.repository
 
+import backend.jvm.model.Schedule
 import backend.jvm.model.Vacation
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
@@ -17,5 +18,7 @@ interface VacationRepository: JpaRepository<Vacation, Int>{
 
     @Query(value ="select v.id,v.date_begin,v.date_end,v.schedule_id from vacation v inner join schedule e on e.company_id = :id", nativeQuery = true)
     fun getVacationsByCompany(@Param("id") id:Int): List<Vacation>
+    @Query(value ="select * from vacation v where v.v.schedule_id = :schedule", nativeQuery = true)
+    fun getVacationsByScheduleId(@Param("schedule")schedule: Int):Vacation?
 
 }

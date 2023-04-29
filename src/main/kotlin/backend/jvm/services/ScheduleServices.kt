@@ -2,8 +2,11 @@ package backend.jvm.services
 
 import backend.jvm.model.Schedule
 import backend.jvm.repository.*
+import backend.jvm.services.dto.DayOutputDto
 import backend.jvm.services.dto.ScheduleInputDto
 import backend.jvm.services.dto.ScheduleOutputDto
+import backend.jvm.utils.errorHandling.ScheduleErrorVacation
+import backend.jvm.utils.errorHandling.ScheduleOpenDays
 import org.springframework.beans.factory.annotation.Autowired
 import java.util.*
 import org.springframework.stereotype.Service
@@ -59,16 +62,9 @@ class ScheduleServices {
         return ScheduleOutputDto(scheduleRepository.findById(id).get())
     }
 
-    /*fun getServices(idSchedule: Int,idService: Int): List<backend.jvm.model.ServiceDB>{
-       TODO()// return scheduleRepository.getAllServices(idSchedule,idService)
-    }*/
-
-    /*  fun getAllClientSchedule(id:Int,date: String,hour: String): List<User>{
-      TODO()
-      //return scheduleRepository.getAllClientSchedule(id,date,hour)
-    }*/
-
-    /*fun findScheduleByAppointment(appointment: MutableList<Appointment>): Schedule{
-        return scheduleRepository.findScheduleByAppointment(appointment)
-    }*/
+    fun getOpenDays(id: Int): List<DayOutputDto> {
+        val openDays = dayRepository.getDayByScheduleId(id)
+        if(openDays.isEmpty()) throw ScheduleOpenDays()
+        return openDays.map { DayOutputDto(it) }
+    }
 }

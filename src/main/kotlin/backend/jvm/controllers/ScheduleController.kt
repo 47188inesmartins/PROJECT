@@ -1,6 +1,7 @@
 package backend.jvm.controllers
 
 import backend.jvm.services.ScheduleServices
+import backend.jvm.services.dto.DayOutputDto
 import backend.jvm.services.dto.ScheduleInputDto
 import backend.jvm.services.dto.ScheduleOutputDto
 import backend.jvm.utils.RoleManager
@@ -22,22 +23,40 @@ class ScheduleController {
     fun addNewSchedule(@RequestBody schedule: ScheduleInputDto): ResponseEntity<ScheduleOutputDto> {
         return try{
             val response = scheduleServices.addSchedule(schedule)
-            //val response = ScheduleResponse(addedSchedule.id, addedSchedule.company.id)
-            ResponseEntity.status(201).body(response)
+            ResponseEntity
+                .status(201)
+                .body(response)
         }catch (e: Exception){
-            ResponseEntity.status(400).body(null)
+            ResponseEntity
+                .status(400)
+                .body(null)
         }
     }
 
-    @RoleManager(["manager"])
+    @RoleManager(["MANAGER"])
     @DeleteMapping("/{id}")
     fun deleteSchedule(@PathVariable id:Int){
         scheduleServices.deleteSchedule(id)
     }
 
-    @RoleManager(["manager"])
+    @RoleManager(["MANAGER"])
     @GetMapping("/{id}")
     fun getSchedule(@PathVariable id:Int):ScheduleOutputDto?{
           return scheduleServices.getSchedule(id)
     }
+    @GetMapping("/{id}/open")
+    fun getOpenDays(@PathVariable id:Int):ResponseEntity<List<DayOutputDto>>{
+        return try{
+            val response = scheduleServices.getOpenDays(id)
+            ResponseEntity
+                .status(200)
+                .body(response)
+        }catch (e: Exception){
+            ResponseEntity
+                .status(400)
+                .body(null)
+        }
+    }
+
+
 }

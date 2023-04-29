@@ -22,5 +22,5 @@ consoante a duracao do service calcular hour end
 
 implementar interfaces para services repositorios 
 
-o numero maximo de clientes ao mesmo tempo muda quando o role do cliente muda para employee
+
 

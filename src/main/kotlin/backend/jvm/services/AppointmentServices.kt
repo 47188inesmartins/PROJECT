@@ -8,6 +8,8 @@ import backend.jvm.repository.UserRepository
 import backend.jvm.services.dto.AppointmentInputDto
 import backend.jvm.services.dto.AppointmentOutputDto
 import backend.jvm.services.dto.ServiceOutputDto
+import backend.jvm.utils.errorHandling.EmptyAppointments
+import backend.jvm.utils.errorHandling.InvalidAppointment
 import backend.jvm.utils.errorHandling.ServiceNotFound
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -59,7 +61,7 @@ class AppointmentServices{
 
     fun getAppointment(id: Int): AppointmentOutputDto? {
         val isAppointment = appointmentRepository.findById(id)
-        if(!isAppointment.isPresent) return null
+        if(!isAppointment.isPresent) throw InvalidAppointment()
         val appointment = isAppointment.get()
         return AppointmentOutputDto(appointment)
     }
@@ -68,6 +70,7 @@ class AppointmentServices{
         val date = Date.valueOf(appDate)
         val hour = Time.valueOf(appHour)
         val appointments = appointmentRepository.getAppointmentByDateAndHour(sid, date, hour)
+        if(appointments.isEmpty()) throw EmptyAppointments()
         return appointments.map{ AppointmentOutputDto(it) }
     }
 
