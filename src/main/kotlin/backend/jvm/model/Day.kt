@@ -71,5 +71,6 @@ class Day {
             this.weekDays = weekDays
             this.schedule = schedule
             this.service = service
+
         }
 }

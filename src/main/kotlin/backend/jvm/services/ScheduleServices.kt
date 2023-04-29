@@ -64,7 +64,7 @@ class ScheduleServices {
 
     fun getOpenDays(id: Int): List<DayOutputDto> {
         val openDays = dayRepository.getDayByScheduleId(id)
-        if(openDays.isEmpty()) throw ScheduleOpenDays()
+        if(openDays.isEmpty()) throw  ScheduleOpenDays()
         return openDays.map { DayOutputDto(it) }
     }
 }

@@ -11,4 +11,4 @@ class InvalidOpenDay : Exception("Invalid day of week")
 class ScheduleInvalid : Exception(" Schedule not found ")
 
 @ResponseStatus(code = HttpStatus.NOT_FOUND, reason = "Day not found")
-class InvalidDay : Exception("Day not found")
+class InvalidDay : Exception("Day not  found")

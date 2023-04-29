@@ -12,7 +12,6 @@ interface DayRepository : JpaRepository<Day, Int> {
     @Query(name = "getDayById")
     fun getDayById(@Param("id")id: Int): Day?
 
-
     @Query(value = "select d.id, d.begin_hour, d.end_hour, d.interval_begin, d.interval_end, week_days, schedule_id from sch_day d inner join schedule s on d.schedule_id = s.id and s.company_id = :id", nativeQuery = true)
     fun getOpenDays(@Param("id") id: Int): List<Day>
 

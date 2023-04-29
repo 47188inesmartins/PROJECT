@@ -25,7 +25,7 @@ data class DayInputDto(
             beginHour = begin,
             endHour = end,
             intervalBegin = intervalB,
-            intervalEnd = intervalE,
+            intervalEnd = intervalE ,
             weekDays = dto.weekDays,
             schedule = schedule,
             service = service
