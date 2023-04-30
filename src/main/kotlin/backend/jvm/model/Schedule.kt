@@ -21,6 +21,7 @@ class Schedule {
     @JoinColumn(name = "company_id", unique = true)
     val company : Company
 
+
     @OneToMany(mappedBy = "schedule")
     val appointment: List<Appointment>?
 

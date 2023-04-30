@@ -17,6 +17,8 @@ class AppConfig :
 
     @Autowired
     lateinit var authenticationInterceptor: AuthenticationInterceptor
+    @Autowired
+    lateinit var roleInterceptor: RoleInterceptor
 
     override fun addInterceptors(registry: InterceptorRegistry) {
         registry.addInterceptor(authenticationInterceptor)
@@ -27,6 +29,7 @@ class AppConfig :
                 "/schedule",
                 "/service"
             ))
+        registry.addInterceptor(roleInterceptor)
     }
 
    /* private fun getPathPatternsForRole(role: String): List<String> {

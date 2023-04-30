@@ -24,7 +24,6 @@ class CompanyController {
 
 
     @RoleManager(["CLIENT"])
-    @ResponseBody
     @PostMapping
     fun addCompany(@RequestBody company: CompanyInputDto): ResponseEntity<CompanyOutputDto> {
         return try {

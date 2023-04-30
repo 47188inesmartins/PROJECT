@@ -67,4 +67,9 @@ class ScheduleServices {
         if(openDays.isEmpty()) throw  ScheduleOpenDays()
         return openDays.map { DayOutputDto(it) }
     }
+
+    fun getVacation(id: Int): List<VacationOutputDto>{
+        val vacation = vacationRepository.getVacationsByScheduleId(id)
+        return vacation.map { VacationOutputDto(it) }
+    }
 }

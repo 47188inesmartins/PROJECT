@@ -102,8 +102,6 @@ class UserServices {
         return UserOutputDto(user)
     }
 
-
-
     fun getUserByToken(token: String):UserDB?{
         val t = UUID.fromString(token)
         return userRepository.getUserByToken(t) ?: throw InvalidToken()
@@ -134,6 +132,10 @@ class UserServices {
     fun getAllAppointments(id: Int): List<AppointmentOutputDto>{
         val listAppointment = appointmentRepository.getAppointmentByUserDB(id)
         return listAppointment.map { AppointmentOutputDto(it) }
+    }
+
+    fun changeRole(id: Int, name: String): String {
+        return userRepository.changeRole(id,name)
     }
 }
 

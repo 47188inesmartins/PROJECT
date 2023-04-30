@@ -3,14 +3,14 @@ package backend.jvm.services.dto
 import backend.jvm.model.Day
 import backend.jvm.model.Schedule
 import backend.jvm.model.ServiceDB
-import jakarta.persistence.*
+import backend.jvm.utils.errorHandling.InvalidOpenDay
 import java.sql.Time
 
 data class DayInputDto(
     val beginHour: String,
     val endHour: String,
-    val intervalE: String,
-    val intervalB: String,
+    val intervalBegin: String,
+    val intervalEnd: String,
     val weekDays: String,
     val schedule: Int?,
     val service: Int?,
@@ -18,8 +18,11 @@ data class DayInputDto(
     fun mapToDayDb(dto: DayInputDto,schedule: Schedule?, service: ServiceDB?): Day {
         val begin = Time.valueOf(dto.beginHour)?: throw Exception("invalid hour")
         val end = Time.valueOf(dto.endHour) ?: throw Exception("invalid hour")
-        val intervalE = Time.valueOf(dto.intervalE) ?: throw Exception("invalid interval")
-        val intervalB = Time.valueOf(dto.intervalB) ?: throw Exception("invalid interval")
+        val intervalEnd = Time.valueOf(dto.intervalEnd) ?: throw Exception("invalid interval")
+        val intervalBegin = Time.valueOf(dto.intervalBegin) ?: throw Exception("invalid interval")
+
+        if(begin.after(intervalBegin)) throw Exception("invalid hours")
+        if(end.before(intervalEnd)) throw Exception("invalid hours")
 
         return Day(
             beginHour = begin,
@@ -41,6 +44,7 @@ data class DayOutputDto(
     val intervalEnd: String,
     val weekDays: String,
     val schedule: Int?,
+    val service: Int?
 ) {
         constructor(day: Day):this(
             day.id,

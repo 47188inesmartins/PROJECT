@@ -32,8 +32,9 @@ class DayServices {
         if(!listDayOfWeek.contains(day.weekDays.uppercase())) throw InvalidOpenDay()
         val schedule = day.schedule?.let { scheduleRepository.findById(it).get() }
         val service = day.service?.let { serviceRepository.findById(it).get() }
-        if(schedule == null) throw ScheduleInvalid()
-        val db = dayRepository.save(day.mapToDayDb(day,schedule,service))
+        if(schedule == null && service == null) throw InvalidOpenDay()
+        val dayDb = day.mapToDayDb(day,schedule,service)
+        val db = dayRepository.save(dayDb)
         return  DayOutputDto(db)
     }
 
@@ -50,5 +51,4 @@ class DayServices {
     fun deleteDay(day: Int){
         dayRepository.deleteById(day)
     }
-
 }

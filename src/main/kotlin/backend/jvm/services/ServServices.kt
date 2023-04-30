@@ -48,8 +48,6 @@ class ServServices {
         val hb = Time.valueOf(hourBegin)
         val he = Time.valueOf(hourEnd)
         val d = Date.valueOf(date)
-
-
         val users = userRepository.getAvailableEmployeesByService(id, d, hb, he)
         return users.map { UserOutputDto(it) }
     }

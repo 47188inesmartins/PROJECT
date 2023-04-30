@@ -20,8 +20,8 @@ class DayController {
 
     @Autowired
     lateinit var dayService:DayServices
-    @RoleManager(["manager"])
-    @ResponseBody
+
+    @RoleManager(["MANAGER"])
     @PostMapping
     fun addOpenDay(@RequestBody day: DayInputDto): ResponseEntity<DayOutputDto> {
         return try{
@@ -29,12 +29,12 @@ class DayController {
            // val response = DayResponse(addedDay.id, addedDay.beginHour, addedDay.endHour, addedDay.interval, addedDay.weekDays, addedDay.scheduleId?.id!!)
             ResponseEntity.status(201).body(addedDay)
         }catch(e: Exception){
-            println("exception = $e")
+
             ResponseEntity.status(400).body(null)
         }
     }
 
-    @RoleManager(["manager"])
+    @RoleManager(["MANAGER"])
     @DeleteMapping("/{id}")
     fun deleteOpenDay(@PathVariable id: Int): ResponseEntity<String> {
         return try{
@@ -49,7 +49,7 @@ class DayController {
         }
     }
 
-    @RoleManager(["manager"])
+    @RoleManager(["MANAGER"])
     @ResponseBody
     @PutMapping("/{id}/begin")
     fun updateBeginHour(@PathVariable id:Int,@RequestParam begin: String): ResponseEntity<Time> {
@@ -70,7 +70,7 @@ class DayController {
         }
     }
 
-    @RoleManager(["manager"])
+    @RoleManager(["MANAGER"])
     @ResponseBody
     @PutMapping("/{id}/end")
     fun updateEndHour(@PathVariable id:Int,@RequestParam end: String): ResponseEntity<Time> {

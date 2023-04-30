@@ -44,6 +44,8 @@ class ScheduleController {
     fun getSchedule(@PathVariable id:Int):ScheduleOutputDto?{
           return scheduleServices.getSchedule(id)
     }
+
+
     @GetMapping("/{id}/open")
     fun getOpenDays(@PathVariable id:Int):ResponseEntity<List<DayOutputDto>>{
         return try{
@@ -58,5 +60,18 @@ class ScheduleController {
         }
     }
 
+    @GetMapping("/{id}/vacation")
+    fun getVacationDays(@PathVariable id:Int): ResponseEntity<List<VacationOutputDto>>{
+        return try{
+            val response = scheduleServices.getVacation(id)
+            ResponseEntity
+                .status(200)
+                .body(response)
+        }catch (e: Exception){
+            ResponseEntity
+                .status(400)
+                .body(null)
+        }
+    }
 
 }
