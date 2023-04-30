@@ -1,6 +1,5 @@
-package backend.jvm.utils
+package backend.jvm.utils.pipeline
 
-import backend.jvm.model.Role
 import backend.jvm.model.UserDB
 import backend.jvm.services.UserServices
 import org.springframework.stereotype.Component

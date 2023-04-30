@@ -20,7 +20,7 @@ class VacationController {
      @Autowired
     lateinit var vacationServices: VacationService
 
-    @RoleManager(["manager"])
+    @RoleManager(["MANAGER"])
     @PostMapping
     fun addVacation(@RequestBody vacation: VacationInputDto): ResponseEntity<VacationOutputDto> {
         return try {
@@ -33,7 +33,7 @@ class VacationController {
         }
     }
 
-    @RoleManager(["manager,employee,client"])
+    @RoleManager(["MANAGER","EMPLOYEE","CLIENT"])
     @GetMapping("/{id}")
     fun getVacation(@PathVariable id: Int): ResponseEntity<VacationOutputDto>{
         return try{
@@ -46,13 +46,13 @@ class VacationController {
         }
     }
 
-    @RoleManager(["manager"])
+    @RoleManager(["MANAGER"])
     @DeleteMapping("/{id}")
     fun deleteVacation(@PathVariable  id: Int){
         vacationServices.deleteVacation(id)
     }
 
-    @RoleManager(["manager"])
+    @RoleManager(["MANAGER"])
     @PutMapping("/{id}/date-begin")
     fun updateBeginDate(@PathVariable id: Int, @RequestParam date: String): ResponseEntity<Date> {
         return try {
@@ -70,7 +70,7 @@ class VacationController {
         }
     }
 
-    @RoleManager(["manager"])
+    @RoleManager(["MANAGER"])
     @PutMapping("/{id}/date-end")
     fun updateEndDate(@PathVariable id: Int, @RequestParam date: String): ResponseEntity<Date> {
         return try {

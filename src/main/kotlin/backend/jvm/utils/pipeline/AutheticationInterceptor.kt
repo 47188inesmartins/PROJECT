@@ -1,5 +1,6 @@
 package backend.jvm.utils
 
+import backend.jvm.utils.pipeline.AuthorizationHeaderProcessor
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.stereotype.Component
@@ -28,7 +29,6 @@ class AuthenticationInterceptor(
                     response.status = 200
                     return true
                 }
-               // println("roles ====" + roleAllowed.roleList[0] + user?.second)
                 return if(user?.second in roleAllowed.roleList){
                     response.status = 200
                     true
@@ -37,10 +37,11 @@ class AuthenticationInterceptor(
                     false
                 }
             }
-
         }
         return true
     }
+
+
 }
 
 

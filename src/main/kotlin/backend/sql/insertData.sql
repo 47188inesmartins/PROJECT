@@ -33,6 +33,23 @@ begin;
 insert into sch_user(email,password,name,birthday) values ('email@gmail.com', 'Email123@', 'Email', '2001-05-15');
 commit;
 
+
+
+
+select s.id, s.service_name, s.duration, s.number_max, s.price,
+       s.company_id from service s inner join sch_day d on ( s.company_id = :companyId and
+       s.id = d.service_id and d.week_days = 'MON');
+
+
+
+
+select * from service s where s.company_id = :companyId and s.id in (select service_id from sch_day where week_days = :day);
+
+
+
+
+
+
 select * from sch_user where id not in
 (select user_id from unavailability where (date_end is null and date_begin ='2000-01-01'
                                         and ((hour_begin  >= '12:30:00' and hour_begin < '13:00:00')

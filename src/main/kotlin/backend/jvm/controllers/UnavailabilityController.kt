@@ -17,7 +17,7 @@ class UnavailabilityController {
     @Autowired
     lateinit var unavailabilityServices: UnavailabilityServices
 
-    @RoleManager(["manager,employee"])
+    @RoleManager(["MANAGER","EMPLOYEE"])
     @PostMapping
     fun addUserUnavailability(@RequestBody unavailability: UnavailabilityInputDto): ResponseEntity<UnavailabilityOutputDto> {
         return try {
@@ -33,7 +33,7 @@ class UnavailabilityController {
         }
     }
 
-    @RoleManager(["manager,employee"])
+    @RoleManager(["MANAGER","EMPLOYEE"])
     @GetMapping("/{id}/user")
     fun getUnavailabilityByUser(@PathVariable id: Int): ResponseEntity<UnavailabilityOutputDto> {
         return try {
@@ -49,7 +49,7 @@ class UnavailabilityController {
         }
     }
 
-    @RoleManager(["manager,employee"])
+    @RoleManager(["MANAGER","EMPLOYEE"])
     @DeleteMapping("/{id}")
     fun deleteUnavailability(@PathVariable id: Int): ResponseEntity<String> {
         return try {
@@ -63,7 +63,4 @@ class UnavailabilityController {
                 .body("Error:${e}")
         }
     }
-
-
-
 }

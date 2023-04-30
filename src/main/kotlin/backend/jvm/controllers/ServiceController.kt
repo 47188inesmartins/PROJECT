@@ -34,7 +34,6 @@ class ServiceController {
         }
     }
 
-    @RoleManager(["manager,employee,guest,client"])
     @GetMapping("/{id}")
     fun getService(@PathVariable id: Int): ResponseEntity<ServiceOutputDto> {
        return try {
@@ -47,21 +46,8 @@ class ServiceController {
        }
     }
 
-  /*  @GetMapping("/{id}/employee")
-    fun getEmployeesForService(@PathVariable id: Int, @RequestParam hourBegin: String, hourEnd: String, date: String): ResponseEntity<List<UserOutputDto>> {
-        return try {
-            val response = servServices.getAvailableEmployees(id, hourBegin, hourEnd, date)
-            ResponseEntity.status(200)
-                .body(response)
-        }catch(e: Exception){
-            println("exception = $e")
-            ResponseEntity.status(400)
-                .body(null)
-        }
-    }*/
-    @RoleManager(["manager,employee"])
 
-
+    @RoleManager(["MANAGER", "EMPLOYEE"])
     @GetMapping("{id}/employees")
     fun getAvailableEmployees(@RequestParam("date") date: String, @RequestParam("beginHour") beginHour: String, @RequestParam("endHour") endHour: String,
                               @PathVariable id: Int
@@ -77,9 +63,6 @@ class ServiceController {
         }
     }
 
-
-
-
     @PutMapping("/{id}/price")
     fun updatePrice(@PathVariable id: Int, @RequestParam price: Double): ResponseEntity<Long> {
         return try {
@@ -92,19 +75,8 @@ class ServiceController {
         }
     }
 
-    /*   @PutMapping("/{id}/apointment/{idA}/avaibility")
-    fun updateAvailability(@PathVariable id: Int,@PathVariable idA: Int, @RequestParam price: String): ResponseEntity<String> {
-        return try {
-            val response = servServices.updateAvailability(id,idA, price)
-            ResponseEntity.status(200)
-                .body(response)
-        }catch(e: Exception){
-            ResponseEntity.status(400)
-                .body(null)
-        }
-    }
-    */
-    @RoleManager(["manager,employee"])
+
+    @RoleManager(["MANAGER", "EMPLOYEE"])
     @PutMapping("/{id}/duration")
     fun updateDuration(@PathVariable id: Int, @RequestParam duration: String): ResponseEntity<Duration>{
         return try {
@@ -117,30 +89,8 @@ class ServiceController {
         }
     }
 
-  /*  @GetMapping("/{id}/appointment/{idA}/available")
-    fun verifyAvailability(@PathVariable id: Int, @PathVariable idA: Int): ResponseEntity<String>{
-        return try {
-            val response = servServices.verifyAvailability(id,idA)
-            ResponseEntity.status(200)
-                .body(response)
-        }catch(e: Exception){
-            ResponseEntity.status(400)
-                .body(null)
-        }
-    }*/
 
-   /* @PutMapping("/{id}/appointment/{idA}/availability")
-    fun updateMaxNumber(@PathVariable id: Int,@PathVariable idA: Int, @RequestBody availability: String): ResponseEntity<String> {
-        return try {
-            val response = servServices.updateAvailability(id,idA,availability)
-            ResponseEntity.status(200)
-                .body(response)
-        }catch(e: Exception){
-            ResponseEntity.status(400)
-                .body(null)
-        }
-    }*/
-    @RoleManager(["manager"])
+    @RoleManager(["MANAGER"])
     @DeleteMapping
     fun deleteServices(@RequestBody serviceDB: ServiceDB): ResponseEntity<String> {
         return try {

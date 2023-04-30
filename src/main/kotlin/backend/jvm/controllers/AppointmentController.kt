@@ -25,8 +25,7 @@ class AppointmentController {
     @Autowired
     lateinit var appointmentServices: AppointmentServices
 
-    @RoleManager(["MANAGER","CLIENT"])
-    @ResponseBody
+    @RoleManager(["MANAGER", "CLIENT"])
     @PostMapping
     fun addAppointment(@RequestBody appointment: AppointmentInputDto): ResponseEntity<AppointmentOutputDto> {
         return try {
@@ -39,12 +38,15 @@ class AppointmentController {
         }
     }
 
-    @RoleManager(["manager"])
+
+    @RoleManager(["MANAGER"])
     @DeleteMapping("/{id}")
     fun deleteAppointment(@PathVariable id: Int){
         appointmentServices.deleteAppointment(id)
     }
-    @RoleManager(["manager,employee,client"])
+
+
+    @RoleManager(["MANAGER", "EMPLOYEE", "CLIENT"])
     @GetMapping("/{id}")
     fun getAppointment(@PathVariable id: Int): ResponseEntity<AppointmentOutputDto>{
         return try {
@@ -58,19 +60,8 @@ class AppointmentController {
         }
     }
 
-    /*@GetMapping("/{id}/services")
-    fun getServices(@PathVariable id: Int): ResponseEntity<List<Int>>{
-        return try {
-            val response = appointmentServices.(id)
-            ResponseEntity.status(200)
-                .body(response)
-        }catch (e: Exception){
-            println("exception = $e")
-            ResponseEntity.status(400)
-                .body(null)
-        }
-    }*/
-    @RoleManager(["manager,employee,client"])
+
+    @RoleManager(["MANAGER", "EMPLOYEE", "CLIENT"])
     @GetMapping
     fun getAppointmentsByDateAndHour(@RequestParam("schedule_id") schedule_id: Int, @RequestParam("hour") hour: String, @RequestParam("date") date: String): ResponseEntity<List<AppointmentOutputDto>>{
         return try {
@@ -86,19 +77,8 @@ class AppointmentController {
         }
     }
 
-    /*@GetMapping("/services")
-    fun getServicesByDateAndHour(@RequestParam("date") date: String, @RequestParam("hour") hour: String):ResponseEntity<Int>{
-        return try{
-            val response = appointmentServices.getNumberOfServicesByDateAndHour(service_id, date, hour)
-            ResponseEntity.status(200)
-                .body(response)
-        }catch (e: Exception){
-            ResponseEntity.status(400)
-                .body(null)
-        }
 
-    }*/
-    @RoleManager(["manager,employee,client"])
+    @RoleManager(["MANAGER", "EMPLOYEE", "CLIENT"])
     @GetMapping("/services/availability")
     fun getAvailableServices(@RequestParam("hour_begin") hourBegin :String, @RequestParam("date") date :String, @RequestParam("companyId") companyId :Int ) :ResponseEntity<List<ServiceOutputDto>>{
         return try{
@@ -111,31 +91,4 @@ class AppointmentController {
                 .body(null)
         }
     }
-
-
-
-
-    /*@GetMapping("/client")
-    fun getAppointmentByClientAndDateAndTime(cid: Client, date: Date, time: Time): Appointment {
-        return appointmentServices.findAppClientByDateAndHour(cid, date, time)
-    }
-
-    @GetMapping("/schedule")
-    fun getAppointmentByScheduleAndDateAndTime(sid: Schedule, date: Date, time: Time): Appointment {
-        return appointmentServices.findAllByAppHourAndSidAndAppDate(time, sid, date)
-    }
-
-    @PutMapping("/{id}/scheduled")
-    fun changeNumberOfScheduledPeople(@PathVariable id: Int, @RequestParam number: Int): Appointment{
-        return appointmentServices.editNumberAppPeople(id, number)
-    }
-
-    @PutMapping("/{id}/availability")
-    fun changeAvailability(@PathVariable id: Int, @RequestBody availability: String): Appointment {
-        return appointmentServices.editAvailability(id, availability)
-    }
-    */
-
-
-
 }

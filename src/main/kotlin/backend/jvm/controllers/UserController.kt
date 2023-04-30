@@ -47,7 +47,7 @@ class UserController {
         }
     }
 
-    @RoleManager(["MANAGER,EMPLOYEE,CLIENT"])
+    @RoleManager(["MANAGER","EMPLOYEE","CLIENT"])
     @DeleteMapping("/{id}")
     fun deleteUser(@PathVariable id: Int): ResponseEntity<Boolean>{
         return try {
@@ -60,7 +60,7 @@ class UserController {
         }
     }
 
-    @RoleManager(["MANAGER,EMPLOYEE,CLIENT"])
+    @RoleManager(["MANAGER","EMPLOYEE","CLIENT"])
     @GetMapping("/{id}")
     fun getUserById(@PathVariable id: Int): ResponseEntity<UserOutputDto> {
         return try {
@@ -73,9 +73,7 @@ class UserController {
         }
     }
 
-
-
-    @RoleManager(["MANAGER,EMPLOYEE,CLIENT"])
+    @RoleManager(["MANAGER","EMPLOYEE","CLIENT"])
     @GetMapping("/{id}/role")
     fun getRole(@PathVariable id: Int): ResponseEntity<String?> {
         return try {
@@ -88,28 +86,7 @@ class UserController {
         }
     }
 
-   /* @RoleManager(["manager,employee"])
-    @PutMapping("/{id}/role")
-    fun changeRole(@PathVariable id: Int, @RequestBody roleName: String):  ResponseEntity<String> {
-        return try {
-            val json = Json.parseToJsonElement(roleName)
-            val request = json.jsonObject["roleName"]?.jsonPrimitive?.content
-                ?: return ResponseEntity
-                    .status(400)
-                    .body(null)
-
-            val response = userServices.changeRole(id, request)
-            ResponseEntity
-                .status(200)
-                .body(response)
-        }catch (e: Exception) {
-            ResponseEntity
-                .status(400)
-                .body(null)
-        }
-    }*/
-
-    @RoleManager(["MANAGER,EMPLOYEE,CLIENT"])
+    @RoleManager(["MANAGER","EMPLOYEE","CLIENT"])
     @PutMapping("/{id}/availability")
     fun changeAvailability(@PathVariable id: Int, @RequestBody availability: String): ResponseEntity<String> {
         return try {
@@ -128,7 +105,7 @@ class UserController {
         }
     }
 
-    @RoleManager(["MANAGER,EMPLOYEE,CLIENT"])
+    @RoleManager(["MANAGER","EMPLOYEE","CLIENT"])
     @PutMapping("/{id}/password")
     fun changePassword(@PathVariable id: Int, @RequestBody password: String): ResponseEntity<String> {
         return try {
@@ -144,21 +121,6 @@ class UserController {
             throw  ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid user",e)
         }
     }
-
-    /*@PostMapping("/{id}/appointment")
-    fun scheduleAnAppointment(@PathVariable id:Int, @RequestBody appointment: AppointmentInputDto): ResponseEntity<AppointmentOutputDto>{
-        return try {
-            val response = userServices.scheduleAnAppointment(id,appointment)
-            ResponseEntity
-                .status(200)
-                .body(response)
-        }catch (e: Exception) {
-            ResponseEntity
-                .status(400)
-                .body(null)
-        }
-    }*/
-
 
     @RoleManager(["MANAGER"])
     @PostMapping("/company/{cid}/employee")
@@ -181,7 +143,7 @@ class UserController {
         }
     }
 
-    @RoleManager(["MANAGER,EMPLOYEE,CLIENT"])
+    @RoleManager(["MANAGER","EMPLOYEE","CLIENT"])
     @GetMapping("/login")
     fun getUserByEmailPass(@RequestBody password: String,@RequestBody email: String): ResponseEntity<UserOutputDto> {
         return try {

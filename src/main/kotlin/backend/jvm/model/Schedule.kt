@@ -43,6 +43,5 @@ class Schedule {
         this.appointment = appointment
         this.day = day
         this.vacation = vacation
-
     }
 }

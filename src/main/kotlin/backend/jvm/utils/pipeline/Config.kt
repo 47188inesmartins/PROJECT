@@ -1,5 +1,6 @@
 package backend.jvm.utils
 
+import backend.jvm.utils.pipeline.RoleInterceptor
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Configuration
 import org.springframework.stereotype.Component
@@ -31,24 +32,4 @@ class AppConfig :
             ))
         registry.addInterceptor(roleInterceptor)
     }
-
-   /* private fun getPathPatternsForRole(role: String): List<String> {
-        return when (role) {
-            "manager" -> listOf()
-            "employee" -> listOf()
-            else -> emptyList()
-        }
-    }*/
-
-    /*override fun addInterceptors(registry: InterceptorRegistry) {
-        registry.addInterceptor(authenticationInterceptor)
-           .addPathPatterns(listOf(
-                "/appointment",
-                "/company",
-                "/vacation",
-                "/schedule",
-                "/service"
-            )
-        )
-    }*/
 }

@@ -27,8 +27,8 @@ data class DayInputDto(
         return Day(
             beginHour = begin,
             endHour = end,
-            intervalBegin = intervalB,
-            intervalEnd = intervalE ,
+            intervalBegin = intervalBegin,
+            intervalEnd = intervalEnd ,
             weekDays = dto.weekDays,
             schedule = schedule,
             service = service
@@ -53,7 +53,8 @@ data class DayOutputDto(
             day.intervalBegin.toString(),
             day.intervalEnd.toString(),
             day.weekDays,
-            day.schedule?.id
+            day.schedule?.id,
+            day.service?.id
             )
 }
 

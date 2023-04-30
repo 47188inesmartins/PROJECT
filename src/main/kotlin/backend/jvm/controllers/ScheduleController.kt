@@ -4,6 +4,7 @@ import backend.jvm.services.ScheduleServices
 import backend.jvm.services.dto.DayOutputDto
 import backend.jvm.services.dto.ScheduleInputDto
 import backend.jvm.services.dto.ScheduleOutputDto
+import backend.jvm.services.dto.VacationOutputDto
 import backend.jvm.utils.RoleManager
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity

@@ -63,8 +63,4 @@ class ServServices {
     fun delete(serviceDB: ServiceDB){
         serviceRepository.delete(serviceDB)
     }
-    fun availableServicesByDay(companyId: Int, day: String,  beginHour: Time, endHour: Time){
-        
-    }
-
 }

@@ -1,11 +1,10 @@
 package backend.jvm.services
 
-import backend.jvm.model.Schedule
 import backend.jvm.repository.*
 import backend.jvm.services.dto.DayOutputDto
 import backend.jvm.services.dto.ScheduleInputDto
 import backend.jvm.services.dto.ScheduleOutputDto
-import backend.jvm.utils.errorHandling.ScheduleErrorVacation
+import backend.jvm.services.dto.VacationOutputDto
 import backend.jvm.utils.errorHandling.ScheduleOpenDays
 import org.springframework.beans.factory.annotation.Autowired
 import java.util.*

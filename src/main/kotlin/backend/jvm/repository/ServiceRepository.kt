@@ -30,16 +30,10 @@ interface ServiceRepository : JpaRepository<ServiceDB, Int> {
     @Query(value = "update service set number_max =:number where id=:idService returning number_max  ", nativeQuery = true)
     fun updateMaxNumber( @Param("idService") idService: Int, @Param("number") number: Int):Double
 
-
-    @Query(value = "select * from service s where s.company_id = :companyId and s.id in" +
-            " (select service_id from sch_day where week_days = :day and :beginHour between begin_hour and end_hour " +
-            "and :endHour between begin_hour and end_hour)", nativeQuery = true)
-    fun getAvailableServicesByDay( @Param("companyId") companyId: Int, @Param("day") day: String, @Param("beginHour") beginHour: Time, @Param("endHour") endHour: Time):Double
-
+    @Query(value = "select s.id, s.service_name, s.duration, s.number_max, s.price, " +
+            " s.company_id from service s inner join sch_day d on ( s.company_id = :companyId and" +
+            " s.id = d.service_id and d.week_days = :day);", nativeQuery = true)
+    fun getAvailableServicesByDay( @Param("companyId") companyId: Int,
+                                   @Param("day") day: String
+    ):List<ServiceDB>
 }
-
-//9:00:00 11:00:00 -- 12:00:00 13:00:00 unavail
-
-//11:30:00 - 13:30:00
-
-// if in 11:30:00 - 13:30:00 houver um begin hour no unavailable retorna false
