@@ -9,4 +9,5 @@ interface IDayServices {
     fun updateBeginHour(id:Int,hour: String): Time
     fun updateEndHour(id:Int,hour: String): Time
     fun deleteDay(day: Int)
+    fun getAvailableServicesDays(serviceId: Int): List<DayOutputDto>
 }

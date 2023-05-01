@@ -5,9 +5,12 @@ import backend.jvm.repository.ScheduleRepository
 import backend.jvm.repository.ServiceRepository
 import backend.jvm.services.dto.DayInputDto
 import backend.jvm.services.dto.DayOutputDto
+import backend.jvm.services.dto.ServiceOutputDto
 import backend.jvm.services.interfaces.IDayServices
 import backend.jvm.utils.errorHandling.InvalidDay
 import backend.jvm.utils.errorHandling.InvalidOpenDay
+import backend.jvm.utils.errorHandling.NoAvailableDays
+import backend.jvm.utils.errorHandling.NoAvailableServices
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.sql.Time
@@ -49,5 +52,22 @@ class DayServices : IDayServices {
 
     override fun deleteDay(day: Int){
         dayRepository.deleteById(day)
+    }
+
+    override fun getAvailableServicesDays(serviceId: Int): List<DayOutputDto> {
+        val availableDays = dayRepository.getAvailableServicesDay(serviceId)
+        if(availableDays.isEmpty()) throw NoAvailableDays()
+        return availableDays.map { DayOutputDto(it) }
+    }
+
+    fun getAvailableServiceByWeekDay(weekDay: String): List<ServiceOutputDto>{
+        if(!listDayOfWeek.contains(weekDay)) throw InvalidDay()
+        val getDay = dayRepository.getDayByWeekDays(weekDay).map { it.service }
+        val availableServices = mutableListOf<ServiceOutputDto>()
+        getDay.forEach {
+            if(it!= null) availableServices.add(ServiceOutputDto(it))
+        }
+        if (availableServices.isEmpty()) throw NoAvailableServices(weekDay)
+        return availableServices
     }
 }
