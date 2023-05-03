@@ -7,6 +7,7 @@ import backend.jvm.repository.UserRepository
 import backend.jvm.services.dto.ServiceInputDto
 import backend.jvm.services.dto.ServiceOutputDto
 import backend.jvm.services.dto.UserOutputDto
+import backend.jvm.services.interfaces.IServServices
 import backend.jvm.utils.errorHandling.CompanyNotFound
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.query.Param
@@ -16,7 +17,7 @@ import java.sql.Time
 import java.time.Duration
 
 @Service
-class ServServices {
+class ServServices : IServServices {
 
     @Autowired
     lateinit var serviceRepository: ServiceRepository
@@ -25,7 +26,7 @@ class ServServices {
     @Autowired
     lateinit var userRepository : UserRepository
 
-    fun addService(service: ServiceInputDto): ServiceOutputDto {
+    override fun addService(service: ServiceInputDto): ServiceOutputDto {
         val company = companyServices.getCompany(service.company)
         if(company.isEmpty) throw CompanyNotFound()
         val serv = ServiceDB(
@@ -39,12 +40,12 @@ class ServServices {
         return ServiceOutputDto(savedService)
     }
 
-    fun getServiceById(id: Int): ServiceOutputDto {
+    override fun getServiceById(id: Int): ServiceOutputDto {
         val serv = serviceRepository.getServiceDBById(id)
         return ServiceOutputDto(serv!!)
     }
 
-    fun getAvailableEmployees(id: Int, hourBegin: String, hourEnd: String, date: String): List<UserOutputDto>{
+    override fun getAvailableEmployees(id: Int, hourBegin: String, hourEnd: String, date: String): List<UserOutputDto>{
         val hb = Time.valueOf(hourBegin)
         val he = Time.valueOf(hourEnd)
         val d = Date.valueOf(date)
@@ -52,15 +53,15 @@ class ServServices {
         return users.map { UserOutputDto(it) }
     }
 
-    fun updatePrice(idService: Int,price: Double):Long{
+    override fun updatePrice(idService: Int,price: Double):Long{
         return serviceRepository.updatePrice(idService,price)
     }
 
-    fun updateDuration(idService: Int,duration: String): Duration {
+    override fun updateDuration(idService: Int,duration: String): Duration {
         return serviceRepository.updateDuration(idService,Time.valueOf(duration))
     }
 
-    fun delete(serviceDB: ServiceDB){
+    override fun delete(serviceDB: ServiceDB){
         serviceRepository.delete(serviceDB)
     }
 }

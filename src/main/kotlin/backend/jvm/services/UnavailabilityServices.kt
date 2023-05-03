@@ -4,12 +4,13 @@ import backend.jvm.repository.UnavailabilityRepository
 import backend.jvm.repository.UserRepository
 import backend.jvm.services.dto.UnavailabilityInputDto
 import backend.jvm.services.dto.UnavailabilityOutputDto
+import backend.jvm.services.interfaces.IUnavailabilityServices
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 
 @Service
-class UnavailabilityServices {
+class UnavailabilityServices : IUnavailabilityServices {
 
     @Autowired
     lateinit var unavailabilityRepository: UnavailabilityRepository
@@ -17,18 +18,14 @@ class UnavailabilityServices {
     @Autowired
     lateinit var userRepository: UserRepository
 
-    @Throws
-    fun addUnavailability(unavailability: UnavailabilityInputDto): UnavailabilityOutputDto {
+    override fun addUnavailability(unavailability: UnavailabilityInputDto): UnavailabilityOutputDto {
         val getUser = userRepository.findById(unavailability.user).get()
-        println("getuser====="+getUser)
 
         if(unavailability.dateEnd == null){
             if(unavailability.hourEnd == null || unavailability.hourBegin == null) throw Exception("hour end and hour begin can't be null")
         }
-        println("maf nao bruxa")
 
         val a = unavailability.mapToUnavailable(unavailability,getUser)
-        println("maf bruxa"+ a)
         val addUnavailability = unavailabilityRepository.save(
             a
         )
@@ -36,14 +33,14 @@ class UnavailabilityServices {
         return UnavailabilityOutputDto(addUnavailability)
     }
 
-    fun getUnavailabilityByUser(user: Int): UnavailabilityOutputDto{
+    override fun getUnavailabilityByUser(user: Int): UnavailabilityOutputDto{
         val getUser = userRepository.findById(user).get()
         return UnavailabilityOutputDto(
             unavailabilityRepository.getUnavailabilityDBByUserDBId(getUser)
         )
     }
 
-    fun deleteUnavailability(id: Int){
+    override fun deleteUnavailability(id: Int){
         unavailabilityRepository.deleteById(id)
     }
 }

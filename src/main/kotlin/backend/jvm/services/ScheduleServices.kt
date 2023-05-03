@@ -5,13 +5,14 @@ import backend.jvm.services.dto.DayOutputDto
 import backend.jvm.services.dto.ScheduleInputDto
 import backend.jvm.services.dto.ScheduleOutputDto
 import backend.jvm.services.dto.VacationOutputDto
+import backend.jvm.services.interfaces.IScheduleServices
 import backend.jvm.utils.errorHandling.ScheduleOpenDays
 import org.springframework.beans.factory.annotation.Autowired
 import java.util.*
 import org.springframework.stereotype.Service
 
 @Service
-class ScheduleServices {
+class ScheduleServices: IScheduleServices {
 
     @Autowired
     lateinit var scheduleRepository: ScheduleRepository
@@ -31,7 +32,7 @@ class ScheduleServices {
      * @exception IllegalArgumentException – in case the given entity is null
      */
 
-    fun addSchedule(schedule: ScheduleInputDto): ScheduleOutputDto {
+    override fun addSchedule(schedule: ScheduleInputDto): ScheduleOutputDto {
         val company = companyRepository.getReferenceById(schedule.companyId)
         val day = schedule.day?.map { dayRepository.getReferenceById(it) }
         val app = schedule.appointment?.map { appointmentRepository.getReferenceById(it) }
@@ -47,7 +48,7 @@ class ScheduleServices {
      * @param id that represents the id of a schedule
      * @exception IllegalArgumentException – in case the given id is null
      */
-    fun deleteSchedule(id: Int){
+    override fun deleteSchedule(id: Int){
         scheduleRepository.deleteById(id)
     }
 
@@ -57,17 +58,17 @@ class ScheduleServices {
      * @return Schedule which is the correspondent schedule for that id
      * @exception NoSuchElementException – if no value is present
      */
-    fun getSchedule(id:Int): ScheduleOutputDto?{
+    override fun getSchedule(id:Int): ScheduleOutputDto?{
         return ScheduleOutputDto(scheduleRepository.findById(id).get())
     }
 
-    fun getOpenDays(id: Int): List<DayOutputDto> {
+    override fun getOpenDays(id: Int): List<DayOutputDto> {
         val openDays = dayRepository.getDayByScheduleId(id)
         if(openDays.isEmpty()) throw  ScheduleOpenDays()
         return openDays.map { DayOutputDto(it) }
     }
 
-    fun getVacation(id: Int): List<VacationOutputDto>{
+    override fun getVacation(id: Int): List<VacationOutputDto>{
         val vacation = vacationRepository.getVacationsByScheduleId(id)
         return vacation.map { VacationOutputDto(it) }
     }

@@ -8,6 +8,7 @@ import backend.jvm.services.dto.AppointmentInputDto
 import backend.jvm.services.dto.AppointmentOutputDto
 import backend.jvm.services.dto.UserInputDto
 import backend.jvm.services.dto.UserOutputDto
+import backend.jvm.services.interfaces.IUserInterface
 import backend.jvm.utils.Hashing
 import backend.jvm.utils.UserAvailability
 import backend.jvm.utils.UserRoles
@@ -19,7 +20,7 @@ import kotlin.collections.List
 
 
 @Service
-class UserServices {
+class UserServices : IUserInterface {
 
     @Autowired
     lateinit var userRepository: UserRepository
@@ -39,7 +40,7 @@ class UserServices {
         val PASSWORD_FORMAT = Regex("^(?=.*\\d)(?=.*[!@#\$%^&*])(?=.*[a-zA-Z]).{8,}$")
     }
 
-    fun addUser(user: UserInputDto): UserOutputDto {
+    override fun addUser(user: UserInputDto): UserOutputDto {
         if(!EMAIL_FORMAT.matches(user.email)) throw InvalidEmail()
         if(!PASSWORD_FORMAT.matches(user.password)) throw PasswordInsecure()
 
@@ -63,28 +64,28 @@ class UserServices {
         return UserOutputDto(returnUser)
     }
 
-    fun deleteUser(id: Int): Boolean {
+    override fun deleteUser(id: Int): Boolean {
         if(userRepository.findById(id).isEmpty) return false
         userRepository.deleteById(id)
         return true
     }
 
-    fun getUserById(id: Int): UserOutputDto {
+    override fun getUserById(id: Int): UserOutputDto {
         val getUser = userRepository.findById(id)
         if(getUser.isEmpty) throw UserNotFound()
         return UserOutputDto(getUser.get())
     }
 
-    fun getRole(id: Int):String?{
+    override fun getRole(id: Int):String?{
         return userRepository.getRole(id)?: throw UserNotFound()
     }
 
-    fun changeAvailability(availability: String, id: Int): String{
+    override fun changeAvailability(availability: String, id: Int): String{
         return userRepository.changeAvailability(availability,id)
     }
 
 
-    fun changePassword(password: String, id: Int): String{
+    override fun changePassword(password: String, id: Int): String{
         if(!Hashing.verifyPasswordSecure(password)) throw InvalidPassword()
         val pass = Hashing.encodePass(password)
         return userRepository.changePassword(pass, id)
@@ -95,24 +96,24 @@ class UserServices {
         return repoList.map { UserOutputDto(it) }
     }
 
-    fun getUsersByEmailAndPass (email: String, password: String): UserOutputDto {
+    override fun getUsersByEmailAndPass (email: String, password: String): UserOutputDto {
         val user = userRepository.getUsersByEmailPass(Hashing.encodePass(password),email)
             ?: throw InvalidCredentials()
         println("here")
         return UserOutputDto(user)
     }
 
-    fun getUserByToken(token: String):UserDB?{
+    override fun getUserByToken(token: String):UserDB?{
         val t = UUID.fromString(token)
         return userRepository.getUserByToken(t) ?: throw InvalidToken()
     }
 
-    fun getRoleByToken(token: String): String? {
+     fun getRoleByToken(token: String): String? {
         val user = userRepository.getUserByToken(UUID.fromString(token))?.id ?: throw UserNotFound()
         return  userRepository.getRole(user)
     }
 
-    fun addEmployee(id: Int, user: String): UserOutputDto {
+    override fun addEmployee(id: Int, user: String): UserOutputDto {
         val getUser = userRepository.getUsersByEmail(user) ?: throw UserNotFound()
         companyRepository.findAllById(id) ?: throw CompanyNotFound()
 
@@ -129,12 +130,12 @@ class UserServices {
         return UserOutputDto(updatedUser)
     }
 
-    fun getAllAppointments(id: Int): List<AppointmentOutputDto>{
+    override fun getAllAppointments(id: Int): List<AppointmentOutputDto>{
         val listAppointment = appointmentRepository.getAppointmentByUserDB(id)
         return listAppointment.map { AppointmentOutputDto(it) }
     }
 
-    fun changeRole(id: Int, name: String): String {
+    override fun changeRole(id: Int, name: String): String {
         return userRepository.changeRole(id,name)
     }
 }
