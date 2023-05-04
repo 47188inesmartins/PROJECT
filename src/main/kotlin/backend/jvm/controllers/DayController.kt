@@ -26,7 +26,6 @@ class DayController {
     fun addOpenDay(@RequestBody day: DayInputDto): ResponseEntity<DayOutputDto> {
         return try{
             val addedDay = dayService.addOpenDay(day)
-           // val response = DayResponse(addedDay.id, addedDay.beginHour, addedDay.endHour, addedDay.interval, addedDay.weekDays, addedDay.scheduleId?.id!!)
             ResponseEntity.status(201).body(addedDay)
         }catch(e: Exception){
 
