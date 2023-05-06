@@ -1,0 +1,25 @@
+# Definir imagem base
+FROM openjdk:11-jdk-slim
+
+# Instalar Node.js e NPM
+RUN apt-get update && \
+    apt-get install -y curl && \
+    curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
+    apt-get install -y nodejs
+
+# Criar diretório de trabalho para a aplicação
+WORKDIR /app
+
+# Copiar o código fonte para o diretório de trabalho
+COPY . .
+
+# Compilar o frontend
+RUN cd frontend && \
+    npm install && \
+    npm run build
+
+# Definir a porta que a aplicação irá executar
+EXPOSE 8080
+
+# Iniciar a aplicação
+CMD ["java", "-jar", "backend/target/myapp.jar"]
