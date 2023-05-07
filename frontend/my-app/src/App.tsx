@@ -1,24 +1,28 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import './App.css';
 import {Fetch} from "./useFetch";
 import './style.css';
+import {createBrowserRouter, Outlet, RouterProvider} from "react-router-dom";
+import {Login} from "./pages/Login";
+import {Home} from "./pages/Home";
 
 
-function App() {
-    const a = Fetch("/","GET")
-    console.log(a)
-      return (
-          <div className="bg-image">
-              {!a.response?
-                  <a> hello </a>
-                  :
-                  <a> {a.response.message}</a>
-              }
-
-          </div>
+const router = createBrowserRouter([
+    {
+        "path": "/",
+        "element": <Home/>
+    },
+    {
+        "path": "/login",
+        "element": <Login/>
+    }
+])
 
 
-      );
+function ScheduleItApp(){
+    return (
+        <RouterProvider router={router} />
+    )
 }
+export default ScheduleItApp;
 
-export default App;

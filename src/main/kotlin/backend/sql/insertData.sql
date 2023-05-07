@@ -38,7 +38,8 @@ commit;
 
 select s.id, s.service_name, s.duration, s.number_max, s.price,
        s.company_id from service s inner join sch_day d on ( s.company_id = :companyId and
-       s.id = d.service_id and d.week_days = 'MON');
+       s.id = d.service_id and d.week_days = 'MON' and (s.duration + interval '18:33:56' SECOND
+           BETWEEN ) ));
 
 
 

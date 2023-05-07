@@ -59,7 +59,7 @@ class CompanyController {
     }
 
     @RoleManager(["MANAGER","EMPLOYEE"])
-    @GetMapping
+    @GetMapping("/nif")
     fun findCompanyByNif(@RequestParam nif: String): ResponseEntity<Company> {
         return try {
             val response = companyServices.findCompanyByNif(nif)
@@ -160,6 +160,17 @@ class CompanyController {
         return try{
 
             val response = companyServices.getVacation(id)
+            ResponseEntity.status(200).body(response)
+        }catch(e: Exception){
+            println("exception = $e")
+            ResponseEntity.status(400).body(null)
+        }
+    }
+
+    @GetMapping
+    fun getAllCompanies(): ResponseEntity<List<Company>>{
+        return try{
+            val response = companyServices.getAllCompanies()
             ResponseEntity.status(200).body(response)
         }catch(e: Exception){
             println("exception = $e")

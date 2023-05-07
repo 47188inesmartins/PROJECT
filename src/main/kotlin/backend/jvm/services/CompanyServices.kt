@@ -110,4 +110,9 @@ class CompanyServices : ICompanyServices {
         return companyRepository.changeDescription(id, description)
     }
 
+
+    fun getAllCompanies(): List<Company>{
+        return companyRepository.findAll()
+    }
+
 }

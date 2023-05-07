@@ -30,10 +30,10 @@ interface ServiceRepository : JpaRepository<ServiceDB, Int> {
     @Query(value = "update service set number_max =:number where id=:idService returning number_max  ", nativeQuery = true)
     fun updateMaxNumber( @Param("idService") idService: Int, @Param("number") number: Int):Double
 
-    @Query(value = "select s.id, s.service_name, s.duration, s.number_max, s.price, " +
+    @Query(value = "select s.id, s.service_name, s.duration, s.number_max, s.price, d.end_hour" +
             " s.company_id from service s inner join sch_day d on ( s.company_id = :companyId and" +
             " s.id = d.service_id and d.week_days = :day);", nativeQuery = true)
     fun getAvailableServicesByDay( @Param("companyId") companyId: Int,
                                    @Param("day") day: String
-    ):List<ServiceDB>
+    ):List<Pair<ServiceDB, Time>>
 }

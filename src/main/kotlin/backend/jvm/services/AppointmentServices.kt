@@ -93,7 +93,7 @@ class AppointmentServices : IAppointmentServices {
 
     override fun availableServicesByDay(companyId: Int, day: String,  beginHour: Time): List<ServiceDB>{
         val services = servicesRepository.getAvailableServicesByDay(companyId, day)
-    //    services.map { it. }
+       // services.map { it.duration }
         TODO()
     }
 
