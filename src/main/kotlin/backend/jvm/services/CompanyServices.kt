@@ -102,8 +102,8 @@ class CompanyServices : ICompanyServices {
     }
 
 
-    fun getAllCompanies(): List<Company>{
-        return companyRepository.findAll()
+    fun getAllCompanies(): List<CompanyOutputDto>{
+        return companyRepository.findAll().map{ CompanyOutputDto(it) }
     }
 
 }

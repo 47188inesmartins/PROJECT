@@ -3,7 +3,6 @@ package backend.jvm.services.dto
 import backend.jvm.model.Day
 import backend.jvm.model.Schedule
 import backend.jvm.model.ServiceDB
-import backend.jvm.utils.errorHandling.InvalidOpenDay
 import java.sql.Time
 
 data class DayInputDto(
@@ -57,7 +56,7 @@ data class DayOutputDto(
             day.weekDays,
             day.schedule?.id,
             day.service?.id
-            )
+        )
 }
 
 

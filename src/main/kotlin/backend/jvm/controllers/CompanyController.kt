@@ -17,6 +17,7 @@ import java.util.*
 
 @RestController
 @RequestMapping(("/company"))
+@CrossOrigin(origins = ["http://localhost:3000"])
 class CompanyController {
 
     @Autowired
@@ -32,7 +33,7 @@ class CompanyController {
                 .status(201)
                 .body(response)
         } catch (e: Exception) {
-            println("ex= $e")
+            println("exception = $e")
             when(e){
                 is NifAlreadyExist -> throw ResponseStatusException(HttpStatus.CONFLICT, "Nif already exists", e)
                 else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Nif is invalid", e)
@@ -52,9 +53,11 @@ class CompanyController {
     fun getCompany(@PathVariable id: Int): ResponseEntity<Company> {
         return try {
             val response = companyServices.getCompany(id)
-            ResponseEntity.status(200).body(response.get())
+            ResponseEntity.status(200)
+                .body(response.get())
         } catch (e: Exception) {
-            ResponseEntity.status(400).body(null)
+            ResponseEntity.status(400)
+                .body(null)
         }
     }
 
@@ -168,7 +171,7 @@ class CompanyController {
     }
 
     @GetMapping
-    fun getAllCompanies(): ResponseEntity<List<Company>>{
+    fun getAllCompanies(): ResponseEntity<List<CompanyOutputDto>>{
         return try{
             val response = companyServices.getAllCompanies()
             ResponseEntity.status(200).body(response)

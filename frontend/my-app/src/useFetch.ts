@@ -16,7 +16,7 @@ export function Fetch(url: string, method: string, requestBody: any = null): Fet
     const [content, setContent] = useState(undefined)
 
     const authorization = {'Content-Type': 'application/json'}
-    const hostUrl = "http://localhost:8080/"
+    const hostUrl = "http://localhost:8080" + url
 
     useEffect(() => {
         let cancelled = false

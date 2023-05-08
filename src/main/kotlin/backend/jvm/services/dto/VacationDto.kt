@@ -1,10 +1,8 @@
 package backend.jvm.services.dto
 
-import backend.jvm.model.Day
 import backend.jvm.model.Schedule
 import backend.jvm.model.Vacation
 import java.sql.Date
-import java.sql.Time
 
 data class VacationInputDto(
     val dateBegin: String,

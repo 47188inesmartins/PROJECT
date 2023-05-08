@@ -145,7 +145,7 @@ class UserController {
 
     @RoleManager(["MANAGER","EMPLOYEE","CLIENT"])
     @GetMapping("/login")
-    fun getUserByEmailPass(@RequestBody password: String,@RequestBody email: String): ResponseEntity<UserOutputDto> {
+    fun login(@RequestBody password: String, @RequestBody email: String): ResponseEntity<UserOutputDto> {
         return try {
             val jsonPass = Json.parseToJsonElement(password)
             val requestPass = jsonPass.jsonObject["password"]?.jsonPrimitive?.content

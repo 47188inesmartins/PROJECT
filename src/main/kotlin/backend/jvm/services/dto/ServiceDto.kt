@@ -1,5 +1,6 @@
 package backend.jvm.services.dto
 
+import backend.jvm.model.Company
 import backend.jvm.model.ServiceDB
 import java.sql.Time
 

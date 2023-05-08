@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ResponseStatus
 class InvalidOpenDay : Exception("Invalid day of week")
 
 @ResponseStatus(code = HttpStatus.NOT_FOUND, reason = "Schedule not found")
-class ScheduleInvalid : Exception(" Schedule not found ")
+class InvalidSchedule : Exception(" Schedule not found ")
 
 @ResponseStatus(code = HttpStatus.NOT_FOUND, reason = "Day not found")
 class InvalidDay : Exception("Day not  found")

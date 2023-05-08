@@ -7,10 +7,7 @@ import backend.jvm.services.dto.DayInputDto
 import backend.jvm.services.dto.DayOutputDto
 import backend.jvm.services.dto.ServiceOutputDto
 import backend.jvm.services.interfaces.IDayServices
-import backend.jvm.utils.errorHandling.InvalidDay
-import backend.jvm.utils.errorHandling.InvalidOpenDay
-import backend.jvm.utils.errorHandling.NoAvailableDays
-import backend.jvm.utils.errorHandling.NoAvailableServices
+import backend.jvm.utils.errorHandling.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.sql.Time
@@ -18,7 +15,7 @@ import java.sql.Time
 @Service
 class DayServices : IDayServices {
     companion object{
-        val listDayOfWeek = listOf("MON","TUE","WED","THU","FRI","SAT","SUN")
+        val listDayOfWeek = listOf("MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN")
     }
 
     @Autowired
@@ -32,7 +29,7 @@ class DayServices : IDayServices {
 
     override fun addOpenDay(day: DayInputDto):DayOutputDto {
         if(!listDayOfWeek.contains(day.weekDays.uppercase())) throw InvalidOpenDay()
-        val schedule = day.schedule?.let { scheduleRepository.findById(it).get() }
+        val schedule = if(day.schedule != null) scheduleRepository.getReferenceById(day.schedule) else throw InvalidSchedule()
         val service = day.service?.let { serviceRepository.findById(it).get() }
         if(schedule == null && service == null) throw InvalidOpenDay()
         val dayDb = day.mapToDayDb(day,schedule,service)

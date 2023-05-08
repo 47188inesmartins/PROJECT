@@ -71,12 +71,9 @@ class AppointmentServices : IAppointmentServices {
         val services = servicesRepository.getAllServicesFromACompany(companyId)
 
         services.forEach { println(  userRepository.getAvailableEmployeesByService(it.id, d, bh, Time(bh.time+it.duration.time)).isNotEmpty()) }
-        println("time " + Time(bh.time - dur.time))
-        println("bh " + Time(bh.time))
         val serv = services.filter {
              userRepository.getAvailableEmployeesByService(it.id, d, bh, getEndHour(bh, dur)).isNotEmpty()
         }
-        println("hello")
 
         serv.forEach { println(it.id) }
 
@@ -86,7 +83,6 @@ class AppointmentServices : IAppointmentServices {
 
     override fun availableServicesByDay(companyId: Int, day: String,  beginHour: Time): List<ServiceDB>{
         val services = servicesRepository.getAvailableServicesByDay(companyId, day)
-       // services.map { it.duration }
         TODO()
     }
 
@@ -98,7 +94,6 @@ class AppointmentServices : IAppointmentServices {
     }
 
     fun getDayOfWeek(date : Date): String{
-
         val utilDate = java.util.Date(date.time)
         val calendar = Calendar.getInstance()
         calendar.time = utilDate
