@@ -9,7 +9,18 @@ data class ServiceInputDto(
     val numberMax: Int,
     val price: Double,
     val company: Int
-)
+){
+    fun mapToService(db: ServiceInputDto, company: Company) : ServiceDB {
+        val d = Time.valueOf(duration) ?: throw Exception("invalid time")
+        return ServiceDB(
+            db.serviceName,
+            d,
+            db.numberMax,
+            db.price,
+            company
+        )
+    }
+}
 
 data class ServiceOutputDto(
     val id: Int,

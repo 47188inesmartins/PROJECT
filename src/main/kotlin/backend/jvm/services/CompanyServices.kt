@@ -49,16 +49,7 @@ class CompanyServices : ICompanyServices {
         val users = company.users?.map { usersRepository.getReferenceById(it) }
         val services = company.service?.map { serviceRepository.getReferenceById(it) }
         val comp = companyRepository.save(
-            Company(
-                nif = company.nif,
-                address = company.address,
-                compName = company.name,
-                compType = company.type,
-                description = company.description,
-                serviceDB = services,
-                schedule = schedule,
-                userDBS = users
-            )
+            company.mapToCompanyDto(company,services,schedule,users)
         )
        // scheduleRepository.save(Schedule(comp))
         return CompanyOutputDto(comp)

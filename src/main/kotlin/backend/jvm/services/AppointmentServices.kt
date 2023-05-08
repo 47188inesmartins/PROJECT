@@ -1,6 +1,5 @@
 package backend.jvm.services
 
-import backend.jvm.model.Appointment
 import backend.jvm.model.ServiceDB
 import backend.jvm.repository.AppointmentRepository
 import backend.jvm.repository.ScheduleRepository
@@ -40,16 +39,10 @@ class AppointmentServices : IAppointmentServices {
         val service = servicesRepository.getServiceDBById(appointment.service)?: throw ServiceNotFound()
         val user = if (appointment.user != null) userRepository.getUserById(appointment.user) else null
         val schedule = scheduleRepository.getScheduleById(appointment.schedule)
-        val app = Appointment(
-            appHour = Time.valueOf(appointment.appHour),
-            appDate = Date.valueOf(appointment.appDate),
-            scheduleId = schedule,
-            userDBId = user,
-            serviceDB = service
-        )
+        val app = appointment.mapToAppointmentDb(appointment, schedule, user, service)
         val savedAppointment = appointmentRepository.save(app)
         return AppointmentOutputDto(savedAppointment)
-        }
+    }
 
     override fun deleteAppointment(id: Int){
         appointmentRepository.deleteById(id)

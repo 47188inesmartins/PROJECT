@@ -1,6 +1,5 @@
 package backend.jvm.services
 
-import backend.jvm.model.Vacation
 import backend.jvm.repository.ScheduleRepository
 import backend.jvm.repository.VacationRepository
 import backend.jvm.services.dto.VacationInputDto

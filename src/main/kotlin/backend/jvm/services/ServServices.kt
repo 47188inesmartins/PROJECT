@@ -29,13 +29,7 @@ class ServServices : IServServices {
     override fun addService(service: ServiceInputDto): ServiceOutputDto {
         val company = companyServices.getCompany(service.company)
         if(company.isEmpty) throw CompanyNotFound()
-        val serv = ServiceDB(
-            name = service.serviceName,
-            duration = Time.valueOf(service.duration),
-            numberMax = service.numberMax,
-            price = service.price,
-            company= company.get()
-        )
+        val serv = service.mapToService(service,company.get())
         val savedService = serviceRepository.save(serv)
         return ServiceOutputDto(savedService)
     }
