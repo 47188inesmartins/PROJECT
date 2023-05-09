@@ -1,10 +1,10 @@
 import React from 'react';
 import './App.css';
-import {Fetch} from "./useFetch";
 import './style.css';
-import {createBrowserRouter, Outlet, RouterProvider} from "react-router-dom";
+import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import {Login} from "./pages/Login";
 import {Home} from "./pages/Home";
+import {Company} from "./pages/Company";
 
 
 const router = createBrowserRouter([
@@ -15,6 +15,10 @@ const router = createBrowserRouter([
     {
         "path": "/login",
         "element": <Login/>
+    },
+    {
+        "path": "/company/:id",
+        "element": <Company/>
     }
 ])
 

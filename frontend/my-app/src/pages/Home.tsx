@@ -19,19 +19,30 @@ export function Home() {
 
     return (
         <div style={{ display: "flex" }}>
-            <Layout />
             <td>
-                <div className="list-container">
+                <div style={{position: "fixed",
+                    top: 0,
+                    left: 0,
+                    bottom: 0,
+                    width: "200px",
+                    overflowY: "auto" }}>
+                    <Layout />
+                </div>
+            </td>
+            <td>
+                <div className="list-container" style={{marginLeft: "200px",
+                    overflowY: "auto"}}>
                     {!response.response ? (
                         <p>Loading...</p>
                     ) : (
                         <>
+                        <input type="time" step="1800"/>
                             <MDBContainer className="py-5">
                                 <MDBCard className="px-3 pt-3"
                                          style={{ maxWidth: "100%"}} >
                                     <div>
-                                        {response.response.map((objeto: any) => (
-                                            <a href="#!" className="text-dark">
+                                        {response.response.map((object: any) => (
+                                            <a href={`/company/${object.id}`} className="text-dark">
                                                 <MDBRow className="mb-4 border-bottom pb-2">
                                                     <MDBCol size="3">
                                                         <img
@@ -43,10 +54,10 @@ export function Home() {
 
                                                     <MDBCol size="9">
                                                         <p className="mb-2">
-                                                            <strong>{objeto.name}</strong>
+                                                            <strong>{object.name}</strong>
                                                         </p>
                                                         <p>
-                                                            <u> {objeto.description}</u>
+                                                            <u> {object.description}</u>
                                                         </p>
                                                     </MDBCol>
                                                 </MDBRow>
