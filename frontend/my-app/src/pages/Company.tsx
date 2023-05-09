@@ -23,16 +23,15 @@ export function Company() {
 
     const company = Fetch(`/company/${id}`, "GET");
     console.log("company",company)
-    const services = Fetch(`/company/${id}/services`, "GET");
-    console.log("services",services)
+
     return (
         <div style={{ display: "flex" }}>
             {!company.response?
               <a>Loading...</a>:
                 <div>
                     <a>{company.response.description}</a>
-                    {services.response.map((object: any) => (
-                            <a>object.serviceName</a>
+                    {company.response.map((object: any) => (
+                            <a>object.service</a>
                     ))}
                 </div>
             }

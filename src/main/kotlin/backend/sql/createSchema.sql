@@ -84,19 +84,12 @@ create table if not exists APPOINTMENT (
     app_date date,
     schedule_id int,
     service_id int,
+    employee_id int,
     user_id int,
     foreign key(service_id) references SERVICE(id),
     foreign key(schedule_id) references SCHEDULE(id),
-    foreign key(user_id) references SCH_USER(id)
-);
-
-
-create table if not exists APPOINTMENT_USER (
-    user_id int,
-    appointment_id int,
-    primary key (user_id, appointment_id),
     foreign key(user_id) references SCH_USER(id),
-    foreign key(appointment_id) references APPOINTMENT(id)
+    foreign key(employee_id) references SCH_USER(id)
 );
 
 

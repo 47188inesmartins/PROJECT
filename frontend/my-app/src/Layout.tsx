@@ -14,9 +14,6 @@ import { NavLink } from "react-router-dom";
 import "@trendmicro/react-sidenav/dist/react-sidenav.css";
 
 export function Layout() {
-
-    // @ts-ignore
-    // @ts-ignore
     return (
         <div
             style={{ display: "flex", height: "100vh", overflow: "scroll initial" }}
@@ -35,7 +32,7 @@ export function Layout() {
 
                 <CDBSidebarContent className="sidebar-content">
                     <CDBSidebarMenu>
-                        <NavLink to="/">
+                        <NavLink to="/user/1/appointments">
                             <CDBSidebarMenuItem icon="columns">Appointments</CDBSidebarMenuItem>
                         </NavLink>
                         <NavLink to="/tables">

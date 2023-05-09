@@ -70,12 +70,8 @@ class UserDB {
         )
         val services: List<ServiceDB>?
 
-        @ManyToMany
-        @JoinTable(
-                name = "appointment_user",
-                joinColumns = [JoinColumn(name = "user_id")],
-                inverseJoinColumns = [JoinColumn(name = "appointment_id")]
-        )
+        @OneToMany
+        @JoinTable()
         val appointment: List<Appointment>?
 
         constructor(){
