@@ -7,7 +7,7 @@ import java.util.*
 interface ICompanyServices {
     fun addCompany(company: CompanyInputDto): CompanyOutputDto
     fun deleteCompany(id: Int): Boolean
-    fun getCompany(id: Int): Optional<Company>
+    fun getCompany(id: Int): CompanyOutputDto
     fun findCompanyByNif(nif: String): Company?
     fun getAllServices(id: Int): List<ServiceOutputDto>
     fun getAllAppointments(id: Int):List<AppointmentOutputDto>

@@ -2,15 +2,14 @@ package backend.jvm.services
 
 
 import backend.jvm.model.ServiceDB
+import backend.jvm.repository.CompanyRepository
 import backend.jvm.repository.ServiceRepository
 import backend.jvm.repository.UserRepository
 import backend.jvm.services.dto.ServiceInputDto
 import backend.jvm.services.dto.ServiceOutputDto
 import backend.jvm.services.dto.UserOutputDto
 import backend.jvm.services.interfaces.IServServices
-import backend.jvm.utils.errorHandling.CompanyNotFound
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Service
 import java.sql.Date
 import java.sql.Time
@@ -22,14 +21,14 @@ class ServServices : IServServices {
     @Autowired
     lateinit var serviceRepository: ServiceRepository
     @Autowired
-    lateinit var companyServices : CompanyServices
+    lateinit var companyRepository : CompanyRepository
     @Autowired
     lateinit var userRepository : UserRepository
 
     override fun addService(service: ServiceInputDto): ServiceOutputDto {
-        val company = companyServices.getCompany(service.company)
-        if(company.isEmpty) throw CompanyNotFound()
-        val serv = service.mapToService(service,company.get())
+        val company = companyRepository.getReferenceById(service.company)
+        //if(company.isEmpty) throw CompanyNotFound()
+        val serv = service.mapToService(service,company)
         val savedService = serviceRepository.save(serv)
         return ServiceOutputDto(savedService)
     }

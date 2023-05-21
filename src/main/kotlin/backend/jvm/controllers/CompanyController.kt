@@ -50,11 +50,11 @@ class CompanyController {
 
     @ResponseBody
     @GetMapping("/{id}")
-    fun getCompany(@PathVariable id: Int): ResponseEntity<Company> {
+    fun getCompany(@PathVariable id: Int): ResponseEntity<CompanyOutputDto> {
         return try {
             val response = companyServices.getCompany(id)
             ResponseEntity.status(200)
-                .body(response.get())
+                .body(response)
         } catch (e: Exception) {
             ResponseEntity.status(400)
                 .body(null)

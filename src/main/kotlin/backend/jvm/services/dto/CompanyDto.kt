@@ -5,7 +5,7 @@ import backend.jvm.model.Schedule
 import backend.jvm.model.ServiceDB
 import backend.jvm.model.UserDB
 
-data class CompanyAddress(val address: String)
+data class ServiceInfo(val id: Int, val name: String)
 
 data class CompanyInputDto(
     val nif: String,
@@ -38,7 +38,7 @@ data class CompanyOutputDto(
     val name: String,
     val type: String,
     val description: String,
-    val service: List<Int>?,
+    val service: List<ServiceInfo>?,
     val schedule: Int?,
     val users: List<Int>?
 ){
@@ -49,7 +49,7 @@ data class CompanyOutputDto(
         name = company.name,
         type = company.type,
         description = company.description,
-        service = company.serviceDBS?.map { it.id },
+        service = company.serviceDBS?.map { ServiceInfo(it.id, it.name) },
         schedule = company.schedule?.id,
         users = company.userDBS?.map { it.id }
     )

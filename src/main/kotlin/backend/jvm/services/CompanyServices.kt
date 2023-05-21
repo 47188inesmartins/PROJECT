@@ -4,17 +4,16 @@ import backend.jvm.model.*
 import backend.jvm.repository.*
 import backend.jvm.services.dto.*
 import backend.jvm.services.interfaces.ICompanyServices
-import backend.jvm.utils.errorHandling.CompanyNotFound
 import backend.jvm.utils.errorHandling.InvalidNif
 import backend.jvm.utils.errorHandling.NifAlreadyExist
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.sql.Time
 import java.sql.Date
-import java.util.*
 
 @Service
 class CompanyServices : ICompanyServices {
+
     companion object{
         const val NIF_NUMBERS = 9
     }
@@ -51,7 +50,6 @@ class CompanyServices : ICompanyServices {
         val comp = companyRepository.save(
             company.mapToCompanyDto(company,services,schedule,users)
         )
-       // scheduleRepository.save(Schedule(comp))
         return CompanyOutputDto(comp)
     }
 
@@ -60,10 +58,10 @@ class CompanyServices : ICompanyServices {
         return true
     }
 
-    override fun getCompany(id: Int): Optional<Company> {
-        val comp = companyRepository.findById(id)
-        if(comp.isEmpty) throw CompanyNotFound()
-        return comp
+    override fun getCompany(id: Int): CompanyOutputDto {
+        val comp = companyRepository.getReferenceById(id)
+        //if(comp == null) throw CompanyNotFound()
+        return CompanyOutputDto(comp)
     }
 
     override fun findCompanyByNif(nif: String): Company? {
