@@ -49,18 +49,9 @@ class UserDB {
         @Column(name = "availability")
         val availability: String?
 
-        @ManyToMany
-        @JoinTable(
-                name = "user_role",
-                joinColumns = [JoinColumn(name = "user_id")],
-                inverseJoinColumns = [JoinColumn(name = "role_name")]
-        )
-        val roles: List<Role>
 
-
-        @ManyToOne
-        @JoinColumn(name = "company_id")
-        val company: Company?
+        @OneToMany(mappedBy="UserDB")
+        val roles: List<UserRole>
 
         @ManyToMany
         @JoinTable(
@@ -82,7 +73,6 @@ class UserDB {
                 this.birthday = Date.valueOf("2001-01-01")
                 this.services = null
                 this.availability = AVAILABILITY_STATE
-                this.company = null
                 this.appointment = null
                 this.roles = listOf()
         }
@@ -104,7 +94,6 @@ class UserDB {
                 this.birthday = birth
                 this.services = serv
                 this.availability = AVAILABILITY_STATE
-                this.company = company
                 this.appointment = appointments
                 this.roles = roles
         }
@@ -125,7 +114,6 @@ class UserDB {
                 this.birthday = birth
                 this.services = serv
                 this.availability = AVAILABILITY_STATE
-                this.company = null
                 this.appointment = appointments
                 this.roles = roles
         }

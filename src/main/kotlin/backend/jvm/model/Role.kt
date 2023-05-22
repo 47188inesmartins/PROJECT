@@ -15,6 +15,10 @@ class Role {
     @Column(name = "name")
     val name: String
 
+    @OneToMany(mappedBy = "role_name")
+    private var users: List<UserRole?>?
+
+
     constructor(){
         this.name = ""
      //   this.userDB = null

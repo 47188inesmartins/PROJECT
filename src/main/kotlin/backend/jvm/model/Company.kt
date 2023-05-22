@@ -38,9 +38,16 @@ class Company {
         @OneToOne(mappedBy = "company")
         val schedule: Schedule?
 
-        @OneToMany(mappedBy = "company")
-        val userDBS: List<UserDB>?
+        /*@OneToMany(mappedBy = "company")
+        val userDBS: List<UserDB>?*/
 
+        @ManyToMany
+        @JoinTable(
+                name = "user_role",
+                joinColumns = [JoinColumn(name = "company_id")],
+                inverseJoinColumns = [JoinColumn(name = "role_name")]
+        )
+        val roles: List<Role>?
         constructor() {
                 this.nif = ""
                 this.address = ""
@@ -49,10 +56,10 @@ class Company {
                 this.description = ""
                 this.serviceDBS = null
                 this.schedule = null
-                this.userDBS = null
+                this.roles = null
         }
 
-        constructor(nif: String, address: String, compName: String, compType: String, description: String, serviceDB: List<ServiceDB>?, schedule: Schedule?, userDBS: List<UserDB>?){
+        constructor(nif: String, address: String, compName: String, compType: String, description: String, serviceDB: List<ServiceDB>?, schedule: Schedule?, role: List<Role>?){
                 this.nif = nif
                 this.address = address
                 this.name = compName
@@ -60,7 +67,7 @@ class Company {
                 this.description = description
                 this.serviceDBS = serviceDB
                 this.schedule = schedule
-                this.userDBS = userDBS
+                this.roles = role
         }
 }
 

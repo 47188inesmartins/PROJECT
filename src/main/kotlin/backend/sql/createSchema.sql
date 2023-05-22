@@ -38,14 +38,13 @@ create table if not exists U_ROLE (
     name varchar(20) primary key CHECK ( name IN ('GUEST', 'CLIENT', 'EMPLOYEE', 'MANAGER'))
 );
 
-
-
-create table if not exists USER_ROLE(
-    role_name varchar(20),
-    user_id int,
-    primary key (role_name, user_id),
-    foreign key (role_name) references U_ROLE(name),
-    foreign key (user_id) references SCH_USER(id)
+CREATE TABLE IF NOT EXISTS USER_ROLE (
+    role_name VARCHAR(20),
+    user_id INT,
+    company_id INT,
+    PRIMARY KEY (role_name, user_id),
+    FOREIGN KEY (role_name) REFERENCES U_ROLE(name),
+    FOREIGN KEY (user_id) REFERENCES SCH_USER(id)
 );
 
 

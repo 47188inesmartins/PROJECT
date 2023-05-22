@@ -5,12 +5,16 @@ import backend.jvm.services.DayServices
 import backend.jvm.services.dto.DayInputDto
 import backend.jvm.services.dto.DayOutputDto
 import backend.jvm.utils.RoleManager
+import backend.jvm.utils.errorHandling.InvalidOpenDay
+import backend.jvm.utils.errorHandling.NifAlreadyExist
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.server.ResponseStatusException
 import java.sql.Time
 
 
@@ -28,8 +32,10 @@ class DayController {
             val addedDay = dayService.addOpenDay(day)
             ResponseEntity.status(201).body(addedDay)
         }catch(e: Exception){
-
-            ResponseEntity.status(400).body(null)
+            when(e){
+                is InvalidOpenDay -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid open day", e)
+                else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "", e)
+            }
         }
     }
 

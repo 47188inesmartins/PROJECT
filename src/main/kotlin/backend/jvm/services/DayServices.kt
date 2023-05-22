@@ -30,8 +30,7 @@ class DayServices : IDayServices {
     override fun addOpenDay(day: DayInputDto):DayOutputDto {
         if(!listDayOfWeek.contains(day.weekDays.uppercase())) throw InvalidOpenDay()
         val schedule = if(day.schedule != null) scheduleRepository.getReferenceById(day.schedule) else throw InvalidSchedule()
-        val service = day.service?.let { serviceRepository.findById(it).get() }
-        if(schedule == null && service == null) throw InvalidOpenDay()
+        val service = day.service?.let { serviceRepository.findById(it).get() } ?: throw InvalidOpenDay()
         val dayDb = day.mapToDayDb(day,schedule,service)
         val db = dayRepository.save(dayDb)
         return  DayOutputDto(db)
