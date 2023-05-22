@@ -14,8 +14,9 @@ import java.util.UUID
  * @property password the User password
  * @property name the user's name
  * @property birthday the User birthday
- * @property company null if the user has the role of 'guest' or 'client'. the company where the user works
- */
+ *
+ *
+*/
 
 @Entity
 @Table(name = "sch_user")
@@ -85,7 +86,7 @@ class UserDB {
                 serv: List<ServiceDB>?,
                 company: Company?,
                 appointments: List<Appointment>?,
-                roles: List<Role>
+                roles: List<UserRole>
         ){
                 this.token = UUID.randomUUID()
                 this.email = email
@@ -105,7 +106,7 @@ class UserDB {
                 birth:Date,
                 serv: List<ServiceDB>?,
                 appointments: List<Appointment>?,
-                roles: List<Role>
+                roles: List<UserRole>
         ){
                 this.token = UUID.randomUUID()
                 this.email = email

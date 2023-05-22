@@ -11,6 +11,7 @@ class Role {
     @Column(name = "id")
     var id: Int? = null*/
 
+
     @Id
     @Column(name = "name")
     val name: String
@@ -21,13 +22,11 @@ class Role {
 
     constructor(){
         this.name = ""
-     //   this.userDB = null
-       // this.user = listOf()
+        this.users = null
     }
 
     constructor(name : String){
         this.name = name
-      //  this.userDB = userDB
-       // this.user = user
+        this.users = null
     }
 }

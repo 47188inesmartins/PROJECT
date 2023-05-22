@@ -28,9 +28,7 @@ create table if not exists SCH_USER (
     name varchar(200),
     birthday date check (date(CURRENT_TIMESTAMP) >= birthday + interval '18 year'),
     availability varchar(15) not null default 'NONE' check (availability in ('AVAILABLE','UNAVAILABLE','NONE')),
-    max_number_people int default 1,
-    company_id int,
-    foreign key(company_id) references COMPANY(id)
+    max_number_people int default 1
 );
 
 
