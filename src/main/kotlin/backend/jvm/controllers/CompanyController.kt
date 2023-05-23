@@ -5,7 +5,9 @@ import backend.jvm.model.*
 import backend.jvm.services.CompanyServices
 import backend.jvm.services.dto.*
 import backend.jvm.utils.RoleManager
+import backend.jvm.utils.errorHandling.InvalidNif
 import backend.jvm.utils.errorHandling.NifAlreadyExist
+import backend.jvm.utils.errorHandling.UserNotFound
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import org.springframework.beans.factory.annotation.Autowired
@@ -26,7 +28,7 @@ class CompanyController {
     lateinit var companyServices: CompanyServices
 
 
-    @RoleManager(["CLIENT"])
+    @RoleManager(["CLIENT", "MANAGER", "EMPLOYEE"])
     @PostMapping
     fun addCompany(
         @RequestBody company: CompanyInputDto
@@ -43,7 +45,9 @@ class CompanyController {
             println("exception = $e")
             when(e) {
                 is NifAlreadyExist -> throw ResponseStatusException(HttpStatus.CONFLICT, "Nif already exists", e)
-                else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Nif is invalid", e)
+                is InvalidNif -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid nif", e)
+                is UserNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid User", e)
+                else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Something went wrong", e)
             }
         }
     }

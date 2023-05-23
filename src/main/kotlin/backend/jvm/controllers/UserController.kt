@@ -1,10 +1,7 @@
 package backend.jvm.controllers
 
 import backend.jvm.services.UserServices
-import backend.jvm.services.dto.AppointmentOutputDto
-import backend.jvm.services.dto.CreatedUserOutput
-import backend.jvm.services.dto.UserInputDto
-import backend.jvm.services.dto.UserOutputDto
+import backend.jvm.services.dto.*
 import backend.jvm.utils.RoleManager
 import backend.jvm.utils.errorHandling.*
 import kotlinx.serialization.json.Json
@@ -125,7 +122,7 @@ class UserController {
 
     @RoleManager(["MANAGER"])
     @PostMapping("/company/{cid}/employee")
-    fun addEmployee(@PathVariable cid: Int,@RequestBody email: String): ResponseEntity<UserOutputDto> {
+    fun addEmployee(@PathVariable cid: Int,@RequestBody email: String): ResponseEntity<CreatedUserOutput> {
         return try {
             val json = Json.parseToJsonElement(email)
             val request = json.jsonObject["email"]?.jsonPrimitive?.content
@@ -146,28 +143,33 @@ class UserController {
         }
     }
 
-    @RoleManager(["MANAGER","EMPLOYEE","CLIENT"])
-    @GetMapping("/login")
-    fun login(@RequestBody password: String, @RequestBody email: String): ResponseEntity<UserOutputDto> {
+
+    @PostMapping("/login")
+    fun login(@RequestBody credentials: UserCredentials): ResponseEntity<UUID> {
         return try {
-            val jsonPass = Json.parseToJsonElement(password)
+
+            /*
+
+            val jsonPass = Json.parseToJsonElement(credentials.password)
             val requestPass = jsonPass.jsonObject["password"]?.jsonPrimitive?.content
                 ?: return ResponseEntity
                     .status(400)
                     .body(null)
 
-            val jsonEmail = Json.parseToJsonElement(email)
+            val jsonEmail = Json.parseToJsonElement(credentials.email)
             val requestEmail = jsonEmail.jsonObject["email"]?.jsonPrimitive?.content
                 ?: return ResponseEntity
                     .status(400)
                     .body(null)
 
-            val response = userServices.getUsersByEmailAndPass(requestEmail,requestPass)
+            */
+
+            val response = userServices.getUsersByEmailAndPass(credentials.email,credentials.password)
 
             println(response)
             ResponseEntity
                 .status(200)
-                .body(response)
+                .body(response.token)
         }catch (e: InvalidCredentials) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Email or password invalid", e)
         }

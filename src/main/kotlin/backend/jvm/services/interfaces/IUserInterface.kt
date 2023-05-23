@@ -23,7 +23,7 @@ interface IUserInterface {
 
     fun getUserByToken(token: String): UserDB?
 
-    fun addEmployee(id: Int, user: String): UserOutputDto
+    fun addEmployee(id: Int, user: String): CreatedUserOutput
 
     fun getAllAppointments(id: Int): List<AppointmentOutputDto>
 

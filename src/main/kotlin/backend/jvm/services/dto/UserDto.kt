@@ -5,7 +5,7 @@ import java.sql.Date
 import java.util.*
 
 
-
+data class UserCredentials(val email: String, val password: String)
 
 data class CreatedUserOutput(val id: Int, val token: UUID)
 

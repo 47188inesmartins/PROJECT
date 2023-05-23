@@ -116,7 +116,7 @@ class UserServices : IUserInterface {
         return  userRepository.getRole(user)
     }
 
-    override fun addEmployee(companyId: Int, user: String): UserOutputDto {
+    override fun addEmployee(companyId: Int, user: String): CreatedUserOutput {
         val user = userRepository.getUsersByEmail(user) ?: throw UserNotFound()
         val company = companyRepository.findAllById(companyId) ?: throw CompanyNotFound()
 
@@ -132,7 +132,7 @@ class UserServices : IUserInterface {
         userCompanyRepository.save(UserCompany(user, company, UserRoles.EMPLOYEE.name))
 
         val updatedUser = userRepository.getUserById(user.id)!!
-        return UserOutputDto(updatedUser)
+        return CreatedUserOutput(updatedUser.id, updatedUser.token)
     }
 
     override fun getAllAppointments(id: Int): List<AppointmentOutputDto>{
