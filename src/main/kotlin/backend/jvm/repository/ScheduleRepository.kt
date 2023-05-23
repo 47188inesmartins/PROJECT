@@ -9,7 +9,7 @@ interface ScheduleRepository: JpaRepository<Schedule, Int> {
 
 
         @Query(name = "getScheduleById")
-        fun getScheduleById(@Param("id") id: Int): Schedule
+        fun getScheduleById(@Param("id") id: Int): Schedule?
 
 
         /**

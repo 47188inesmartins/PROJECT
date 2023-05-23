@@ -9,10 +9,7 @@ import backend.jvm.services.dto.AppointmentInputDto
 import backend.jvm.services.dto.AppointmentOutputDto
 import backend.jvm.services.dto.ServiceOutputDto
 import backend.jvm.services.interfaces.IAppointmentServices
-import backend.jvm.utils.errorHandling.EmptyAppointments
-import backend.jvm.utils.errorHandling.InvalidAppointment
-import backend.jvm.utils.errorHandling.ServiceNotFound
-import backend.jvm.utils.errorHandling.UserNotFound
+import backend.jvm.utils.errorHandling.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.sql.Date
@@ -41,7 +38,7 @@ class AppointmentServices : IAppointmentServices {
         val user = if (appointment.user != null) appointment.user.map {
             userRepository.getUserById(it)?: throw UserNotFound()
         } else null
-        val schedule = scheduleRepository.getScheduleById(appointment.schedule)
+        val schedule = scheduleRepository.getScheduleById(appointment.schedule)?: throw ScheduleNotFound()
         val app = appointment.mapToAppointmentDb(appointment, schedule, user, service)
         val savedAppointment = appointmentRepository.save(app)
         return AppointmentOutputDto(savedAppointment)

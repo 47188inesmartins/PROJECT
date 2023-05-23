@@ -5,6 +5,7 @@ import backend.jvm.services.dto.AppointmentInputDto
 import backend.jvm.services.dto.AppointmentOutputDto
 import backend.jvm.services.dto.ServiceOutputDto
 import backend.jvm.utils.RoleManager
+import backend.jvm.utils.errorHandling.ScheduleNotFound
 import backend.jvm.utils.errorHandling.ServiceNotFound
 import backend.jvm.utils.errorHandling.UserNotFound
 import org.springframework.beans.factory.annotation.Autowired
@@ -38,6 +39,7 @@ class AppointmentController {
                 .body(response)
         }catch (e: Exception) {
             when(e) {
+                is ScheduleNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "Schedule not found", e)
                 is UserNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "User not found", e)
                 is ServiceNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "Service not found", e)
                 else ->  throw ResponseStatusException(HttpStatus.BAD_REQUEST, "", e)
