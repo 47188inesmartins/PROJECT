@@ -26,6 +26,14 @@ import java.util.UUID
         cacheable = true,
         timeout = 1
 )
+
+@org.hibernate.annotations.NamedQuery(
+        name = "getUserByToken",
+        query = "from UserDB where token = :token",
+        cacheable = true,
+        timeout = 1
+)
+
 class UserDB {
         @Id
         @Column(name = "id")
@@ -50,9 +58,16 @@ class UserDB {
         @Column(name = "availability")
         val availability: String?
 
+        @OneToMany(mappedBy = "userDB")
+        val unavailabilityDB : List<UnavailabilityDB>?
 
-        @OneToMany(mappedBy="UserDB")
-        val roles: List<UserRole>
+        @ManyToMany
+        @JoinTable(
+                name = "user_role",
+                joinColumns = [JoinColumn(name = "user_id")],
+                inverseJoinColumns = [JoinColumn(name = "role_name")]
+        )
+        val roles: List<Role>
 
         @ManyToMany
         @JoinTable(
@@ -62,8 +77,10 @@ class UserDB {
         )
         val services: List<ServiceDB>?
 
-        @OneToMany
-        @JoinTable()
+        @OneToMany(mappedBy = "user")
+        val companies: List<UserCompany>?
+
+        @ManyToMany(mappedBy = "usersDB")
         val appointment: List<Appointment>?
 
         constructor(){
@@ -76,6 +93,8 @@ class UserDB {
                 this.availability = AVAILABILITY_STATE
                 this.appointment = null
                 this.roles = listOf()
+                this.unavailabilityDB = listOf()
+                this.companies = listOf()
         }
 
         constructor(
@@ -84,9 +103,10 @@ class UserDB {
                 clientName:String,
                 birth:Date,
                 serv: List<ServiceDB>?,
-                company: Company?,
                 appointments: List<Appointment>?,
-                roles: List<UserRole>
+                roles: List<Role>,
+                unavailabilityDB: List<UnavailabilityDB>?,
+                companies: List<UserCompany>?
         ){
                 this.token = UUID.randomUUID()
                 this.email = email
@@ -97,26 +117,8 @@ class UserDB {
                 this.availability = AVAILABILITY_STATE
                 this.appointment = appointments
                 this.roles = roles
-        }
-
-        constructor(
-                email:String,
-                password:String,
-                clientName:String,
-                birth:Date,
-                serv: List<ServiceDB>?,
-                appointments: List<Appointment>?,
-                roles: List<UserRole>
-        ){
-                this.token = UUID.randomUUID()
-                this.email = email
-                this.password = password
-                this.name = clientName
-                this.birthday = birth
-                this.services = serv
-                this.availability = AVAILABILITY_STATE
-                this.appointment = appointments
-                this.roles = roles
+                this.unavailabilityDB = unavailabilityDB
+                this.companies = companies
         }
 
         companion object{

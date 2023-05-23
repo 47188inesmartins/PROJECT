@@ -1,12 +1,10 @@
 package backend.jvm.controllers
 
-import backend.jvm.model.Day
 import backend.jvm.services.DayServices
 import backend.jvm.services.dto.DayInputDto
 import backend.jvm.services.dto.DayOutputDto
 import backend.jvm.utils.RoleManager
 import backend.jvm.utils.errorHandling.InvalidOpenDay
-import backend.jvm.utils.errorHandling.NifAlreadyExist
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive

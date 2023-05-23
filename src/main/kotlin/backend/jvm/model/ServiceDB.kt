@@ -65,13 +65,13 @@ class ServiceDB{
         this.day = listOf()
     }
 
-    constructor(name : String, duration: Time, numberMax: Int, price: Double, company: Company){
+    constructor(name : String, duration: Time, numberMax: Int, price: Double, company: Company, users: List<UserDB>){
         this.name = name
         this.duration = duration
         this.numberMax = numberMax
         this.price = price
         this.company = company
-        this.userDB = null
+        this.userDB = users
         this.appointment = null
         this.day = null
     }

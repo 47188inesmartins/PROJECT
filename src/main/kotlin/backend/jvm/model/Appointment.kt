@@ -47,9 +47,14 @@ class Appointment {
     @JoinColumn(name = "service_id")
     val service: ServiceDB
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    val userDB : UserDB?
+    @ManyToMany
+    @JoinTable(
+        name = "appointment_user",
+        joinColumns = [JoinColumn(name = "appointment_id")],
+        inverseJoinColumns = [JoinColumn(name = "user_id")]
+    )
+
+    val usersDB : List<UserDB>?
 
 
 
@@ -57,15 +62,15 @@ class Appointment {
         this.appHour = Time.valueOf("00:00:00")
         this.appDate = Date.valueOf("2000-01-01")
         this.schedule = Schedule()
-        this.userDB = null
+        this.usersDB = null
         this.service = ServiceDB()
     }
 
-    constructor(appHour: Time, appDate : Date, scheduleId: Schedule, userDBId: UserDB?, serviceDB: ServiceDB) {
+    constructor(appHour: Time, appDate : Date, scheduleId: Schedule, userDBId: List<UserDB>?, serviceDB: ServiceDB) {
         this.appHour = appHour
         this.appDate = appDate
         this.schedule = scheduleId
-        this.userDB = userDBId
+        this.usersDB = userDBId
         this.service = serviceDB
     }
 }

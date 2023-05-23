@@ -11,6 +11,7 @@ import org.springframework.web.servlet.HandlerInterceptor
 class AuthenticationInterceptor(
     private val authorizationHeaderProcessor : AuthorizationHeaderProcessor
 )  : HandlerInterceptor {
+
     private val NAME_AUTHORIZATION_HEADER = "Authorization"
     private val NAME_WWW_AUTHENTICATE_HEADER = "WWW-Authenticate"
 

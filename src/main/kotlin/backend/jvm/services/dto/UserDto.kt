@@ -5,6 +5,11 @@ import java.sql.Date
 import java.util.*
 
 
+
+
+data class CreatedUserOutput(val id: Int, val token: UUID)
+
+
 data class UserOutputDto(
         val id: Int,
         val token: UUID,
@@ -24,7 +29,7 @@ data class UserOutputDto(
                 name = userDB.name,
                 birthday = userDB.birthday.toString(),
                 availability = userDB.availability,
-                companyId = userDB.company?.id,
+                companyId = userDB.companies?.map { it.company?.id },
                 services = userDB.services?.map { it.id }?: emptyList()
         )
 
@@ -42,18 +47,20 @@ data class UserInputDto(
         val availability: String?,
         val companyId: Int?,
         val services: List<Int>?,
-        val appointment: List<Int>?
+        val appointment: List<Int>?,
+        val unavailability: List<Int>?
 ){
-        fun mapToUser(dto: UserInputDto,pass: String,services: List<ServiceDB>?,appointment: List<Appointment>?,comp: Company?, roles: List<Role>):UserDB{
+        fun mapToUser(dto: UserInputDto,pass: String,services: List<ServiceDB>?,appointment: List<Appointment>?,comp: List<UserCompany>?, roles: List<Role>, unavailabilityDB : List<UnavailabilityDB>?):UserDB{
               return UserDB(
                       email = dto.email,
                       password = pass,
                       clientName = dto.name,
                       birth = Date.valueOf(dto.birthday),
                       serv = services,
-                      company = comp,
+                      companies = comp,
                       appointments = appointment,
-                      roles = roles
+                      roles = roles,
+                      unavailabilityDB = unavailabilityDB
                 )
         }
 }

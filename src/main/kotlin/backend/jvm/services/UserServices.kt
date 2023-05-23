@@ -1,13 +1,8 @@
 package backend.jvm.services
 
-import backend.jvm.model.Appointment
-import backend.jvm.model.ServiceDB
-import backend.jvm.model.UserDB
+import backend.jvm.model.*
 import backend.jvm.repository.*
-import backend.jvm.services.dto.AppointmentInputDto
-import backend.jvm.services.dto.AppointmentOutputDto
-import backend.jvm.services.dto.UserInputDto
-import backend.jvm.services.dto.UserOutputDto
+import backend.jvm.services.dto.*
 import backend.jvm.services.interfaces.IUserInterface
 import backend.jvm.utils.Hashing
 import backend.jvm.utils.UserAvailability
@@ -34,6 +29,10 @@ class UserServices : IUserInterface {
     lateinit var scheduleRepository: ScheduleRepository
     @Autowired
     lateinit var roleRepository: RoleRepository
+    @Autowired
+    lateinit var userCompanyRepository: UserCompanyRepository
+
+
 
     companion object{
         val EMAIL_FORMAT = Regex("""^\w+@\w+\.\w+$""")
@@ -43,25 +42,20 @@ class UserServices : IUserInterface {
     override fun addUser(user: UserInputDto): UserOutputDto {
         if(!EMAIL_FORMAT.matches(user.email)) throw InvalidEmail()
         if(!PASSWORD_FORMAT.matches(user.password)) throw PasswordInsecure()
-
-        if(userRepository.getUsersByEmail(user.email) != null)
-            throw EmailAlreadyExists()
+        if(userRepository.getUsersByEmail(user.email) != null) throw EmailAlreadyExists()
 
         val servicesList = mutableListOf<ServiceDB>()
         val appList =  mutableListOf<Appointment>()
 
         if(user.services != null ) user.services.forEach { servicesList.add(servicesRepository.findById(it).get()) }
         if(user.appointment != null ) user.appointment.forEach { appList.add(appointmentRepository.findById(it).get()) }
-        val comp = if(user.companyId != null ) companyRepository.findById(user.companyId).get() else null
-        val a = UserRoles.CLIENT.name
-        val b = UserAvailability.AVAILABLE.name
         val role = roleRepository.getRoleByName(UserRoles.CLIENT.name)
 
         val returnUser = userRepository.save(
             user.mapToUser(user,Hashing.encodePass(user.password),servicesList,appList, comp, listOf(role))
         )
 
-        return UserOutputDto(returnUser)
+        return CreatedUserOutput(returnUser.id, returnUser.token)
     }
 
     override fun deleteUser(id: Int): Boolean {
@@ -81,7 +75,8 @@ class UserServices : IUserInterface {
     }
 
     override fun changeAvailability(availability: String, id: Int): String{
-        return userRepository.changeAvailability(availability,id)
+    TODO()
+    // return userRepository.changeAvailability(availability,id)
     }
 
 
@@ -91,9 +86,16 @@ class UserServices : IUserInterface {
         return userRepository.changePassword(pass, id)
     }
 
-    fun getUsersByCompId (compId: Int): List<UserOutputDto> {
+  /*  fun getUsersByCompId (compId: Int): List<UserOutputDto> {
         val repoList = userRepository.getUsersByCompanyId(compId)
         return repoList.map { UserOutputDto(it) }
+    }
+*/
+
+    fun getRoleByCompId (compId: Int, userId: Int): UserCompany {
+        val user = userRepository.getReferenceById(userId)
+        val company = companyRepository.getReferenceById(compId)
+        return userCompanyRepository.getRoleByCompanyAndUser(company,user)
     }
 
     override fun getUsersByEmailAndPass (email: String, password: String): UserOutputDto {
@@ -113,20 +115,22 @@ class UserServices : IUserInterface {
         return  userRepository.getRole(user)
     }
 
-    override fun addEmployee(id: Int, user: String): UserOutputDto {
-        val getUser = userRepository.getUsersByEmail(user) ?: throw UserNotFound()
-        companyRepository.findAllById(id) ?: throw CompanyNotFound()
+    override fun addEmployee(companyId: Int, user: String): UserOutputDto {
+        val user = userRepository.getUsersByEmail(user) ?: throw UserNotFound()
+        val company = companyRepository.findAllById(companyId) ?: throw CompanyNotFound()
 
-        val name = roleRepository.getRoleByUserId(getUser.id)
+        val name = roleRepository.getRoleByUserId(user.id)
+        val userRole = userCompanyRepository.findByCompanyAndUser(company, user)
+        if(userRole != null && userRole.role == UserRoles.MANAGER.name) throw AlreadyCompanyManager()
         if(name == UserRoles.EMPLOYEE.name) throw AlreadyEmployee()
         if(name != UserRoles.CLIENT.name) throw InvalidUser()
 
-        userRepository.changeRole(getUser.id,UserRoles.EMPLOYEE.name)
-        userRepository.changeAvailability(UserAvailability.AVAILABLE.name,getUser.id)
-        userRepository.changeMaxNumber(1,getUser.id)
-        userRepository.changeCompany(id,getUser.id)
+        userRepository.changeRole(user.id,UserRoles.EMPLOYEE.name)
+        userRepository.changeAvailabilityAndMaxNumber(UserAvailability.AVAILABLE.name, 1, user.id)
 
-        val updatedUser = userRepository.getUserById(getUser.id)!!
+        userCompanyRepository.save(UserCompany(user, company, UserRoles.EMPLOYEE.name))
+
+        val updatedUser = userRepository.getUserById(user.id)!!
         return UserOutputDto(updatedUser)
     }
 

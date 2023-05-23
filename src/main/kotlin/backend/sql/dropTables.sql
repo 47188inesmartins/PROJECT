@@ -10,10 +10,11 @@ drop table if exists SCHEDULE cascade;
 drop table if exists SERVICE cascade;
 drop table if exists U_ROLE cascade;
 drop table if exists UNAVAILABILITY cascade;
+drop table if exists USER_COMPANY cascade;
 drop table if exists USER_ROLE cascade;
 drop table if exists USER_SERVICE cascade;
 drop table if exists VACATION cascade;
 
 COMMIT;
 
-
+rollback ;

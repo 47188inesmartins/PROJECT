@@ -12,6 +12,7 @@ import backend.jvm.services.interfaces.IAppointmentServices
 import backend.jvm.utils.errorHandling.EmptyAppointments
 import backend.jvm.utils.errorHandling.InvalidAppointment
 import backend.jvm.utils.errorHandling.ServiceNotFound
+import backend.jvm.utils.errorHandling.UserNotFound
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.sql.Date

@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.context.request.RequestContextHolder
+import org.springframework.web.context.request.ServletRequestAttributes
 import org.springframework.web.server.ResponseStatusException
 import java.util.*
 
@@ -28,7 +30,10 @@ class CompanyController {
     @PostMapping
     fun addCompany(@RequestBody company: CompanyInputDto): ResponseEntity<CompanyOutputDto> {
         return try {
-            val response = companyServices.addCompany(company)
+            val requestAttributes = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes
+            val request = requestAttributes.request
+            val bearerToken = request.getHeader("Authorization")?.removePrefix("Bearer ")
+            val response = bearerToken?.let { companyServices.addCompany(it,company) }
             ResponseEntity
                 .status(201)
                 .body(response)

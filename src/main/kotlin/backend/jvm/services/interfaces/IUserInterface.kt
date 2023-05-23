@@ -2,6 +2,7 @@ package backend.jvm.services.interfaces
 
 import backend.jvm.model.UserDB
 import backend.jvm.services.dto.AppointmentOutputDto
+import backend.jvm.services.dto.CreatedUserOutput
 import backend.jvm.services.dto.UserInputDto
 import backend.jvm.services.dto.UserOutputDto
 

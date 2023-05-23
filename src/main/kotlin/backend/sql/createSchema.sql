@@ -32,6 +32,16 @@ create table if not exists SCH_USER (
 );
 
 
+create table USER_COMPANY(
+    user_id int,
+    company_id int,
+    role varchar(10) check (role in ('GUEST', 'CLIENT', 'EMPLOYEE', 'MANAGER')),
+    primary key (user_id, company_id),
+    foreign key (user_id) references SCH_USER(id),
+    foreign key (company_id) references COMPANY(id)
+);
+
+
 create table if not exists U_ROLE (
     name varchar(20) primary key CHECK ( name IN ('GUEST', 'CLIENT', 'EMPLOYEE', 'MANAGER'))
 );
@@ -39,7 +49,6 @@ create table if not exists U_ROLE (
 CREATE TABLE IF NOT EXISTS USER_ROLE (
     role_name VARCHAR(20),
     user_id INT,
-    company_id INT,
     PRIMARY KEY (role_name, user_id),
     FOREIGN KEY (role_name) REFERENCES U_ROLE(name),
     FOREIGN KEY (user_id) REFERENCES SCH_USER(id)
@@ -66,7 +75,7 @@ create table if not exists UNAVAILABILITY(
 
 
 create table if not exists SERVICE (
-    id serial primary key,
+    id serial primary key unique,
     service_name varchar(30),
     duration time,
     number_max int default 1,

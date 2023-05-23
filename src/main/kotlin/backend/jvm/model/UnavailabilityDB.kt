@@ -38,14 +38,14 @@ class UnavailabilityDB {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    val userDBId : UserDB
+    val userDB : UserDB
 
     constructor(){
         this.dateBegin = Date.valueOf(getCurrentDate())
         this.dateEnd = Date.valueOf(getCurrentDate())
         this.hourBegin = Time.valueOf(getCurrentTime())
         this.hourEnd = Time.valueOf(getCurrentTime())
-        this.userDBId = UserDB()
+        this.userDB = UserDB()
     }
 
     constructor(dateBegin: Date, dateEnd: Date?, hourBegin: Time?, hourEnd: Time?, userDB: UserDB){
@@ -53,7 +53,7 @@ class UnavailabilityDB {
         this.dateEnd = dateEnd
         this.hourBegin = hourBegin
         this.hourEnd = hourEnd
-        this.userDBId = userDB
+        this.userDB = userDB
     }
 
 }

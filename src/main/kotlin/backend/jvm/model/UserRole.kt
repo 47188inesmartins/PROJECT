@@ -1,7 +1,7 @@
 package backend.jvm.model
 
 import jakarta.persistence.*
-
+/*
 @Entity
 @Table(name = "user_role")
 class UserRole {
@@ -36,3 +36,4 @@ class UserRolePK {
     var user: Int = 0
     var role: String = ""
 }
+*/

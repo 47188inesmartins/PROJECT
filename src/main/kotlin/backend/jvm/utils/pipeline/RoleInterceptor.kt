@@ -1,5 +1,6 @@
 package backend.jvm.utils.pipeline
 
+import backend.jvm.repository.UserCompanyRepository
 import backend.jvm.services.UserServices
 import backend.jvm.utils.UserRoles
 import backend.jvm.utils.errorHandling.HttpCode
@@ -16,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView
 @Component
 class RoleInterceptor (
     val userServices: UserServices,
+    val userCompanyRepository: UserCompanyRepository
 ) : HandlerInterceptor {
 
     override fun postHandle(

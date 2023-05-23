@@ -2,6 +2,7 @@ package backend.jvm.services.dto
 
 import backend.jvm.model.Company
 import backend.jvm.model.ServiceDB
+import backend.jvm.model.UserDB
 import java.sql.Time
 
 data class ServiceInputDto(
@@ -9,16 +10,18 @@ data class ServiceInputDto(
     val duration: String,
     val numberMax: Int,
     val price: Double,
-    val company: Int
+    val company: Int,
+    val users: List<Int>
 ){
-    fun mapToService(db: ServiceInputDto, company: Company) : ServiceDB {
+    fun mapToService(db: ServiceInputDto, company: Company, users: List<UserDB>) : ServiceDB {
         val d = Time.valueOf(duration) ?: throw Exception("invalid time")
         return ServiceDB(
             db.serviceName,
             d,
             db.numberMax,
             db.price,
-            company
+            company,
+            users
         )
     }
 }

@@ -4,12 +4,14 @@ import backend.jvm.model.*
 import backend.jvm.repository.*
 import backend.jvm.services.dto.*
 import backend.jvm.services.interfaces.ICompanyServices
+import backend.jvm.utils.UserRoles
 import backend.jvm.utils.errorHandling.InvalidNif
 import backend.jvm.utils.errorHandling.NifAlreadyExist
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.sql.Time
 import java.sql.Date
+import java.util.*
 
 @Service
 class CompanyServices : ICompanyServices {
@@ -48,7 +50,7 @@ class CompanyServices : ICompanyServices {
         val users = company.users?.map { usersRepository.getReferenceById(it) }
         val services = company.service?.map { serviceRepository.getReferenceById(it) }
         val comp = companyRepository.save(
-            company.mapToCompanyDto(company,services,schedule,users)
+            company.mapToCompanyDto(company, services, null)
         )
         return CompanyOutputDto(comp)
     }

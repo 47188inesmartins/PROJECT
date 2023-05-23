@@ -6,19 +6,12 @@ import jakarta.persistence.*
 @Table(name = "u_role")
 class Role {
 
-    /*@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    var id: Int? = null*/
-
-
     @Id
     @Column(name = "name")
     val name: String
 
-    @OneToMany(mappedBy = "role_name")
-    private var users: List<UserRole?>?
-
+    @ManyToMany(mappedBy = "roles")
+    private var users: List<UserDB?>?
 
     constructor(){
         this.name = ""
