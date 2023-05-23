@@ -1,9 +1,6 @@
 package backend.jvm.services.dto
 
-import backend.jvm.model.Company
-import backend.jvm.model.Schedule
-import backend.jvm.model.ServiceDB
-import backend.jvm.model.UserDB
+import backend.jvm.model.*
 
 data class ServiceInfo(val id: Int, val name: String)
 
@@ -14,10 +11,10 @@ data class CompanyInputDto(
     val type: String,
     val description: String,
     val service: List<Int>?,
-    val schedule: Int?,
-    val users: List<Int>?
+    //val schedule: Int?,
+    val users: MutableList<Int>?
 ){
-    fun mapToCompanyDto(dto: CompanyInputDto, service: List<ServiceDB>?, schedule: Schedule?, users: List<UserDB>?): Company{
+    fun mapToCompanyDto(dto: CompanyInputDto, service: List<ServiceDB>?, users: List<UserCompany>?): Company{
         return Company(
             dto.nif,
             dto.address,
@@ -25,7 +22,7 @@ data class CompanyInputDto(
             dto.type,
             dto.description,
             service,
-            schedule,
+            null,
             users
         )
     }
@@ -40,7 +37,7 @@ data class CompanyOutputDto(
     val description: String,
     val service: List<ServiceInfo>?,
     val schedule: Int?,
-    val users: List<Int>?
+    val users: List<CompanyUserRole>?
 ){
     constructor(company: Company): this(
         id = company.id,
@@ -51,6 +48,8 @@ data class CompanyOutputDto(
         description = company.description,
         service = company.serviceDBS?.map { ServiceInfo(it.id, it.name) },
         schedule = company.schedule?.id,
-        users = company.userDBS?.map { it.id }
+        users = company.userCompany?.map { CompanyUserRole(it.id.user, it.role)}
     )
 }
+
+data class CompanyUserRole(val userId: Int, val role: String)

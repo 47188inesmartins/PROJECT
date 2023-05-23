@@ -33,7 +33,7 @@ class UserController {
     lateinit var userServices: UserServices
 
     @PostMapping
-    fun addUser(@RequestBody user: UserInputDto): ResponseEntity<UserOutputDto> {
+    fun addUser(@RequestBody user: UserInputDto): ResponseEntity<CreatedUserOutput> {
         return try {
             val response = userServices.addUser(user)
             ResponseEntity
@@ -135,10 +135,12 @@ class UserController {
                 .status(200)
                 .body(response)
         }catch (e: Exception) {
+            println(e)
             when(e){
                 is UserNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "User not found", e)
                 is CompanyNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "Company not found", e)
                 is AlreadyEmployee -> throw ResponseStatusException(HttpStatus.CONFLICT, "Already Employee", e)
+                is AlreadyCompanyManager -> throw ResponseStatusException(HttpStatus.CONFLICT, "Already Company Manager", e)
                 else -> throw  ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid user",e)
             }
         }

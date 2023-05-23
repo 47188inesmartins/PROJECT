@@ -9,6 +9,7 @@ import backend.jvm.utils.UserAvailability
 import backend.jvm.utils.UserRoles
 import backend.jvm.utils.errorHandling.*
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Service
 import java.util.*
 import kotlin.collections.List
@@ -34,12 +35,12 @@ class UserServices : IUserInterface {
 
 
 
-    companion object{
+        companion object{
         val EMAIL_FORMAT = Regex("""^\w+@\w+\.\w+$""")
         val PASSWORD_FORMAT = Regex("^(?=.*\\d)(?=.*[!@#\$%^&*])(?=.*[a-zA-Z]).{8,}$")
     }
 
-    override fun addUser(user: UserInputDto): UserOutputDto {
+    override fun addUser(user: UserInputDto): CreatedUserOutput {
         if(!EMAIL_FORMAT.matches(user.email)) throw InvalidEmail()
         if(!PASSWORD_FORMAT.matches(user.password)) throw PasswordInsecure()
         if(userRepository.getUsersByEmail(user.email) != null) throw EmailAlreadyExists()
@@ -52,7 +53,7 @@ class UserServices : IUserInterface {
         val role = roleRepository.getRoleByName(UserRoles.CLIENT.name)
 
         val returnUser = userRepository.save(
-            user.mapToUser(user,Hashing.encodePass(user.password),servicesList,appList, comp, listOf(role))
+            user.mapToUser(user,Hashing.encodePass(user.password),servicesList,appList, null, listOf(role), null)
         )
 
         return CreatedUserOutput(returnUser.id, returnUser.token)

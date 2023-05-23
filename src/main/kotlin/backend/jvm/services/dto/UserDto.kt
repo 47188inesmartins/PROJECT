@@ -18,7 +18,7 @@ data class UserOutputDto(
         val name: String,
         val birthday: String,
         val availability: String?,
-        val companyId: Int?,
+        val companyId: List<Int?>?,
         val services: List<Int>
 ){
         constructor(userDB: UserDB): this(

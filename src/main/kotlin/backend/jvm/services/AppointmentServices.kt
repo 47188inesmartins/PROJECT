@@ -38,7 +38,9 @@ class AppointmentServices : IAppointmentServices {
 
     override fun addAppointment(appointment: AppointmentInputDto): AppointmentOutputDto {
         val service = servicesRepository.getServiceDBById(appointment.service)?: throw ServiceNotFound()
-        val user = if (appointment.user != null) userRepository.getUserById(appointment.user) else null
+        val user = if (appointment.user != null) appointment.user.map {
+            userRepository.getUserById(it)?: throw UserNotFound()
+        } else null
         val schedule = scheduleRepository.getScheduleById(appointment.schedule)
         val app = appointment.mapToAppointmentDb(appointment, schedule, user, service)
         val savedAppointment = appointmentRepository.save(app)

@@ -28,5 +28,8 @@ class InvalidCredentials: Exception("Invalid credentials")
 @ResponseStatus(code = HttpStatus.BAD_REQUEST, reason = "Invalid User")
 class InvalidUser: Exception("Invalid User")
 
-@ResponseStatus(code = HttpStatus.CONFLICT, reason = "Invalid User")
+@ResponseStatus(code = HttpStatus.CONFLICT, reason = "Already an employee")
 class AlreadyEmployee: Exception("Already an employee")
+
+@ResponseStatus(code = HttpStatus.CONFLICT, reason = "Already an employee")
+class AlreadyCompanyManager: Exception("Already Company Manager")

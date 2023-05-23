@@ -7,6 +7,7 @@ import backend.jvm.services.interfaces.ICompanyServices
 import backend.jvm.utils.UserRoles
 import backend.jvm.utils.errorHandling.InvalidNif
 import backend.jvm.utils.errorHandling.NifAlreadyExist
+import backend.jvm.utils.errorHandling.UserNotFound
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.sql.Time
@@ -41,17 +42,26 @@ class CompanyServices : ICompanyServices {
     @Autowired
     lateinit var vacationRepository: VacationRepository
 
+    @Autowired
+    lateinit var userCompanyRepository: UserCompanyRepository
 
 
-    override fun addCompany(company: CompanyInputDto): CompanyOutputDto {
+    override fun addCompany(token: String, company: CompanyInputDto): CompanyOutputDto {
+
+        val managerUser = usersRepository.getUserByToken(UUID.fromString(token))?: throw UserNotFound()
+        company.users?.add(managerUser.id)
+
         if(company.nif.length != NIF_NUMBERS ) throw InvalidNif()
         if(companyRepository.findCompanyByNif(company.nif) != null) throw NifAlreadyExist()
-        val schedule = company.schedule?.let { scheduleRepository.getReferenceById(it) }
-        val users = company.users?.map { usersRepository.getReferenceById(it) }
         val services = company.service?.map { serviceRepository.getReferenceById(it) }
         val comp = companyRepository.save(
             company.mapToCompanyDto(company, services, null)
         )
+
+        userCompanyRepository.save(UserCompany(managerUser, comp, UserRoles.MANAGER.name))
+        val schedule = Schedule(comp,null,null,null)
+        scheduleRepository.save(schedule)
+
         return CompanyOutputDto(comp)
     }
 

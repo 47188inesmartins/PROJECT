@@ -5,7 +5,10 @@ import backend.jvm.services.dto.AppointmentInputDto
 import backend.jvm.services.dto.AppointmentOutputDto
 import backend.jvm.services.dto.ServiceOutputDto
 import backend.jvm.utils.RoleManager
+import backend.jvm.utils.errorHandling.ServiceNotFound
+import backend.jvm.utils.errorHandling.UserNotFound
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.server.ResponseStatusException
 
 
 @RestController
@@ -33,8 +37,11 @@ class AppointmentController {
             ResponseEntity.status(201)
                 .body(response)
         }catch (e: Exception) {
-            ResponseEntity.status(400)
-                .body(null)
+            when(e) {
+                is UserNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "User not found", e)
+                is ServiceNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "Service not found", e)
+                else ->  throw ResponseStatusException(HttpStatus.BAD_REQUEST, "", e)
+            }
         }
     }
 

@@ -7,7 +7,7 @@ import backend.jvm.services.dto.UserInputDto
 import backend.jvm.services.dto.UserOutputDto
 
 interface IUserInterface {
-    fun addUser(user: UserInputDto): UserOutputDto
+    fun addUser(user: UserInputDto): CreatedUserOutput
 
     fun deleteUser(id: Int): Boolean
 

@@ -28,7 +28,9 @@ class CompanyController {
 
     @RoleManager(["CLIENT"])
     @PostMapping
-    fun addCompany(@RequestBody company: CompanyInputDto): ResponseEntity<CompanyOutputDto> {
+    fun addCompany(
+        @RequestBody company: CompanyInputDto
+    ): ResponseEntity<CompanyOutputDto> {
         return try {
             val requestAttributes = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes
             val request = requestAttributes.request
@@ -39,11 +41,10 @@ class CompanyController {
                 .body(response)
         } catch (e: Exception) {
             println("exception = $e")
-            when(e){
+            when(e) {
                 is NifAlreadyExist -> throw ResponseStatusException(HttpStatus.CONFLICT, "Nif already exists", e)
                 else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Nif is invalid", e)
             }
-
         }
     }
 
