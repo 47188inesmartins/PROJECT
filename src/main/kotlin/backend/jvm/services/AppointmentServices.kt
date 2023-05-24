@@ -85,7 +85,7 @@ class AppointmentServices : IAppointmentServices {
         }
 
 
-        serv.forEach { println(it.id) }
+      // serv.forEach { println(it.id) }
 
         return serv.map { ServiceOutputDto(it) }
     }
