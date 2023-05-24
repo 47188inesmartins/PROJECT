@@ -26,6 +26,7 @@ interface UserRepository: JpaRepository<UserDB, Int> {
              "and id in (select user_id from user_service where service_id = :id)", nativeQuery = true)
      fun getAvailableEmployeesByService(@Param("id") serviceId: Int, @Param("date") date: Date, @Param("beginHour") beginHour: Time, @Param("endHour") endHour: Time): List<UserDB>
 
+
      @Query(value = "select role_name from user_role r where r.user_id = :id", nativeQuery = true)
      fun getRole (@Param("id") id: Int): String?
 

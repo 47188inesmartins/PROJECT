@@ -15,7 +15,7 @@ interface ServiceRepository : JpaRepository<ServiceDB, Int> {
     @Query(name = "getServiceById")
     fun getServiceDBById(@Param("id") id: Int): ServiceDB?
 
-    @Query(value = "select * from service s where s.company_id = :id", nativeQuery = true)
+    @Query(value = "select * from service s  where s.company_id = :id ", nativeQuery = true)
     fun getAllServicesFromACompany(@Param("id") id: Int): List<ServiceDB>
 
     @Query(value = "select count(appointment_id) from service_appointment where service_id=:serviceId and appointment_id=:appointmentId ", nativeQuery = true)
@@ -36,4 +36,13 @@ interface ServiceRepository : JpaRepository<ServiceDB, Int> {
     fun getAvailableServicesByDay( @Param("companyId") companyId: Int,
                                    @Param("day") day: String
     ):List<Pair<ServiceDB, Time>>
+
+
+    @Query(value = "select * from service s inner join sch_day sd on s.id = sd.service_id and sd.week_days = :weekDay " +
+            "and  (:beginHour  between sd.begin_hour and interval_begin or :beginHour between  interval_end and sd.end_hour) " +
+            "and (TIME :beginHour + (s.duration || ' minutes')::INTERVAL between sd.begin_hour and interval_begin " +
+            "or TIME :beginHour + (s.duration || ' minutes')::INTERVAL between  interval_end and sd.end_hour) " +
+            "and s.company_id = :companyId", nativeQuery = true)
+    fun getAvailableServicesByHour(@Param("weekDay") weekDay: String, @Param("beginHour") beginHour: Time, @Param("companyId") companyId: Int): List<ServiceDB>
+
 }

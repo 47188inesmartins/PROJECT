@@ -67,13 +67,23 @@ class AppointmentServices : IAppointmentServices {
         val bh = Time.valueOf(beginHour)
         val d = Date.valueOf(date)
         val dur = Time.valueOf("00:30:00")
-
+        val weekDay = getDayOfWeek(d)
         val services = servicesRepository.getAllServicesFromACompany(companyId)
 
-        services.forEach { println(  userRepository.getAvailableEmployeesByService(it.id, d, bh, Time(bh.time+it.duration.time)).isNotEmpty()) }
+        //val s = servicesRepository.getServicesWithNonEmptyUserList(d, bh,  Time(bh.time+dur.time))
+
+
+        // weekDay = :weekDay and
+
+
+       // services.forEach { println(  userRepository.getAvailableEmployeesByService(it.id, d, bh, Time(bh.time+it.duration.time)).isNotEmpty()) }
+
+
+
         val serv = services.filter {
              userRepository.getAvailableEmployeesByService(it.id, d, bh, getEndHour(bh, dur)).isNotEmpty()
         }
+
 
         serv.forEach { println(it.id) }
 
