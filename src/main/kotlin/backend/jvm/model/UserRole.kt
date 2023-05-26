@@ -30,7 +30,6 @@ class UserRole {
 
 }
 
-
 @Embeddable
 class UserRolePK {
     var user: Int = 0

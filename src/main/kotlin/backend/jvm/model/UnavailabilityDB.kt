@@ -41,10 +41,10 @@ class UnavailabilityDB {
     val userDB : UserDB
 
     constructor(){
-        this.dateBegin = Date.valueOf(getCurrentDate())
-        this.dateEnd = Date.valueOf(getCurrentDate())
-        this.hourBegin = Time.valueOf(getCurrentTime())
-        this.hourEnd = Time.valueOf(getCurrentTime())
+        this.dateBegin = getCurrentDate()
+        this.dateEnd = getCurrentDate()
+        this.hourBegin = getCurrentTime()
+        this.hourEnd = getCurrentTime()
         this.userDB = UserDB()
     }
 

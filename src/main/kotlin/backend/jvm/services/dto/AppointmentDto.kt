@@ -1,6 +1,7 @@
 package backend.jvm.services.dto
 
 import backend.jvm.model.*
+import backend.jvm.utils.errorHandling.AlreadyEmployee
 import java.sql.Date
 import java.sql.Time
 
@@ -42,3 +43,16 @@ data class AppointmentOutputDto(
         service = appointment.service.id
     )
 }
+
+data class AppointmentInfo(
+    val id: Int,
+    val appHour: String,
+    val appDate: Date,
+    val companyName: String,
+    val employee: String
+)
+data class AppointmentsUserInfo(
+    val futureAppointments: List<AppointmentInfo> = emptyList(),
+    val passedAppointments: List<AppointmentInfo> = emptyList()
+)
+

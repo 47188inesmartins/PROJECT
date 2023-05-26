@@ -26,15 +26,15 @@ interface AppointmentRepository: JpaRepository<Appointment, Int>{
     /*@Query(value = "select count(service_id) from appointment a where a.service_id = :serviceId and app_hour = :appHour and app_date = :appDate", nativeQuery = true)
     fun getNumberOfServicesByDateAndHour(@Param("serviceId") serviceId: Int, @Param("appDate") appDate: Date, @Param("appHour") appHour: Time): Int*/
 
-    @Query(value =  "update appointment set number_app_people = :numberAppPeople where id = :id", nativeQuery = true)
+    /*@Query(value =  "update appointment set number_app_people = :numberAppPeople where id = :id", nativeQuery = true)
     fun editNumberAppPeople(@Param("id") id: Int, @Param("numberAppPeople") numberAppPeople: Int): Appointment
 
     @Query(value = "UPDATE appointment SET number_app_people = number_app_people + 1, availability = CASE WHEN number_app_people + 1 = :maxNumber THEN 'unavailable' ELSE availability END WHERE id = :id", nativeQuery = true)
     fun increaseAppointmentNumber(@Param("id") id: Int, @Param("maxNumber") maxNumber: Int)
-
-    @Query(value = "from appointment a where a.availability='available' and a.date=:date", nativeQuery = true)
+*/
+    @Query(value = "select * from appointment a where a.app_hour='available' and a.date=:date", nativeQuery = true)
     fun getAvailableAppointmentByDate(@Param("date") date: Date): Appointment
 
-    @Query(value = "select * from appointment a where a.user_id =:id", nativeQuery = true)
+    @Query(value = "select * from appointment a inner join appointment_user au on a.id = au.appointment_id and au.user_id =:id", nativeQuery = true)
     fun getAppointmentByUserDB(@Param("id") id: Int): List<Appointment>
 }

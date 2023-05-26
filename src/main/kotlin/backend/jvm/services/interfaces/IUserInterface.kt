@@ -1,10 +1,7 @@
 package backend.jvm.services.interfaces
 
 import backend.jvm.model.UserDB
-import backend.jvm.services.dto.AppointmentOutputDto
-import backend.jvm.services.dto.CreatedUserOutput
-import backend.jvm.services.dto.UserInputDto
-import backend.jvm.services.dto.UserOutputDto
+import backend.jvm.services.dto.*
 
 interface IUserInterface {
     fun addUser(user: UserInputDto): CreatedUserOutput
@@ -25,7 +22,7 @@ interface IUserInterface {
 
     fun addEmployee(id: Int, user: String): CreatedUserOutput
 
-    fun getAllAppointments(id: Int): List<AppointmentOutputDto>
+    fun getAllAppointments(id: Int): AppointmentsUserInfo
 
     fun changeRole(id: Int, name: String): String
 }

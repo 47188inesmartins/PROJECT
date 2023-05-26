@@ -14,6 +14,8 @@ interface CompanyRepository : JpaRepository<Company, Int>{
 
     fun findCompanyByNif(nif:String): Company?
 
+    @Query(value = "select company.name from company inner join schedule s on company.id = s.company_id and s.id = :schedule", nativeQuery = true)
+    fun getCompanyBySchedule(@Param("schedule") schedule: Int):String?
 
     @Query(value = "select * from appointment a where a.schedule_id = (select id from schedule s where s.company_id = :id) and a.app_date = :date and a.app_hour = :hour", nativeQuery = true)
     fun getAppointmentsByDateAndHour(@Param("id") id: Int, @Param("date") date: Date, @Param("hour") time: Time): List<Appointment>

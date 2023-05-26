@@ -147,3 +147,4 @@ insert into u_role (name) values ('EMPLOYEE');
 COMMIT;
 
 rollback;
+

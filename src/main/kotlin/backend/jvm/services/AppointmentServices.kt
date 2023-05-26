@@ -1,14 +1,13 @@
 package backend.jvm.services
 
 import backend.jvm.model.ServiceDB
-import backend.jvm.repository.AppointmentRepository
-import backend.jvm.repository.ScheduleRepository
-import backend.jvm.repository.ServiceRepository
-import backend.jvm.repository.UserRepository
+import backend.jvm.model.UnavailabilityDB
+import backend.jvm.repository.*
 import backend.jvm.services.dto.AppointmentInputDto
 import backend.jvm.services.dto.AppointmentOutputDto
 import backend.jvm.services.dto.ServiceOutputDto
 import backend.jvm.services.interfaces.IAppointmentServices
+import backend.jvm.utils.UserRoles
 import backend.jvm.utils.errorHandling.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -33,18 +32,45 @@ class AppointmentServices : IAppointmentServices {
     @Autowired
     lateinit var scheduleRepository: ScheduleRepository
 
+    @Autowired
+    lateinit var unavailabilityRepository: UnavailabilityRepository
+
     override fun addAppointment(appointment: AppointmentInputDto): AppointmentOutputDto {
         val service = servicesRepository.getServiceDBById(appointment.service)?: throw ServiceNotFound()
+
         val user = if (appointment.user != null) appointment.user.map {
             userRepository.getUserById(it)?: throw UserNotFound()
         } else null
+
+        val employee = user?.first {
+            val role = userRepository.getRole(it.id)
+            role == UserRoles.EMPLOYEE.name || role == UserRoles.MANAGER.name
+         }
         val schedule = scheduleRepository.getScheduleById(appointment.schedule)?: throw ScheduleNotFound()
         val app = appointment.mapToAppointmentDb(appointment, schedule, user, service)
         val savedAppointment = appointmentRepository.save(app)
+        val time = Time(savedAppointment.appHour.time + service.duration.time)
+        unavailabilityRepository.save(UnavailabilityDB(getCurrentDate(),null,savedAppointment.appHour,time,
+            employee ?: throw UserNotFound()
+        ))
         return AppointmentOutputDto(savedAppointment)
     }
 
+    fun getCurrentDate(): Date {
+        val actualDate = Date()
+        return Date(actualDate.time)
+    }
+
+
     override fun deleteAppointment(id: Int){
+        val getAppointment = appointmentRepository.getAppointmentById(id)
+        val getEmployee = getAppointment.usersDB?.first {
+            val role = userRepository.getRole(it.id)
+            role == UserRoles.EMPLOYEE.name ||role == UserRoles.MANAGER.name
+        }
+        if(getEmployee == null) InvalidAppointment()
+        val unavailabilityDB = unavailabilityRepository.getUnavailabilityDBByUserDBId(getEmployee!!)
+        unavailabilityRepository.deleteById(unavailabilityDB.id)
         appointmentRepository.deleteById(id)
     }
 
@@ -96,6 +122,10 @@ class AppointmentServices : IAppointmentServices {
         TODO()
     }
 
+    override fun getAllAppointmentsByUser(user: Int): List<AppointmentOutputDto> {
+        TODO("Not yet implemented")
+    }
+
 
     fun getEndHour(tempo1: Time, tempo2: Time): Time {
         val additionalTime = tempo2.time - tempo2.timezoneOffset * 60 * 1000
@@ -105,9 +135,9 @@ class AppointmentServices : IAppointmentServices {
 
     fun getDayOfWeek(date : Date): String{
         val utilDate = java.util.Date(date.time)
-        val calendar = Calendar.getInstance()
+        val calendar = getInstance()
         calendar.time = utilDate
-        val dayOfWeek = calendar[Calendar.DAY_OF_WEEK]
+        val dayOfWeek = calendar[DAY_OF_WEEK]
         println("Dia da semana: $dayOfWeek")
 
         return when(dayOfWeek) {

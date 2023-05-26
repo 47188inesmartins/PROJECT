@@ -10,20 +10,14 @@ import kotlinx.serialization.json.jsonPrimitive
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 import java.util.*
 
 
 @RestController
 @RequestMapping("/user")
+@CrossOrigin(origins = ["http://localhost:3000"])
 class UserController {
 
     @Autowired
@@ -177,7 +171,7 @@ class UserController {
 
     @RoleManager(["CLIENT"])
     @GetMapping("/{id}/appointments")
-    fun getAllEmployee(@PathVariable id: Int): ResponseEntity<List<AppointmentOutputDto>> {
+    fun getAllAppointments(@PathVariable id: Int): ResponseEntity<AppointmentsUserInfo> {
         return try {
             val response = userServices.getAllAppointments(id)
             ResponseEntity

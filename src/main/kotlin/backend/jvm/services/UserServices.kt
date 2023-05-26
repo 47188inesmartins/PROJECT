@@ -4,13 +4,12 @@ import backend.jvm.model.*
 import backend.jvm.repository.*
 import backend.jvm.services.dto.*
 import backend.jvm.services.interfaces.IUserInterface
-import backend.jvm.utils.Hashing
-import backend.jvm.utils.UserAvailability
-import backend.jvm.utils.UserRoles
+import backend.jvm.utils.*
 import backend.jvm.utils.errorHandling.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Service
+import java.sql.Time
 import java.util.*
 import kotlin.collections.List
 
@@ -135,9 +134,38 @@ class UserServices : IUserInterface {
         return CreatedUserOutput(updatedUser.id, updatedUser.token)
     }
 
-    override fun getAllAppointments(id: Int): List<AppointmentOutputDto>{
+    override fun getAllAppointments(id: Int): AppointmentsUserInfo{
         val listAppointment = appointmentRepository.getAppointmentByUserDB(id)
-        return listAppointment.map { AppointmentOutputDto(it) }
+        if(listAppointment.isEmpty()) return AppointmentsUserInfo()
+
+        val currentDate = getCurrentDate()
+        val currentTime = getCurrentTime()
+
+        val (latterApp,soonerApp) = listAppointment.partition {
+            it.appDate.before(currentDate) && it.appHour < currentTime
+        }
+        return AppointmentsUserInfo(mapToAppointmentsInfo(soonerApp),mapToAppointmentsInfo(latterApp))
+    }
+
+    fun mapToAppointmentsInfo(listAppointments: List<Appointment>):List<AppointmentInfo>{
+        if(listAppointments.isEmpty()) return emptyList()
+        return listAppointments.map {
+            val getCompany = companyRepository.getCompanyBySchedule(it.schedule.id)?:throw CompanyNotFound()
+
+            if(it.usersDB == null) throw InvalidAppointment()
+            val employee = it.usersDB.firstOrNull { user ->
+                userRepository.getUserDBByIdAndRole(UserRoles.EMPLOYEE.name,user.id)!= null ||
+                userRepository.getUserDBByIdAndRole(UserRoles.MANAGER.name,user.id)!= null
+            }?: throw UserNotFound()
+
+            AppointmentInfo(
+                it.id,
+                convertToHourFormat(it.appHour),
+                it.appDate,
+                getCompany,
+                employee.name
+            )
+        }
     }
 
     override fun changeRole(id: Int, name: String): String {
