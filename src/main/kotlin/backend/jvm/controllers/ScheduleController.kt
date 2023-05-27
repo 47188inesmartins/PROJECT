@@ -6,6 +6,7 @@ import backend.jvm.services.dto.ScheduleInputDto
 import backend.jvm.services.dto.ScheduleOutputDto
 import backend.jvm.services.dto.VacationOutputDto
 import backend.jvm.utils.RoleManager
+import jakarta.persistence.EntityNotFoundException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*

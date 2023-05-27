@@ -35,38 +35,21 @@ export function Layout() {
                         <NavLink to="/user/1/appointments">
                             <CDBSidebarMenuItem icon="columns">Appointments</CDBSidebarMenuItem>
                         </NavLink>
-                        <NavLink to="/tables">
+                        <NavLink to="/new/company">
                             <CDBSidebarMenuItem icon="table">Company</CDBSidebarMenuItem>
                         </NavLink>
                         <NavLink to="/profile">
                             <CDBSidebarMenuItem icon="user">Profile</CDBSidebarMenuItem>
                         </NavLink>
-                        <NavLink to="/analytics">
-                            <CDBSidebarMenuItem icon="chart-line">
-                                Analytics
-                            </CDBSidebarMenuItem>
-                        </NavLink>
-
-                        <NavLink
-                            to="/hero404"
-                            target="_blank"
-                        >
-                            <CDBSidebarMenuItem icon="exclamation-circle">
-                                404 page
-                            </CDBSidebarMenuItem>
-                        </NavLink>
                     </CDBSidebarMenu>
                 </CDBSidebarContent>
 
                 <CDBSidebarFooter>
-                    <div
-                        style={{
-                            textAlign: "center",
-                            padding: "20px 5px"
-                        }}
-                    >
-                        Sidebar Footer
-                    </div>
+                    <CDBSidebarMenu>
+                        <NavLink to="/analytics">
+                            <CDBSidebarMenuItem icon="chart-line">Login</CDBSidebarMenuItem>
+                        </NavLink>
+                    </CDBSidebarMenu>
                 </CDBSidebarFooter>
             </CDBSidebar>
         </div>

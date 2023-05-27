@@ -6,6 +6,7 @@ import {Login} from "./pages/Login";
 import {Home} from "./pages/Home";
 import {Company} from "./pages/Company";
 import {MyAppointments} from "./pages/MyAppointments";
+import {CreatingCompany} from "./pages/CreatingCompany";
 
 
 const router = createBrowserRouter([
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
     {
         "path": "/user/:id/appointments",
         "element": <MyAppointments/>
+    },
+    {
+        "path": "/new/company",
+        "element": <CreatingCompany/>
     }
 ])
 

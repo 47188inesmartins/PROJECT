@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.sql.Date
 import java.sql.Time
-import java.util.*
+import java.time.LocalDate
 import java.util.Calendar.*
 
 
@@ -31,9 +31,6 @@ class AppointmentServices : IAppointmentServices {
 
     @Autowired
     lateinit var scheduleRepository: ScheduleRepository
-
-    @Autowired
-    lateinit var unavailabilityRepository: UnavailabilityRepository
 
     override fun addAppointment(appointment: AppointmentInputDto): AppointmentOutputDto {
         val service = servicesRepository.getServiceDBById(appointment.service)?: throw ServiceNotFound()
@@ -56,9 +53,11 @@ class AppointmentServices : IAppointmentServices {
         return AppointmentOutputDto(savedAppointment)
     }
 
-    fun getCurrentDate(): Date {
-        val actualDate = Date()
-        return Date(actualDate.time)
+    fun getCurrentDate(): Date = Date.valueOf(LocalDate.now())
+
+    fun getCurrentHour(): Time{
+        val currentTime = getInstance().time
+        return Time(currentTime.time)
     }
 
 
@@ -89,30 +88,23 @@ class AppointmentServices : IAppointmentServices {
         return appointments.map{ AppointmentOutputDto(it) }
     }
 
-    override fun getAvailableServicesByEmployees(beginHour:String, date:String, companyId: Int):List<ServiceOutputDto>{
+    override fun getAvailableServicesByEmployees(
+        beginHour: String,
+        date: String,
+        companyId: Int
+    ): List<ServiceOutputDto> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getAvailableServices(beginHour:String, date:String, companyId: Int):List<ServiceOutputDto>{
         val bh = Time.valueOf(beginHour)
         val d = Date.valueOf(date)
         val dur = Time.valueOf("00:30:00")
         val weekDay = getDayOfWeek(d)
-        val services = servicesRepository.getAllServicesFromACompany(companyId)
-
-        //val s = servicesRepository.getServicesWithNonEmptyUserList(d, bh,  Time(bh.time+dur.time))
-
-
-        // weekDay = :weekDay and
-
-
-       // services.forEach { println(  userRepository.getAvailableEmployeesByService(it.id, d, bh, Time(bh.time+it.duration.time)).isNotEmpty()) }
-
-
-
+        val services = servicesRepository.getAvailableServicesByHour(weekDay, bh, companyId)
         val serv = services.filter {
              userRepository.getAvailableEmployeesByService(it.id, d, bh, getEndHour(bh, dur)).isNotEmpty()
         }
-
-
-      // serv.forEach { println(it.id) }
-
         return serv.map { ServiceOutputDto(it) }
     }
 

@@ -14,4 +14,5 @@ interface IAppointmentServices {
     fun getAvailableServicesByEmployees(beginHour:String, date:String, companyId: Int):List<ServiceOutputDto>
     fun availableServicesByDay(companyId: Int, day: String,  beginHour: Time): List<ServiceDB>
     fun getAllAppointmentsByUser(user: Int): List<AppointmentOutputDto>
+    fun getAvailableServices(beginHour:String, date:String, companyId: Int):List<ServiceOutputDto>
 }

@@ -9,6 +9,7 @@ import {
     MDBRipple,
     MDBRow,
 } from "mdb-react-ui-kit";
+import {CreatingCompany} from "./CreatingCompany";
 
 export function Home() {
 
@@ -19,6 +20,7 @@ export function Home() {
 
     return (
         <div style={{ display: "flex" }}>
+
             <td>
                 <div style={{position: "fixed",
                     top: 0,

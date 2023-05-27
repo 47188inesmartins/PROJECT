@@ -1,5 +1,5 @@
 import {Fetch} from "../useFetch";
-import React from "react";
+import React, {useState} from "react";
 
 import {
     MDBCard,
@@ -15,6 +15,13 @@ import {
 import {useParams} from "react-router-dom";
 
 export function Company() {
+
+    const [selectedTime, setSelectedTime] = useState('');
+
+    const handleTimeChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
+        setSelectedTime(event.target.value);
+        // Faça algo com o valor selecionado
+    };
 
     const params = useParams()
     const id = params.id
@@ -64,6 +71,14 @@ export function Company() {
                                             {company.response.service.map((object: any) => (
                                                 <MDBCardText>{object.name}</MDBCardText>
                                             ))}
+                                        </div>
+                                    </div>
+                                    <div className="mb-5">
+                                        <p className="lead fw-normal mb-1">Schedule with this company</p>
+                                        <div className="p-4" style={{ backgroundColor: '#f8f9fa' }}>
+                                            <div>
+                                                <input type="time" step="1800" value={selectedTime} onChange={handleTimeChange} />
+                                            </div>
                                         </div>
                                     </div>
                                 </MDBCardBody>

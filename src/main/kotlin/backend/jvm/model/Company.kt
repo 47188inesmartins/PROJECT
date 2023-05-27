@@ -73,3 +73,106 @@ class Company {
 
 }
 
+
+class Node(val data: Int){
+        var previous: Node? = null
+        var next: Node? = null
+}
+
+class BinaryTree{
+
+        var root: Node?  = null
+
+
+        fun insert (data: Int){
+                root = insertBinary(root, data)
+        }
+
+
+        fun insertBinary(node: Node?, data: Int): Node?{
+                if(node == null){
+                        return Node(data)
+                }
+                if(data < node.data)
+                        node.previous = insertBinary(node.previous, data)
+                else if(data > node.data){
+                        node.next = insertBinary(node.next, data)
+                }
+
+                return node
+        }
+
+        fun search(data: Int): Boolean{
+                return searchBinary(root, data)
+        }
+
+        fun searchBinary(node: Node?, data: Int): Boolean{
+                if(node == null) return false
+                if(node.data == data) return true
+
+                return if(node.data > data)
+                        searchBinary(node.previous, data)
+                else
+                        searchBinary(node.next, data)
+        }
+
+
+}
+
+
+
+
+
+
+
+fun main() {
+
+
+        val tree = BinaryTree()
+
+        tree.insert(4)
+        tree.insert(2)
+        tree.insert(6)
+        tree.insert(1)
+        tree.insert(3)
+        tree.insert(5)
+        tree.insert(7)
+
+        println(tree.search(5))  // true
+        println(tree.search(8))  // false
+
+
+
+
+
+
+
+
+
+
+        /*val a = "abggtztf"
+
+        val b = "ftgtgba"
+
+        val list = hashMapOf<Char, Int>()
+        val list1 = hashMapOf<Char, Int>()
+
+        for (i in a.indices) {
+                if (list.keys.contains(a[i])) {
+                        list[a[i]] = list[a[i]]!! + 1
+                }
+                else list.put(a[i], 1)
+        }
+
+        for (i in b.indices) {
+                if (list1.keys.contains(b[i])) {
+                        list1[b[i]] = list1[b[i]]!! + 1
+                }
+                else list1.put(b[i], 1)
+        }
+
+        println(list.equals(list1))*/
+
+
+
+}

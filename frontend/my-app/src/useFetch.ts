@@ -25,7 +25,7 @@ export function Fetch(url: string, method: string, requestBody: any = null): Fet
                 console.log("RES",requestBody)
                 const resp = await fetch(hostUrl,{
                     method : method,
-                    body : requestBody,
+                    body : JSON.stringify(requestBody),
                     headers : authorization
                 })
                 console.log("headers",await resp.headers)

@@ -11,7 +11,6 @@ data class CompanyInputDto(
     val type: String,
     val description: String,
     val service: List<Int>?,
-    //val schedule: Int?,
     val users: MutableList<Int>?
 ){
     fun mapToCompanyDto(dto: CompanyInputDto, service: List<ServiceDB>?, users: List<UserCompany>?): Company{
