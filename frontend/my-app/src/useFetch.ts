@@ -25,7 +25,7 @@ export function Fetch(url: string, method: string, requestBody: any = null): Fet
                 console.log("RES",requestBody)
                 const resp = await fetch(hostUrl,{
                     method : method,
-                    body : JSON.stringify(requestBody),
+                    body : requestBody,
                     headers : authorization
                 })
                 console.log("headers",await resp.headers)
@@ -46,9 +46,3 @@ export function Fetch(url: string, method: string, requestBody: any = null): Fet
     }, [url,method,requestBody])
     return {response:content,error:undefined}
 }
-
-
-
-
-
-

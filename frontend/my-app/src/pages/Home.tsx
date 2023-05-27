@@ -9,7 +9,6 @@ import {
     MDBRipple,
     MDBRow,
 } from "mdb-react-ui-kit";
-import {CreatingCompany} from "./CreatingCompany";
 
 export function Home() {
 
@@ -20,7 +19,6 @@ export function Home() {
 
     return (
         <div style={{ display: "flex" }}>
-
             <td>
                 <div style={{position: "fixed",
                     top: 0,
@@ -38,7 +36,7 @@ export function Home() {
                         <p>Loading...</p>
                     ) : (
                         <>
-                        <input type="time" step="1800"/>
+                            <input type="time" step="1800"/>
                             <MDBContainer className="py-5">
                                 <MDBCard className="px-3 pt-3"
                                          style={{ maxWidth: "100%"}} >
