@@ -8,8 +8,10 @@ import backend.jvm.services.dto.VacationOutputDto
 import backend.jvm.utils.RoleManager
 import jakarta.persistence.EntityNotFoundException
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.server.ResponseStatusException
 
 
 @RestController
@@ -23,22 +25,26 @@ class ScheduleController {
     @ResponseBody
     @PostMapping
     fun addNewSchedule(@RequestBody schedule: ScheduleInputDto): ResponseEntity<ScheduleOutputDto> {
-        return try{
+        return try {
             val response = scheduleServices.addSchedule(schedule)
             ResponseEntity
                 .status(201)
                 .body(response)
-        }catch (e: Exception){
-            ResponseEntity
-                .status(400)
-                .body(null)
+        } catch (e: Exception) {
+            when (e) {
+                is EntityNotFoundException -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "entity does not exists", e)
+                else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Something went wrong", e)
+            }
         }
     }
-
     @RoleManager(["MANAGER"])
     @DeleteMapping("/{id}")
     fun deleteSchedule(@PathVariable id:Int){
-        scheduleServices.deleteSchedule(id)
+        return try{
+            scheduleServices.deleteSchedule(id)
+        }catch (e: Exception) {
+           throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Something went wrong", e)
+        }
     }
 
     @RoleManager(["MANAGER"])
@@ -56,9 +62,10 @@ class ScheduleController {
                 .status(200)
                 .body(response)
         }catch (e: Exception){
-            ResponseEntity
-                .status(400)
-                .body(null)
+            when (e) {
+                is EntityNotFoundException -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "entity does not exists", e)
+                else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Something went wrong", e)
+            }
         }
     }
 

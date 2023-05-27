@@ -5,6 +5,7 @@ import backend.jvm.services.dto.DayInputDto
 import backend.jvm.services.dto.DayOutputDto
 import backend.jvm.utils.RoleManager
 import backend.jvm.utils.errorHandling.InvalidOpenDay
+import backend.jvm.utils.errorHandling.InvalidSchedule
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
@@ -32,7 +33,8 @@ class DayController {
         }catch(e: Exception){
             when(e){
                 is InvalidOpenDay -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid open day", e)
-                else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "", e)
+                is InvalidSchedule -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "Schedule not found", e)
+                else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
             }
         }
     }
@@ -45,10 +47,7 @@ class DayController {
             ResponseEntity.status(200)
                 .body("Open day deleted")
         }catch(e: Exception){
-            println("exception = $e")
-            ResponseEntity
-                .status(400)
-                .body(e.toString())
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
         }
     }
 
@@ -66,10 +65,10 @@ class DayController {
             ResponseEntity.status(200)
                 .body(response)
         }catch(e: Exception){
-            println("exception = $e")
-            ResponseEntity
-                .status(400)
-                .body(null)
+            when(e){
+                is InvalidOpenDay -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid open day", e)
+                else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
+            }
         }
     }
 
@@ -87,11 +86,10 @@ class DayController {
             ResponseEntity.status(200)
                 .body(response)
         }catch(e: Exception){
-            println("exception = $e")
-            ResponseEntity
-                .status(400)
-                .body(null)
+            when(e){
+                is InvalidOpenDay -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid open day", e)
+                else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
+            }
         }
     }
-
 }

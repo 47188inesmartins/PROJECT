@@ -5,9 +5,7 @@ import backend.jvm.services.dto.AppointmentInputDto
 import backend.jvm.services.dto.AppointmentOutputDto
 import backend.jvm.services.dto.ServiceOutputDto
 import backend.jvm.utils.RoleManager
-import backend.jvm.utils.errorHandling.ScheduleNotFound
-import backend.jvm.utils.errorHandling.ServiceNotFound
-import backend.jvm.utils.errorHandling.UserNotFound
+import backend.jvm.utils.errorHandling.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -35,16 +33,24 @@ class AppointmentController {
                 is ScheduleNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "Schedule not found", e)
                 is UserNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "User not found", e)
                 is ServiceNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "Service not found", e)
-                else ->  throw ResponseStatusException(HttpStatus.BAD_REQUEST, "", e)
+                else ->  throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
             }
         }
     }
 
-
-    @RoleManager(["MANAGER"])
+    @RoleManager(["CLIENT","MANAGER","EMPLOYEE"])
     @DeleteMapping("/{id}")
-    fun deleteAppointment(@PathVariable id: Int){
-        appointmentServices.deleteAppointment(id)
+    fun deleteAppointment(@PathVariable id: Int): ResponseEntity<String> {
+        return try {
+            appointmentServices.deleteAppointment(id)
+            ResponseEntity.status(200)
+                .body("Appointment deleted!")
+        } catch (e: Exception) {
+            when(e) {
+                is InvalidAppointment -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid appointment!", e)
+                else ->  throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
+            }
+        }
     }
 
 
@@ -57,8 +63,10 @@ class AppointmentController {
                 .body(response)
 
         }catch (e: Exception) {
-            ResponseEntity.status(400)
-                .body(null)
+            when(e) {
+                is AppointmentNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "Appointment not found!", e)
+                else ->  throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
+            }
         }
     }
 
@@ -71,11 +79,11 @@ class AppointmentController {
 
             ResponseEntity.status(200)
                 .body(response)
-
-        }catch (e: Exception){
-            println("error=$e")
-            ResponseEntity.status(400)
-                .body(null)
+        } catch (e: Exception) {
+            when(e) {
+                is EmptyAppointments -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "No appointments found", e)
+                else ->  throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
+            }
         }
     }
 
@@ -88,9 +96,10 @@ class AppointmentController {
             ResponseEntity.status(200)
                 .body(response)
         }catch (e: Exception){
-            println("exception = $e")
-            ResponseEntity.status(400)
-                .body(null)
+            when(e) {
+                is EmptyAppointments -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "No appointments found", e)
+                else ->  throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
+            }
         }
     }
 }

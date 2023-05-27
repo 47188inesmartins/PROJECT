@@ -32,24 +32,40 @@ class AppointmentServices : IAppointmentServices {
     @Autowired
     lateinit var scheduleRepository: ScheduleRepository
 
+    @Autowired
+    lateinit var unavailabilityRepository: UnavailabilityRepository
+
     override fun addAppointment(appointment: AppointmentInputDto): AppointmentOutputDto {
-        val service = servicesRepository.getServiceDBById(appointment.service)?: throw ServiceNotFound()
+        val service = servicesRepository.getServiceDBById(appointment.service)
+            ?: throw ServiceNotFound()
 
-        val user = if (appointment.user != null) appointment.user.map {
-            userRepository.getUserById(it)?: throw UserNotFound()
-        } else null
+        val user = appointment.user?.map { userId ->
+            userRepository.getUserById(userId) ?: throw UserNotFound()
+        }
 
-        val employee = user?.first {
-            val role = userRepository.getRole(it.id)
-            role == UserRoles.EMPLOYEE.name || role == UserRoles.MANAGER.name
-         }
-        val schedule = scheduleRepository.getScheduleById(appointment.schedule)?: throw ScheduleNotFound()
-        val app = appointment.mapToAppointmentDb(appointment, schedule, user, service)
-        val savedAppointment = appointmentRepository.save(app)
-        val time = Time(savedAppointment.appHour.time + service.duration.time)
-        unavailabilityRepository.save(UnavailabilityDB(getCurrentDate(),null,savedAppointment.appHour,time,
+        val employee = user?.firstOrNull { user ->
+            val role = userRepository.getRole(user.id)
+            role in listOf(UserRoles.EMPLOYEE.name, UserRoles.MANAGER.name)
+        }
+
+        val schedule = scheduleRepository.getScheduleById(appointment.schedule)
+            ?: throw ScheduleNotFound()
+
+        val appointmentDb = appointment.mapToAppointmentDb(appointment, schedule, user, service)
+        val savedAppointment = appointmentRepository.save(appointmentDb)
+
+        val endTime = savedAppointment.appHour.time + service.duration.time
+        val time = Time(endTime)
+
+        val unavailabilityDb = UnavailabilityDB(
+            getCurrentDate(),
+            null,
+            savedAppointment.appHour,
+            time,
             employee ?: throw UserNotFound()
-        ))
+        )
+        unavailabilityRepository.save(unavailabilityDb)
+
         return AppointmentOutputDto(savedAppointment)
     }
 
@@ -63,10 +79,15 @@ class AppointmentServices : IAppointmentServices {
 
     override fun deleteAppointment(id: Int){
         val getAppointment = appointmentRepository.getAppointmentById(id)
+        if(getCurrentDate().after(getAppointment.appDate) && getCurrentHour() > getAppointment.appHour)
+            return appointmentRepository.deleteById(id)
+
         val getEmployee = getAppointment.usersDB?.first {
             val role = userRepository.getRole(it.id)
             role == UserRoles.EMPLOYEE.name ||role == UserRoles.MANAGER.name
         }
+
+
         if(getEmployee == null) InvalidAppointment()
         val unavailabilityDB = unavailabilityRepository.getUnavailabilityDBByUserDBId(getEmployee!!)
         unavailabilityRepository.deleteById(unavailabilityDB.id)
@@ -75,7 +96,7 @@ class AppointmentServices : IAppointmentServices {
 
     override fun getAppointment(id: Int): AppointmentOutputDto? {
         val isAppointment = appointmentRepository.findById(id)
-        if(!isAppointment.isPresent) throw InvalidAppointment()
+        if(!isAppointment.isPresent) throw AppointmentNotFound()
         val appointment = isAppointment.get()
         return AppointmentOutputDto(appointment)
     }

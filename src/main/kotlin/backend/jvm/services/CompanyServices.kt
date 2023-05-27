@@ -5,6 +5,7 @@ import backend.jvm.repository.*
 import backend.jvm.services.dto.*
 import backend.jvm.services.interfaces.ICompanyServices
 import backend.jvm.utils.UserRoles
+import backend.jvm.utils.errorHandling.CompanyNotFound
 import backend.jvm.utils.errorHandling.InvalidNif
 import backend.jvm.utils.errorHandling.NifAlreadyExist
 import backend.jvm.utils.errorHandling.UserNotFound
@@ -77,7 +78,7 @@ class CompanyServices : ICompanyServices {
     }
 
     override fun findCompanyByNif(nif: String): Company? {
-        return companyRepository.findCompanyByNif(nif)
+        return companyRepository.findCompanyByNif(nif) ?: throw CompanyNotFound()
     }
 
     override fun getAllServices(id: Int): List<ServiceOutputDto>{
@@ -85,12 +86,14 @@ class CompanyServices : ICompanyServices {
     }
 
     override fun getAllAppointments(id: Int):List<AppointmentOutputDto>{
+        companyRepository.findAllById(id) ?: throw CompanyNotFound()
         return appointmentRepository.getAllOnGoingAppointments(id).map { AppointmentOutputDto(it) }
     }
 
     override fun getAppointment(id: Int, date: String, hour: String): List<AppointmentOutputDto>{
         val d = Date.valueOf(date)
         val h = Time.valueOf(hour)
+        companyRepository.findAllById(id) ?: throw CompanyNotFound()
         return companyRepository.getAppointmentsByDateAndHour(id, d, h).map { AppointmentOutputDto(it) }
     }
 
@@ -103,7 +106,7 @@ class CompanyServices : ICompanyServices {
     }
 
     override fun changeAddress(id: Int, address: String){
-        println("services = $address")
+        companyRepository.findAllById(id) ?: throw CompanyNotFound()
         companyRepository.changeAddress(id, address)
     }
 

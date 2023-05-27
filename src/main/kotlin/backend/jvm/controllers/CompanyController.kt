@@ -5,6 +5,7 @@ import backend.jvm.model.*
 import backend.jvm.services.CompanyServices
 import backend.jvm.services.dto.*
 import backend.jvm.utils.RoleManager
+import backend.jvm.utils.errorHandling.CompanyNotFound
 import backend.jvm.utils.errorHandling.InvalidNif
 import backend.jvm.utils.errorHandling.NifAlreadyExist
 import backend.jvm.utils.errorHandling.UserNotFound
@@ -54,8 +55,15 @@ class CompanyController {
 
     @RoleManager(["MANAGER"])
     @DeleteMapping("/{id}")
-    fun deleteCompany(@PathVariable id: Int): Boolean {
-        return companyServices.deleteCompany(id)
+    fun deleteCompany(@PathVariable id: Int): ResponseEntity<Boolean> {
+        return try {
+          val response = companyServices.deleteCompany(id)
+            ResponseEntity
+                .status(201)
+                .body(response)
+        } catch (e: Exception) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Something went wrong", e)
+        }
     }
 
     @ResponseBody
@@ -66,8 +74,7 @@ class CompanyController {
             ResponseEntity.status(200)
                 .body(response)
         } catch (e: Exception) {
-            ResponseEntity.status(400)
-                .body(null)
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Something went wrong", e)
         }
     }
 
@@ -80,12 +87,12 @@ class CompanyController {
                 .status(200)
                 .body(response)
         } catch (e: Exception) {
-            ResponseEntity
-                .status(400)
-                .body(null)
+            when(e) {
+                is CompanyNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "Company not found", e)
+                else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Something went wrong", e)
+            }
         }
     }
-
 
     @GetMapping("/{id}/services")
     fun getAllServices(@PathVariable id: Int): ResponseEntity<List<ServiceOutputDto>> {
@@ -93,8 +100,7 @@ class CompanyController {
             val response = companyServices.getAllServices(id)
             ResponseEntity.status(200).body(response)
         } catch (e: Exception) {
-            ResponseEntity.status(400)
-                .body(null)
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
         }
     }
 
@@ -107,15 +113,15 @@ class CompanyController {
                 ?: return ResponseEntity
                     .status(400)
                     .body(null)
-
             companyServices.changeAddress(id, request)
             ResponseEntity
                 .status(200)
                 .body("The address of the company was updated")
         }catch (e: Exception) {
-            ResponseEntity
-                .status(400)
-                .body(e.toString())
+            when(e) {
+                is CompanyNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "Company not found", e)
+                else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Something went wrong", e)
+            }
         }
     }
     @RoleManager(["MANAGER"])
@@ -133,9 +139,10 @@ class CompanyController {
             val response = companyServices.getAllAppointments(id)
             ResponseEntity.status(200).body(response)
         }catch (e: Exception){
-            println("exception= $e")
-            ResponseEntity.status(400)
-                .body(null)
+            when(e) {
+                is CompanyNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "Company not found", e)
+                else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Something went wrong", e)
+            }
         }
     }
 
@@ -148,9 +155,10 @@ class CompanyController {
                 .status(200)
                 .body(response)
         }catch (e: Exception){
-            ResponseEntity
-                .status(400)
-                .body(null)
+            when(e) {
+                is CompanyNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "Company not found", e)
+                else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Something went wrong", e)
+            }
         }
     }
 
@@ -162,21 +170,17 @@ class CompanyController {
                 .status(200)
                 .body(response)
         }catch (e: Exception){
-            println("exception = $e")
-            ResponseEntity.status(400)
-                .body(null)
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
         }
     }
 
     @GetMapping("/{id}/vacation")
     fun getVacation(@PathVariable id: Int): ResponseEntity<List<VacationOutputDto>>{
         return try{
-
             val response = companyServices.getVacation(id)
             ResponseEntity.status(200).body(response)
         }catch(e: Exception){
-            println("exception = $e")
-            ResponseEntity.status(400).body(null)
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
         }
     }
 
@@ -186,8 +190,7 @@ class CompanyController {
             val response = companyServices.getAllCompanies()
             ResponseEntity.status(200).body(response)
         }catch(e: Exception){
-            println("exception = $e")
-            ResponseEntity.status(400).body(null)
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
         }
     }
 
