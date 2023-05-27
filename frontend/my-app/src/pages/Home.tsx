@@ -36,7 +36,6 @@ export function Home() {
                         <p>Loading...</p>
                     ) : (
                         <>
-                            <input type="time" step="1800"/>
                             <MDBContainer className="py-5">
                                 <MDBCard className="px-3 pt-3"
                                          style={{ maxWidth: "100%"}} >

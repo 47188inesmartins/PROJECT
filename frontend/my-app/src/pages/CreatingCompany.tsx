@@ -1,5 +1,6 @@
 import {useEffect, useState} from "react";
 import {Fetch} from "../useFetch";
+import {Navigate} from "react-router";
 
 
 interface CompanyInputDto {
@@ -47,6 +48,15 @@ export function CreatingCompany(){
         'POST',
         companyData)
     }, [create]);*/
+
+    function FetchCreateCompany(){
+
+        Fetch('/company',
+            'POST',
+            companyData)
+
+        return(<Navigate to = "/" replace={true}></Navigate>);
+    }
 
 
     return (
@@ -132,7 +142,7 @@ export function CreatingCompany(){
                     </div>
                 </section>
             :
-            <div></div>
+            <FetchCreateCompany />
         }
         </div>
     );
