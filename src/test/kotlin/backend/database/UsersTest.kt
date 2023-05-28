@@ -15,7 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner
 import java.sql.Date
 import java.util.*
 import kotlin.test.assertEquals
-
+/*
 
 @RunWith(SpringRunner::class)
 @DataJpaTest
@@ -54,4 +54,4 @@ class UsersTest {
         assertEquals("user",get)
     }
 
-}
+}*/

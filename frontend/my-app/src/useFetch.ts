@@ -12,10 +12,13 @@ export function delay(delayInMs: number) {
     })
 }
 
-export function Fetch(url: string, method: string, requestBody: any = null): FetchResponse{
+export function Fetch(url: string, method: string, requestBody: any = null/*, token: string*/): FetchResponse{
     const [content, setContent] = useState(undefined)
 
-    const authorization = {'Content-Type': 'application/json'}
+    const authorization = {
+        'Content-Type': 'application/json',
+       // 'Authorization' : token
+    }
     const hostUrl = "http://localhost:8080" + url
 
     useEffect(() => {

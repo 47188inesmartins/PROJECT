@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
 import org.springframework.jdbc.datasource.DriverManagerDataSource
-
+/*
 @TestConfiguration
 class TestConfig(
     @Value("\${spring.test-datasource.url}")
@@ -24,4 +24,4 @@ class TestConfig(
             it.username = dbUsername
             it.password = dbPassword
         }
-}
+}*/

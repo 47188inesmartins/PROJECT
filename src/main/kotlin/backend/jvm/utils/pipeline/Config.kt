@@ -18,14 +18,18 @@ class AppConfig :
     lateinit var roleInterceptor: RoleInterceptor
 
     override fun addInterceptors(registry: InterceptorRegistry) {
-        registry.addInterceptor(authenticationInterceptor)
+        val pathMatcher = AntPathMatcher()
+        registry.addInterceptor(authenticationsInterceptor)
             .addPathPatterns(listOf(
-                "/appointment",
-                "/company",
-                "/vacation",
-                "/schedule",
-                "/service"
+                "/appointment/**",
+                "/company/**",
+                "/vacation/**",
+                "/schedule/**",
+                "/service/**",
+                "/user/**"
             ))
+            .pathMatcher(pathMatcher)
+
         registry.addInterceptor(roleInterceptor)
     }
 }
