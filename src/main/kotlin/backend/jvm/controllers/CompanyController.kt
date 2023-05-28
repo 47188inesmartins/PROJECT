@@ -3,12 +3,10 @@ package backend.jvm.controllers
 import kotlinx.serialization.json.Json
 import backend.jvm.model.*
 import backend.jvm.services.CompanyServices
+import backend.jvm.services.UserServices
 import backend.jvm.services.dto.*
 import backend.jvm.utils.RoleManager
-import backend.jvm.utils.errorHandling.CompanyNotFound
-import backend.jvm.utils.errorHandling.InvalidNif
-import backend.jvm.utils.errorHandling.NifAlreadyExist
-import backend.jvm.utils.errorHandling.UserNotFound
+import backend.jvm.utils.errorHandling.*
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import org.springframework.beans.factory.annotation.Autowired
@@ -28,6 +26,8 @@ class CompanyController {
     @Autowired
     lateinit var companyServices: CompanyServices
 
+    @Autowired
+    lateinit var userServices: UserServices
 
     @RoleManager(["CLIENT", "MANAGER", "EMPLOYEE"])
     @PostMapping
@@ -53,6 +53,28 @@ class CompanyController {
         }
     }
 
+    @RoleManager(["MANAGER"])
+    @PostMapping("/{cid}/employee")
+    fun addEmployee(@PathVariable cid: Int,@RequestBody email: String): ResponseEntity<CreatedUserOutput> {
+        return try {
+            val json = Json.parseToJsonElement(email)
+            val request = json.jsonObject["email"]?.jsonPrimitive?.content
+                ?: throw InvalidCredentials()
+            val response = userServices.addEmployee(cid,request)
+            ResponseEntity
+                .status(200)
+                .body(response)
+        }catch (e: Exception) {
+            println(e)
+            when(e){
+                is UserNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "User not found", e)
+                is CompanyNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "Company not found", e)
+                is AlreadyEmployee -> throw ResponseStatusException(HttpStatus.CONFLICT, "Already Employee", e)
+                is AlreadyCompanyManager -> throw ResponseStatusException(HttpStatus.CONFLICT, "Already Company Manager", e)
+                else -> throw  ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid user",e)
+            }
+        }
+    }
     @RoleManager(["MANAGER"])
     @DeleteMapping("/{id}")
     fun deleteCompany(@PathVariable id: Int): ResponseEntity<Boolean> {

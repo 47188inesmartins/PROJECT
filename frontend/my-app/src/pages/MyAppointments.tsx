@@ -12,54 +12,9 @@ import {
 } from "mdb-react-ui-kit";
 import {Form, useParams} from "react-router-dom";
 import {Fetch} from "../useFetch";
-import {Button, Card, Col, Row} from "react-bootstrap";
-import Container from "react-bootstrap/Container";
+import {Button, Modal} from "react-bootstrap";
+import {Navigate} from "react-router";
 
-export function MyAppointments1() {
-    const params = useParams()
-    const id = params.id
-    const appointments = Fetch(`/user/${id}/appointments`,"GET")
-    return (
-        <div>
-        {!appointments.response?
-            <div className="loading">
-            <div className="spinner-border" role="status">
-                <span className="sr-only">Loading...</span>
-            </div>
-            </div>:(
-                <div>
-                <div>
-                    {appointments.response.futureAppointments.map((appointment: any)=> (
-                        <Card key={appointment.id} style={{ width: '18rem' ,backgroundColor:'blue' }}>
-                            <Card.Body>
-                                <Card.Title>{appointment.companyName}</Card.Title>
-                                <Card.Subtitle className="mb-2 text-muted">Scheduled with {appointment.employee}</Card.Subtitle>
-                                <Card.Text>
-                                    Scheduled for {appointment.appDate} at {appointment.appHour}
-                                </Card.Text>
-                            </Card.Body>
-                        </Card>
-                    ))}
-                </div>
-            <div>
-                {appointments.response.passedAppointments.map((appointment: any)=> (
-                        <Card key={appointment.id} style={{ width: '18rem' ,backgroundColor:'pink' }}>
-                            <Card.Body>
-                            <Card.Title>{appointment.companyName}</Card.Title>
-                                <Card.Subtitle className="mb-2 text-muted">Scheduled with {appointment.employee}</Card.Subtitle>
-                                    <Card.Text>
-                                    Scheduled for {appointment.appDate} at {appointment.appHour}
-                                    </Card.Text>
-                            </Card.Body>
-                        </Card>
-                        ))}
-                    </div>
-                </div>
-            )
-        }
-        </div>
-    );
-}
 
 export function MyAppointments() {
     const params = useParams()
@@ -108,7 +63,7 @@ export function MyAppointments() {
                                             <td>{appointment.employee}</td>
                                             <td>{appointment.appDate} at {appointment.appHour}</td>
                                             <td>
-                                                <button style={{backgroundColor:'#d14319'}} className="btn btn-outline-light btn-lg px-5" type="button" onClick={()=>{}}>Cancel</button>
+                                                <button style={{backgroundColor:'#d14319'}} className="btn btn-outline-light btn-lg px-5" type="button" onClick={PopUpMessage}>Cancel</button>
                                             </td>
                                         </tr>
                                         ))}
@@ -135,3 +90,54 @@ export function MyAppointments() {
     );
 }
 
+function PopUpMessage() {
+    const [show, setShow] = useState(false);
+    const [cancel, setCancel] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleCancel = () => setCancel(true);
+
+    return (
+        <>
+            {!cancel?
+                <>
+            <Button variant="primary" onClick={handleCancel}>
+                Launch static backdrop modal
+            </Button>
+
+            <Modal
+                show={show}
+                onHide={handleClose}
+                backdrop="static"
+                keyboard={false}
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>Cancel appointment</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    Are you sure you want to cancel your appointment?
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                        Close
+                    </Button>
+                    <Button variant="primary" onClick = {handleCancel}>Cancel</Button>
+                </Modal.Footer>
+            </Modal>
+                </>:
+                <FetchCancelAppointment/>
+            }
+        </>
+    );
+}
+
+
+function FetchCancelAppointment(){
+    const params = useParams()
+    const id = params.id
+
+    Fetch('/appointment'+id,
+        'DELETE')
+
+    return(<Navigate to = "/" replace={true}></Navigate>);
+}

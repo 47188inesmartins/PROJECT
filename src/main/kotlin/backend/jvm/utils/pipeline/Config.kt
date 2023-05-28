@@ -4,6 +4,7 @@ import backend.jvm.utils.pipeline.RoleInterceptor
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Configuration
 import org.springframework.stereotype.Component
+import org.springframework.util.AntPathMatcher
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
@@ -11,13 +12,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 class AppConfig :
     WebMvcConfigurer {
 
-    companion object{
-        val MANAGER = listOf("/appointment", "/company")
-        val EMPLOYEE = listOf("/vacation", "/schedule", "/service")
-    }
-
     @Autowired
-    lateinit var authenticationInterceptor: AuthenticationInterceptor
+    lateinit var authenticationsInterceptor: AuthenticationsInterceptor
     @Autowired
     lateinit var roleInterceptor: RoleInterceptor
 

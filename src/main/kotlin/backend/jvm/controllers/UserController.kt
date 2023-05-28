@@ -4,20 +4,26 @@ import backend.jvm.services.UserServices
 import backend.jvm.services.dto.*
 import backend.jvm.utils.RoleManager
 import backend.jvm.utils.errorHandling.*
+import jakarta.servlet.http.Cookie
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseCookie
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 import java.util.*
 
 
+
 @RestController
-@RequestMapping("/user")
 @CrossOrigin(origins = ["http://localhost:3000"])
+@RequestMapping("/user")
 class UserController {
 
     @Autowired
@@ -66,38 +72,6 @@ class UserController {
     }
 
     @RoleManager(["MANAGER","EMPLOYEE","CLIENT"])
-    @GetMapping("/{id}/role")
-    fun getRole(@PathVariable id: Int): ResponseEntity<String?> {
-        return try {
-            val response = userServices.getRole(id)
-            ResponseEntity
-                .status(200)
-                .body(response)
-        }catch (e: UserNotFound) {
-            throw ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found", e)
-        }
-    }
-
-    @RoleManager(["MANAGER","EMPLOYEE","CLIENT"])
-    @PutMapping("/{id}/availability")
-    fun changeAvailability(@PathVariable id: Int, @RequestBody availability: String): ResponseEntity<String> {
-        return try {
-            val json = Json.parseToJsonElement(availability)
-            val request = json.jsonObject["availability"]?.jsonPrimitive?.content
-                ?: return ResponseEntity
-                    .status(400)
-                    .body(null)
-
-            val response = userServices.changeAvailability(request, id)
-            ResponseEntity
-                .status(200)
-                .body(response)
-        }catch (e: Exception) {
-            throw  ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid user",e)
-        }
-    }
-
-    @RoleManager(["MANAGER","EMPLOYEE","CLIENT"])
     @PutMapping("/{id}/password")
     fun changePassword(@PathVariable id: Int, @RequestBody password: String): ResponseEntity<String> {
         return try {
@@ -114,61 +88,57 @@ class UserController {
         }
     }
 
-    @RoleManager(["MANAGER"])
-    @PostMapping("/company/{cid}/employee")
-    fun addEmployee(@PathVariable cid: Int,@RequestBody email: String): ResponseEntity<CreatedUserOutput> {
-        return try {
-            val json = Json.parseToJsonElement(email)
-            val request = json.jsonObject["email"]?.jsonPrimitive?.content
-                ?: throw InvalidCredentials()
-            val response = userServices.addEmployee(cid,request)
-            ResponseEntity
-                .status(200)
-                .body(response)
-        }catch (e: Exception) {
-            println(e)
-            when(e){
-                is UserNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "User not found", e)
-                is CompanyNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "Company not found", e)
-                is AlreadyEmployee -> throw ResponseStatusException(HttpStatus.CONFLICT, "Already Employee", e)
-                is AlreadyCompanyManager -> throw ResponseStatusException(HttpStatus.CONFLICT, "Already Company Manager", e)
-                else -> throw  ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid user",e)
-            }
-        }
-    }
-
-
     @PostMapping("/login")
-    fun login(@RequestBody credentials: UserCredentials): ResponseEntity<UUID> {
+    fun login(@RequestBody credentials: UserCredentials,response: HttpServletResponse): ResponseEntity<UUID> {
         return try {
-
-            /*
-
-            val jsonPass = Json.parseToJsonElement(credentials.password)
-            val requestPass = jsonPass.jsonObject["password"]?.jsonPrimitive?.content
-                ?: return ResponseEntity
-                    .status(400)
-                    .body(null)
-
-            val jsonEmail = Json.parseToJsonElement(credentials.email)
-            val requestEmail = jsonEmail.jsonObject["email"]?.jsonPrimitive?.content
-                ?: return ResponseEntity
-                    .status(400)
-                    .body(null)
-
-            */
-
-            val response = userServices.getUsersByEmailAndPass(credentials.email,credentials.password)
-
-            println(response)
+            val user = userServices.getUsersByEmailAndPass(credentials.email,credentials.password)
+            val cookieToken = ResponseCookie
+                .from("token", user.token.toString())
+                .maxAge(7 * 24 * 60 * 60 )
+                .path("/")
+                .httpOnly(true)
+                .secure(false)
+                .build()
+            response.addHeader(HttpHeaders.SET_COOKIE, cookieToken.toString())
             ResponseEntity
                 .status(200)
-                .body(response.token)
-        }catch (e: InvalidCredentials) {
+                .body(user.token)
+        }catch (e: Exception) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Email or password invalid", e)
         }
     }
 
+    @GetMapping("/check-session")
+    fun check(request: HttpServletRequest ) : Pair<Cookie,String?>? {
+        try {
+             println(request.cookies)
+             val cookies = request.cookies.first()
+             val token = cookies.value ?: return null
+             val role = userServices.getRoleByToken(token)
+             return Pair(cookies,role)
+        }catch (e: Exception){
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid token", e)
+        }
+    }
+
+    @PostMapping("/logout")
+    fun logout(response: HttpServletResponse): ResponseEntity<String> {
+        return try {
+            val cookieToken = ResponseCookie
+                .from("token", "")
+                .maxAge(0)
+                .path("/")
+                .httpOnly(true)
+                .secure(false)
+                .build()
+            response.addHeader(HttpHeaders.SET_COOKIE, cookieToken.toString())
+            ResponseEntity
+                .status(200)
+                .body("Logout completed")
+        }catch (e: Exception) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Email or password invalid", e)
+        }
+    }
     @RoleManager(["CLIENT"])
     @GetMapping("/{id}/appointments")
     fun getAllAppointments(@PathVariable id: Int): ResponseEntity<AppointmentsUserInfo> {

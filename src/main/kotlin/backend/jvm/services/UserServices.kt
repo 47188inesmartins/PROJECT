@@ -101,7 +101,6 @@ class UserServices : IUserInterface {
     override fun getUsersByEmailAndPass (email: String, password: String): UserOutputDto {
         val user = userRepository.getUsersByEmailPass(Hashing.encodePass(password),email)
             ?: throw InvalidCredentials()
-        println("here")
         return UserOutputDto(user)
     }
 

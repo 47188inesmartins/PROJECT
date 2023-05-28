@@ -8,7 +8,7 @@ import org.springframework.web.method.HandlerMethod
 import org.springframework.web.servlet.HandlerInterceptor
 
 @Component
-class AuthenticationInterceptor(
+class AuthenticationsInterceptor(
     private val authorizationHeaderProcessor : AuthorizationHeaderProcessor
 )  : HandlerInterceptor {
 
@@ -26,14 +26,17 @@ class AuthenticationInterceptor(
                 false
             }else{
                 val roleAllowed = handler.getMethodAnnotation(RoleManager::class.java)
+                println(roleAllowed)
                 if(roleAllowed == null){
                     response.status = 200
                     return true
                 }
                 return if(user?.second in roleAllowed.roleList){
+                    println("200")
                     response.status = 200
                     true
                 } else{
+                    println("401")
                     response.status = 401
                     false
                 }

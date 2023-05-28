@@ -1,25 +1,55 @@
-# Definir imagem base
-FROM openjdk:11-jdk-slim
+# Dockerfile para o projeto com React, Spring e PostgreSQL
 
-# Instalar Node.js e NPM
-RUN apt-get update && \
-    apt-get install -y curl && \
-    curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
-    apt-get install -y nodejs
+# Estágio 1: Construir o frontend em React
+FROM node:14 as frontend
 
-# Criar diretório de trabalho para a aplicação
-WORKDIR /app
+WORKDIR /app/frontend
 
-# Copiar o código fonte para o diretório de trabalho
-COPY . .
+# Copiar os arquivos do projeto frontend
+COPY frontend/package.json .
+COPY frontend/yarn.lock .
 
-# Compilar o frontend
-RUN cd frontend && \
-    npm install && \
-    npm run build
+# Instalar as dependências do frontend
+RUN yarn install
 
-# Definir a porta que a aplicação irá executar
+# Copiar o código-fonte do frontend
+COPY frontend/ .
+
+# Construir o frontend
+RUN yarn build
+
+# Estágio 2: Construir o backend em Spring
+FROM adoptopenjdk/openjdk11:alpine as backend
+
+WORKDIR /app/backend
+
+# Copiar o código-fonte do backend
+COPY backend/ .
+
+# Construir o backend
+RUN ./gradlew build
+
+# Estágio 3: Criar a imagem final
+FROM adoptopenjdk/openjdk11:alpine
+
+# Instalar o PostgreSQL
+RUN apk update && apk add postgresql
+
+WORKDIR /projetoseminario
+
+# Copiar o JAR do backend construído
+COPY --from=backend /src/main/kotlin/backend/build/libs/backend.jar .
+
+# Copiar a build do frontend
+COPY --from=frontend /frontend/build ./frontend/build
+
+# Definir as variáveis de ambiente para o banco de dados
+ENV SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/postgres
+ENV SPRING_DATASOURCE_USERNAME=postgres
+ENV SPRING_DATASOURCE_PASSWORD=inesmartins
+
+# Expor a porta do backend
 EXPOSE 8080
 
-# Iniciar a aplicação
-CMD ["java", "-jar", "backend/target/myapp.jar"]
+# Comando para executar o projeto
+CMD ["java", "-jar", "backend.jar"]

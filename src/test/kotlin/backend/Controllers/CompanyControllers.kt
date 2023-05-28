@@ -32,4 +32,4 @@ class CompanyControllersTest {
         this.mockMvc.perform(post("/company"))
             .andExpect(MockMvcResultMatchers.status().is2xxSuccessful)
     }*/
-}
+//}

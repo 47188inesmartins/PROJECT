@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import {Fetch} from "../useFetch";
 import {Navigate} from "react-router";
+import {AuthnContainer} from "./Authn";
 
 
 interface CompanyInputDto {
@@ -60,6 +61,7 @@ export function CreatingCompany(){
 
 
     return (
+        <AuthnContainer>
         <div>
             {!create ?
                 <section className="vh-100 gradient-custom">
@@ -145,5 +147,6 @@ export function CreatingCompany(){
             <FetchCreateCompany />
         }
         </div>
+        </AuthnContainer>
     );
 }

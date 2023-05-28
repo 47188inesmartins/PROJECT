@@ -2,6 +2,7 @@ import {MDBBtn, MDBCheckbox, MDBCol, MDBContainer, MDBInput, MDBRow} from "mdb-r
 import React from "react";
 
 import { useState } from 'react';
+import {AuthnContainer} from "./Authn";
 
 export function Login() {
 
@@ -29,6 +30,7 @@ export function Login() {
 
 
     return (
+        <AuthnContainer>
         <MDBContainer fluid className="p-3 my-5 h-custom">
             <MDBRow>
                 <MDBCol col='10' md='6'>
@@ -83,5 +85,6 @@ export function Login() {
             </MDBRow>
 
         </MDBContainer>
+        </AuthnContainer>
     );
 }
