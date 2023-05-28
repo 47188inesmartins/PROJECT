@@ -10,9 +10,9 @@ interface IScheduleServices {
 
     fun deleteSchedule(id: Int)
 
-    fun getSchedule(id:Int): ScheduleOutputDto?
+    fun getScheduleById(id:Int): ScheduleOutputDto?
 
-    fun getOpenDays(id: Int): List<DayOutputDto>
+  /*  fun getOpenDays(id: Int): List<DayOutputDto>
 
-    fun getVacation(id: Int): List<VacationOutputDto>
+    fun getVacation(id: Int): List<VacationOutputDto>**************/
 }

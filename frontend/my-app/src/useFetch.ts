@@ -1,37 +1,33 @@
 import React, {useEffect, useState} from "react";
-import axios from 'axios';
 const HOST = "http://localhost:8080"
 
 export type FetchResponse = {
     response:any,
     error:any
 }
-export function delay(delayInMs: number) {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => resolve(undefined), delayInMs)
-    })
-}
+
 
 export function Fetch(url: string, method: string, requestBody: any = null/*, token: string*/): FetchResponse{
     const [content, setContent] = useState(undefined)
 
+
+
+    console.log(requestBody)
     const authorization = {
         'Content-Type': 'application/json',
-       // 'Authorization' : token
+        'Authorization' : 'Bearer 40e196c0-d2e0-435d-9d20-38ef1ff7bffd'
     }
-    const hostUrl = "http://localhost:8080" + url
+    const hostUrl = HOST + url
 
     useEffect(() => {
         let cancelled = false
         async function doFetch() {
             try{
-                console.log("RES",requestBody)
                 const resp = await fetch(hostUrl,{
                     method : method,
-                    body : requestBody,
+                    body : requestBody? JSON.stringify(requestBody) : null,
                     headers : authorization
                 })
-                console.log("headers",await resp.headers)
                 const body = await resp.json()
                 console.log("BODY", body)
                 if (!cancelled) {
@@ -39,6 +35,7 @@ export function Fetch(url: string, method: string, requestBody: any = null/*, to
                     setContent(body)
                 }
             }catch (error){
+                console.log("error = ", error)
             }
         }
         setContent(undefined)
@@ -47,5 +44,5 @@ export function Fetch(url: string, method: string, requestBody: any = null/*, to
             cancelled = true
         }
     }, [url,method,requestBody])
-    return {response:content,error:undefined}
+    return {response:content, error:undefined}
 }

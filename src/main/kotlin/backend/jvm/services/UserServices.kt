@@ -26,15 +26,13 @@ class UserServices : IUserInterface {
     @Autowired
     lateinit var companyRepository: CompanyRepository
     @Autowired
-    lateinit var scheduleRepository: ScheduleRepository
-    @Autowired
     lateinit var roleRepository: RoleRepository
     @Autowired
     lateinit var userCompanyRepository: UserCompanyRepository
 
 
 
-        companion object{
+    companion object{
         val EMAIL_FORMAT = Regex("""^\w+@\w+\.\w+$""")
         val PASSWORD_FORMAT = Regex("^(?=.*\\d)(?=.*[!@#\$%^&*])(?=.*[a-zA-Z]).{8,}$")
     }
@@ -70,35 +68,27 @@ class UserServices : IUserInterface {
         return UserOutputDto(getUser.get())
     }
 
-    override fun getRole(id: Int):String?{
+    override fun changeRole(id: Int, name: String): String {
+        return userRepository.changeRole(id,name)
+    }
+
+ /*   override fun getRoleByUser(id: Int):String?{
         return userRepository.getRole(id)?: throw UserNotFound()
     }
-
-    override fun changeAvailability(availability: String, id: Int): String{
-    TODO()
-    // return userRepository.changeAvailability(availability,id)
-    }
-
-
+*/
     override fun changePassword(password: String, id: Int): String{
         if(!Hashing.verifyPasswordSecure(password)) throw InvalidPassword()
         val pass = Hashing.encodePass(password)
         return userRepository.changePassword(pass, id)
     }
 
-  /*  fun getUsersByCompId (compId: Int): List<UserOutputDto> {
-        val repoList = userRepository.getUsersByCompanyId(compId)
-        return repoList.map { UserOutputDto(it) }
-    }
-*/
-
-    fun getRoleByCompId (compId: Int, userId: Int): UserCompany {
+    override fun getRoleByUserAndCompany (compId: Int, userId: Int): UserCompany {
         val user = userRepository.getReferenceById(userId)
         val company = companyRepository.getReferenceById(compId)
         return userCompanyRepository.getRoleByCompanyAndUser(company,user)
     }
 
-    override fun getUsersByEmailAndPass (email: String, password: String): UserOutputDto {
+    override fun getUsersByEmailAndPassword (email: String, password: String): UserOutputDto {
         val user = userRepository.getUsersByEmailPass(Hashing.encodePass(password),email)
             ?: throw InvalidCredentials()
         return UserOutputDto(user)
@@ -109,7 +99,7 @@ class UserServices : IUserInterface {
         return userRepository.getUserByToken(t) ?: throw InvalidToken()
     }
 
-     fun getRoleByToken(token: String): String? {
+    fun getRoleByToken(token: String): String? {
         val user = userRepository.getUserByToken(UUID.fromString(token))?.id ?: throw UserNotFound()
         return  userRepository.getRole(user)
     }
@@ -133,7 +123,7 @@ class UserServices : IUserInterface {
         return CreatedUserOutput(updatedUser.id, updatedUser.token)
     }
 
-    override fun getAllAppointments(id: Int): AppointmentsUserInfo{
+    override fun getAllAppointmentsByUser(id: Int): AppointmentsUserInfo{
         val listAppointment = appointmentRepository.getAppointmentByUserDB(id)
         if(listAppointment.isEmpty()) return AppointmentsUserInfo()
 
@@ -166,26 +156,4 @@ class UserServices : IUserInterface {
             )
         }
     }
-
-    override fun changeRole(id: Int, name: String): String {
-        return userRepository.changeRole(id,name)
-    }
 }
-
-/*
-fun scheduleAnAppointment(id:Int,appointment: AppointmentInputDto): AppointmentOutputDto {
-         val getUser = userRepository.findById(id)
-         if(getUser.isEmpty) throw UserNotFound()
-         val serviceDb = servicesRepository.findById(appointment.service).get()
-         val schedule = scheduleRepository.findById(appointment.schedule).get()
-         val app = Appointment(
-             appHour = Time.valueOf(appointment.appHour),
-             appDate = Date.valueOf(appointment.appDate),
-             scheduleId = schedule,
-             userDBId = getUser.get(),
-             serviceDB = serviceDb
-         )
-         val com = appointmentRepository.save(app)
-         return AppointmentOutputDto(com)
-}
-*/

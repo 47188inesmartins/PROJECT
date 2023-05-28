@@ -46,8 +46,8 @@ export function Layout() {
 
                 <CDBSidebarFooter>
                     <CDBSidebarMenu>
-                        <NavLink to="/analytics">
-                            <CDBSidebarMenuItem icon="chart-line">Login</CDBSidebarMenuItem>
+                        <NavLink to="/login">
+                            <CDBSidebarMenuItem>Login</CDBSidebarMenuItem>
                         </NavLink>
                     </CDBSidebarMenu>
                 </CDBSidebarFooter>

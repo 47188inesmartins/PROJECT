@@ -29,7 +29,7 @@ class CompanyController {
     @Autowired
     lateinit var userServices: UserServices
 
-    @RoleManager(["CLIENT", "MANAGER", "EMPLOYEE"])
+   // @RoleManager(["CLIENT", "MANAGER", "EMPLOYEE"])
     @PostMapping
     fun addCompany(
         @RequestBody company: CompanyInputDto
@@ -92,7 +92,7 @@ class CompanyController {
     @GetMapping("/{id}")
     fun getCompany(@PathVariable id: Int): ResponseEntity<CompanyOutputDto> {
         return try {
-            val response = companyServices.getCompany(id)
+            val response = companyServices.getCompanyById(id)
             ResponseEntity.status(200)
                 .body(response)
         } catch (e: Exception) {
@@ -104,7 +104,7 @@ class CompanyController {
     @GetMapping("/nif")
     fun findCompanyByNif(@RequestParam nif: String): ResponseEntity<Company> {
         return try {
-            val response = companyServices.findCompanyByNif(nif)
+            val response = companyServices.getCompanyByNif(nif)
             ResponseEntity
                 .status(200)
                 .body(response)
@@ -158,7 +158,7 @@ class CompanyController {
     @GetMapping("/{id}/appointments")
     fun getAllOnGoingAppointments(@PathVariable id: Int): ResponseEntity<List<AppointmentOutputDto>>{
         return try {
-            val response = companyServices.getAllAppointments(id)
+            val response = companyServices.getAllAppointmentsByCompany(id)
             ResponseEntity.status(200).body(response)
         }catch (e: Exception){
             when(e) {
@@ -172,7 +172,7 @@ class CompanyController {
     @GetMapping("/{id}/appointment")
     fun getAppointmentByDateAndHour(@PathVariable id: Int, @RequestParam date: String, hour: String): ResponseEntity<List<AppointmentOutputDto>> {
         return try {
-            val response = companyServices.getAppointment(id,date,hour)
+            val response = companyServices.getAppointmentByCompanyAndDateAndHour(id,date,hour)
             ResponseEntity
                 .status(200)
                 .body(response)
@@ -187,7 +187,7 @@ class CompanyController {
     @GetMapping("/{id}/days")
     fun getOpenDays(@PathVariable id: Int): ResponseEntity<List<DayOutputDto>>{
         return try {
-            val response = companyServices.getOpenDays(id)
+            val response = companyServices.getOpenDaysByCompany(id)
             ResponseEntity
                 .status(200)
                 .body(response)
@@ -199,7 +199,7 @@ class CompanyController {
     @GetMapping("/{id}/vacation")
     fun getVacation(@PathVariable id: Int): ResponseEntity<List<VacationOutputDto>>{
         return try{
-            val response = companyServices.getVacation(id)
+            val response = companyServices.getVacationByCompany(id)
             ResponseEntity.status(200).body(response)
         }catch(e: Exception){
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)

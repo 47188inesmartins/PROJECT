@@ -5,9 +5,15 @@ import backend.jvm.services.dto.DayOutputDto
 import java.sql.Time
 
 interface IDayServices {
+
     fun addOpenDay(day: DayInputDto): DayOutputDto
+
     fun updateBeginHour(id:Int,hour: String): Time
+
     fun updateEndHour(id:Int,hour: String): Time
+
     fun deleteDay(day: Int)
-    fun getAvailableServicesDays(serviceId: Int): List<DayOutputDto>
+
+    fun getAvailableDaysByService(serviceId: Int): List<DayOutputDto>
+
 }

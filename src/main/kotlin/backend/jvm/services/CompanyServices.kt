@@ -71,37 +71,37 @@ class CompanyServices : ICompanyServices {
         return true
     }
 
-    override fun getCompany(id: Int): CompanyOutputDto {
+    override fun getCompanyById(id: Int): CompanyOutputDto {
         val comp = companyRepository.getReferenceById(id)
         //if(comp == null) throw CompanyNotFound()
         return CompanyOutputDto(comp)
     }
 
-    override fun findCompanyByNif(nif: String): Company? {
+    override fun getCompanyByNif(nif: String): Company? {
         return companyRepository.findCompanyByNif(nif) ?: throw CompanyNotFound()
     }
 
-    override fun getAllServices(id: Int): List<ServiceOutputDto>{
+    override fun getAllServicesByCompany(id: Int): List<ServiceOutputDto>{
         return serviceRepository.getAllServicesFromACompany(id).map { ServiceOutputDto(it) }
     }
 
-    override fun getAllAppointments(id: Int):List<AppointmentOutputDto>{
+    override fun getAllAppointmentsByCompany(id: Int):List<AppointmentOutputDto>{
         companyRepository.findAllById(id) ?: throw CompanyNotFound()
         return appointmentRepository.getAllOnGoingAppointments(id).map { AppointmentOutputDto(it) }
     }
 
-    override fun getAppointment(id: Int, date: String, hour: String): List<AppointmentOutputDto>{
+    override fun getAppointmentByCompanyAndDateAndHour(id: Int, date: String, hour: String): List<AppointmentOutputDto>{
         val d = Date.valueOf(date)
         val h = Time.valueOf(hour)
         companyRepository.findAllById(id) ?: throw CompanyNotFound()
         return companyRepository.getAppointmentsByDateAndHour(id, d, h).map { AppointmentOutputDto(it) }
     }
 
-    override fun getOpenDays(id: Int): List<DayOutputDto>{
+    override fun getOpenDaysByCompany(id: Int): List<DayOutputDto>{
         return dayRepository.getOpenDays(id).map { DayOutputDto(it) }
     }
 
-    override fun getVacation(id: Int): List<VacationOutputDto>{
+    override fun getVacationByCompany(id: Int): List<VacationOutputDto>{
         return vacationRepository.getVacationsByCompany(id).map { VacationOutputDto(it) }
     }
 
@@ -115,8 +115,12 @@ class CompanyServices : ICompanyServices {
     }
 
 
-    fun getAllCompanies(): List<CompanyOutputDto>{
+    override fun getAllCompanies(): List<CompanyOutputDto>{
         return companyRepository.findAll().map{ CompanyOutputDto(it) }
+    }
+
+    override fun getAllServices(id: Int): List<ServiceOutputDto>{
+        return serviceRepository.getAllServicesFromACompany(id).map { ServiceOutputDto(it) }
     }
 
 }

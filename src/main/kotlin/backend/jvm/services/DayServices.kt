@@ -50,7 +50,7 @@ class DayServices : IDayServices {
         dayRepository.deleteById(day)
     }
 
-    override fun getAvailableServicesDays(serviceId: Int): List<DayOutputDto> {
+    override fun getAvailableDaysByService(serviceId: Int): List<DayOutputDto> {
         val availableDays = dayRepository.getAvailableServicesDay(serviceId)
         if(availableDays.isEmpty()) throw NoAvailableDays()
         return availableDays.map { DayOutputDto(it) }

@@ -58,11 +58,11 @@ class ScheduleServices: IScheduleServices {
      * @return Schedule which is the correspondent schedule for that id
      * @exception NoSuchElementException – if no value is present
      */
-    override fun getSchedule(id:Int): ScheduleOutputDto?{
+    override fun getScheduleById(id:Int): ScheduleOutputDto?{
         return ScheduleOutputDto(scheduleRepository.findById(id).get())
     }
 
-    override fun getOpenDays(id: Int): List<DayOutputDto> {
+  /*  override fun getOpenDaysBySchedule(id: Int): List<DayOutputDto> {
         val openDays = dayRepository.getDayByScheduleId(id)
         if(openDays.isEmpty()) throw  ScheduleOpenDays()
         return openDays.map { DayOutputDto(it) }
@@ -72,4 +72,5 @@ class ScheduleServices: IScheduleServices {
         val vacation = vacationRepository.getVacationsByScheduleId(id)
         return vacation.map { VacationOutputDto(it) }
     }
+    */
 }

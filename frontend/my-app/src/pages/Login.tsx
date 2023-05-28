@@ -1,90 +1,122 @@
-import {MDBBtn, MDBCheckbox, MDBCol, MDBContainer, MDBInput, MDBRow} from "mdb-react-ui-kit";
-import React from "react";
+import React, {useState} from 'react';
+import {
+    MDBBtn,
+    MDBContainer,
+    MDBRow,
+    MDBCol,
+    MDBCard,
+    MDBCardBody,
+    MDBInput,
+    MDBIcon
+}
+    from 'mdb-react-ui-kit';
+import {Fetch} from "../useFetch";
+import {Navigate} from "react-router";
 
-import { useState } from 'react';
-import {AuthnContainer} from "./Authn";
+
+
+
+
+interface UserCredentials{
+    email: string,
+    password: string
+}
+
+
+
+
 
 export function Login() {
 
-    const [inputs, setInputs] = useState({
-        email: "",
-        password: "",
-    })
+    const [email, setEmail] = useState<string>("")
+    const [password, setPassword] = useState<string>("")
+    const [submit, setSubmit] = useState<boolean>(false)
 
-    function handleEmailChange(ev: React.FormEvent<HTMLInputElement>) {
-        const name = ev.currentTarget.name
-        setInputs({ ...inputs, [name]: ev.currentTarget.value })
-     //   setError(undefined)
+
+    const handleSubmit = () => {
+        setSubmit(true)
     }
 
-    function handlePasswordChange(ev: React.FormEvent<HTMLInputElement>) {
-        const name = ev.currentTarget.name
-        setInputs({ ...inputs, [name]: ev.currentTarget.value })
-        //   setError(undefined)
+    function FetchLogin(){
+        const userCredentials: UserCredentials = {
+            email,
+            password
+        }
+        console.log(email, password)
+        Fetch("/user/login", 'POST', userCredentials)
+       return(<div></div>)
+        // return(<Navigate to = "/" replace={true}></Navigate>);
     }
-
-    function handleSubmit(ev: React.FormEvent<HTMLFormElement>){
-        ev.preventDefault()
-     //   setIsSubmitting(true)
-    }
-
 
     return (
-        <AuthnContainer>
-        <MDBContainer fluid className="p-3 my-5 h-custom">
-            <MDBRow>
-                <MDBCol col='10' md='6'>
-                    <img
-                        src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
-                        className="img-fluid"
-                        alt="Sample image"
-                    />
-                </MDBCol>
+        <div>
+            {!submit ?
+                <MDBContainer fluid>
+                    <MDBRow className='d-flex justify-content-center align-items-center h-100'>
+                        <MDBCol col='12'>
 
-                <MDBCol col='4' md='6'>
-                    <br /><br /><br />
-                    <div className="divider d-flex align-items-center my-4">
-                        <p className="text-center fw-bold mx-3 mb-0">Log into your account</p>
-                    </div>
+                            <MDBCard className='bg-dark text-white my-5 mx-auto'
+                                     style={{borderRadius: '1rem', maxWidth: '400px'}}>
+                                <MDBCardBody className='p-5 d-flex flex-column align-items-center mx-auto w-100'>
 
-                    <form onSubmit={handleSubmit}>
-                        <MDBInput
-                            wrapperClass='mb-4'
-                            label='Email address'
-                            id='formControlLg'
-                            type='email'
-                            size="lg"
-                            value={inputs.email}
-                            onChange={handleEmailChange}
-                        />
-                        <MDBInput
-                            wrapperClass='mb-4'
-                            label='Password'
-                            id='formControlLg'
-                            type='password'
-                            size="lg"
-                            value={inputs.password}
-                            onChange={handlePasswordChange}
-                        />
+                                    <h2 className="fw-bold mb-2 text-uppercase">Login</h2>
+                                    <p className="text-white-50 mb-5">Please enter your login and password!</p>
 
-                        <div className="d-flex justify-content-between mb-4">
-                            <MDBCheckbox name='flexCheck' value='' id='flexCheckDefault' label='Remember me' />
-                            <a href="!#">Forgot password?</a>
-                        </div>
+                                    <MDBInput wrapperClass='mb-4 mx-5 w-100'
+                                              labelClass='text-white'
+                                              label='Email address'
+                                              id='formControlLg'
+                                              type='email'
+                                              size="lg"
+                                              value={email}
+                                              onChange={(e) => setEmail(e.target.value)}
+                                    />
+                                    <MDBInput wrapperClass='mb-4 mx-5 w-100'
+                                              labelClass='text-white'
+                                              label='Password'
+                                              id='formControlLg'
+                                              type='password'
+                                              size="lg"
+                                              value={password}
+                                              onChange={(e) => setPassword(e.target.value)}
+                                    />
 
-                        <div className='text-center text-md-start mt-4 pt-2'>
-                            <MDBBtn className="mb-0 px-5" size='lg' type="submit">Login</MDBBtn>
-                            <p className="small fw-bold mt-2 pt-1 mb-2">
-                                Don't have an account? <a href="src/pages/Login#!" className="link-danger">Register</a>
-                            </p>
-                        </div>
-                    </form>
+                                    <p className="small mb-3 pb-lg-2"><a className="text-white-50" href="#!">Forgot
+                                        password?</a></p>
+                                    <button className="btn btn-outline-light btn-lg px-5" type="submit"
+                                            onClick={handleSubmit}>Login
+                                    </button>
 
-                </MDBCol>
+                                    <div className='d-flex flex-row mt-3 mb-5'>
+                                        <MDBBtn tag='a' color='none' className='m-3' style={{color: 'white'}}>
+                                            <MDBIcon fab icon='facebook-f' size="lg"/>
+                                        </MDBBtn>
 
-            </MDBRow>
+                                        <MDBBtn tag='a' color='none' className='m-3' style={{color: 'white'}}>
+                                            <MDBIcon fab icon='twitter' size="lg"/>
+                                        </MDBBtn>
 
-        </MDBContainer>
-        </AuthnContainer>
+                                        <MDBBtn tag='a' color='none' className='m-3' style={{color: 'white'}}>
+                                            <MDBIcon fab icon='google' size="lg"/>
+                                        </MDBBtn>
+                                    </div>
+
+                                    <div>
+                                        <p className="mb-0">Don't have an account? <a href="#!"
+                                                                                      className="text-white-50 fw-bold">Sign
+                                            Up</a></p>
+
+                                    </div>
+                                </MDBCardBody>
+                            </MDBCard>
+                        </MDBCol>
+                    </MDBRow>
+                </MDBContainer>
+                :
+            <FetchLogin/>
+        }
+        </div>
+
     );
 }
+

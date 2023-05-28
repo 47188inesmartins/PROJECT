@@ -35,38 +35,36 @@ export function Home() {
                     {!response.response ? (
                         <p>Loading...</p>
                     ) : (
-                        <>
-                            <MDBContainer className="py-5">
-                                <MDBCard className="px-3 pt-3"
-                                         style={{ maxWidth: "100%"}} >
-                                    <div>
-                                        {response.response.map((object: any) => (
-                                            <a href={`/company/${object.id}`} className="text-dark">
-                                                <MDBRow className="mb-4 border-bottom pb-2">
-                                                    <MDBCol size="3">
-                                                        <img
-                                                            src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"
-                                                            className="img-fluid shadow-1-strong rounded"
-                                                            alt="Hollywood Sign on The Hill"
-                                                        />
-                                                    </MDBCol>
+                        <MDBContainer className="py-5">
+                            <MDBCard className="px-3 pt-3"
+                                     style={{ maxWidth: "100%"}} >
+                                <div>
+                                    {response.response.map((object: any) => (
+                                        <a href={`/company/${object.id}`} className="text-dark">
+                                            <MDBRow className="mb-4 border-bottom pb-2">
+                                                <MDBCol size="3">
+                                                    <img
+                                                        src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"
+                                                        className="img-fluid shadow-1-strong rounded"
+                                                        alt="Hollywood Sign on The Hill"
+                                                    />
+                                                </MDBCol>
 
-                                                    <MDBCol size="9">
-                                                        <p className="mb-2">
-                                                            <strong>{object.name}</strong>
-                                                        </p>
-                                                        <p>
-                                                            <u> {object.description}</u>
-                                                        </p>
-                                                    </MDBCol>
-                                                </MDBRow>
-                                            </a>
-                                        ))}
+                                                <MDBCol size="9">
+                                                    <p className="mb-2">
+                                                        <strong>{object.name}</strong>
+                                                    </p>
+                                                    <p>
+                                                        <u> {object.description}</u>
+                                                    </p>
+                                                </MDBCol>
+                                            </MDBRow>
+                                        </a>
+                                    ))}
 
-                                    </div>
-                                </MDBCard>
-                            </MDBContainer>
-                        </>
+                                </div>
+                            </MDBCard>
+                        </MDBContainer>
                     )
                     }
                 </div>

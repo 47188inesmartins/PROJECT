@@ -58,9 +58,9 @@ class AppointmentController {
     @GetMapping("/{id}")
     fun getAppointment(@PathVariable id: Int): ResponseEntity<AppointmentOutputDto>{
         return try {
-            val response = appointmentServices.getAppointment(id)
-            ResponseEntity.status(200)
-                .body(response)
+           TODO()
+            // val response = appointmentServices.getAppointment(id)
+           // ResponseEntity.status(200)                .body(response)
 
         }catch (e: Exception) {
             when(e) {
@@ -92,9 +92,9 @@ class AppointmentController {
     @GetMapping("/services/availability")
     fun getAvailableServices(@RequestParam("hour_begin") hourBegin :String, @RequestParam("date") date :String, @RequestParam("companyId") companyId :Int ) :ResponseEntity<List<ServiceOutputDto>>{
         return try{
-            val response = appointmentServices.getAvailableServices(hourBegin, date, companyId)
-            ResponseEntity.status(200)
-                .body(response)
+
+           val response = appointmentServices.getAvailableServicesByAppointment(hourBegin, date, companyId)
+            ResponseEntity.status(200) .body(response)
         }catch (e: Exception){
             when(e) {
                 is EmptyAppointments -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "No appointments found", e)

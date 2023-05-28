@@ -44,23 +44,23 @@ class ServServices : IServServices {
         return ServiceOutputDto(serv!!)
     }
 
-    override fun getAvailableEmployees(id: Int, hourBegin: String, hourEnd: String, date: String): List<UserOutputDto>{
+    /*override fun getAvailableEmployeesByService(id: Int, hourBegin: String, hourEnd: String, date: String): List<UserOutputDto>{
         val hb = Time.valueOf(hourBegin)
         val he = Time.valueOf(hourEnd)
         val d = Date.valueOf(date)
         val users = userRepository.getAvailableEmployeesByService(id, d, hb, he)
         return users.map { UserOutputDto(it) }
-    }
+    }*/
 
-    override fun updatePrice(idService: Int,price: Double):Long{
+    override fun changePrice(idService: Int,price: Double):Long{
         return serviceRepository.updatePrice(idService,price)
     }
 
-    override fun updateDuration(idService: Int,duration: String): Duration {
+    override fun changeDuration(idService: Int,duration: String): Duration {
         return serviceRepository.updateDuration(idService,Time.valueOf(duration))
     }
 
-    override fun delete(serviceDB: ServiceDB){
+    override fun deleteService(serviceDB: ServiceDB){
         serviceRepository.delete(serviceDB)
     }
 }

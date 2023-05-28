@@ -18,17 +18,17 @@ class VacationService : IVacationServices {
     @Autowired
     lateinit var scheduleRepository: ScheduleRepository
 
-    override fun getVacation(id: Int): VacationOutputDto {
-        val vacation = vacationRepository.findById(id)
-        if(vacation.isEmpty) throw Exception("The company doesn't has vacation")
-        return VacationOutputDto(vacation.get())
-    }
-
     override fun addVacation(vacation: VacationInputDto):VacationOutputDto {
         val schedule = scheduleRepository.getReferenceById(vacation.schedule)
         val db = vacation.mapToVacationDb(vacation,schedule)
         if(!db.dateBegin.before(db.dateEnd)) throw Exception("Invalid dates")
         return VacationOutputDto(vacationRepository.save(db))
+    }
+
+    override fun getVacation(id: Int): VacationOutputDto {
+        val vacation = vacationRepository.findById(id)
+        if(vacation.isEmpty) throw Exception("The company doesn't has vacation")
+        return VacationOutputDto(vacation.get())
     }
 
     override fun deleteVacation(vacation: Int){
@@ -48,4 +48,5 @@ class VacationService : IVacationServices {
         if(!getVacation.dateBegin.before(newDate)) throw Exception("Invalid new end date")
         return vacationRepository.changeEndDate(id, newDate)
     }
+
 }

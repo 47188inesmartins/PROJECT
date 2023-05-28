@@ -47,7 +47,7 @@ class ServiceController {
     }
 
 
-    @RoleManager(["MANAGER", "EMPLOYEE"])
+ /*   @RoleManager(["MANAGER", "EMPLOYEE"])
     @GetMapping("{id}/employees")
     fun getAvailableEmployees(@RequestParam("date") date: String, @RequestParam("beginHour") beginHour: String, @RequestParam("endHour") endHour: String,
                               @PathVariable id: Int
@@ -62,11 +62,11 @@ class ServiceController {
             ResponseEntity.status(400).body(null)
         }
     }
-
+*/
     @PutMapping("/{id}/price")
     fun updatePrice(@PathVariable id: Int, @RequestParam price: Double): ResponseEntity<Long> {
         return try {
-            val response = servServices.updatePrice(id, price)
+            val response = servServices.changePrice(id, price)
             ResponseEntity.status(200)
                 .body(response)
         }catch(e: Exception){
@@ -80,7 +80,7 @@ class ServiceController {
     @PutMapping("/{id}/duration")
     fun updateDuration(@PathVariable id: Int, @RequestParam duration: String): ResponseEntity<Duration>{
         return try {
-            val response = servServices.updateDuration(id, duration)
+            val response = servServices.changeDuration(id, duration)
             ResponseEntity.status(200)
                 .body(response)
         }catch(e: Exception){
@@ -94,7 +94,7 @@ class ServiceController {
     @DeleteMapping
     fun deleteServices(@RequestBody serviceDB: ServiceDB): ResponseEntity<String> {
         return try {
-             servServices.delete(serviceDB)
+             servServices.deleteService(serviceDB)
 
              ResponseEntity.status(200)
                 .body("Service was deleted")

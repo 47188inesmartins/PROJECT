@@ -15,6 +15,7 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseCookie
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.annotation.Secured
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 import java.util.*
@@ -92,7 +93,7 @@ class UserController {
     @PostMapping("/login")
     fun login(@RequestBody credentials: UserCredentials,response: HttpServletResponse): ResponseEntity<UUID> {
         return try {
-            val user = userServices.getUsersByEmailAndPass(credentials.email,credentials.password)
+            val user = userServices.getUsersByEmailAndPassword(credentials.email,credentials.password)
             val cookieToken = ResponseCookie
                 .from("token", user.token.toString())
                 .maxAge(7 * 24 * 60 * 60 )
@@ -144,7 +145,7 @@ class UserController {
     @GetMapping("/{id}/appointments")
     fun getAllAppointments(@PathVariable id: Int): ResponseEntity<AppointmentsUserInfo> {
         return try {
-            val response = userServices.getAllAppointments(id)
+            val response = userServices.getAllAppointmentsByUser(id)
             ResponseEntity
                 .status(200)
                 .body(response)

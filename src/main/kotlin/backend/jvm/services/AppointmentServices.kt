@@ -69,14 +69,6 @@ class AppointmentServices : IAppointmentServices {
         return AppointmentOutputDto(savedAppointment)
     }
 
-    fun getCurrentDate(): Date = Date.valueOf(LocalDate.now())
-
-    fun getCurrentHour(): Time{
-        val currentTime = getInstance().time
-        return Time(currentTime.time)
-    }
-
-
     override fun deleteAppointment(id: Int){
         val getAppointment = appointmentRepository.getAppointmentById(id)
         if(getCurrentDate().after(getAppointment.appDate) && getCurrentHour() > getAppointment.appHour)
@@ -94,7 +86,7 @@ class AppointmentServices : IAppointmentServices {
         appointmentRepository.deleteById(id)
     }
 
-    override fun getAppointment(id: Int): AppointmentOutputDto? {
+    override fun getAppointmentById(id: Int): AppointmentOutputDto? {
         val isAppointment = appointmentRepository.findById(id)
         if(!isAppointment.isPresent) throw AppointmentNotFound()
         val appointment = isAppointment.get()
@@ -109,15 +101,8 @@ class AppointmentServices : IAppointmentServices {
         return appointments.map{ AppointmentOutputDto(it) }
     }
 
-    override fun getAvailableServicesByEmployees(
-        beginHour: String,
-        date: String,
-        companyId: Int
-    ): List<ServiceOutputDto> {
-        TODO("Not yet implemented")
-    }
 
-    override fun getAvailableServices(beginHour:String, date:String, companyId: Int):List<ServiceOutputDto>{
+    override fun getAvailableServicesByAppointment(beginHour:String, date:String, companyId: Int):List<ServiceOutputDto>{
         val bh = Time.valueOf(beginHour)
         val d = Date.valueOf(date)
         val dur = Time.valueOf("00:30:00")
@@ -130,13 +115,12 @@ class AppointmentServices : IAppointmentServices {
     }
 
 
-    override fun availableServicesByDay(companyId: Int, day: String,  beginHour: Time): List<ServiceDB>{
-        val services = servicesRepository.getAvailableServicesByDay(companyId, day)
-        TODO()
-    }
+    fun getCurrentDate(): Date = Date.valueOf(LocalDate.now())
 
-    override fun getAllAppointmentsByUser(user: Int): List<AppointmentOutputDto> {
-        TODO("Not yet implemented")
+
+    fun getCurrentHour(): Time{
+        val currentTime = getInstance().time
+        return Time(currentTime.time)
     }
 
 
@@ -145,6 +129,7 @@ class AppointmentServices : IAppointmentServices {
         println(Time(tempo1.time + additionalTime))
         return Time(tempo1.time + additionalTime)
     }
+
 
     fun getDayOfWeek(date : Date): String{
         val utilDate = java.util.Date(date.time)

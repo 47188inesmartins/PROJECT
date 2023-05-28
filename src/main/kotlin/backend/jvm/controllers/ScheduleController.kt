@@ -50,14 +50,14 @@ class ScheduleController {
     @RoleManager(["MANAGER"])
     @GetMapping("/{id}")
     fun getSchedule(@PathVariable id:Int):ScheduleOutputDto?{
-          return scheduleServices.getSchedule(id)
+          return scheduleServices.getScheduleById(id)
     }
 
 
-    @GetMapping("/{id}/open")
+  /*  @GetMapping("/{id}/open")
     fun getOpenDays(@PathVariable id:Int):ResponseEntity<List<DayOutputDto>>{
         return try{
-            val response = scheduleServices.getOpenDays(id)
+            val response = scheduleServices.getOpenDaysB(id)
             ResponseEntity
                 .status(200)
                 .body(response)
@@ -81,6 +81,6 @@ class ScheduleController {
                 .status(400)
                 .body(null)
         }
-    }
+    }*/
 
 }

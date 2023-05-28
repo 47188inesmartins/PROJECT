@@ -55,8 +55,8 @@ export function CreatingCompany(){
         Fetch('/company',
             'POST',
             companyData)
-
-        return(<Navigate to = "/" replace={true}></Navigate>);
+return(<div></div>)
+       // return(<Navigate to = "/" replace={true}></Navigate>);
     }
 
 

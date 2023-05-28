@@ -11,11 +11,11 @@ interface IServServices {
 
     fun getServiceById(id: Int): ServiceOutputDto
 
-    fun getAvailableEmployees(id: Int, hourBegin: String, hourEnd: String, date: String): List<UserOutputDto>
+   // fun getAvailableEmployees(id: Int, hourBegin: String, hourEnd: String, date: String): List<UserOutputDto>
 
-    fun updatePrice(idService: Int,price: Double):Long
+    fun changePrice(idService: Int,price: Double):Long
 
-    fun updateDuration(idService: Int,duration: String): Duration
+    fun changeDuration(idService: Int,duration: String): Duration
 
-    fun delete(serviceDB: ServiceDB)
+    fun deleteService(serviceDB: ServiceDB)
 }
