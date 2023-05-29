@@ -1,5 +1,6 @@
 package backend.jvm.services
 
+import backend.jvm.model.Appointment
 import backend.jvm.model.ServiceDB
 import backend.jvm.model.UnavailabilityDB
 import backend.jvm.repository.*
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service
 import java.sql.Date
 import java.sql.Time
 import java.time.LocalDate
+import java.util.*
 import java.util.Calendar.*
 
 
@@ -69,20 +71,21 @@ class AppointmentServices : IAppointmentServices {
         return AppointmentOutputDto(savedAppointment)
     }
 
-    override fun deleteAppointment(id: Int){
-        val getAppointment = appointmentRepository.getAppointmentById(id)
+    override fun deleteAppointment(id: Int) {
+        val getAppointment = appointmentRepository.findById(id).get()
+        if(getAppointment.equals(Optional.empty<Appointment>())) throw AppointmentNotFound()
         if(getCurrentDate().after(getAppointment.appDate) && getCurrentHour() > getAppointment.appHour)
             return appointmentRepository.deleteById(id)
 
-        val getEmployee = getAppointment.usersDB?.first {
+        val getEmployee = getAppointment.usersDB?.firstOrNull {
             val role = userRepository.getRole(it.id)
-            role == UserRoles.EMPLOYEE.name ||role == UserRoles.MANAGER.name
+            (role == UserRoles.EMPLOYEE.name ||role == UserRoles.MANAGER.name)
         }
+        if(getEmployee == null) EmployeeNotFound()
 
+        val unavailabilityDB = unavailabilityRepository.getUnavailabilityDBByUserDB(getEmployee!!)
+        if(unavailabilityDB != null)  unavailabilityRepository.deleteById(unavailabilityDB.id)
 
-        if(getEmployee == null) InvalidAppointment()
-        val unavailabilityDB = unavailabilityRepository.getUnavailabilityDBByUserDBId(getEmployee!!)
-        unavailabilityRepository.deleteById(unavailabilityDB.id)
         appointmentRepository.deleteById(id)
     }
 

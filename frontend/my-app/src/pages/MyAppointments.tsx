@@ -18,8 +18,16 @@ import {Navigate} from "react-router";
 
 export function MyAppointments() {
     const params = useParams()
+    const [cancel, setCancel] = useState(false);
+    const [idAppointment,setIdAppointment] = useState<undefined|Number>(undefined)
     const id = params.id
     const appointments = Fetch(`/user/${id}/appointments`,"GET")
+    console.log(appointments)
+    const handleCancel = (idApp:Number) =>{
+        setCancel(true);
+        setIdAppointment(idApp);
+    }
+
     return (
         <div>
             {!appointments.response?
@@ -29,7 +37,8 @@ export function MyAppointments() {
                     </div>
                 </div>:(
         <section className="vh-100" style={{ backgroundColor: '#0e4378' }}>
-            <MDBContainer className="py-5 h-100">
+            {cancel?<PopUpMessage id={idAppointment}/>
+            :<MDBContainer className="py-5 h-100">
                 <MDBRow className="d-flex justify-content-center align-items-center">
                     <MDBCol lg="9" xl="7">
                         <MDBCard className="rounded-3">
@@ -63,7 +72,7 @@ export function MyAppointments() {
                                             <td>{appointment.employee}</td>
                                             <td>{appointment.appDate} at {appointment.appHour}</td>
                                             <td>
-                                                <button style={{backgroundColor:'#d14319'}} className="btn btn-outline-light btn-lg px-5" type="button" onClick={PopUpMessage}>Cancel</button>
+                                                <button style={{backgroundColor:'#d14319'}} className="btn btn-outline-light btn-lg px-5" type="button" onClick={() => handleCancel(appointment.id)}>Cancel</button>
                                             </td>
                                         </tr>
                                         ))}
@@ -84,27 +93,26 @@ export function MyAppointments() {
                     </MDBCol>
                 </MDBRow>
             </MDBContainer>
-        </section>
+            }</section>
                 )}
         </div>
     );
 }
 
-function PopUpMessage() {
-    const [show, setShow] = useState(false);
+function PopUpMessage(props:{id:Number|undefined}) {
+    const [show, setShow] = useState(true);
     const [cancel, setCancel] = useState(false);
+    const params = useParams()
+    const id = params.id
 
     const handleClose = () => setShow(false);
     const handleCancel = () => setCancel(true);
 
+    if(props.id == undefined) return <Navigate to = {`/user/${id}/appointments`} replace={true}></Navigate>
     return (
         <>
             {!cancel?
                 <>
-            <Button variant="primary" onClick={handleCancel}>
-                Launch static backdrop modal
-            </Button>
-
             <Modal
                 show={show}
                 onHide={handleClose}
@@ -125,19 +133,19 @@ function PopUpMessage() {
                 </Modal.Footer>
             </Modal>
                 </>:
-                <FetchCancelAppointment/>
+                <FetchCancelAppointment id={props.id}/>
             }
         </>
     );
 }
 
 
-function FetchCancelAppointment(){
+function FetchCancelAppointment(props:{id:Number}){
     const params = useParams()
     const id = params.id
 
-    Fetch('/appointment'+id,
+    Fetch('/appointment/'+props.id,
         'DELETE')
-
-    return(<Navigate to = "/" replace={true}></Navigate>);
+    window.location.href = `/user/${id}/appointments`;
+    return(<> </>);
 }

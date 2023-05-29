@@ -54,10 +54,10 @@ class CompanyServices : ICompanyServices {
 
         if(company.nif.length != NIF_NUMBERS ) throw InvalidNif()
         if(companyRepository.findCompanyByNif(company.nif) != null) throw NifAlreadyExist()
+
         val services = company.service?.map { serviceRepository.getReferenceById(it) }
-        val comp = companyRepository.save(
-            company.mapToCompanyDto(company, services, null)
-        )
+        val companyDb = company.mapToCompanyDto(company, services, null)
+        val comp = companyRepository.save(companyDb)
 
         userCompanyRepository.save(UserCompany(managerUser, comp, UserRoles.MANAGER.name))
         val schedule = Schedule(comp,null,null,null)

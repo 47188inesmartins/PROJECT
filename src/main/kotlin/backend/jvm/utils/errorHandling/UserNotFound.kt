@@ -33,3 +33,7 @@ class AlreadyEmployee: Exception("Already an employee")
 
 @ResponseStatus(code = HttpStatus.CONFLICT, reason = "Already an employee")
 class AlreadyCompanyManager: Exception("Already Company Manager")
+
+
+@ResponseStatus(code = HttpStatus.NOT_FOUND, reason = "No employee found")
+class EmployeeNotFound: Exception("No employee found")

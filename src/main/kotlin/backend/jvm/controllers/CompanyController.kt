@@ -48,7 +48,7 @@ class CompanyController {
                 is NifAlreadyExist -> throw ResponseStatusException(HttpStatus.CONFLICT, "Nif already exists", e)
                 is InvalidNif -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid nif", e)
                 is UserNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid User", e)
-                else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Something went wrong", e)
+                else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
             }
         }
     }

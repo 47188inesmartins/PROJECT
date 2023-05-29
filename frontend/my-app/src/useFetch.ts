@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from "react";
+import axios from 'axios';
 const HOST = "http://localhost:8080"
 
 export type FetchResponse = {
@@ -9,13 +10,10 @@ export type FetchResponse = {
 
 export function Fetch(url: string, method: string, requestBody: any = null/*, token: string*/): FetchResponse{
     const [content, setContent] = useState(undefined)
-
-
-
-    console.log(requestBody)
+    const [error, setError] = useState<any>(undefined);
     const authorization = {
         'Content-Type': 'application/json',
-        'Authorization' : 'Bearer 40e196c0-d2e0-435d-9d20-38ef1ff7bffd'
+       'Authorization' : 'Bearer aa714939-b9a3-4718-be6f-3fbf00adb241'
     }
     const hostUrl = HOST + url
 
@@ -23,19 +21,29 @@ export function Fetch(url: string, method: string, requestBody: any = null/*, to
         let cancelled = false
         async function doFetch() {
             try{
+                console.log("RES",requestBody)
+                console.log("here")
                 const resp = await fetch(hostUrl,{
                     method : method,
                     body : requestBody? JSON.stringify(requestBody) : null,
                     headers : authorization
                 })
+                if(resp.status === 401){
+                    console.log("here")
+                    const t = {response:undefined,error:resp.status}
+                    console.log(t)
+                    return t
+                }
                 const body = await resp.json()
+
+
                 console.log("BODY", body)
                 if (!cancelled) {
                     console.log(body)
                     setContent(body)
                 }
             }catch (error){
-                console.log("error = ", error)
+                setError(error)
             }
         }
         setContent(undefined)
@@ -44,5 +52,7 @@ export function Fetch(url: string, method: string, requestBody: any = null/*, to
             cancelled = true
         }
     }, [url,method,requestBody])
-    return {response:content, error:undefined}
+    return {response:content,error:error}
 }
+
+

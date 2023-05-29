@@ -42,12 +42,15 @@ class AppointmentController {
     @DeleteMapping("/{id}")
     fun deleteAppointment(@PathVariable id: Int): ResponseEntity<String> {
         return try {
+            println(id)
             appointmentServices.deleteAppointment(id)
             ResponseEntity.status(200)
                 .body("Appointment deleted!")
         } catch (e: Exception) {
             when(e) {
+                is AppointmentNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "Appointment not foun", e)
                 is InvalidAppointment -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid appointment!", e)
+                is EmployeeNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "No employee found", e)
                 else ->  throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
             }
         }

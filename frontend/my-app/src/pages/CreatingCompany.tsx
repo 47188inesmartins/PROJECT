@@ -20,7 +20,7 @@ export function CreatingCompany(){
     const [address, setAddress] = useState<string>("");
     const [nif, setNif] = useState<string>("");
     const [description, setDescription] = useState<string>("");
-    const [create, setCreate] = useState<Boolean>(false)
+    const [create, setCreate] = useState<boolean>(false)
 
 
     const companyData : CompanyInputDto = {
@@ -38,32 +38,33 @@ export function CreatingCompany(){
 
 
     const handleCreate = () => {
-
+        console.log(create)
         setCreate(true)
-
-
+        console.log(create)
     };
 
-    /*useEffect(() => {
-       /* Fetch('/company',
-        'POST',
-        companyData)
-    }, [create]);*/
+    useEffect(() =>{
+        setCreate(false)
+    },[create])
+
+    if(create){
+        setCreate(false)
+        return <FetchCreateCompany/>
+    }
 
     function FetchCreateCompany(){
-
+        console.log("company")
         Fetch('/company',
             'POST',
             companyData)
-return(<div></div>)
-       // return(<Navigate to = "/" replace={true}></Navigate>);
+        window.location.href = '/';
+        return <Navigate to = "/" replace={true}></Navigate>;
     }
 
 
     return (
         <AuthnContainer>
         <div>
-            {!create ?
                 <section className="vh-100 gradient-custom">
                     <div className="container py-5 h-100">
                         <div className="row d-flex justify-content-center align-items-center h-100">
@@ -143,9 +144,6 @@ return(<div></div>)
                         </div>
                     </div>
                 </section>
-            :
-            <FetchCreateCompany />
-        }
         </div>
         </AuthnContainer>
     );

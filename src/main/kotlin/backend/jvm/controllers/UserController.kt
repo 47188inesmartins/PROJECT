@@ -30,7 +30,6 @@ class UserController {
     @Autowired
     lateinit var userServices: UserServices
 
-    @RoleManager(["MANAGER"])
     @PostMapping
     fun addUser(@RequestBody user: UserInputDto): ResponseEntity<CreatedUserOutput> {
         return try {
@@ -141,6 +140,7 @@ class UserController {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Email or password invalid", e)
         }
     }
+
     @RoleManager(["CLIENT"])
     @GetMapping("/{id}/appointments")
     fun getAllAppointments(@PathVariable id: Int): ResponseEntity<AppointmentsUserInfo> {
