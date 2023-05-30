@@ -51,7 +51,7 @@ export function Layout() {
                 </CDBSidebarContent>
 
                 <CDBSidebarFooter>
-                    {check?
+                    {!check?
                     <CDBSidebarMenu>
                         <NavLink to="/login">
                             <CDBSidebarMenuItem>Login</CDBSidebarMenuItem>

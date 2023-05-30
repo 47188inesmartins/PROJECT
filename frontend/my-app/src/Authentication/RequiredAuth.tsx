@@ -26,6 +26,7 @@ export function RequireRole({ children }: { children: React.ReactNode }): React.
     const location = useLocation()
     const response = Fetch("/role","GET")
     if (response) {
+
         if(response.response === "MANAGER")
             return <>{children}</>
         else
