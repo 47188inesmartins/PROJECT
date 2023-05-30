@@ -14,6 +14,7 @@ import {Form, useParams} from "react-router-dom";
 import {Fetch} from "../useFetch";
 import {Button, Modal} from "react-bootstrap";
 import {Navigate} from "react-router";
+import {RequireAuthn} from "../Authentication/RequiredAuth";
 
 
 export function MyAppointments() {
@@ -29,6 +30,7 @@ export function MyAppointments() {
     }
 
     return (
+        <RequireAuthn>
         <div>
             {!appointments.response?
                 <div className="loading">
@@ -96,6 +98,7 @@ export function MyAppointments() {
             }</section>
                 )}
         </div>
+        </RequireAuthn>
     );
 }
 

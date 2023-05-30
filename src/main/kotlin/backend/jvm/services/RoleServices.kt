@@ -24,4 +24,9 @@ class RoleServices : IRoleServices {
         return true
     }
 
+    fun getRoleByToken(token: String): String {
+        val uuid = UUID.fromString(token)
+        return roleRepository.getRoleByToken(uuid)
+    }
+
 }

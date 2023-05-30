@@ -4,6 +4,7 @@ import backend.jvm.model.Role
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
+import java.util.UUID
 
 
 interface RoleRepository : JpaRepository<Role, Int>{
@@ -12,5 +13,8 @@ interface RoleRepository : JpaRepository<Role, Int>{
 
     @Query(value = "select role_name from user_role r where r.user_id = :id", nativeQuery = true)
     fun getRoleByUserId(@Param("id") id: Int):String
+
+    @Query(value = "select UR.role_name from sch_user inner join USER_ROLE UR on SCH_USER.id = UR.user_id and SCH_USER.token =:token", nativeQuery = true)
+    fun getRoleByToken(@Param("token") token: UUID):String
 
 }

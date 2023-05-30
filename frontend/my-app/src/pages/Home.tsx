@@ -1,6 +1,6 @@
 import {Fetch} from "../useFetch";
 import React, {useEffect, useState} from "react";
-import {Layout} from "../Layout";
+import {Layout, ManagerLayout} from "../Layout";
 import {
     MDBCard,
     MDBContainer,
@@ -9,6 +9,7 @@ import {
     MDBRipple,
     MDBRow,
 } from "mdb-react-ui-kit";
+import {RequireRole} from "../Authentication/RequiredAuth";
 
 export function Home() {
 
@@ -35,6 +36,7 @@ export function Home() {
                     {!response.response ? (
                         <p>Loading...</p>
                     ) : (
+                        <div>
                         <MDBContainer className="py-5">
                             <MDBCard className="px-3 pt-3"
                                      style={{ maxWidth: "100%"}} >
@@ -65,6 +67,8 @@ export function Home() {
                                 </div>
                             </MDBCard>
                         </MDBContainer>
+                            <ManagerLayout/>
+                        </div>
                     )
                     }
                 </div>

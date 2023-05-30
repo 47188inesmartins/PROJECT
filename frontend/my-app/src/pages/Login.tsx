@@ -23,9 +23,6 @@ interface UserCredentials{
 }
 
 
-
-
-
 export function Login() {
 
     const [email, setEmail] = useState<string>("")
@@ -43,9 +40,9 @@ export function Login() {
             password
         }
         console.log(email, password)
-        Fetch("/user/login", 'POST', userCredentials)
-       return(<div></div>)
-        // return(<Navigate to = "/" replace={true}></Navigate>);
+        const a = Fetch("/user/login", 'POST', userCredentials)
+        console.log(a)
+        return(<Navigate to = "/" replace={true}></Navigate>);
     }
 
     return (
@@ -116,7 +113,6 @@ export function Login() {
             <FetchLogin/>
         }
         </div>
-
     );
 }
 

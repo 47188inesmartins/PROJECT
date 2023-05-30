@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
 import axios from 'axios';
+import {LoggedInContextCookie} from "./Authentication/Authn";
 const HOST = "http://localhost:8080"
 
 export type FetchResponse = {
@@ -8,13 +9,14 @@ export type FetchResponse = {
 }
 
 
-export function Fetch(url: string, method: string, requestBody: any = null/*, token: string*/): FetchResponse{
-    const [content, setContent] = useState(undefined)
+export function Fetch(url: string, method: string, requestBody: any = null): FetchResponse{
+    const [content, setContent] = useState(undefined);
     const [error, setError] = useState<any>(undefined);
-    const authorization = {
-        'Content-Type': 'application/json',
-       'Authorization' : 'Bearer aa714939-b9a3-4718-be6f-3fbf00adb241'
-    }
+    const token = React.useContext(LoggedInContextCookie).loggedInState.token;
+    const authorization: { 'Content-Type': string; Authorization?: string; } = (token !== "")
+        ? {'Content-Type': 'application/json', 'Authorization': `Bearer ${token} `}
+        : {'Content-Type': 'application/json'};
+
     const hostUrl = HOST + url
 
     useEffect(() => {

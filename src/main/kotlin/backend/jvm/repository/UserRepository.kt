@@ -56,4 +56,5 @@ interface UserRepository: JpaRepository<UserDB, Int> {
 
      @Query(value = "select * from SCH_USER s inner join user_role ur on s.id =:id and ur.role_name =:role ", nativeQuery = true)
      fun getUserDBByIdAndRole(@Param("role") role: String, @Param("id") id: Int): UserDB?
+
 }
