@@ -19,7 +19,8 @@ export async function fetchGetSession(onSuccess: (token: string, role: string) =
             credentials: "include",
         }
         )
-        console.log("RESPONSEE1", await  resp)
+        console.log("RESPONSEE1",
+            await  resp)
         const response = await resp.json()
         console.log("RESPONSEE1",  response)
         const token = response.body.first.find( it.name === TOKEN_PARAM)
