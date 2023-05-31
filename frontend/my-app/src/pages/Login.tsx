@@ -40,8 +40,8 @@ export function Login() {
             password
         }
         console.log(email, password)
-        const a = Fetch("/user/login", 'POST', userCredentials)
-        console.log(a)
+        Fetch("/user/login", 'POST', userCredentials)
+       //return(<div></div>)
         return(<Navigate to = "/" replace={true}></Navigate>);
     }
 

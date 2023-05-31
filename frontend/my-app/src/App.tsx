@@ -1,15 +1,19 @@
 import React from 'react';
 import './App.css';
 import './style.css';
-import {createBrowserRouter, RouterProvider} from "react-router-dom";
+import {createBrowserRouter, Outlet, RouterProvider} from "react-router-dom";
 import {Login} from "./pages/Login";
 import {Home} from "./pages/Home";
 import {Company} from "./pages/Company";
 import {MyAppointments} from "./pages/MyAppointments";
 import {CreatingCompany} from "./pages/CreatingCompany";
+import {AuthnContainer} from "./pages/Authn";
 
 
-const router = createBrowserRouter([
+const router = createBrowserRouter([{
+    "path": "/",
+    "element": <AuthnContainer><Outlet/></AuthnContainer>,
+    "children": [
     {
         "path": "/",
         "element": <Home/>
@@ -30,7 +34,7 @@ const router = createBrowserRouter([
         "path": "/new/company",
         "element": <CreatingCompany/>
     }
-])
+]}])
 
 
 function ScheduleItApp(){

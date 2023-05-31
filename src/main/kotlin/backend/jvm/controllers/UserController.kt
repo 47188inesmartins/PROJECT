@@ -19,11 +19,12 @@ import org.springframework.security.access.annotation.Secured
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 import java.util.*
+import org.springframework.web.bind.annotation.CrossOrigin
 
 
 
 @RestController
-@CrossOrigin(origins = ["http://localhost:3000"])
+@CrossOrigin(origins = ["http://localhost:3000"], allowCredentials = "true")
 @RequestMapping("/user")
 class UserController {
 
@@ -110,8 +111,9 @@ class UserController {
     }
 
     @GetMapping("/check-session")
-    fun check(request: HttpServletRequest ) : Pair<Cookie,String?>? {
+    fun check(request: HttpServletRequest, response: HttpServletResponse ) : Pair<Cookie,String?>? {
         try {
+          //   response.addHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
              println(request.cookies)
              val cookies = request.cookies.first()
              val token = cookies.value ?: return null
