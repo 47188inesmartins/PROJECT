@@ -21,7 +21,6 @@ export function Fetch(url: string, method: string, requestBody: any = null): Fet
 
     useEffect(() => {
         let cancelled = false
-        console.log("dentro do fetch")
         async function doFetch() {
             try{
                 console.log("RES",requestBody)
@@ -31,6 +30,7 @@ export function Fetch(url: string, method: string, requestBody: any = null): Fet
                     body : requestBody? JSON.stringify(requestBody) : null,
                     headers : authorization
                 })
+                console.log("Fetch do body",resp)
                 if(resp.status === 401){
                     console.log("here")
                     const t = {response:undefined,error:resp.status}
@@ -54,8 +54,7 @@ export function Fetch(url: string, method: string, requestBody: any = null): Fet
         return () => {
             cancelled = true
         }
-    }, [url, method, requestBody])
+    }, [url,method,requestBody])
     return {response:content,error:error}
 }
-
 

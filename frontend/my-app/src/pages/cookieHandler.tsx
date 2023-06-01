@@ -22,7 +22,7 @@ export async function fetchGetSession(onSuccess: (token: string, role: string) =
         console.log("RESPONSEE1",
             await  resp)
         const response = await resp.json()
-        console.log("RESPONSEE1",  response)
+        console.log("RESPONSEE1",  response.message)
         const token = response.body.first.find( it.name === TOKEN_PARAM)
         console.log("TOKENNN", token)
         const role = response.second

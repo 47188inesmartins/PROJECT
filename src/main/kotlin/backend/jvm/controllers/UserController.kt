@@ -20,11 +20,11 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 import java.util.*
 import org.springframework.web.bind.annotation.CrossOrigin
-
+import javax.swing.text.html.parser.Entity
 
 
 @RestController
-@CrossOrigin(origins = ["http://localhost:3000"], allowCredentials = "true")
+@CrossOrigin(origins = ["http://localhost:3000"], allowCredentials = "true", allowedHeaders = ["*"])
 @RequestMapping("/user")
 class UserController {
 
@@ -111,14 +111,14 @@ class UserController {
     }
 
     @GetMapping("/check-session")
-    fun check(request: HttpServletRequest, response: HttpServletResponse ) : Pair<Cookie,String?>? {
+    fun check(@CookieValue("token", required = false) token: String?) : ResponseEntity<Pair<String?,String?>?> {
         try {
-          //   response.addHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
-             println(request.cookies)
-             val cookies = request.cookies.first()
-             val token = cookies.value ?: return null
-             val role = userServices.getRoleByToken(token)
-             return Pair(cookies,role)
+           //  response.addHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+             println(token)
+          //   val cookies = request.cookies.first()
+             val t = token ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid token")
+             val role = userServices.getRoleByToken(t)
+             return ResponseEntity.status(200).body(Pair(t,role))
         }catch (e: Exception){
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid token", e)
         }
