@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*
 
 
 @RestController
-@RequestMapping("/unavailability")
+@RequestMapping("/api/unavailability")
 class UnavailabilityController {
 
     @Autowired

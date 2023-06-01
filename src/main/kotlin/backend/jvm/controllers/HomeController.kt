@@ -18,7 +18,7 @@ import org.springframework.web.server.ResponseStatusException
 @RestController
 class HomeController {
 
-    @GetMapping("/", produces= [MediaType.APPLICATION_JSON_VALUE])
+    @GetMapping("/api", produces= [MediaType.APPLICATION_JSON_VALUE])
     @ResponseBody
     fun home(): ResponseEntity<String> {
         return try {

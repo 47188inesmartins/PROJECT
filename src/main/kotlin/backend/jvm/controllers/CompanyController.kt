@@ -19,7 +19,7 @@ import org.springframework.web.server.ResponseStatusException
 import java.util.*
 
 @RestController
-@RequestMapping(("/company"))
+@RequestMapping(("/api/company"))
 @CrossOrigin(origins = ["http://localhost:3000"])
 class CompanyController {
 

@@ -14,7 +14,7 @@ import org.springframework.web.server.ResponseStatusException
 
 
 @RestController
-@RequestMapping(("/appointment"))
+@RequestMapping(("/api/appointment"))
 @CrossOrigin(origins = ["http://localhost:3000"])
 class AppointmentController {
 

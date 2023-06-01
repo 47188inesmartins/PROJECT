@@ -18,7 +18,7 @@ import java.sql.Time
 
 
 @RestController
-@RequestMapping("/day")
+@RequestMapping("/api/day")
 class DayController {
 
     @Autowired

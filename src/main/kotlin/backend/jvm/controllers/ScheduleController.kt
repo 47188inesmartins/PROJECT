@@ -15,7 +15,7 @@ import org.springframework.web.server.ResponseStatusException
 
 
 @RestController
-@RequestMapping("/schedule")
+@RequestMapping("/api/schedule")
 class ScheduleController {
 
     @Autowired

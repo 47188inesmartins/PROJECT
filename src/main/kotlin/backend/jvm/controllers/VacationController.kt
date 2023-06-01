@@ -14,7 +14,7 @@ import java.sql.Date
 
 
 @RestController
-@RequestMapping("/vacation")
+@RequestMapping("/api/vacation")
 class VacationController {
 
      @Autowired

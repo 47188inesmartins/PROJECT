@@ -25,7 +25,7 @@ import javax.swing.text.html.parser.Entity
 
 @RestController
 @CrossOrigin(origins = ["http://localhost:3000"], allowCredentials = "true", allowedHeaders = ["*"])
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 class UserController {
 
     @Autowired
@@ -111,14 +111,15 @@ class UserController {
     }
 
     @GetMapping("/check-session")
-    fun check(@CookieValue("token", required = false) token: String?) : ResponseEntity<Pair<String?,String?>?> {
+    fun check(/*@CookieValue("token", required = false) token: String?*/ request: HttpServletRequest) : ResponseEntity<Pair<String?,String?>?> {
         try {
            //  response.addHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
-             println(token)
-          //   val cookies = request.cookies.first()
-             val t = token ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid token")
-             val role = userServices.getRoleByToken(t)
-             return ResponseEntity.status(200).body(Pair(t,role))
+            // println(token)
+             val headers = request.headerNames
+             val cookies = request.cookies.first()
+             val t = cookies ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid token")
+             val role = userServices.getRoleByToken(t.value)
+             return ResponseEntity.status(200).body(Pair(t.value,role))
         }catch (e: Exception){
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid token", e)
         }
