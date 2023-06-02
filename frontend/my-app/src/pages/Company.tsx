@@ -1,5 +1,5 @@
 import {Fetch} from "../useFetch";
-import React, {useState} from "react";
+import * as React from "react";
 
 import {
     MDBCard,
@@ -13,6 +13,7 @@ import {
 } from "mdb-react-ui-kit";
 
 import {useParams} from "react-router-dom";
+import {useState} from "react";
 
 export function Company() {
 

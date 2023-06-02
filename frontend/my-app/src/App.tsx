@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import './App.css';
 import './style.css';
 import {createBrowserRouter, Outlet, RouterProvider} from "react-router-dom";
@@ -37,10 +37,10 @@ const router = createBrowserRouter([{
 ]}])
 
 
-function ScheduleItApp(){
+function App(){
     return (
         <RouterProvider router={router} />
     )
 }
-export default ScheduleItApp;
+export default App;
 

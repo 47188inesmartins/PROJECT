@@ -1,5 +1,5 @@
 import {Fetch} from "../useFetch";
-import React, {useState} from "react";
+import * as React from "react";
 import {Layout} from "../Layout";
 import {
     MDBCard,
@@ -7,6 +7,7 @@ import {
     MDBCol,
     MDBRow,
 } from "mdb-react-ui-kit";
+import {useState} from "react";
 
 export function Home() {
 

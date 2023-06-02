@@ -1,7 +1,8 @@
-import React, {useEffect, useState} from "react";
+import * as React from "react";
+import {useEffect, useState} from "react";
 import axios from 'axios';
 import {LoggedInContextCookie} from "./Authentication/Authn";
-const HOST = "http://localhost:8080"
+const HOST = "http://localhost:8080/api"
 
 export type FetchResponse = {
     response:any,

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import * as React from 'react';
 import {
     MDBBtn,
     MDBContainer,
@@ -12,6 +12,7 @@ import {
     from 'mdb-react-ui-kit';
 import {Fetch} from "../useFetch";
 import {Navigate} from "react-router";
+import {useState} from "react";
 
 
 
