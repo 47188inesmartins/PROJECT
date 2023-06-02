@@ -8,6 +8,7 @@ export type cookieParams = {
 const TOKEN_PARAM = "token"
 
 
+
 export async function fetchGetSession(onSuccess: (token: string, role: string) => void) {
     console.log("fetch get session")
     try {

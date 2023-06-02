@@ -13,6 +13,7 @@ export function Home() {
 
     const [companies, setCompanies] = useState([]);
 
+
     const response = Fetch("/company", "GET");
     console.log(response)
     return (

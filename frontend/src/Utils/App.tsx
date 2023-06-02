@@ -4,6 +4,7 @@ import {Home} from "../Pages/Home";
 import {AuthnContainer} from "../Authentication/Authn";
 
 
+
 const router = createBrowserRouter([{
     "path": "/",
     "element": <AuthnContainer><Outlet/></AuthnContainer>,

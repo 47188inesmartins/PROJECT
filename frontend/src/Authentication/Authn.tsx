@@ -10,6 +10,7 @@ export const LoggedInContextCookie = createContext({
     loggedInState: { auth: false, token: '', role: 'guest' },
 });
 
+
 export function AuthnContainer({ children }: { children: React.ReactNode }) {
 
     const [authenticated, setAuthenticated] = useState({auth: false, token: '', role: 'guest'})

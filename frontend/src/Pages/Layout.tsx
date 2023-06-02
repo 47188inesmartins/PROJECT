@@ -11,6 +11,7 @@ import { NavLink } from "react-router-dom";
 import {useLocation} from "react-router";
 import {LoggedInContextCookie} from "../Authentication/Authn";
 
+
 export function Layout() {
     const check = React.useContext(LoggedInContextCookie).loggedInState.auth
     console.log("Check", check)

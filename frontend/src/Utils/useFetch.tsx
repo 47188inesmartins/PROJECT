@@ -12,6 +12,7 @@ export type FetchResponse = {
 }
 
 
+
 export function Fetch(url: string, method: string, requestBody: any = null): FetchResponse{
     const [content, setContent] = useState(undefined);
     const [error, setError] = useState<any>(undefined);
