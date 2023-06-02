@@ -6,6 +6,8 @@ import java.sql.Date
 import java.sql.Time
 
 
+
+
 data class AppointmentInputDto(
     val appHour: String,
     val appDate: String,

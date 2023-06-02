@@ -1,19 +1,20 @@
-import {Fetch} from "../useFetch";
-import React, {useState} from "react";
-import {Layout} from "../Layout";
+import * as React from 'react';
+import {useState} from "react";
 import {
     MDBCard,
     MDBContainer,
     MDBCol,
     MDBRow,
 } from "mdb-react-ui-kit";
+import {Fetch} from "../Utils/useFetch";
+import {Layout} from "./Layout";
 
 export function Home() {
 
     const [companies, setCompanies] = useState([]);
 
     const response = Fetch("/company", "GET");
-   // console.log(tokenUser)
+    console.log(response)
     return (
         <div style={{ display: "flex" }}>
             <td>
