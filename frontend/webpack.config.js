@@ -20,7 +20,7 @@ module.exports = {
             "/api": {
                 target: "http://localhost:8080",
                 // introducing an API delay to make testing easier
-                pathRewrite: {'^/api' : ''}
+               // pathRewrite: {'^/api' : ''}
             }
         },
     },
