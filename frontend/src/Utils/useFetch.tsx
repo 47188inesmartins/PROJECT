@@ -4,7 +4,7 @@ import {
     useEffect
 } from 'react';
 import {LoggedInContextCookie} from "../Authentication/Authn";
-const HOST = "http://localhost:8080/api"
+const HOST = "http://localhost:8000/api"
 
 export type FetchResponse = {
     response:any,

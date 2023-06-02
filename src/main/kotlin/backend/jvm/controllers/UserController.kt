@@ -24,7 +24,7 @@ import javax.swing.text.html.parser.Entity
 
 
 @RestController
-@CrossOrigin(origins = ["http://localhost:3000"], allowCredentials = "true", allowedHeaders = ["*"])
+@CrossOrigin(origins = ["http://localhost:8080"], allowCredentials = "true", allowedHeaders = ["*"])
 @RequestMapping("/api/user")
 class UserController {
 

@@ -12,7 +12,7 @@ const TOKEN_PARAM = "token"
 export async function fetchGetSession(onSuccess: (token: string, role: string) => void) {
     console.log("fetch get session")
     try {
-        const resp = await fetch('http://localhost:8080/api/user/check-session',
+        const resp = await fetch('http://localhost:8000/api/user/check-session',
             {
                 //  mode: 'no-cors',
                 credentials: "include",
