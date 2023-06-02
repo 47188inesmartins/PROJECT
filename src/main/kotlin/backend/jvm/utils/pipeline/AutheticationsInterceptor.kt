@@ -1,6 +1,6 @@
-package backend.jvm.utils
+package backend.jvm.utils.pipeline
 
-import backend.jvm.utils.pipeline.AuthorizationHeaderProcessor
+import backend.jvm.utils.RoleManager
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.stereotype.Component

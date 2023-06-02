@@ -3,7 +3,6 @@ package backend.jvm.utils.pipeline
 import backend.jvm.repository.UserCompanyRepository
 import backend.jvm.services.UserServices
 import backend.jvm.utils.UserRoles
-import backend.jvm.utils.errorHandling.HttpCode
 import backend.jvm.utils.errorHandling.InvalidUser
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse

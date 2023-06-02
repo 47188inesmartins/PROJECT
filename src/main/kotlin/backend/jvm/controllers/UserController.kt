@@ -24,7 +24,7 @@ import javax.swing.text.html.parser.Entity
 
 
 @RestController
-@CrossOrigin(origins = ["http://localhost:8080"], allowCredentials = "true", allowedHeaders = ["*"])
+//@CrossOrigin(origins = ["http://localhost:8080"], allowCredentials = "true", allowedHeaders = ["*"])
 @RequestMapping("/api/user")
 class UserController {
 
@@ -111,7 +111,9 @@ class UserController {
     }
 
     @GetMapping("/check-session")
-    fun check(/*@CookieValue("token", required = false) token: String?*/ request: HttpServletRequest) : ResponseEntity<Pair<String?,String?>?> {
+    fun check(
+              request:HttpServletRequest
+    ): ResponseEntity<Pair<String?,String?>?> {
         try {
            //  response.addHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
             // println(token)
@@ -124,6 +126,8 @@ class UserController {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid token", e)
         }
     }
+
+
 
     @PostMapping("/logout")
     fun logout(response: HttpServletResponse): ResponseEntity<String> {
