@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useState} from "react";
+import {useContext, useState} from "react";
 import {
     MDBCard,
     MDBContainer,
@@ -8,11 +8,14 @@ import {
 } from "mdb-react-ui-kit";
 import {Fetch} from "../Utils/useFetch";
 import {Layout} from "./Layout";
+import {LoggedInContextCookie} from "../Authentication/Authn";
 
 export function Home() {
 
     const [companies, setCompanies] = useState([]);
 
+    const token = useContext(LoggedInContextCookie).loggedInState.token
+    console.log("toke na home = ", token)
 
     const response = Fetch("/company", "GET");
     console.log(response)

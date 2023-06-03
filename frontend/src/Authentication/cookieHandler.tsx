@@ -22,7 +22,7 @@ export async function fetchGetSession(onSuccess: (token: string, role: string) =
         const token = response.first
         const role = response.second
         console.log("token =", token, " role = ", role)
-        onSuccess(token.value, role.value)
+        onSuccess(token, role)
     }catch (error){
         console.log(error)
     }

@@ -18,8 +18,13 @@ export function AuthnContainer({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         fetchGetSession(
             (token: string, id: string) => {
-                if (token) setAuthenticated({ auth: true , token: token, role: id})
-                else setAuthenticated({ auth: false, token: '', role: 'guest' })
+                if (token) {
+                    console.log("if onsuccess")
+                    setAuthenticated({ auth: true , token: token, role: id})}
+
+                else {
+                    console.log("else onsuccess")
+                    setAuthenticated({ auth: false, token: '', role: 'guest' })}
             }
         )
         return () => { }

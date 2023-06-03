@@ -10,12 +10,21 @@ import {
 import { NavLink } from "react-router-dom";
 import {useLocation} from "react-router";
 import {LoggedInContextCookie} from "../Authentication/Authn";
+import {useState} from "react";
+import {Fetch} from "../Utils/useFetch";
 
 
 export function Layout() {
+    const [isLogout, setIsLogout] = useState<boolean>(false)
     const check = React.useContext(LoggedInContextCookie).loggedInState.auth
     console.log("Check", check)
-    const location = useLocation()
+
+    if(isLogout) Fetch("/logout", 'POST')
+
+    function handleLogout(){
+        setIsLogout(true)
+    }
+
     return (
         <div
             style={{display: "flex", height: "100vh", overflow: "scroll initial"}}
@@ -55,7 +64,7 @@ export function Layout() {
                         </CDBSidebarMenu> :
                         <CDBSidebarMenu>
                             <NavLink to="/">
-                                <CDBSidebarMenuItem>Logout</CDBSidebarMenuItem>
+                                <CDBSidebarMenuItem onClick={handleLogout}>Logout</CDBSidebarMenuItem>
                             </NavLink>
                         </CDBSidebarMenu>
                     }
