@@ -113,15 +113,15 @@ class UserController {
     @GetMapping("/check-session")
     fun check(
               request:HttpServletRequest
-    ): ResponseEntity<Pair<String?,String?>?> {
+    ): ResponseEntity<List<URoles>?> {
         try {
            //  response.addHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
             // println(token)
              val headers = request.headerNames
              val cookies = request.cookies.first()
              val t = cookies ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid token")
-             val role = userServices.getRoleByToken(t.value)
-             return ResponseEntity.status(200).body(Pair(t.value,role))
+             val roles = userServices.getRolesByToken(t.value)
+             return ResponseEntity.status(200).body(roles)
         }catch (e: Exception){
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid token", e)
         }

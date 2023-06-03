@@ -19,11 +19,8 @@ export function AuthnContainer({ children }: { children: React.ReactNode }) {
         fetchGetSession(
             (token: string, id: string) => {
                 if (token) {
-                    console.log("if onsuccess")
                     setAuthenticated({ auth: true , token: token, role: id})}
-
                 else {
-                    console.log("else onsuccess")
                     setAuthenticated({ auth: false, token: '', role: 'guest' })}
             }
         )

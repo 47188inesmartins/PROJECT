@@ -1,6 +1,7 @@
 package backend.jvm.repository
 
 import backend.jvm.model.UserDB
+import backend.jvm.services.dto.URoles
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
@@ -29,6 +30,9 @@ interface UserRepository: JpaRepository<UserDB, Int> {
 
      @Query(value = "select role_name from user_role r where r.user_id = :id", nativeQuery = true)
      fun getRole (@Param("id") id: Int): String?
+
+     @Query(value = "select company_id, role from user_company uc where uc.user_id = :id", nativeQuery = true)
+     fun getRoles (@Param("id") id: Int): List<URoles>?
 
      @Query(value = "update SCH_USER set password = :pass where id = :id returning name", nativeQuery = true)
      fun changePassword (@Param("pass") pass: String, @Param("id") id: Int): String

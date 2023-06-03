@@ -10,6 +10,11 @@ insert into SCH_USER(token,email,password,name,birthday,availability,company_id)
 values('4f298735-5893-4199-a179-3af3fabc38b8','user@gmail.com','senha_segura','user','2001-01-01','available',1);
 
 
+
+select company_id, role from user_company uc where uc.user_id = 10;
+
+
+
 select * from service s inner join sch_day sd on s.id = sd.service_id and sd.week_days = 'MON'
 and  ('9:00:00'  between sd.begin_hour and interval_begin or '9:00:00' between  interval_end and sd.end_hour)
 and (TIME '9:00:00' + (s.duration || ' minutes')::INTERVAL between sd.begin_hour and interval_begin

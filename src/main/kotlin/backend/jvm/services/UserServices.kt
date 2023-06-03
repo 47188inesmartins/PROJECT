@@ -104,6 +104,13 @@ class UserServices : IUserInterface {
         return  userRepository.getRole(user)
     }
 
+    fun getRolesByToken(token: String): List<URoles>? {
+        val user = userRepository.getUserByToken(UUID.fromString(token))?.id ?: throw UserNotFound()
+        return  userRepository.getRoles(user)
+    }
+
+
+
     override fun addEmployee(companyId: Int, user: String): CreatedUserOutput {
         val user = userRepository.getUsersByEmail(user) ?: throw UserNotFound()
         val company = companyRepository.findAllById(companyId) ?: throw CompanyNotFound()
