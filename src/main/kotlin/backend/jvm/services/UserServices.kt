@@ -104,9 +104,12 @@ class UserServices : IUserInterface {
         return  userRepository.getRole(user)
     }
 
-    fun getRolesByToken(token: String): List<URoles>? {
+    fun getRolesByToken(token: String): List<CompanyRole> {
         val user = userRepository.getUserByToken(UUID.fromString(token))?.id ?: throw UserNotFound()
-        return  userRepository.getRoles(user)
+        val companyRoleRep = userCompanyRepository.getUserCompanyByUserId(user)
+        return companyRoleRep.map {
+            CompanyRole(it.company!!.id,it.role)
+        }
     }
 
 

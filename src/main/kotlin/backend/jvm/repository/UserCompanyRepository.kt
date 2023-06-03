@@ -5,6 +5,7 @@ import backend.jvm.model.UserCompany
 import backend.jvm.model.UserCompanyPK
 import backend.jvm.model.UserDB
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Query
 
 interface UserCompanyRepository : JpaRepository<UserCompany, UserCompanyPK> {
 
@@ -15,5 +16,7 @@ interface UserCompanyRepository : JpaRepository<UserCompany, UserCompanyPK> {
     fun getByCompanyAndUser(company: Company, user: UserDB): UserCompany
 
     fun findByCompanyAndUser(company: Company, user: UserDB): UserCompany?
+
+    fun getUserCompanyByUserId(user_id: Int): List<UserCompany>
 
 }

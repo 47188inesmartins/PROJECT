@@ -7,6 +7,7 @@ import backend.jvm.services.UserServices
 import backend.jvm.services.dto.*
 import backend.jvm.utils.RoleManager
 import backend.jvm.utils.errorHandling.*
+import jakarta.persistence.EntityNotFoundException
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import org.springframework.beans.factory.annotation.Autowired
@@ -95,7 +96,11 @@ class CompanyController {
             ResponseEntity.status(200)
                 .body(response)
         } catch (e: Exception) {
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Something went wrong", e)
+            when(e){
+                is EntityNotFoundException ->  throw ResponseStatusException(HttpStatus.NOT_FOUND, "Company not found", e)
+                else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Something went wrong", e)
+            }
+
         }
     }
 

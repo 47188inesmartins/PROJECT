@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
     useState,
     createContext,
-    useEffect,
+    useEffect, useContext,
 } from 'react';
 import {fetchGetSession} from "./cookieHandler";
 
@@ -32,4 +32,8 @@ export function AuthnContainer({ children }: { children: React.ReactNode }) {
             { children }
         </LoggedInContextCookie.Provider>
     );
+}
+
+export function useCurrentUser() {
+    return useContext(LoggedInContextCookie).loggedInState;
 }

@@ -24,6 +24,7 @@ export function MyAppointments() {
     const id = params.id
     const appointments = Fetch(`/user/${id}/appointments`,"GET")
     console.log(appointments)
+
     const handleCancel = (idApp:Number) =>{
         setCancel(true);
         setIdAppointment(idApp);

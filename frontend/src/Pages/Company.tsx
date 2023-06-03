@@ -21,7 +21,6 @@ export function Company() {
 
     const handleTimeChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
         setSelectedTime(event.target.value);
-        // Faça algo com o valor selecionado
     };
 
     const params = useParams()
@@ -69,9 +68,34 @@ export function Company() {
                                     <div className="mb-5">
                                         <p className="lead fw-normal mb-1">Services</p>
                                         <div className="p-4" style={{ backgroundColor: '#f8f9fa' }}>
-                                            {company.response.service.map((object: any) => (
-                                                <MDBCardText>{object.name}</MDBCardText>
-                                            ))}
+                                            <table style={{ fontFamily: 'Arial, Helvetica, sans-serif', borderCollapse: 'collapse', width: '100%' }}>
+                                                <thead>
+                                                <tr>
+                                                    <th
+                                                        style={{ paddingTop: '12px', paddingBottom: '12px', textAlign: 'left', backgroundColor: '#8faacf', color: 'white' }}>
+                                                        Nome </th>
+                                                    <th style={{ paddingTop: '12px', paddingBottom: '12px', textAlign: 'left', backgroundColor: '#8faacf', color: 'white' }}>
+                                                        Preço </th>
+                                                    <th style={{ paddingTop: '12px', paddingBottom: '12px', textAlign: 'left', backgroundColor: '#8faacf', color: 'white' }}>
+                                                        Duração </th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {company.response.service.map((object: any) => (
+                                                    <tr key={object.name}>
+                                                        <td style={{border: '1px solid #ddd',
+                                                            padding: '8px',
+                                                            backgroundColor: '#dadde0'}}> {object.name} </td>
+                                                        <td style={{border: '1px solid #ddd',
+                                                            padding: '8px',
+                                                            backgroundColor: '#dadde0'}}> {object.price} </td>
+                                                        <td style={{border: '1px solid #ddd',
+                                                            padding: '8px',
+                                                            backgroundColor: '#dadde0'}}> {object.duration} </td>
+                                                    </tr>
+                                                ))}
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
                                     <div className="mb-5">

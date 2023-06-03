@@ -2,7 +2,7 @@ package backend.jvm.services.dto
 
 import backend.jvm.model.*
 
-data class ServiceInfo(val id: Int, val name: String)
+data class ServiceInfo(val id: Int, val name: String, val price: Double, val duration: String)
 
 data class CompanyInputDto(
     val nif: String,
@@ -45,7 +45,7 @@ data class CompanyOutputDto(
         name = company.name,
         type = company.type,
         description = company.description,
-        service = company.serviceDBS?.map { ServiceInfo(it.id, it.name) },
+        service = company.serviceDBS?.map { ServiceInfo(it.id, it.name,it.price,it.duration.toString()) },
         schedule = company.schedule?.id,
         users = company.userCompany?.map { CompanyUserRole(it.id.user, it.role)}
     )

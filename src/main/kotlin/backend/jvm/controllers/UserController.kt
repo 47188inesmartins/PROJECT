@@ -1,5 +1,6 @@
 package backend.jvm.controllers
 
+import backend.jvm.model.UserCompany
 import backend.jvm.services.UserServices
 import backend.jvm.services.dto.*
 import backend.jvm.utils.RoleManager
@@ -113,15 +114,16 @@ class UserController {
     @GetMapping("/check-session")
     fun check(
               request:HttpServletRequest
-    ): ResponseEntity<List<URoles>?> {
+    ): ResponseEntity<List<CompanyRole>> {
         try {
            //  response.addHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
             // println(token)
-             val headers = request.headerNames
              val cookies = request.cookies.first()
              val t = cookies ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid token")
              val roles = userServices.getRolesByToken(t.value)
-             return ResponseEntity.status(200).body(roles)
+             return ResponseEntity
+                 .status(200)
+                 .body(roles)
         }catch (e: Exception){
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid token", e)
         }

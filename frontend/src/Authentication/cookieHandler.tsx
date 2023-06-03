@@ -14,7 +14,6 @@ export async function fetchGetSession(onSuccess: (token: string, role: string) =
     try {
         const resp = await fetch('/api/user/check-session',
             {
-                //  mode: 'no-cors',
                 credentials: "include",
             }
         )

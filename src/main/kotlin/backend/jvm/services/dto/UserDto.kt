@@ -65,3 +65,6 @@ data class UserInputDto(
                 )
         }
 }
+
+
+data class CompanyRole(val companyId: Int, val role: String)
