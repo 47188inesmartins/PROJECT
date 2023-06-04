@@ -7,14 +7,14 @@ import {
     MDBRow,
 } from "mdb-react-ui-kit";
 import {Fetch} from "../Utils/useFetch";
-import {Layout} from "./Layout";
+import {Layout, LayoutRole} from "./Layout";
 import {LoggedInContextCookie} from "../Authentication/Authn";
 
 export function Home() {
 
     const [companies, setCompanies] = useState([]);
 
-    const token = useContext(LoggedInContextCookie).loggedInState.token
+    const token = useContext(LoggedInContextCookie).loggedInState.role
     console.log("toke na home = ", token)
 
     const response = Fetch("/company", "GET");
@@ -71,6 +71,14 @@ export function Home() {
                         </div>
                     )
                     }
+                </div>
+            </td>
+            <td>
+                <div style={{position: "fixed",
+                    width: "200px",
+                    overflowY: "auto",
+                    alignContent: 'right'}}>
+                    <LayoutRole />
                 </div>
             </td>
         </div>

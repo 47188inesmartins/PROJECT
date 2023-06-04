@@ -6,9 +6,8 @@ import {
     CDBSidebarHeader,
     CDBSidebarMenu,
     CDBSidebarMenuItem
-} from "cdbreact";
+}from "cdbreact";
 import { NavLink } from "react-router-dom";
-import {Navigate, useLocation} from "react-router";
 import {LoggedInContextCookie} from "../Authentication/Authn";
 import {useEffect, useState} from "react";
 import {Fetch} from "../Utils/useFetch";
@@ -19,21 +18,19 @@ export function Layout() {
     const check = React.useContext(LoggedInContextCookie).loggedInState.auth
     console.log("Check", check)
 
-  //  if(isLogout)
-
     useEffect(() => {
     }, [check]);
 
 
     function handleLogout(){
         setIsLogout(true)
-        //Fetch("/logout", 'POST')
     }
 
     function FetchLogout(){
         Fetch("/user/logout", 'POST')
-       // setIsLogout(false)
-        return <Navigate to={"/"}></Navigate>
+        setIsLogout(false)
+        window.location.href = "/"
+        return <></>
     }
 
     return (

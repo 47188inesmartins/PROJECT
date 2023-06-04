@@ -17,11 +17,21 @@ export async function fetchGetSession(onSuccess: (token: string, role: string) =
                 credentials: "include",
             }
         )
+
+
         const response = await resp.json()
+
+
         const token = response.first
         const role = response.second
+
+
+        if(response.second == null)
+            return onSuccess(response.first, "CLIENT")
+
         console.log("token =", token, " role = ", role)
         onSuccess(token, role)
+
     }catch (error){
         console.log(error)
     }

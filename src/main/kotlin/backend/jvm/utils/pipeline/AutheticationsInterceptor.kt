@@ -18,9 +18,17 @@ class AuthenticationsInterceptor(
     override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
         if(handler is HandlerMethod ){
 
-            val user = authorizationHeaderProcessor.process(request.getHeader(NAME_AUTHORIZATION_HEADER))
+            val user = authorizationHeaderProcessor.process(request.getHeader(NAME_AUTHORIZATION_HEADER),
+                request.getAttribute("id") as Int
+            )
 
-            return if(user != null && user.first == null){
+            val roleAllowed = handler.getMethodAnnotation(RoleManager::class.java)
+            
+            if(user == null ){
+                if(roleAllowed == null){
+                    response.status = 200
+                    return true
+                }
                 response.status = 401
                 response.addHeader(NAME_WWW_AUTHENTICATE_HEADER, AuthorizationHeaderProcessor.SCHEMA)
                 return false
@@ -29,7 +37,6 @@ class AuthenticationsInterceptor(
                     response.status = 200
                     true
                 } else{
-                    println("401")
                     response.status = 401
                     false
                 }

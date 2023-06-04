@@ -1,11 +1,9 @@
 package backend.jvm.controllers
 
-import backend.jvm.model.UserCompany
 import backend.jvm.services.UserServices
 import backend.jvm.services.dto.*
 import backend.jvm.utils.RoleManager
 import backend.jvm.utils.errorHandling.*
-import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import kotlinx.serialization.json.Json
@@ -16,16 +14,12 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseCookie
 import org.springframework.http.ResponseEntity
-import org.springframework.security.access.annotation.Secured
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 import java.util.*
-import org.springframework.web.bind.annotation.CrossOrigin
-import javax.swing.text.html.parser.Entity
 
 
 @RestController
-//@CrossOrigin(origins = ["http://localhost:8080"], allowCredentials = "true", allowedHeaders = ["*"])
 @RequestMapping("/api/user")
 class UserController {
 
@@ -114,7 +108,7 @@ class UserController {
     @GetMapping("/check-session")
     fun check(
               request:HttpServletRequest
-    ): ResponseEntity<List<CompanyRole>> {
+    ): ResponseEntity<Pair<String, List<CompanyRole>?>> {
         try {
            //  response.addHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
             // println(token)
@@ -123,7 +117,7 @@ class UserController {
              val roles = userServices.getRolesByToken(t.value)
              return ResponseEntity
                  .status(200)
-                 .body(roles)
+                 .body(Pair(t.value, roles))
         }catch (e: Exception){
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid token", e)
         }

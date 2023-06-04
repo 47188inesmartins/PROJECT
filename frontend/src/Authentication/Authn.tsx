@@ -33,7 +33,3 @@ export function AuthnContainer({ children }: { children: React.ReactNode }) {
         </LoggedInContextCookie.Provider>
     );
 }
-
-export function useCurrentUser() {
-    return useContext(LoggedInContextCookie).loggedInState;
-}

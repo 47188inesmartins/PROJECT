@@ -43,7 +43,8 @@ export function Login() {
         console.log(email, password)
         Fetch("/user/login", 'POST', userCredentials)
        //return(<div></div>)
-        return(<Navigate to = "/" replace={true}></Navigate>);
+        window.location.href = "/"
+        return(<></>);
     }
 
     return (
