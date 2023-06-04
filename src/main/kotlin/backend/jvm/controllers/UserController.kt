@@ -3,6 +3,7 @@ package backend.jvm.controllers
 import backend.jvm.services.UserServices
 import backend.jvm.services.dto.*
 import backend.jvm.utils.RoleManager
+import backend.jvm.utils.UserRoles
 import backend.jvm.utils.errorHandling.*
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -115,9 +116,13 @@ class UserController {
              val cookies = request.cookies.first()
              val t = cookies ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid token")
              val roles = userServices.getRolesByToken(t.value)
+
+             val body = if(roles.isEmpty()) Pair(UserRoles.CLIENT.name, null)
+             else Pair(t.value, roles)
+
              return ResponseEntity
                  .status(200)
-                 .body(Pair(t.value, roles))
+                 .body(body)
         }catch (e: Exception){
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid token", e)
         }
