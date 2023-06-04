@@ -8,6 +8,7 @@ import backend.jvm.utils.*
 import backend.jvm.utils.errorHandling.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Service
 import java.sql.Time
 import java.util.*
@@ -165,5 +166,11 @@ class UserServices : IUserInterface {
                 employee.name
             )
         }
+    }
+
+    fun getRoleByUserIdAndCompany(company: Int, user_id: String): String? {
+        val token = userRepository.getUserByToken(UUID.fromString(user_id))
+        return if (token == null)  null
+        else userCompanyRepository.getRoleByCompanyAndUser(company, token.id)
     }
 }

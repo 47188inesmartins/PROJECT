@@ -23,16 +23,9 @@ class AuthenticationsInterceptor(
             return if(user != null && user.first == null){
                 response.status = 401
                 response.addHeader(NAME_WWW_AUTHENTICATE_HEADER, AuthorizationHeaderProcessor.SCHEMA)
-                false
+                return false
             }else{
-                val roleAllowed = handler.getMethodAnnotation(RoleManager::class.java)
-                println(roleAllowed)
-                if(roleAllowed == null){
-                    response.status = 200
-                    return true
-                }
-                return if(user?.second in roleAllowed.roleList){
-                    println("200")
+                return if(roleAllowed?.roleList?.contains(user) == true){
                     response.status = 200
                     true
                 } else{
@@ -44,8 +37,6 @@ class AuthenticationsInterceptor(
         }
         return true
     }
-
-
 }
 
 

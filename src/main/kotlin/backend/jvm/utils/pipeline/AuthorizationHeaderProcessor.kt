@@ -9,11 +9,11 @@ class AuthorizationHeaderProcessor(
     val userServices: UserServices
 ) {
 
-    fun process(credentials : String?) : Pair <UserDB?, String>?{
-        if(credentials == null) return null
+    fun process(credentials: String?, companyId: Int): String? {
+        if (credentials == null) return null
         val parts = credentials.trim().split(" ")
-        if(parts.size != 2 || parts[0].lowercase() != SCHEMA) return Pair(null,"GUEST")
-        return Pair (userServices.getUserByToken(parts[1]),userServices.getRoleByToken(parts[1])?:"GUEST")
+        if (parts.size != 2 || parts[0].lowercase() != SCHEMA) return null
+        return userServices.getRoleByUserIdAndCompany(companyId, parts[1]) ?: return "CLIENT"
     }
 
     companion object{
