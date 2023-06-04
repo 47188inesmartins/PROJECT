@@ -21,12 +21,12 @@ class AppConfig :
         val pathMatcher = AntPathMatcher()
         registry.addInterceptor(authenticationsInterceptor)
             .addPathPatterns(listOf(
-                "/appointment/**",
-                "/company/**",
-                "/vacation/**",
-                "/schedule/**",
-                "/service/**",
-                "/user/**"
+                "/api/appointment/**",
+                "/api/company/**",
+                "/api/vacation/**",
+                "/api/schedule/**",
+                "/api/service/**",
+                "/api/user/**"
             ))
             .pathMatcher(pathMatcher)
 

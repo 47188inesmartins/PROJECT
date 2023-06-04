@@ -14,15 +14,15 @@ import org.springframework.web.server.ResponseStatusException
 
 
 @RestController
-@RequestMapping(("/appointment"))
+@RequestMapping(("/api/company/{cid}/appointment"))
 class AppointmentController {
 
     @Autowired
     lateinit var appointmentServices: AppointmentServices
 
     @RoleManager(["MANAGER", "CLIENT"])
-    @PostMapping
-    fun addAppointment(@RequestBody appointment: AppointmentInputDto): ResponseEntity<AppointmentOutputDto> {
+    @PostMapping("")
+    fun addAppointment(@RequestBody appointment: AppointmentInputDto, @PathVariable cid: String): ResponseEntity<AppointmentOutputDto> {
         return try {
             val response = appointmentServices.addAppointment(appointment)
             ResponseEntity.status(201)
@@ -39,7 +39,7 @@ class AppointmentController {
 
     @RoleManager(["CLIENT","MANAGER","EMPLOYEE"])
     @DeleteMapping("/{id}")
-    fun deleteAppointment(@PathVariable id: Int): ResponseEntity<String> {
+    fun deleteAppointment(@PathVariable id: Int, @PathVariable cid: String): ResponseEntity<String> {
         return try {
             println(id)
             appointmentServices.deleteAppointment(id)
@@ -58,7 +58,7 @@ class AppointmentController {
 
     @RoleManager(["MANAGER", "EMPLOYEE", "CLIENT"])
     @GetMapping("/{id}")
-    fun getAppointment(@PathVariable id: Int): ResponseEntity<AppointmentOutputDto>{
+    fun getAppointment(@PathVariable id: Int, @PathVariable cid: String): ResponseEntity<AppointmentOutputDto>{
         return try {
            TODO()
             // val response = appointmentServices.getAppointment(id)
@@ -75,7 +75,9 @@ class AppointmentController {
 
     @RoleManager(["MANAGER", "EMPLOYEE", "CLIENT"])
     @GetMapping
-    fun getAppointmentsByDateAndHour(@RequestParam("schedule_id") schedule_id: Int, @RequestParam("hour") hour: String, @RequestParam("date") date: String): ResponseEntity<List<AppointmentOutputDto>>{
+    fun getAppointmentsByDateAndHour(@RequestParam("schedule_id") schedule_id: Int, @RequestParam("hour") hour: String, @RequestParam("date") date: String,
+                                     @PathVariable cid: String
+    ): ResponseEntity<List<AppointmentOutputDto>>{
         return try {
             val response = appointmentServices.getAppointmentByDateAndHour(schedule_id, hour, date)
 
@@ -92,7 +94,9 @@ class AppointmentController {
 
     @RoleManager(["MANAGER", "EMPLOYEE", "CLIENT"])
     @GetMapping("/services/availability")
-    fun getAvailableServices(@RequestParam("hour_begin") hourBegin :String, @RequestParam("date") date :String, @RequestParam("companyId") companyId :Int ) :ResponseEntity<List<ServiceOutputDto>>{
+    fun getAvailableServices(@RequestParam("hour_begin") hourBegin :String, @RequestParam("date") date :String, @RequestParam("companyId") companyId :Int,
+                             @PathVariable cid: String
+    ) :ResponseEntity<List<ServiceOutputDto>>{
         return try{
 
            val response = appointmentServices.getAvailableServicesByAppointment(hourBegin, date, companyId)

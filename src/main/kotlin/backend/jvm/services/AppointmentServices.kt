@@ -36,15 +36,9 @@ class AppointmentServices : IAppointmentServices {
 
     @Autowired
     lateinit var unavailabilityRepository: UnavailabilityRepository
+
+
     override fun addAppointment(appointment: AppointmentInputDto): AppointmentOutputDto {
-        TODO("Not yet implemented")
-    }
-
-    override fun deleteAppointment(id: Int) {
-        TODO("Not yet implemented")
-    }
-
-    /*override fun addAppointment(appointment: AppointmentInputDto): AppointmentOutputDto {
         val service = servicesRepository.getServiceDBById(appointment.service)
             ?: throw ServiceNotFound()
 
@@ -94,7 +88,7 @@ class AppointmentServices : IAppointmentServices {
         if(unavailabilityDB != null)  unavailabilityRepository.deleteById(unavailabilityDB.id)
 
         appointmentRepository.deleteById(id)
-    }*/
+    }
 
     override fun getAppointmentById(id: Int): AppointmentOutputDto? {
         val isAppointment = appointmentRepository.findById(id)

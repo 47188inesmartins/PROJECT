@@ -43,14 +43,16 @@ export function Login() {
         console.log(email, password)
         const resp = Fetch("/user/login", 'POST', userCredentials)
         console.log("login feito")
-        window.location.href = "/"
+        if(resp.response)
+            window.location.href = "/"
         return(
             <>
-            {resp.response?
-                <a>loading...</a>:
-                <Navigate to={`/`} replace={true}/>
-            }
-        </>);
+                {resp.response?
+                    <a>loading...</a>:
+                    <a></a>
+                    //  <Navigate to={`/`} replace={true}/>
+                }
+            </>);
     }
 
     return (
@@ -118,9 +120,8 @@ export function Login() {
                     </MDBRow>
                 </MDBContainer>
                 :
-            <FetchLogin/>
-        }
+                <FetchLogin/>
+            }
         </div>
     );
 }
-
