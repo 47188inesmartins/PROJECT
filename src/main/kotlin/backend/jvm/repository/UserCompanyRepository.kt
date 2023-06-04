@@ -10,8 +10,6 @@ import org.springframework.data.repository.query.Param
 
 interface UserCompanyRepository : JpaRepository<UserCompany, UserCompanyPK> {
 
-    fun getRoleByCompanyAndUser(company: Company, user: UserDB): UserCompany
-
     fun getAllByUser(user: UserDB): UserCompany?
 
     fun getByCompanyAndUser(company: Company, user: UserDB): UserCompany
@@ -21,5 +19,5 @@ interface UserCompanyRepository : JpaRepository<UserCompany, UserCompanyPK> {
     fun getUserCompanyByUserId(user_id: Int): List<UserCompany>
 
     @Query(value = "select u.role from user_company u where u.user_id=:user_id and u.company_id=:company_id", nativeQuery = true)
-    fun getRoleByCompanyAndUser(@Param("company_id")company: Int, @Param("user_id") user_id: Int): String
+    fun getRoleByCompanyAndUser(@Param("company_id")company: Int, @Param("user_id") user_id: Int): String?
 }

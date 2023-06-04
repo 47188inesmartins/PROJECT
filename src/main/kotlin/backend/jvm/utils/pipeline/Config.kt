@@ -1,4 +1,4 @@
-package backend.jvm.utils
+package backend.jvm.utils.pipeline
 
 import backend.jvm.utils.pipeline.AuthenticationsInterceptor
 import backend.jvm.utils.pipeline.RoleInterceptor

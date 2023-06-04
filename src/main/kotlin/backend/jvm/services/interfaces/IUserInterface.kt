@@ -15,7 +15,7 @@ interface IUserInterface {
 
     fun changeRole(id: Int, name: String): String
 
-    fun getRoleByUserAndCompany (compId: Int, userId: Int): UserCompany
+    fun getRoleByUserAndCompany (compId: Int, userId: Int): String?
 
     fun changePassword(password: String, id: Int): String
 
@@ -23,7 +23,7 @@ interface IUserInterface {
 
     fun getUserByToken(token: String): UserDB?
 
-    fun addEmployee(id: Int, user: String): CreatedUserOutput
+    fun addEmployees(companyId: Int, emails: List<String>)
 
     fun getAllAppointmentsByUser(id: Int): AppointmentsUserInfo
 

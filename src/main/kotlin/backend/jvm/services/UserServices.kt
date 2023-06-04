@@ -83,10 +83,8 @@ class UserServices : IUserInterface {
         return userRepository.changePassword(pass, id)
     }
 
-    override fun getRoleByUserAndCompany (compId: Int, userId: Int): UserCompany {
-        val user = userRepository.getReferenceById(userId)
-        val company = companyRepository.getReferenceById(compId)
-        return userCompanyRepository.getRoleByCompanyAndUser(company,user)
+    override fun getRoleByUserAndCompany (compId: Int, userId: Int): String? {
+        return userCompanyRepository.getRoleByCompanyAndUser(compId,userId)
     }
 
     override fun getUsersByEmailAndPassword (email: String, password: String): UserOutputDto {
@@ -115,23 +113,22 @@ class UserServices : IUserInterface {
 
 
 
-    override fun addEmployee(companyId: Int, user: String): CreatedUserOutput {
-        val user = userRepository.getUsersByEmail(user) ?: throw UserNotFound()
+    override fun addEmployees(companyId: Int, emails: List<String>){
+        val user = emails.map {email ->
+            userRepository.getUsersByEmail(email) ?: throw UserNotFound()
+        }
         val company = companyRepository.findAllById(companyId) ?: throw CompanyNotFound()
 
-        val name = roleRepository.getRoleByUserId(user.id)
-        val userRole = userCompanyRepository.findByCompanyAndUser(company, user)
-        if(userRole != null && userRole.role == UserRoles.MANAGER.name) throw AlreadyCompanyManager()
-        if(name == UserRoles.EMPLOYEE.name) throw AlreadyEmployee()
-        if(name != UserRoles.CLIENT.name) throw InvalidUser()
+        val newEmployees = user.filter {
+            userCompanyRepository.getRoleByCompanyAndUser(companyId, it.id) != UserRoles.MANAGER.name
+            &&  userCompanyRepository.getRoleByCompanyAndUser(companyId, it.id) != UserRoles.EMPLOYEE.name
+        }
 
-        userRepository.changeRole(user.id,UserRoles.EMPLOYEE.name)
-        userRepository.changeAvailabilityAndMaxNumber(UserAvailability.AVAILABLE.name, 1, user.id)
+        newEmployees.forEach {
+            //userRepository.changeAvailabilityAndMaxNumber(UserAvailability.AVAILABLE.name, 1, it.id)
+            userCompanyRepository.save(UserCompany(it, company, UserRoles.EMPLOYEE.name))
+        }
 
-        userCompanyRepository.save(UserCompany(user, company, UserRoles.EMPLOYEE.name))
-
-        val updatedUser = userRepository.getUserById(user.id)!!
-        return CreatedUserOutput(updatedUser.id, updatedUser.token)
     }
 
     override fun getAllAppointmentsByUser(id: Int): AppointmentsUserInfo{
