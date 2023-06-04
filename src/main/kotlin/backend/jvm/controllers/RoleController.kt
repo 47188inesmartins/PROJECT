@@ -16,7 +16,7 @@ import org.springframework.web.server.ResponseStatusException
 
 
 @RestController
-@RequestMapping(("/api/role"))
+@RequestMapping(("/role"))
 class RoleController {
 
     @Autowired

@@ -20,7 +20,7 @@ import org.springframework.web.server.ResponseStatusException
 import java.util.*
 
 @RestController
-@RequestMapping(("/api/company"))
+@RequestMapping(("/company"))
 class CompanyController {
 
     @Autowired

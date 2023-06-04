@@ -14,7 +14,7 @@ import java.util.*
 
 
 @RestController
-@RequestMapping("/api/service")
+@RequestMapping("/service")
 class ServiceController {
 
     @Autowired

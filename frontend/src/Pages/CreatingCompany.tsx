@@ -53,10 +53,11 @@ export function CreatingCompany(){
 
     function FetchCreateCompany(){
 
-        Fetch('/company',
+        const resp = Fetch('/company',
             'POST',
             companyData)
         //return(<div></div>)
+        window.location.href = "/"
         return(<Navigate to = "/" replace={true}></Navigate>);
     }
 

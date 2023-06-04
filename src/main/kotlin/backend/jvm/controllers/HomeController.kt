@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
 
 
-@CrossOrigin(origins = ["http://localhost:3000"])
 @RestController
 class HomeController {
 

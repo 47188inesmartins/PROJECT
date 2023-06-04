@@ -10,26 +10,35 @@ export const LoggedInContextCookie = createContext({
     loggedInState: { auth: false, token: '', role: 'guest' },
 });
 
-
 export function AuthnContainer({ children }: { children: React.ReactNode }) {
+    const [authenticated, setAuthenticated] = useState({
+        auth: false,
+        token: '',
+        role: 'guest'
+    });
+    const [loading, setLoading] = useState(true); // Variável de estado para controlar o estado de carregamento
 
-    const [authenticated, setAuthenticated] = useState({auth: false, token: '', role: 'guest'})
-    console.log("here authn")
     useEffect(() => {
-        fetchGetSession(
-            (token: string, id: string) => {
-                if (token) {
-                    setAuthenticated({ auth: true , token: token, role: id})}
-                else {
-                    setAuthenticated({ auth: false, token: '', role: 'guest' })}
+        fetchGetSession((token: string, id: string) => {
+            if (token) {
+                setAuthenticated({ auth: true, token: token, role: id });
+            } else {
+                setAuthenticated({ auth: false, token: '', role: 'guest' });
             }
-        )
-        return () => { }
-    }, [setAuthenticated])
+            setLoading(false); // Marcar o carregamento como concluído
+        }).catch((error) => {
+            console.log(error);
+            setLoading(false); // Marcar o carregamento como concluído mesmo em caso de erro
+        });
+    }, []);
+
+    if (loading) {
+        return <div>Loading...</div>; // Renderizar um indicador de carregamento enquanto a função fetchGetSession está sendo executada
+    }
 
     return (
-        <LoggedInContextCookie.Provider value={{loggedInState: authenticated}}>
-            { children }
+        <LoggedInContextCookie.Provider value={{ loggedInState: authenticated }}>
+            {children}
         </LoggedInContextCookie.Provider>
     );
 }

@@ -23,7 +23,7 @@ class AuthenticationsInterceptor(
             )
 
             val roleAllowed = handler.getMethodAnnotation(RoleManager::class.java)
-            
+
             if(user == null ){
                 if(roleAllowed == null){
                     response.status = 200

@@ -14,7 +14,7 @@ import org.springframework.web.server.ResponseStatusException
 
 
 @RestController
-@RequestMapping(("/api/appointment"))
+@RequestMapping(("/appointment"))
 class AppointmentController {
 
     @Autowired

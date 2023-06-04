@@ -41,10 +41,16 @@ export function Login() {
             password
         }
         console.log(email, password)
-        Fetch("/user/login", 'POST', userCredentials)
-       //return(<div></div>)
+        const resp = Fetch("/user/login", 'POST', userCredentials)
+        console.log("login feito")
         window.location.href = "/"
-        return(<></>);
+        return(
+            <>
+            {resp.response?
+                <a>loading...</a>:
+                <Navigate to={`/`} replace={true}/>
+            }
+        </>);
     }
 
     return (
