@@ -56,15 +56,12 @@ class CompanyController {
 
     @RoleManager(["MANAGER"])
     @PostMapping("/{cid}/employee")
-    fun addEmployee(@PathVariable cid: Int,@RequestBody email: String): ResponseEntity<CreatedUserOutput> {
+    fun addEmployee(@PathVariable cid: Int, @RequestBody emails: UserEmails): ResponseEntity<CreatedUserOutput?> {
         return try {
-            val json = Json.parseToJsonElement(email)
-            val request = json.jsonObject["email"]?.jsonPrimitive?.content
-                ?: throw InvalidCredentials()
-            val response = userServices.addEmployee(cid,request)
+            userServices.addEmployees(cid, emails.emails)
             ResponseEntity
                 .status(200)
-                .body(response)
+                .body(null)
         }catch (e: Exception) {
             println(e)
             when(e){
@@ -76,6 +73,8 @@ class CompanyController {
             }
         }
     }
+
+
     @RoleManager(["MANAGER"])
     @DeleteMapping("/{id}")
     fun deleteCompany(@PathVariable id: Int): ResponseEntity<Boolean> {

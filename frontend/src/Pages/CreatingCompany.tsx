@@ -53,6 +53,9 @@ export function CreatingCompany(){
 
     function FetchCreateCompany(){
 
+
+
+
         const resp = Fetch('/company',
             'POST',
             companyData)

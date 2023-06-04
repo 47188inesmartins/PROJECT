@@ -12,3 +12,5 @@ encriptar pass better
 encryptar token p gaurdar na db
 
 fazer swagger p meter as dtos no frontend automaticamente
+
+fazer bue testes
