@@ -28,16 +28,16 @@ class AuthenticationsInterceptor(
 
             val roleAllowed = handler.getMethodAnnotation(RoleManager::class.java)
 
-            if(user == null ){
-                if(roleAllowed == null){
-                    response.status = 200
-                    return true
-                }
+            if(roleAllowed == null){
+                response.status = 200
+                return true
+            }
+            return if(user == null ){
                 response.status = 401
                 response.addHeader(NAME_WWW_AUTHENTICATE_HEADER, AuthorizationHeaderProcessor.SCHEMA)
-                return false
+                false
             }else{
-                return if(roleAllowed?.roleList?.contains(user) == true){
+                if(roleAllowed?.roleList?.contains(user) == true){
                     response.status = 200
                     true
                 } else{

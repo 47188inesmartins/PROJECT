@@ -51,4 +51,5 @@ data class CompanyOutputDto(
     )
 }
 
+data class CompanyInfo(val id: Int, val name: String)
 data class CompanyUserRole(val userId: Int, val role: String)

@@ -11,7 +11,9 @@ import { NavLink } from "react-router-dom";
 import {LoggedInContextCookie} from "../Authentication/Authn";
 import {useEffect, useState} from "react";
 import {Fetch} from "../Utils/useFetch";
-
+import { MDBDropdown, MDBDropdownMenu, MDBDropdownToggle, MDBDropdownItem } from 'mdb-react-ui-kit';
+import 'bootstrap/dist/css/bootstrap.css';
+import Dropdown from 'react-bootstrap/Dropdown';
 
 export function Layout() {
     const [isLogout, setIsLogout] = useState<boolean>(false)
@@ -90,8 +92,8 @@ export function Layout() {
 
 export function LayoutRole(){
     const check = React.useContext(LoggedInContextCookie).loggedInState.role
-
-    const role = (check !== "CLIENT")
+    console.log("CHECK",check)
+    const role = (check !== "client" && check !== "guest")
 
     return (
         <div
@@ -103,7 +105,6 @@ export function LayoutRole(){
                 justifyContent: "flex-end",
                 right: '0'
             }}
-
         >
             {role ?
                 <CDBSidebar
@@ -128,9 +129,7 @@ export function LayoutRole(){
 
                     <CDBSidebarContent className="sidebar-content">
                         <CDBSidebarMenu>
-                            <NavLink to="/user/1/appointments">
-                                <CDBSidebarMenuItem icon="columns">Appointments</CDBSidebarMenuItem>
-                            </NavLink>
+                            <MyDropdownButton/>
                             <NavLink to="/new/company">
                                 <CDBSidebarMenuItem icon="table">Company</CDBSidebarMenuItem>
                             </NavLink>
@@ -145,3 +144,41 @@ export function LayoutRole(){
         </div>
     );
 }
+
+
+function MyDropdownButton() {
+    const [items, setItems] = useState([]);
+    const [managerCompanies,setManagerCompanies] = useState(false)
+
+    const handleButtonClick = () => {
+        setManagerCompanies(true)
+    };
+
+    useEffect(() => {
+    }, [managerCompanies])
+
+    const response = Fetch("/company/info?role=MANAGER",'GET')
+
+    console.log("Layout",response)
+    return (
+        <div>
+            <Dropdown>
+                <Dropdown.Toggle style={{background :'#8faacf'}} variant="success">
+                    Open Menu
+                </Dropdown.Toggle >
+                <Dropdown.Menu>
+                    {response.response ?
+                        <div>
+                            {response.response.map((object: any) => (
+                                <Dropdown.Item href="#" id={object.id}>
+                                    {object.name}
+                                </Dropdown.Item>))}
+                        </div>
+                        : <Dropdown.Item disabled>No companies</Dropdown.Item>
+                    }
+                </Dropdown.Menu>
+            </Dropdown>
+        </div>
+    )
+}
+

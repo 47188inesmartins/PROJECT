@@ -6,6 +6,7 @@ import backend.jvm.services.CompanyServices
 import backend.jvm.services.UserServices
 import backend.jvm.services.dto.*
 import backend.jvm.utils.RoleManager
+import backend.jvm.utils.UserRoles
 import backend.jvm.utils.errorHandling.*
 import jakarta.persistence.EntityNotFoundException
 import kotlinx.serialization.json.jsonObject
@@ -215,6 +216,18 @@ class CompanyController {
         return try{
             val response = companyServices.getAllCompanies()
             ResponseEntity.status(200).body(response)
+        }catch(e: Exception){
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
+        }
+    }
+
+    @GetMapping("/info")
+    fun getCompanyByManager(@RequestHeader("Authorization") token: String,@RequestParam role: String): ResponseEntity<List<CompanyInfo>>{
+        return try{
+            val response = companyServices.getCompanyByUserAndRole(token.split(" ")[1], role)
+            ResponseEntity
+                .status(200)
+                .body(response)
         }catch(e: Exception){
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
         }

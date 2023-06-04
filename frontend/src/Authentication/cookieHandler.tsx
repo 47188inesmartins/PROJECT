@@ -17,8 +17,6 @@ export async function fetchGetSession(onSuccess: (token: string, role: string) =
                 credentials: "include",
             }
         )
-
-
         const response = await resp.json()
 
 

@@ -6,7 +6,7 @@ import {Login} from "../Pages/Login";
 import {Company} from "../Pages/Company";
 import {MyAppointments} from "../Pages/MyAppointments";
 import {CreatingCompany} from "../Pages/CreatingCompany";
-import {Layout} from "../Pages/Layout";
+import {Layout, LayoutRole} from "../Pages/Layout";
 
 
 
@@ -36,8 +36,12 @@ const router = createBrowserRouter([{
         },
         {
             "element": <Layout/>
+        },
+        {
+            "element": <LayoutRole/>
         }
-    ]}])
+    ]}]
+)
 
 
 function ScheduleItApp(){

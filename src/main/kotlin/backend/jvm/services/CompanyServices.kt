@@ -5,10 +5,7 @@ import backend.jvm.repository.*
 import backend.jvm.services.dto.*
 import backend.jvm.services.interfaces.ICompanyServices
 import backend.jvm.utils.UserRoles
-import backend.jvm.utils.errorHandling.CompanyNotFound
-import backend.jvm.utils.errorHandling.InvalidNif
-import backend.jvm.utils.errorHandling.NifAlreadyExist
-import backend.jvm.utils.errorHandling.UserNotFound
+import backend.jvm.utils.errorHandling.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.sql.Time
@@ -121,6 +118,14 @@ class CompanyServices : ICompanyServices {
 
     override fun getAllServices(id: Int): List<ServiceOutputDto>{
         return serviceRepository.getAllServicesFromACompany(id).map { ServiceOutputDto(it) }
+    }
+
+    fun getCompanyByUserAndRole(userId: String, role: String): List<CompanyInfo>{
+        val user = usersRepository.getUserByToken(UUID.fromString(userId)) ?: throw InvalidCredentials()
+        val companyRepository = companyRepository.getCompanyByUserIdAndRole(user.id,role)
+        return companyRepository.map {
+            CompanyInfo(it.id,it.name)
+        }
     }
 
 }
