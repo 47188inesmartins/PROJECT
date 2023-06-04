@@ -37,7 +37,6 @@ class AppointmentServices : IAppointmentServices {
     @Autowired
     lateinit var unavailabilityRepository: UnavailabilityRepository
 
-
     override fun addAppointment(appointment: AppointmentInputDto): AppointmentOutputDto {
         val service = servicesRepository.getServiceDBById(appointment.service)
             ?: throw ServiceNotFound()

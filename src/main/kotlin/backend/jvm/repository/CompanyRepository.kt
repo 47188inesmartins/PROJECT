@@ -29,6 +29,7 @@ interface CompanyRepository : JpaRepository<Company, Int>{
     @Query(value = "update company c set c.description=:description where c.id = :id", nativeQuery = true)
     fun changeDescription(@Param("id") id: Int, @Param("description") description: String): Company
 
+
     @Query(value = "select c.id,c.nif,c.address,c.name,c.type,c.description " +
             "from COMPANY C inner join USER_COMPANY UC on uc.company_id = c.id " +
             "and uc.user_id = 1 and uc.role = 'EMPLOYEE'",nativeQuery = true)

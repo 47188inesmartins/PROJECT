@@ -32,6 +32,7 @@ class AuthenticationsInterceptor(
                 response.status = 200
                 return true
             }
+
             return if(user == null ){
                 response.status = 401
                 response.addHeader(NAME_WWW_AUTHENTICATE_HEADER, AuthorizationHeaderProcessor.SCHEMA)

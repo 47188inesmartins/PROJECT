@@ -15,7 +15,6 @@ class AuthorizationHeaderProcessor(
         if(companyId == null) return "CLIENT"
         return userServices.getRoleByUserIdAndCompany(companyId, parts[1]) ?: return "CLIENT"
     }
-
     companion object{
         const val SCHEMA = "bearer"
     }
