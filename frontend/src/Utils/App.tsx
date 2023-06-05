@@ -42,7 +42,7 @@ const router = createBrowserRouter([{
             "element": <LayoutRole/>
         },
         {
-            "path": "/employees",
+            "path": "/:id/employees",
             "element": <AddingEmployees />
         }
     ]}])
