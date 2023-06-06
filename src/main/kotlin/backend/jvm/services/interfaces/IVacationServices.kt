@@ -7,7 +7,7 @@ import java.sql.Date
 interface IVacationServices {
     fun getVacation(id: Int): VacationOutputDto
 
-    fun addVacation(vacation: VacationInputDto):VacationOutputDto
+    fun addVacation(vacation: VacationInputDto, company: Int):VacationOutputDto
 
     fun deleteVacation(vacation: Int)
 

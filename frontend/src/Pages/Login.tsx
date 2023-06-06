@@ -43,7 +43,7 @@ export function Login() {
         console.log(email, password)
         const resp = Fetch("/user/login", 'POST', userCredentials)
         console.log("login feito")
-       if(resp.response)
+        if(resp.response)
         window.location.href = "/"
         return(
             <>
@@ -52,7 +52,8 @@ export function Login() {
                 <a></a>
               //  <Navigate to={`/`} replace={true}/>
             }
-        </>);
+        </>
+        );
     }
 
     return (

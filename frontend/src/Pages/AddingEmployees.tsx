@@ -18,7 +18,6 @@ export function AddingEmployees() {
         const updatedTextBoxes = [...textBoxes];
         updatedTextBoxes[index] = value;
         setTextBoxes(updatedTextBoxes);
-        console.log(textBoxes)
     };
 
 
@@ -39,7 +38,6 @@ export function AddingEmployees() {
         const id = params.id
 
         const resp = Fetch(`/company/${id}/employee`, 'POST', textBoxes)
-        console.log("login feito")
         if(resp.response)
             window.location.href = "/"
         return(
@@ -47,7 +45,6 @@ export function AddingEmployees() {
                 {resp.response?
                     <a>loading...</a>:
                     <a></a>
-                    //  <Navigate to={`/`} replace={true}/>
                 }
             </>);
     }

@@ -5,6 +5,7 @@ import backend.jvm.repository.VacationRepository
 import backend.jvm.services.dto.VacationInputDto
 import backend.jvm.services.dto.VacationOutputDto
 import backend.jvm.services.interfaces.IVacationServices
+import backend.jvm.utils.errorHandling.CompanyNotFound
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.sql.Date
@@ -18,8 +19,8 @@ class VacationService : IVacationServices {
     @Autowired
     lateinit var scheduleRepository: ScheduleRepository
 
-    override fun addVacation(vacation: VacationInputDto):VacationOutputDto {
-        val schedule = scheduleRepository.getReferenceById(vacation.schedule)
+    override fun addVacation(vacation: VacationInputDto, company: Int): VacationOutputDto {
+        val schedule = scheduleRepository.getScheduleByCompany_Id(company)?: throw CompanyNotFound()
         val db = vacation.mapToVacationDb(vacation,schedule)
         if(!db.dateBegin.before(db.dateEnd)) throw Exception("Invalid dates")
         return VacationOutputDto(vacationRepository.save(db))

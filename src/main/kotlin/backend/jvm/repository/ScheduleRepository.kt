@@ -11,6 +11,8 @@ interface ScheduleRepository: JpaRepository<Schedule, Int> {
         @Query(name = "getScheduleById")
         fun getScheduleById(@Param("id") id: Int): Schedule?
 
+        fun getScheduleByCompany_Id(@Param("id") id: Int): Schedule?
+
 
         /**
          * @param idSchedule

@@ -14,17 +14,17 @@ import java.sql.Date
 
 
 @RestController
-@RequestMapping("/vacation")
+@RequestMapping("/company/{cid}/vacation")
 class VacationController {
 
      @Autowired
     lateinit var vacationServices: VacationService
 
     @RoleManager(["MANAGER"])
-    @PostMapping("company/{cid}")
-    fun addVacation(@RequestBody vacation: VacationInputDto, @PathVariable cid: String): ResponseEntity<VacationOutputDto> {
+    @PostMapping
+    fun addVacation(@RequestBody vacation: VacationInputDto, @PathVariable cid: Int): ResponseEntity<VacationOutputDto> {
         return try {
-            val response = vacationServices.addVacation(vacation)
+            val response = vacationServices.addVacation(vacation, cid)
             ResponseEntity
                 .status(201)
                 .body(response)
@@ -35,7 +35,7 @@ class VacationController {
 
     @RoleManager(["MANAGER","EMPLOYEE","CLIENT"])
     @GetMapping("/{id}")
-    fun getVacation(@PathVariable id: Int): ResponseEntity<VacationOutputDto>{
+    fun getVacation(@PathVariable id: Int, @PathVariable cid: Int): ResponseEntity<VacationOutputDto>{
         return try{
             val response = vacationServices.getVacation(id)
             ResponseEntity
@@ -48,13 +48,13 @@ class VacationController {
 
     @RoleManager(["MANAGER"])
     @DeleteMapping("/{id}")
-    fun deleteVacation(@PathVariable  id: Int){
+    fun deleteVacation(@PathVariable  id: Int, @PathVariable cid: Int){
         vacationServices.deleteVacation(id)
     }
 
     @RoleManager(["MANAGER"])
     @PutMapping("/{id}/date-begin")
-    fun updateBeginDate(@PathVariable id: Int, @RequestParam date: String): ResponseEntity<Date> {
+    fun updateBeginDate(@PathVariable id: Int, @RequestParam date: String, @PathVariable cid: Int): ResponseEntity<Date> {
         return try {
             val json = Json.parseToJsonElement(date)
 
@@ -72,7 +72,7 @@ class VacationController {
 
     @RoleManager(["MANAGER"])
     @PutMapping("/{id}/date-end")
-    fun updateEndDate(@PathVariable id: Int, @RequestParam date: String): ResponseEntity<Date> {
+    fun updateEndDate(@PathVariable id: Int, @RequestParam date: String, @PathVariable cid: Int): ResponseEntity<Date> {
         return try {
             val json = Json.parseToJsonElement(date)
             val request = json.jsonObject["date"]?.jsonPrimitive?.content
