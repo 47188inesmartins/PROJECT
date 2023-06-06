@@ -227,7 +227,6 @@ class CompanyController {
             ResponseEntity
                 .status(200)
                 .body(response)
-
         }catch(e: Exception){
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
         }

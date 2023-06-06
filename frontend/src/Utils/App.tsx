@@ -8,6 +8,7 @@ import {MyAppointments} from "../Pages/MyAppointments";
 import {CreatingCompany} from "../Pages/CreatingCompany";
 import {Layout, LayoutRole} from "../Pages/Layout";
 import {AddingEmployees} from "../Pages/AddingEmployees";
+import {MyCompany} from "../Pages/ManagerCompany";
 
 
 
@@ -44,6 +45,10 @@ const router = createBrowserRouter([{
         {
             "path": "/:id/employees",
             "element": <AddingEmployees />
+        },
+        {
+            "path": "/company/:id/managing",
+            "element": <MyCompany />
         }
     ]}])
 

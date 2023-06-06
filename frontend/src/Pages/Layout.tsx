@@ -11,7 +11,14 @@ import { NavLink } from "react-router-dom";
 import {LoggedInContextCookie} from "../Authentication/Authn";
 import {useEffect, useState} from "react";
 import {Fetch} from "../Utils/useFetch";
-import { MDBDropdown, MDBDropdownMenu, MDBDropdownToggle, MDBDropdownItem } from 'mdb-react-ui-kit';
+import {
+    MDBDropdown,
+    MDBDropdownMenu,
+    MDBDropdownToggle,
+    MDBDropdownItem,
+    MDBListGroup,
+    MDBListGroupItem
+} from 'mdb-react-ui-kit';
 import 'bootstrap/dist/css/bootstrap.css';
 import Dropdown from 'react-bootstrap/Dropdown';
 import "../Style/LayoutCompany.css"
@@ -115,26 +122,63 @@ export function LayoutRole(){
 }
 
 function LayoutCompany() {
+    const [click,SetClick] = useState(false)
+
+    const handleClick = () =>{
+        SetClick(true)
+    }
+
     return (
-        <div className="container">
-            <div className="row">
-                <div className="col-md-6">
-                    <div className="navbar">
-                        <ul className="menu">
-                            <li><a href="#" className="fa fa-facebook"></a></li>
-                            <li><a href="#" className="fa fa-twitter"></a></li>
-                            <li><a href="#" className="fa fa-youtube"></a></li>
-                            <li><a href="#" className="fa fa-google-plus"></a></li>
-                            <li><a href="#" className="fa fa-linkedin"></a></li>
-                            <li><a href="#" className="fa fa-instagram"></a></li>
-                            <li><a href="#" className="fa fa-pinterest"></a></li>
-                            <li><a href="#" className="fa fa-rss"></a></li>
-                            <li><a href="#" className="fa fa-github"></a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+        <div>
+            {click?
+                <MyCompany role={"MANAGER"}/>
+                    :<div>
+            <nav className="menu">
+                <input type="checkbox"  className="menu-open" name="menu-open" id="menu-open"/>
+                <label className="menu-open-button" htmlFor="menu-open">
+                    <span className="lines line-1"></span>
+                    <span className="lines line-2"></span>
+                    <span className="lines line-3"></span>
+                </label>
+
+            <button className="menu-item blue" onClick={handleClick}> <i className="fa fa-anchor"></i> </button>
+        </nav> </div>
+            }
         </div>
+    );
+}
+
+function MyCompany(props:{role:String}) {
+    const resp = Fetch(`/company/info?role=${props.role}`, 'GET')
+
+    console.log("companies",resp.response)
+    if(resp.response){
+        if(resp.response.length === 0){
+            window.location.href = ``
+        }
+        if(resp.response.length === 1){
+            const id = resp.response[0].id
+            window.location.href = `/company/${id}/managing`
+        }
+    }
+    return(
+        <>
+            {!resp.response?
+                <div className="loading">
+                    <div className="spinner-border" role="status">
+                <span className="sr-only">Loading...</span>
+                </div>
+                </div>
+                :
+                <MDBListGroup style={{ minWidth: '22rem' }} light>
+                    {resp.response.map((object: any) => (
+                        <MDBListGroupItem active noBorders aria-current='true' className='px-3'>
+                            <a ref={`/company/${object.id}/managing`}>{object.name}</a>
+                        </MDBListGroupItem>
+                    ))}
+                </MDBListGroup>
+            }
+        </>
 
     );
 }
