@@ -63,10 +63,9 @@ class UserServices : IUserInterface {
         return true
     }
 
-    override fun getUserById(id: Int): UserOutputDto {
-        val getUser = userRepository.findById(id)
-        if(getUser.isEmpty) throw UserNotFound()
-        return UserOutputDto(getUser.get())
+    override fun getUserById(token: String): UserOutputDto {
+        val getUser = userRepository.getUserByToken(UUID.fromString(token)) ?: throw UserNotFound()
+        return UserOutputDto(getUser)
     }
 
     override fun changeRole(id: Int, name: String): String {

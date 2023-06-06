@@ -9,7 +9,7 @@ interface IUserInterface {
 
     fun deleteUser(id: Int): Boolean
 
-    fun getUserById(id: Int): UserOutputDto
+    fun getUserById(token: String): UserOutputDto
 
    // fun getRoleByUser(id: Int):String?
 

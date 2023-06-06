@@ -6,10 +6,10 @@ import {Login} from "../Pages/Login";
 import {Company} from "../Pages/Company";
 import {MyAppointments} from "../Pages/MyAppointments";
 import {CreatingCompany} from "../Pages/CreatingCompany";
-import {Layout, LayoutRole} from "../Pages/Layout";
+import {Layout} from "../Pages/Layout";
 import {AddingEmployees} from "../Pages/AddingEmployees";
 import {MyCompany} from "../Pages/ManagerCompany";
-import {AllCompanies} from "../Pages/AllCompanies";
+import {ProfilePage} from "../Pages/UserProfile";
 
 
 
@@ -41,7 +41,7 @@ const router = createBrowserRouter([{
             "element": <Layout/>
         },
         {
-            "element": <LayoutRole/>
+            "element": <Layout/>
         },
         {
             "path": "/:id/employees",
@@ -50,10 +50,14 @@ const router = createBrowserRouter([{
         {
             "path": "/company/:id/managing",
             "element": <MyCompany />
-        },
+        }/*,
         {
             "path": "/company/managing",
             "element": <AllCompanies />
+        }*/,
+        {
+            "path": "/user/profile",
+            "element": <ProfilePage />
         }
     ]}])
 

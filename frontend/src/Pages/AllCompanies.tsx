@@ -5,7 +5,7 @@ import {ListGroup} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import "../Style/AllCompanies.css"
 
-export function AllCompanies(){
+export function AllCompanies(props:{role:String}){
     const resp = Fetch(`/company/info?role=MANAGER`, 'GET')
 
     console.log("AQUI",resp)

@@ -16,6 +16,8 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseCookie
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.context.request.RequestContextHolder
+import org.springframework.web.context.request.ServletRequestAttributes
 import org.springframework.web.server.ResponseStatusException
 import java.util.*
 
@@ -57,10 +59,14 @@ class UserController {
     }
 
    // @RoleManager(["MANAGER","EMPLOYEE","CLIENT"])
-    @GetMapping("/{id}")
-    fun getUserById(@PathVariable id: Int): ResponseEntity<UserOutputDto> {
+    @GetMapping("/info")
+    fun getUserById(): ResponseEntity<UserOutputDto> {
         return try {
-            val response = userServices.getUserById(id)
+            val requestAttributes = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes
+            val request = requestAttributes.request
+            val bearerToken = request.getHeader("Authorization")?.removePrefix("Bearer ")
+                ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found",Exception("User not found"))
+            val response = userServices.getUserById(bearerToken)
             ResponseEntity
                 .status(200)
                 .body(response)

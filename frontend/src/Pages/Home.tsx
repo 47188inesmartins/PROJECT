@@ -7,7 +7,7 @@ import {
     MDBRow,
 } from "mdb-react-ui-kit";
 import {Fetch} from "../Utils/useFetch";
-import {Layout, LayoutRole} from "./Layout";
+import {Layout} from "./Layout";
 import {LoggedInContextCookie} from "../Authentication/Authn";
 
 export function Home() {
@@ -78,7 +78,6 @@ export function Home() {
                     width: "200px",
                     overflowY: "auto",
                     alignContent: 'right'}}>
-                    <LayoutRole />
                 </div>
             </td>
         </div>
