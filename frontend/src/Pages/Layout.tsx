@@ -22,6 +22,7 @@ import {
 import 'bootstrap/dist/css/bootstrap.css';
 import Dropdown from 'react-bootstrap/Dropdown';
 import "../Style/LayoutCompany.css"
+import {Navigate} from "react-router";
 export function Layout() {
     const [isLogout, setIsLogout] = useState<boolean>(false)
     const check = React.useContext(LoggedInContextCookie).loggedInState.auth
@@ -122,27 +123,29 @@ export function LayoutRole(){
 }
 
 function LayoutCompany() {
-    const [click,SetClick] = useState(false)
+    const [manager,SetManager] = useState(false)
 
-    const handleClick = () =>{
-        SetClick(true)
+    const handleClickManager = () =>{
+        SetManager(true)
     }
 
     return (
         <div>
-            {click?
+            {manager?
                 <MyCompany role={"MANAGER"}/>
-                    :<div>
-            <nav className="menu">
-                <input type="checkbox"  className="menu-open" name="menu-open" id="menu-open"/>
-                <label className="menu-open-button" htmlFor="menu-open">
-                    <span className="lines line-1"></span>
-                    <span className="lines line-2"></span>
-                    <span className="lines line-3"></span>
-                </label>
-
-            <button className="menu-item blue" onClick={handleClick}> <i className="fa fa-anchor"></i> </button>
-        </nav> </div>
+                    :
+                <div>
+                        <nav className="menu">
+                            <input type="checkbox"  className="menu-open" name="menu-open" id="menu-open"/>
+                            <label className="menu-open-button" htmlFor="menu-open">
+                                <span className="lines line-1"></span>
+                                <span className="lines line-2"></span>
+                                <span className="lines line-3"></span>
+                            </label>
+                            <button className="menu-item blue" onClick={handleClickManager}> <i className="fa fa-anchor"></i> </button>
+                            <button className="menu-item blue menu-item-left" onClick={handleClickManager}> <i className="fa fa-anchor"></i> </button>
+                        </nav>
+                </div>
             }
         </div>
     );
@@ -160,26 +163,24 @@ function MyCompany(props:{role:String}) {
             const id = resp.response[0].id
             window.location.href = `/company/${id}/managing`
         }
+        if(resp.response.length > 1){
+            const id = resp.response[0].id
+            window.location.href = `/company/managing`
+        }
+
     }
     return(
         <>
             {!resp.response?
                 <div className="loading">
-                    <div className="spinner-border" role="status">
-                <span className="sr-only">Loading...</span>
-                </div>
+                        <div className="spinner-border" role="status">
+                    <span className="sr-only">Loading...</span>
+                    </div>
                 </div>
                 :
-                <MDBListGroup style={{ minWidth: '22rem' }} light>
-                    {resp.response.map((object: any) => (
-                        <MDBListGroupItem active noBorders aria-current='true' className='px-3'>
-                            <a ref={`/company/${object.id}/managing`}>{object.name}</a>
-                        </MDBListGroupItem>
-                    ))}
-                </MDBListGroup>
+               <></>
             }
         </>
-
     );
 }
 

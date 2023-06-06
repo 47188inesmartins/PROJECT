@@ -21,8 +21,8 @@ class VacationController {
     lateinit var vacationServices: VacationService
 
     @RoleManager(["MANAGER"])
-    @PostMapping
-    fun addVacation(@RequestBody vacation: VacationInputDto): ResponseEntity<VacationOutputDto> {
+    @PostMapping("company/{cid}")
+    fun addVacation(@RequestBody vacation: VacationInputDto, @PathVariable cid: String): ResponseEntity<VacationOutputDto> {
         return try {
             val response = vacationServices.addVacation(vacation)
             ResponseEntity

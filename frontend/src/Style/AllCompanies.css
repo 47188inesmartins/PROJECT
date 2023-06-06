@@ -1,0 +1,6 @@
+.scrollable-list {
+    width: 700px;
+    padding: 30px;
+    max-height: 400px;
+    overflow-y: auto;
+}

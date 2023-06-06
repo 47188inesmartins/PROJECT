@@ -12,7 +12,10 @@ class AuthorizationHeaderProcessor(
         if (credentials == null) return null
         val parts = credentials.trim().split(" ")
         if (parts.size != 2 || parts[0].lowercase() != SCHEMA) return null
-        if(companyId == null) return "CLIENT"
+        if(companyId == null ){
+            return if(userServices.getUserByToken(parts[1]) != null) "CLIENT"
+            else null
+        }
         return  userServices.getRoleByUserIdAndCompany(companyId, parts[1])?: return "CLIENT"
     }
     companion object{
