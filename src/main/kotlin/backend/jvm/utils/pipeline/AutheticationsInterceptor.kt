@@ -38,7 +38,7 @@ class AuthenticationsInterceptor(
                 response.addHeader(NAME_WWW_AUTHENTICATE_HEADER, AuthorizationHeaderProcessor.SCHEMA)
                 false
             }else{
-                if(roleAllowed?.roleList?.contains(user) == true){
+                if(roleAllowed.roleList.contains(user)){
                     response.status = 200
                     true
                 } else{

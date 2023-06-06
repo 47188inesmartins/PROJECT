@@ -7,7 +7,7 @@ import backend.jvm.services.dto.UserOutputDto
 import java.time.Duration
 
 interface IServServices {
-    fun addService(service: ServiceInputDto): ServiceOutputDto
+    fun addService(service: ServiceInputDto, companyId: Int): ServiceOutputDto
 
     fun getServiceById(id: Int): ServiceOutputDto
 

@@ -28,8 +28,8 @@ class ServServices : IServServices {
     @Autowired
     lateinit var userCompanyRepository : UserCompanyRepository
 
-    override fun addService(service: ServiceInputDto): ServiceOutputDto {
-        val company = companyRepository.getReferenceById(service.company)
+    override fun addService(service: ServiceInputDto, companyId: Int): ServiceOutputDto {
+        val company = companyRepository.getReferenceById(companyId)
         val users = service.users.map{ userRepository.getReferenceById(it) }
         users.forEach {
             if(userCompanyRepository.findByCompanyAndUser(company, it) == null) throw InvalidUser()

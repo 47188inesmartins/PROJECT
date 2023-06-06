@@ -10,7 +10,6 @@ data class ServiceInputDto(
     val duration: String,
     val numberMax: Int,
     val price: Double,
-    val company: Int,
     val users: List<Int>
 ){
     fun mapToService(db: ServiceInputDto, company: Company, users: List<UserDB>) : ServiceDB {

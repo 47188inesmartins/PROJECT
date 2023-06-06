@@ -6,9 +6,12 @@ import backend.jvm.services.dto.ServiceInputDto
 import backend.jvm.services.dto.ServiceOutputDto
 import backend.jvm.services.dto.UserOutputDto
 import backend.jvm.utils.RoleManager
+import jakarta.persistence.EntityNotFoundException
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.server.ResponseStatusException
 import java.time.Duration
 import java.util.*
 
@@ -21,16 +24,17 @@ class ServiceController {
     lateinit var servServices: ServServices
 
     @RoleManager(["MANAGER","EMPLOYEE"])
-    @PostMapping
-    fun addService(@RequestBody service: ServiceInputDto): ResponseEntity<ServiceOutputDto> {
+    @PostMapping("/company/{cid}")
+    fun addService(@RequestBody service: ServiceInputDto, @PathVariable cid: Int): ResponseEntity<ServiceOutputDto> {
         return try{
-            val response = servServices.addService(service)
+            val response = servServices.addService(service,cid)
             ResponseEntity.status(201)
                 .body(response)
         }catch (e: Exception){
-            println("exception = $e")
-            ResponseEntity.status(400)
-                .body(null)
+            when (e) {
+                is EntityNotFoundException -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "entity does not exists", e)
+                else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Something went wrong", e)
+            }
         }
     }
 

@@ -52,6 +52,11 @@ dependencies {
 	implementation ("io.jsonwebtoken:jjwt:0.9.1")
 	implementation ("javax.servlet:javax.servlet-api:4.0.1")
 	implementation ("javax.servlet:jstl:1.2")
+	testImplementation ("org.springframework.boot:spring-boot-starter-test")
+
+		testImplementation ("org.junit.jupiter:junit-jupiter-engine")
+		testImplementation ("org.junit.jupiter:junit-jupiter-api")
+		testImplementation ("com.ninja-squad:springmockk:3.1.1")
 	//implementation ("org.springframework.boot:spring-boot-starter-security")
 }
 

@@ -13,3 +13,4 @@ delete from USER_SERVICE cascade;
 
 delete from SCH_USER where email = 'grupo18@gmail.com';
 COMMIT;
+
