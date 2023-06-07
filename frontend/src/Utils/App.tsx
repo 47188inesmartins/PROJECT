@@ -11,6 +11,7 @@ import {AddingEmployees} from "../Pages/AddingEmployees";
 import {MyCompany} from "../Pages/ManagerCompany";
 import {ProfilePage} from "../Pages/UserProfile";
 import {AddingVacations} from "../Pages/AddingVacations";
+import AdvancedCalendar from "../Pages/AdvancedCalendar";
 
 
 
@@ -55,7 +56,7 @@ const router = createBrowserRouter([{
         },
         {
             "path": "/user/profile",
-            "element": <ProfilePage />
+            "element": <ProfilePage/>
         }
     ]}])
 

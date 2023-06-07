@@ -2,6 +2,9 @@ import * as React from 'react';
 import {useParams} from "react-router-dom";
 import {Fetch} from "../Utils/useFetch";
 import {useState} from "react";
+import MyCalendar from "./AdvancedCalendar";
+import CalendarComponent from "./Calendarv2";
+import "../Style/Test.css";
 /*
 import {
     ScheduleComponent, ResourcesDirective, ResourceDirective, ViewsDirective, ViewDirective,
@@ -66,6 +69,7 @@ export function MyCompany() {
             :
                 <FetchAddEmployee/>
             }
+            <MyCalendar/>
             <button className="btn btn-outline-light btn-lg px-5" type="submit"
                     onClick={handleAddVacation}>Add vacation
             </button>

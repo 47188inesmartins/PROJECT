@@ -11,18 +11,9 @@ import { NavLink } from "react-router-dom";
 import {LoggedInContextCookie} from "../Authentication/Authn";
 import {useEffect, useState} from "react";
 import {Fetch} from "../Utils/useFetch";
-import {
-    MDBDropdown,
-    MDBDropdownMenu,
-    MDBDropdownToggle,
-    MDBDropdownItem,
-    MDBListGroup,
-    MDBListGroupItem, MDBCol, MDBCard, MDBCardBody, MDBCardText
-} from 'mdb-react-ui-kit';
 import 'bootstrap/dist/css/bootstrap.css';
-import Dropdown from 'react-bootstrap/Dropdown';
 import "../Style/LayoutCompany.css"
-import {Navigate} from "react-router";
+
 export function Layout() {
     const [isLogout, setIsLogout] = useState<boolean>(false)
     const check = React.useContext(LoggedInContextCookie).loggedInState.auth
@@ -84,7 +75,7 @@ export function Layout() {
                                 </CDBSidebarMenu> :
                                 <CDBSidebarMenu>
                                     <NavLink to="/">
-                                        <CDBSidebarMenuItem onClick={handleLogout}>Logout</CDBSidebarMenuItem>
+                                        <button onClick={handleLogout} >Logout</button>
                                     </NavLink>
                                 </CDBSidebarMenu>
                             }
@@ -96,11 +87,3 @@ export function Layout() {
         </div>
     );
 }
-
-
-
-
-
-
-
-
