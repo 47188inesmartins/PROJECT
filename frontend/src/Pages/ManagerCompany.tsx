@@ -69,7 +69,7 @@ export function MyCompany() {
             :
                 <FetchAddEmployee/>
             }
-            <MyCalendar/>
+            <CalendarComponent/>
             <button className="btn btn-outline-light btn-lg px-5" type="submit"
                     onClick={handleAddVacation}>Add vacation
             </button>
