@@ -12,6 +12,7 @@ import {MyCompany} from "../Pages/ManagerCompany";
 import {ProfilePage} from "../Pages/UserProfile";
 import {AddingVacations} from "../Pages/AddingVacations";
 import AdvancedCalendar from "../Pages/AdvancedCalendar";
+import TimePickerComponent from "../Pages/ScheduleWithCompany";
 
 
 
@@ -57,6 +58,11 @@ const router = createBrowserRouter([{
         {
             "path": "/user/profile",
             "element": <ProfilePage/>
+        },
+        {
+            "path": "/aa",
+            "element": <TimePickerComponent/>
+
         }
     ]}])
 

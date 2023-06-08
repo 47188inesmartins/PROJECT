@@ -1,0 +1,25 @@
+@keyframes jumpAnimation {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+.cell:hover {
+    background-color: #F35FA4;
+    cursor: pointer;
+    /* Outras propriedades de estilo para o hover */
+    animation: jumpAnimation 0.5s; /* Duração e nome da animação */
+    color: white;
+}
+
+
+.cell {
+    border-radius: 10px; /* Valor de raio que determina o grau de arredondamento */
+    /* Outras propriedades de estilo */
+}
