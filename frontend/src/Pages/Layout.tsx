@@ -20,7 +20,7 @@ export function Layout() {
     console.log("Check", check)
 
     useEffect(() => {
-    }, [check]);
+    }, [check,isLogout]);
 
 
     function handleLogout(){

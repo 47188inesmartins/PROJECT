@@ -84,7 +84,7 @@ export function MyAppointments() {
                                                                     <td>{appointment.employee}</td>
                                                                     <td>{appointment.appDate} at {appointment.appHour}</td>
                                                                     <td>
-                                                                        <button style={{backgroundColor:'#F0A818'}} className="btn btn-outline-light btn-lg px-5" type="button" onClick={()=>{}}>Delete</button>
+                                                                        <button style={{backgroundColor:'#F0A818'}} className="btn btn-outline-light btn-lg px-5" type="button" onClick={()=> handleCancel(appointment.id)}>Delete</button>
                                                                     </td>
                                                                 </tr>
                                                             ))}
@@ -107,7 +107,10 @@ function PopUpMessage(props:{id:Number|undefined}) {
     const params = useParams()
     const id = params.id
 
-    const handleClose = () => setShow(false);
+    const handleClose = () => {
+        setShow(false);
+        window.location.href = `/user/${id}/appointments`;
+    }
     const handleCancel = () => setCancel(true);
 
     if(props.id == undefined) return <Navigate to = {`/user/${id}/appointments`} replace={true}></Navigate>
@@ -115,6 +118,7 @@ function PopUpMessage(props:{id:Number|undefined}) {
         <>
             {!cancel?
                 <>
+                    <MyAppointments/>
                     <Modal
                         show={show}
                         onHide={handleClose}
