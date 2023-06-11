@@ -1,5 +1,6 @@
 package backend.jvm.services
 
+import backend.jvm.repository.CompanyRepository
 import backend.jvm.repository.DayRepository
 import backend.jvm.repository.ScheduleRepository
 import backend.jvm.repository.ServiceRepository
@@ -25,6 +26,10 @@ class DayServices : IDayServices {
     lateinit var scheduleRepository: ScheduleRepository
 
     @Autowired
+    lateinit var companyRepository: CompanyRepository
+
+
+    @Autowired
     lateinit var serviceRepository: ServiceRepository
 
     override fun addOpenDay(day: DayInputDto):DayOutputDto {
@@ -35,6 +40,14 @@ class DayServices : IDayServices {
         val db = dayRepository.save(dayDb)
         return  DayOutputDto(db)
     }
+
+    fun addOpenDays(day: List<DayInputDto>, companyId: Int) {
+        companyRepository.findAllById(companyId) ?: throw InvalidSchedule()
+        val schedule = scheduleRepository.getScheduleByCompany_Id(companyId)
+        val daysDb = day.map { it.mapToDayDb(it, schedule, null) }
+        daysDb.forEach { dayRepository.save(it) }
+    }
+
 
     override fun updateBeginHour(id:Int,hour: String): Time {
         if(dayRepository.getDayById(id) == null ) throw InvalidDay()

@@ -3,14 +3,8 @@ import {useParams} from "react-router-dom";
 import {Fetch} from "../Utils/useFetch";
 import {useState} from "react";
 import MyCalendar from "./AdvancedCalendar";
-import CalendarComponent from "./Calendarv2";
 import "../Style/Test.css";
-/*
-import {
-    ScheduleComponent, ResourcesDirective, ResourceDirective, ViewsDirective, ViewDirective,
-    ResourceDetails, Inject, TimelineViews, Resize, DragAndDrop, TimelineMonth, Day
-} from '@syncfusion/ej2-react-schedule';
-*/
+
 export function MyCompany() {
     const a = useParams()
     const res = Fetch(`/company/${a.id}`,'GET')
@@ -69,7 +63,7 @@ export function MyCompany() {
             :
                 <FetchAddEmployee/>
             }
-            <CalendarComponent/>
+            <MyCalendar/>
             <button className="btn btn-outline-light btn-lg px-5" type="submit"
                     onClick={handleAddVacation}>Add vacation
             </button>

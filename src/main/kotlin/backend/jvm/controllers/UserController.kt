@@ -40,7 +40,7 @@ class UserController {
             when(e){
                 is InvalidEmail -> throw ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid Email",e)
                 is PasswordInsecure -> throw ResponseStatusException(HttpStatus.BAD_REQUEST,"Insecure Password",e)
-                else -> throw ResponseStatusException(HttpStatus.CONFLICT,"Email already exits",e)
+                else -> throw ResponseStatusException(HttpStatus.CONFLICT, "Email already exits",e)
             }
         }
     }
@@ -115,7 +115,7 @@ class UserController {
     @GetMapping("/check-session")
     fun check(
               request:HttpServletRequest
-    ): ResponseEntity<Pair<String, List<CompanyRole>?>> {
+    ): ResponseEntity<Pair<String, Any>> {
         try {
            //  response.addHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
             // println(token)
@@ -123,7 +123,7 @@ class UserController {
              val t = cookies ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid token")
              val roles = userServices.getRolesByToken(t.value)
 
-             val body = if(roles.isEmpty()) Pair(UserRoles.CLIENT.name, null)
+             val body = if(roles.isEmpty()) Pair(t.value, UserRoles.CLIENT.name)
              else Pair(t.value, roles)
 
              return ResponseEntity

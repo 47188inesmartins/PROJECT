@@ -27,13 +27,16 @@
     "cldr-numbers-full": "^43.0.0",
     "date-fns": "^2.30.0",
     "mdb-react-ui-kit": "^6.1.0",
+    "rc-picker": "^3.8.1",
     "react": "^18.2.0",
     "react-big-calendar": "^1.8.1",
     "react-bootstrap": "^1.6.7",
+    "react-bootstrap-time-picker": "^2.0.1",
     "react-datepicker": "^4.12.0",
     "react-dom": "^18.2.0",
     "react-native-calendar-timetable": "^1.0.6",
     "react-router-dom": "^6.11.2",
+    "react-time-picker": "^6.2.0",
     "reactstrap": "^9.1.10"
   },
   "devDependencies": {

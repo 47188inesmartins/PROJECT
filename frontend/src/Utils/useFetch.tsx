@@ -17,6 +17,7 @@ export function Fetch(url: string, method: string, requestBody: any = null): Fet
     const [content, setContent] = useState(undefined);
     const [error, setError] = useState<any>(undefined);
     const token = React.useContext(LoggedInContextCookie).loggedInState.token;
+    console.log("TOKEN = ", token)
     const authorization: { 'Content-Type': string; Authorization?: string; } = (token !== "")
         ? {'Content-Type': 'application/json', 'Authorization': `Bearer ${token} `}
         : {'Content-Type': 'application/json'};

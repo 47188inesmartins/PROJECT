@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useContext, useState} from "react";
+import {useContext} from "react";
 import {
     MDBCard,
     MDBContainer,
@@ -12,13 +12,11 @@ import {LoggedInContextCookie} from "../Authentication/Authn";
 
 export function Home() {
 
-    const [companies, setCompanies] = useState([]);
-
-    const token = useContext(LoggedInContextCookie).loggedInState.role
+    const token = useContext(LoggedInContextCookie).loggedInState
     console.log("toke na home = ", token)
 
     const response = Fetch("/company", "GET");
-    console.log(response)
+    console.log("response = ", response)
     return (
         <div style={{ display: "flex" }}>
             <td>
@@ -34,9 +32,9 @@ export function Home() {
             <td>
                 <div className="list-container" style={{marginLeft: "200px",
                     overflowY: "auto"}}>
-                    {!response.response ? (
+                    {!response.response ?
                         <p>Loading...</p>
-                    ) : (
+                     :
                         <div>
                             <MDBContainer className="py-5">
                                 <MDBCard className="px-3 pt-3"
@@ -69,7 +67,6 @@ export function Home() {
                                 </MDBCard>
                             </MDBContainer>
                         </div>
-                    )
                     }
                 </div>
             </td>

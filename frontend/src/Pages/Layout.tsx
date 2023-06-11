@@ -16,11 +16,11 @@ import "../Style/LayoutCompany.css"
 
 export function Layout() {
     const [isLogout, setIsLogout] = useState<boolean>(false)
-    const check = React.useContext(LoggedInContextCookie).loggedInState.auth
-    console.log("Check", check)
+    const auth = React.useContext(LoggedInContextCookie).loggedInState.auth
+    console.log("Check", auth)
 
     useEffect(() => {
-    }, [check,isLogout]);
+    }, [auth,isLogout]);
 
 
     function handleLogout(){
@@ -51,35 +51,53 @@ export function Layout() {
                                 Schedule it
                             </a>
                         </CDBSidebarHeader>
-
-                        <CDBSidebarContent className="sidebar-content">
-                            <CDBSidebarMenu>
-                                <NavLink to="/user/1/appointments">
-                                    <CDBSidebarMenuItem icon="columns">Appointments</CDBSidebarMenuItem>
-                                </NavLink>
-                                <NavLink to="/new/company">
-                                    <CDBSidebarMenuItem icon="table">Company</CDBSidebarMenuItem>
-                                </NavLink>
-                                <NavLink to="/user/profile">
-                                    <CDBSidebarMenuItem icon="user">Profile</CDBSidebarMenuItem>
-                                </NavLink>
-                            </CDBSidebarMenu>
-                        </CDBSidebarContent>
-
-                        <CDBSidebarFooter>
-                            {!check ?
-                                <CDBSidebarMenu>
-                                    <NavLink to="/login">
-                                        <CDBSidebarMenuItem>Login</CDBSidebarMenuItem>
-                                    </NavLink>
-                                </CDBSidebarMenu> :
-                                <CDBSidebarMenu>
-                                    <NavLink to="/">
-                                        <button onClick={handleLogout} >Logout</button>
-                                    </NavLink>
-                                </CDBSidebarMenu>
+                        {auth ?
+                            <div style={{ position: 'relative', minHeight: '100vh' }}>
+                                <CDBSidebarContent className="sidebar-content">
+                                    <CDBSidebarMenu>
+                                        <NavLink to="/user/1/appointments">
+                                            <CDBSidebarMenuItem icon="columns">Appointments</CDBSidebarMenuItem>
+                                        </NavLink>
+                                        <NavLink to="/new/company">
+                                            <CDBSidebarMenuItem icon="table">Company</CDBSidebarMenuItem>
+                                        </NavLink>
+                                        <NavLink to="/user/profile">
+                                            <CDBSidebarMenuItem icon="user">Profile</CDBSidebarMenuItem>
+                                        </NavLink>
+                                    </CDBSidebarMenu>
+                                </CDBSidebarContent>
+                                <CDBSidebarFooter>
+                                    <div style={{ position: 'absolute', bottom: '0', width: '100%' }}>
+                                        <NavLink to="/">
+                                            <button onClick={handleLogout}> Logout </button>
+                                        </NavLink>
+                                    </div>
+                                </CDBSidebarFooter>
+                            </div>
+                            :
+                            <div>
+                                <CDBSidebarContent className="sidebar-content">
+                                    <CDBSidebarMenu>
+                                        <NavLink to="/login">
+                                            <CDBSidebarMenuItem icon="columns">Appointments</CDBSidebarMenuItem>
+                                        </NavLink>
+                                        <NavLink to="/new/company">
+                                            <CDBSidebarMenuItem icon="table">Company</CDBSidebarMenuItem>
+                                        </NavLink>
+                                        <NavLink to="/login">
+                                            <CDBSidebarMenuItem icon="user">Profile</CDBSidebarMenuItem>
+                                        </NavLink>
+                                    </CDBSidebarMenu>
+                                </CDBSidebarContent>
+                                <div style={{ position: 'absolute', bottom: '0', width: '100%' }}>
+                                    <CDBSidebarMenu>
+                                        <NavLink to="/login">
+                                            <CDBSidebarMenuItem>Login</CDBSidebarMenuItem>
+                                        </NavLink>
+                                    </CDBSidebarMenu>
+                                </div>
+                            </div>
                             }
-                        </CDBSidebarFooter>
                     </CDBSidebar>
                 </div>
                 : <FetchLogout/>

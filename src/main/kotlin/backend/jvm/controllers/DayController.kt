@@ -18,7 +18,7 @@ import java.sql.Time
 
 
 @RestController
-@RequestMapping("/day")
+@RequestMapping("company/{cid}/day")
 class DayController {
 
     @Autowired
@@ -30,6 +30,21 @@ class DayController {
         return try{
             val addedDay = dayService.addOpenDay(day)
             ResponseEntity.status(201).body(addedDay)
+        }catch(e: Exception){
+            when(e){
+                is InvalidOpenDay -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid open day", e)
+                is InvalidSchedule -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "Schedule not found", e)
+                else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
+            }
+        }
+    }
+
+    @RoleManager(["MANAGER"])
+    @PostMapping("/all")
+    fun addOpenDays(@RequestBody day: List<DayInputDto>, @PathVariable cid: Int): ResponseEntity<*> {
+        return try{
+            dayService.addOpenDays(day, cid)
+            ResponseEntity.status(201).body(null)
         }catch(e: Exception){
             when(e){
                 is InvalidOpenDay -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid open day", e)

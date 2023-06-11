@@ -1,0 +1,84 @@
+/* Estilização do container do TimePicker */
+.react-bootstrap-time-picker {
+    position: relative;
+    display: inline-block;
+}
+
+/* Estilização do input do TimePicker */
+.react-bootstrap-time-picker input {
+    width: 100%;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    background-color: #fff;
+}
+
+/* Estilização do ícone do TimePicker */
+.react-bootstrap-time-picker .input-group-append .input-group-text {
+    background-color: #fff;
+    border: 1px solid #ced4da;
+    border-left: 0;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    cursor: pointer;
+}
+
+/* Estilização do ícone do TimePicker quando hover */
+.react-bootstrap-time-picker .input-group-append .input-group-text:hover {
+    background-color: #f8f9fa;
+}
+
+/* Estilização do seletor de hora do TimePicker */
+.react-bootstrap-time-picker .bootstrap-time-picker-widget {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    min-width: 160px;
+    padding: 8px;
+    margin-top: 4px;
+    font-size: 14px;
+    color: #495057;
+    text-align: left;
+    list-style: none;
+    background-color: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+/* Estilização dos itens do seletor de hora do TimePicker */
+.react-bootstrap-time-picker .bootstrap-time-picker-widget li {
+    padding: 4px 8px;
+    cursor: pointer;
+}
+
+/* Estilização dos itens do seletor de hora do TimePicker quando hover */
+.react-bootstrap-time-picker .bootstrap-time-picker-widget li:hover {
+    background-color: #f8f9fa;
+}
+
+
+.schedule-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.schedule-day {
+    margin-bottom: 10px;
+}
+
+.schedule-day label {
+    margin-right: 10px;
+}
+
+.schedule-time {
+    margin-left: 10px;
+}
+
+.schedule-button {
+    margin-top: 20px;
+}

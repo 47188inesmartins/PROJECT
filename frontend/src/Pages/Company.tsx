@@ -14,6 +14,7 @@ import {
 
 import {useParams} from "react-router-dom";
 import {Fetch} from "../Utils/useFetch";
+import ScheduleWithCompany from "./ScheduleWithCompany";
 
 export function Company() {
 
@@ -101,9 +102,7 @@ export function Company() {
                                     <div className="mb-5">
                                         <p className="lead fw-normal mb-1">Schedule with this company</p>
                                         <div className="p-4" style={{ backgroundColor: '#f8f9fa' }}>
-                                            <div>
-                                                <input type="time" step="1800" value={selectedTime} onChange={handleTimeChange} />
-                                            </div>
+                                            <ScheduleWithCompany/>
                                         </div>
                                     </div>
                                 </MDBCardBody>

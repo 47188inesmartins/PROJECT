@@ -7,17 +7,10 @@ import {
     MDBCardText,
     MDBCardBody,
     MDBCardImage,
-    MDBBtn,
     MDBBreadcrumb,
     MDBBreadcrumbItem,
-    MDBProgress,
-    MDBProgressBar,
-    MDBIcon,
-    MDBListGroup,
-    MDBListGroupItem
 } from 'mdb-react-ui-kit'
 import {Fetch} from "../Utils/useFetch";
-import {MyCompany} from "./ManagerCompany";
 import {useContext} from "react";
 import {LoggedInContextCookie} from "../Authentication/Authn";
 

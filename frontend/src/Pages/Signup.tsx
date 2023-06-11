@@ -10,22 +10,23 @@ import {
     MDBIcon
 }
     from 'mdb-react-ui-kit';
-import {Navigate} from "react-router";
 import {useState} from "react";
 import {Fetch} from "../Utils/useFetch";
-
-
-
+import {Navigate} from "react-router";
 
 
 interface UserCredentials{
+    name: string,
+    birthday:string
     email: string,
     password: string
 }
 
 
-export function Login() {
+export function Signup() {
 
+    const [name, setName] = useState<string>("")
+    const [birthday, setBirthday] = useState<string>("")
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
     const [submit, setSubmit] = useState<boolean>(false)
@@ -35,25 +36,26 @@ export function Login() {
         setSubmit(true)
     }
 
-    function FetchLogin(){
+
+    function FetchSignup(){
         const userCredentials: UserCredentials = {
+            name,
+            birthday,
             email,
             password
         }
-        console.log(email, password)
-        const resp = Fetch("/user/login", 'POST', userCredentials)
-        console.log("login feito")
-        if(resp.response)
-            window.location.href = "/"
-        return(
-            <>
-                {resp.response?
-                    <a>loading...</a>:
-                    <a></a>
-                    //  <Navigate to={`/`} replace={true}/>
-                }
-            </>
-        );
+        const resp = Fetch("/user", 'POST', userCredentials).response
+        if(!resp) return(<p>...loading...</p>);
+
+        if(resp.status) {
+            setSubmit(false)
+            window.location.href = `/`
+            return(<Navigate to = '/'></Navigate>);
+        }
+        if(resp){
+            window.location.href = `/`
+            return(<Navigate to = '/'></Navigate>);
+        }
     }
 
     return (
@@ -67,8 +69,32 @@ export function Login() {
                                      style={{borderRadius: '1rem', maxWidth: '400px'}}>
                                 <MDBCardBody className='p-5 d-flex flex-column align-items-center mx-auto w-100'>
 
-                                    <h2 className="fw-bold mb-2 text-uppercase">Login</h2>
-                                    <p className="text-white-50 mb-5">Please enter your login and password!</p>
+                                    <h2 className="fw-bold mb-2 text-uppercase">Signup</h2>
+                                    <p className="text-white-50 mb-5">Signup to our website!</p>
+
+                                    <MDBInput wrapperClass='mb-4 mx-5 w-100'
+                                              labelClass='text-white'
+                                              label='Name'
+                                              id='formControlLg'
+                                              type='text'
+                                              size="lg"
+                                              value={name}
+                                              onChange={(e) => {
+                                                console.log(e.target.value)
+                                                  setName(e.target.value)
+
+                                              }}
+                                    />
+
+                                    <MDBInput wrapperClass='mb-4 mx-5 w-100'
+                                              labelClass='text-white'
+                                              label='Birthday'
+                                              id='formControlLg'
+                                              type='date'
+                                              size="lg"
+                                              value={birthday}
+                                              onChange={(e) => setBirthday(e.target.value)}
+                                    />
 
                                     <MDBInput wrapperClass='mb-4 mx-5 w-100'
                                               labelClass='text-white'
@@ -77,7 +103,9 @@ export function Login() {
                                               type='email'
                                               size="lg"
                                               value={email}
-                                              onChange={(e) => setEmail(e.target.value)}
+                                              onChange={(e) => {setEmail(e.target.value)
+                                        console.log(e.target.value)}
+                                    }
                                     />
                                     <MDBInput wrapperClass='mb-4 mx-5 w-100'
                                               labelClass='text-white'
@@ -89,8 +117,6 @@ export function Login() {
                                               onChange={(e) => setPassword(e.target.value)}
                                     />
 
-                                    <p className="small mb-3 pb-lg-2"><a className="text-white-50" href="#!">Forgot
-                                        password?</a></p>
                                     <button className="btn btn-outline-light btn-lg px-5" type="submit"
                                             onClick={handleSubmit}>Login
                                     </button>
@@ -110,9 +136,8 @@ export function Login() {
                                     </div>
 
                                     <div>
-                                        <p className="mb-0">Don't have an account? <a href="/signup"
-                                                                                      className="text-white-50 fw-bold">Sign
-                                            Up</a></p>
+                                        <p className="mb-0">Already have an account? <a href="/login"
+                                                                                      className="text-white-50 fw-bold">Login</a></p>
 
                                     </div>
                                 </MDBCardBody>
@@ -121,7 +146,7 @@ export function Login() {
                     </MDBRow>
                 </MDBContainer>
                 :
-                <FetchLogin/>
+                <FetchSignup/>
             }
         </div>
     );

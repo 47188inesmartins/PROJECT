@@ -16,7 +16,7 @@ export function AuthnContainer({ children }: { children: React.ReactNode }) {
         token: '',
         role: 'guest'
     });
-    const [loading, setLoading] = useState(true); // Variável de estado para controlar o estado de carregamento
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         fetchGetSession((token: string, id: string) => {
@@ -25,15 +25,15 @@ export function AuthnContainer({ children }: { children: React.ReactNode }) {
             } else {
                 setAuthenticated({ auth: false, token: '', role: 'guest' });
             }
-            setLoading(false); // Marcar o carregamento como concluído
+            setLoading(false);
         }).catch((error) => {
             console.log(error);
-            setLoading(false); // Marcar o carregamento como concluído mesmo em caso de erro
+            setLoading(false);
         });
     }, []);
 
     if (loading) {
-        return <div>Loading...</div>; // Renderizar um indicador de carregamento enquanto a função fetchGetSession está sendo executada
+        return <div>Loading...</div>;
     }
 
     return (
