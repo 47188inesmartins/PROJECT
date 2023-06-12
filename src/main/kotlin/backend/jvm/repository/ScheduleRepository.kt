@@ -4,6 +4,8 @@ import backend.jvm.model.*
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
+import java.sql.Time
+
 
 interface ScheduleRepository: JpaRepository<Schedule, Int> {
 
@@ -12,6 +14,9 @@ interface ScheduleRepository: JpaRepository<Schedule, Int> {
         fun getScheduleById(@Param("id") id: Int): Schedule?
 
         fun getScheduleByCompany_Id(@Param("id") id: Int): Schedule?
+
+        @Query(value = "update schedule set between_interval = :interval where id = :id ", nativeQuery = true)
+        fun updateBetweenInterval(@Param("id") id: Int,@Param("interval") interval: Time)
 
 
         /**

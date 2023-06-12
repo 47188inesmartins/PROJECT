@@ -12,9 +12,9 @@ data class DayInputDto(
     val intervalEnd: String?,
     val weekDays: String,
     val schedule: Int?,
-    val service: Int?,
+    val service: List<Int>?,
 ) {
-    fun mapToDayDb(dto: DayInputDto,schedule: Schedule?, service: ServiceDB?): Day {
+    fun mapToDayDb(dto: DayInputDto,schedule: Schedule?, service: List<ServiceDB>?): Day {
         val begin = Time.valueOf(dto.beginHour.plus(":00"))?: throw Exception("invalid hour")
         val end = Time.valueOf(dto.endHour.plus(":00")) ?: throw Exception("invalid hour")
         val intervalEnd = if(dto.intervalEnd != null) Time.valueOf(dto.intervalEnd.plus(":00")) else null
@@ -45,7 +45,7 @@ data class DayOutputDto(
     val intervalEnd: String,
     val weekDays: String,
     val schedule: Int?,
-    val service: Int?
+    val service: List<Int>?
 ) {
         constructor(day: Day):this(
             day.id,
@@ -55,7 +55,7 @@ data class DayOutputDto(
             day.intervalEnd.toString(),
             day.weekDays,
             day.schedule?.id,
-            day.service?.id
+            day.service?.map{it.id}
         )
 }
 

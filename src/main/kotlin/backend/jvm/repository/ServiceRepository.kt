@@ -45,4 +45,10 @@ interface ServiceRepository : JpaRepository<ServiceDB, Int> {
             "and s.company_id = :companyId", nativeQuery = true)
     fun getAvailableServicesByHour(@Param("weekDay") weekDay: String, @Param("beginHour") beginHour: Time, @Param("companyId") companyId: Int): List<ServiceDB>
 
+    @Query(value = "select sum(s.price) as money from service s  " +
+            "inner join USER_SERVICE US on s.id = US.service_id and US.user_id = :userId and s.company_id = :company " +
+            "inner join APPOINTMENT_USER AU on AU.user_id = US.user_id " +
+            "inner join APPOINTMENT A on A.id = AU.appointment_id " +
+            "and A.service_id = s.id and a.app_date>:dateBegin and a.app_date<:dateEnd ", nativeQuery = true)
+    fun getEarnedMoneyByEmployee(@Param("userId")userId: Int,@Param("company")company: Int, @Param("dateBegin") dateBegin: Date, @Param("dateEnd") dateEnd: Date): Double?
 }

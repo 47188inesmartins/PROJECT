@@ -124,8 +124,15 @@ create table if not exists SCH_DAY(
      service_id int,
      CONSTRAINT uc_sch_day UNIQUE (week_days, schedule_id),
      CONSTRAINT uc_serv_day UNIQUE (week_days, service_id),
-     foreign key (schedule_id) references SCHEDULE(id),
-     foreign key (service_id) references SERVICE(id)
+     foreign key (schedule_id) references SCHEDULE(id)
+);
+
+create table if not exists SERVICE_DAY(
+      day_id int,
+      service_id int,
+      primary key(day_id,service_id),
+      foreign key (service_id) references SERVICE(id),
+      foreign key (day_id) references SCH_DAY(id)
 );
 
 create table if not exists VACATION(

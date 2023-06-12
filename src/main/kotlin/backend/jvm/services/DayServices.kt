@@ -41,9 +41,11 @@ class DayServices : IDayServices {
         return  DayOutputDto(db)
     }
 
-    fun addOpenDays(day: List<DayInputDto>, companyId: Int) {
+    fun addOpenDays(day: List<DayInputDto>, companyId: Int, interval: String) {
         companyRepository.findAllById(companyId) ?: throw InvalidSchedule()
-        val schedule = scheduleRepository.getScheduleByCompany_Id(companyId)
+        val schedule = scheduleRepository.getScheduleByCompany_Id(companyId) ?: throw InvalidSchedule()
+        val intervalBetween = Time.valueOf(interval.plus(":00"))
+        scheduleRepository.updateBetweenInterval(schedule.id, intervalBetween)
         val daysDb = day.map { it.mapToDayDb(it, schedule, null) }
         daysDb.forEach { dayRepository.save(it) }
     }
@@ -69,6 +71,7 @@ class DayServices : IDayServices {
         return availableDays.map { DayOutputDto(it) }
     }
 
+    /*
     fun getAvailableServiceByWeekDay(weekDay: String): List<ServiceOutputDto>{
         if(!listDayOfWeek.contains(weekDay)) throw InvalidDay()
         val getDay = dayRepository.getDayByWeekDays(weekDay).map { it.service }

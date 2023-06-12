@@ -167,6 +167,25 @@ class UserController {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Not appointment", e)
         }
     }
+
+    @RoleManager(["MANAGER","EMPLOYEE"])
+    @GetMapping("company/{cid}/receive-money")
+    fun getEmployeeEarnedMoney(@RequestParam dateBegin: String, @RequestParam dateEnd: String,
+                               @PathVariable cid: Int
+    ): ResponseEntity<ReceiveMoney>{
+        return try {
+            val requestAttributes = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes
+            val request = requestAttributes.request
+            val bearerToken = request.getHeader("Authorization")?.removePrefix("Bearer ")
+            val res = bearerToken?.let { userServices.getEarnedMoneyEmployee(it,dateBegin,dateEnd,cid) }
+            val response = ReceiveMoney("$res €")
+            ResponseEntity
+                .status(200)
+                .body(response)
+        }catch (e: InvalidCredentials) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Not appointment", e)
+        }
+    }
 }
 
 

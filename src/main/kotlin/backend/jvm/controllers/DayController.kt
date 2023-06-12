@@ -41,9 +41,9 @@ class DayController {
 
     @RoleManager(["MANAGER"])
     @PostMapping("/all")
-    fun addOpenDays(@RequestBody day: List<DayInputDto>, @PathVariable cid: Int): ResponseEntity<*> {
+    fun addOpenDays(@RequestBody day: List<DayInputDto>, @PathVariable cid: Int, @RequestParam duration: String ): ResponseEntity<*> {
         return try{
-            dayService.addOpenDays(day, cid)
+            dayService.addOpenDays(day, cid, duration)
             ResponseEntity.status(201).body(null)
         }catch(e: Exception){
             when(e){

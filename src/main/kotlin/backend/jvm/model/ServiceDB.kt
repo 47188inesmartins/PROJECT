@@ -42,8 +42,12 @@ class ServiceDB{
     @OneToMany(mappedBy = "service")
     val appointment: List<Appointment>?
 
-
-    @OneToMany(mappedBy = "service")
+    @ManyToMany
+    @JoinTable(
+        name = "SERVICE_DAY",
+        joinColumns = [JoinColumn(name = "service_id")],
+        inverseJoinColumns = [JoinColumn(name = "day_id")]
+    )
     val day: List<Day>?
 
     @ManyToMany

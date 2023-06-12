@@ -49,9 +49,13 @@ class Day {
         @JoinColumn(name = "schedule_id")
         val schedule : Schedule?
 
-        @ManyToOne
-        @JoinColumn(name = "service_id")
-        val service: ServiceDB?
+        @ManyToMany
+        @JoinTable(
+            name = "SERVICE_DAY",
+            joinColumns = [JoinColumn(name = "day_id")],
+            inverseJoinColumns = [JoinColumn(name = "service_id")]
+        )
+        val service: List<ServiceDB>?
 
         constructor(){
             this.beginHour = Time.valueOf("00:00:00")

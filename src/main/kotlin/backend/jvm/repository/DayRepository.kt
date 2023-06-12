@@ -31,4 +31,6 @@ interface DayRepository : JpaRepository<Day, Int> {
     fun getAvailableServicesDay(@Param("service_id") service_id: Int): List<Day>
 
     fun getDayByWeekDays(weekDays: String):List<Day>
+
+    fun getDayByScheduleIdAndWeekDays(schedule_id: Int, weekDays: String):List<Day>
 }
