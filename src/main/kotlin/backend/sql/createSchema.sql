@@ -155,19 +155,3 @@ COMMIT;
 
 rollback;
 
-select c.id,c.nif,c.address,c.name,c.type,c.description from COMPANY C inner join USER_COMPANY UC on uc.company_id = c.id and uc.user_id = 1 and uc.role = 'EMPLOYEE';
-
-
-SELECT AU.user_id, SUM(S.price) AS total_price
-FROM APPOINTMENT_USER AU
-         JOIN APPOINTMENT A ON AU.appointment_id = A.id
-         JOIN SERVICE S ON A.service_id = S.id
-WHERE AU.user_id = 1
-  AND A.app_date >= '2000-01-01'
-  AND A.app_date <= '2002-01-01'
-GROUP BY AU.user_id;
-
-
-select sum(s.price) from service s inner join USER_SERVICE US on s.id = US.service_id and user_id = 1
-                    inner join APPOINTMENT_USER AU on US.user_id = 1
-                    inner join APPOINTMENT A on A.id = AU.appointment_id and a.app_date > '2001-01-01' and a.app_date < '2001-01-01';

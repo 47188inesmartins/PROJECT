@@ -10,6 +10,13 @@ const TimePickerComponent = () => {
         console.log(value)
     }
 
+    function handleDateChange(date){
+
+
+
+
+        setStartDate(date)
+    }
 
     return (
         <div className="container-fluid px-0 px-sm-4 mx-auto">
@@ -21,8 +28,7 @@ const TimePickerComponent = () => {
                                 <div className="mx-0 mb-0 row justify-content-sm-center justify-content-start px-1">
                                     <DatePicker
                                         selected={startDate}
-                                        minDate={startDate} // Define a data mínima como hoje
-                                        onChange={() => {}}
+                                    onChange={(date) => handleDateChange(date)} // Atualiza o estado com a data selecionada
                                     />
                                 </div>
                             </div>

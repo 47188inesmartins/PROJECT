@@ -40,7 +40,7 @@ export function Layout() {
                 <div
                     style={{display: "flex", height: "100vh", overflow: "scroll initial"}}
                 >
-                    <CDBSidebar textColor="#fff" backgroundColor="#333" className={""} breakpoint={0} toggled={false}
+                    <CDBSidebar textColor="#fff" backgroundColor="black" className={""} breakpoint={0} toggled={false}
                                 minWidth={""} maxWidth={""}>
                         <CDBSidebarHeader prefix={<i className="fa fa-bars fa-large"></i>}>
                             <a

@@ -39,6 +39,21 @@ class DayController {
         }
     }
 
+    @PostMapping("/scheudlelelle")
+    fun getScheduleByWeekDay(@RequestBody day: String): ResponseEntity<List<String>> {
+        return try{
+            TODO()
+          //  val addedDay = dayService.addOpenDay(day)
+          //  ResponseEntity.status(201).body(addedDay)
+        }catch(e: Exception){
+            when(e){
+                is InvalidOpenDay -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid open day", e)
+                is InvalidSchedule -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "Schedule not found", e)
+                else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
+            }
+        }
+    }
+
     @RoleManager(["MANAGER"])
     @PostMapping("/all")
     fun addOpenDays(@RequestBody day: List<DayInputDto>, @PathVariable cid: Int, @RequestParam duration: String ): ResponseEntity<*> {

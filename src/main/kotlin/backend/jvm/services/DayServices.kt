@@ -12,6 +12,10 @@ import backend.jvm.utils.errorHandling.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.sql.Time
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.format.TextStyle
+import java.util.*
 
 @Service
 class DayServices : IDayServices {
@@ -35,11 +39,32 @@ class DayServices : IDayServices {
     override fun addOpenDay(day: DayInputDto):DayOutputDto {
         if(!listDayOfWeek.contains(day.weekDays.uppercase())) throw InvalidOpenDay()
         val schedule = if(day.schedule != null) scheduleRepository.getReferenceById(day.schedule) else throw InvalidSchedule()
-        val service = day.service?.let { serviceRepository.findById(it).get() } ?: throw InvalidOpenDay()
+        val service = day.service?.map { index -> serviceRepository.getServiceDBById(index) ?: throw InvalidOpenDay() }
         val dayDb = day.mapToDayDb(day,schedule,service)
         val db = dayRepository.save(dayDb)
         return  DayOutputDto(db)
     }
+
+
+   /* fun getScheduleByWeekDay(weekDay: String, cid: Int) : DayOutputDto {
+       // if(!listDayOfWeek.contains(day.weekDays.uppercase())) throw InvalidOpenDay()
+        val dayOfWeek = getDayOfWeekFromDate(weekDay)
+        val schedule = scheduleRepository.getScheduleByCompany_Id(cid) ?: throw CompanyNotFound()
+        println(dayOfWeek) // Saída: "Saturday"
+        val days = dayRepository.getDayByScheduleIdAndWeekDays(schedule.id, dayOfWeek)
+        val dayDb = day.mapToDayDb(day,schedule,service)
+        val db = dayRepository.save(dayDb)
+        return  DayOutputDto(db)
+    }*/
+
+   /* override fun addOpenDay(day: DayInputDto):DayOutputDto {
+        if(!listDayOfWeek.contains(day.weekDays.uppercase())) throw InvalidOpenDay()
+        val schedule = if(day.schedule != null) scheduleRepository.getReferenceById(day.schedule) else throw InvalidSchedule()
+        val service = day.service?.let { serviceRepository.findById(it).get() } ?: throw InvalidOpenDay()
+        val dayDb = day.mapToDayDb(day,schedule,service)
+        val db = dayRepository.save(dayDb)
+        return  DayOutputDto(db)
+    }*/
 
     fun addOpenDays(day: List<DayInputDto>, companyId: Int, interval: String) {
         companyRepository.findAllById(companyId) ?: throw InvalidSchedule()
@@ -82,4 +107,13 @@ class DayServices : IDayServices {
         if (availableServices.isEmpty()) throw NoAvailableServices(weekDay)
         return availableServices
     }
+    */
+    fun getDayOfWeekFromDate(dateString: String): String {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val date = LocalDate.parse(dateString, formatter)
+        val dayOfWeek = date.dayOfWeek
+        val locale = Locale.getDefault()
+        return dayOfWeek.getDisplayName(TextStyle.FULL, locale).substring(3).toUpperCase()
+    }
+
 }

@@ -67,7 +67,7 @@ class Day {
             this.service = null
         }
 
-        constructor(beginHour : Time, endHour: Time, intervalBegin: Time?, intervalEnd: Time?, weekDays: String, schedule: Schedule?, service: ServiceDB?){
+        constructor(beginHour : Time, endHour: Time, intervalBegin: Time?, intervalEnd: Time?, weekDays: String, schedule: Schedule?, service: List<ServiceDB>?){
             this.beginHour = beginHour
             this.endHour = endHour
             this.intervalEnd = intervalEnd

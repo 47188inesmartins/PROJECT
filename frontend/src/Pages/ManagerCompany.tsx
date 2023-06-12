@@ -10,6 +10,8 @@ export function MyCompany() {
     const res = Fetch(`/company/${a.id}`,'GET')
     const [submitVacation, setSubmitVacation] = useState(false)
     const [submitEmployees, setSubmitEmployees] = useState(false)
+    const [submitServices, setSubmitServices] = useState(false)
+    const [submitSchedule, setSubmitSchedule] = useState(false)
 
     const handleAddVacation = () => {
         setSubmitVacation(true)
@@ -38,39 +40,87 @@ export function MyCompany() {
         )
     }
 
+    function FetchAddServices(){
+        const params = useParams()
+        const id = params.id
+        window.location.href = `/company/${id}/services`
+        return(
+            <></>
+        )
+    }
+
+    function handleChangeSchedule(){
+       setSubmitSchedule(true)
+    }
+
+    function handleAddServices(){
+       setSubmitServices(true)
+    }
+
+    function FetchChangeSchedule(){
+        const params = useParams()
+        const id = params.id
+        window.location.href = `/company/${id}/schedule`
+        return(
+            <></>
+        )
+    }
+
     return(
         <div>
-            {!submitEmployees?
+            {!submitSchedule?
                 <div>
-                    {!submitVacation?
-                    <div>
-                        {!res.response?
-                            <div className="loading">
-                                <div className="spinner-border" role="status">
-                                    <span className="sr-only">Loading...</span>
+                    {!submitServices?
+                        <div>
+                            {!submitEmployees?
+                                <div>
+                                    {!submitVacation?
+                                        <div>
+                                            {!res.response?
+                                                <div className="loading">
+                                                    <div className="spinner-border" role="status">
+                                                        <span className="sr-only">Loading...</span>
+                                                    </div>
+                                                </div>
+                                                :
+                                                <>
+                                                    <h1>{res.response.name}</h1>
+                                                </>
+                                            }
+                                        </div>
+                                        :
+                                        <FetchAddVacation/>
+                                    }
                                 </div>
-                            </div>
-                            :
-                            <>
-                                <h1>{res.response.name}</h1>
-                            </>
-                        }
-                    </div>
-                    :
-                    <FetchAddVacation/>
-                }
+                                :
+                                <FetchAddEmployee/>
+                            }
+                        </div>
+                        :
+                        <FetchAddServices/>
+                    }
                 </div>
             :
-                <FetchAddEmployee/>
+            <FetchChangeSchedule/>
             }
+
             <MyCalendar/>
             <button className="btn btn-outline-light btn-lg px-5" type="submit"
                     onClick={handleAddVacation}>Add vacation
             </button>
+            <br/>
             <button className="btn btn-outline-light btn-lg px-5" type="submit"
                     onClick={handleAddEmployees}>Add employees
             </button>
-        </div>
+            <br/>
+            <button className="btn btn-outline-light btn-lg px-5" type="submit"
+                    onClick={handleChangeSchedule}>Change schedule
+            </button>
+            <br/>
+            <button className="btn btn-outline-light btn-lg px-5" type="submit"
+                    onClick={handleAddServices}>Add services
+            </button>
+       </div>
     );
 }
 

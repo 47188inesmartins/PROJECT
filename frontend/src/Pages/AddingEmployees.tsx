@@ -6,8 +6,6 @@ import {useParams} from "react-router-dom";
 export function AddingEmployees() {
 
     const [create, setCreate] = useState<Boolean>(false)
-
-
     const [textBoxes, setTextBoxes] = useState([""]);
 
     const addTextBox = () => {
@@ -48,8 +46,6 @@ export function AddingEmployees() {
                 }
             </>);
     }
-
-
 
     return (
         <div>

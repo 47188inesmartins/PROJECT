@@ -7,11 +7,7 @@ import backend.jvm.services.interfaces.IUserInterface
 import backend.jvm.utils.*
 import backend.jvm.utils.errorHandling.*
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.jpa.repository.JpaRepository
-import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Service
-import java.sql.Time
-import java.util.*
 import kotlin.collections.List
 import java.sql.Date
 import java.util.*

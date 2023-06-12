@@ -11,6 +11,7 @@ export function CreatingSchedule() {
     const daysOfWeek = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
 
     const [create, setCreate] = useState<boolean>(false)
+    const [interval, setInterval] = useState('')
 
     const [schedule, setSchedule] = useState(
         daysOfWeek.map(day => ({
@@ -65,7 +66,7 @@ export function CreatingSchedule() {
                 beginHour: day.beginHour,
                 endHour: day.endHour
             }))
-            const resp = Fetch(`company/${id}/day/all`,
+            const resp = Fetch(`company/${id}/day/all?duration=${interval}`,
                 'POST',
                 body).response
             if(!resp) return(<p>...loading...</p>);
@@ -96,6 +97,10 @@ export function CreatingSchedule() {
                     end_hour: day.endHour
                 }))
         );
+    }
+
+    function handleIntervalChange(value){
+        setInterval(value)
     }
 
 
@@ -139,6 +144,15 @@ export function CreatingSchedule() {
                                                 ))}
                                                 <button onClick={handleSameTimeButtonClick}>Mesmo horário</button>
                                             </div>
+
+                                            <label>
+                                                Duration between each block
+                                            </label>
+                                            <input
+                                                type="time"
+                                                value={interval}
+                                                onChange={e => handleIntervalChange(e.target.value)}
+                                            />
                                             <br/><br/>
 
                                             <button className="btn btn-outline-light btn-lg px-5" type="submit"

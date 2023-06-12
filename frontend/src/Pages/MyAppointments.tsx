@@ -38,7 +38,7 @@ export function MyAppointments() {
                             <span className="sr-only">Loading...</span>
                         </div>
                     </div>:(
-                        <section className="vh-100" style={{ backgroundColor: '#0e4378' }}>
+                        <section className="vh-100" style={{ backgroundColor: '#f7d8ba' }}>
                             {cancel?<PopUpMessage id={idAppointment}/>
                                 :<MDBContainer className="py-5 h-100">
                                     <MDBRow className="d-flex justify-content-center align-items-center">
@@ -55,7 +55,7 @@ export function MyAppointments() {
                                                             />
                                                         </MDBCol>
                                                         <MDBCol size="12">
-                                                            <button style={{ backgroundColor: '#0e4378' }} className="btn btn-outline-light btn-lg px-2" type="button" onClick={()=>{}}>Search</button>
+                                                            <button style={{ backgroundColor: '#f7d8ba' }} className="btn btn-outline-light btn-lg px-2" type="button" onClick={()=>{}}>Search</button>
                                                         </MDBCol>
                                                     </MDBRow>
                                                     <MDBTable className="mb-4">
