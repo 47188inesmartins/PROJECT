@@ -20,13 +20,16 @@ export function Company() {
 
     const [selectedTime, setSelectedTime] = useState('');
 
+
     const handleTimeChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
         setSelectedTime(event.target.value);
     };
 
     const params = useParams()
     const id = params.id
+
     const company = Fetch(`/company/${id}`, "GET");
+
 
     return (
         <div className="gradient-custom-2" style={{ backgroundColor: '#0e4378' }}>

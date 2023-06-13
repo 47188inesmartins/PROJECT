@@ -46,35 +46,41 @@ class DayServices : IDayServices {
     }
 
 
-   /* fun getScheduleByWeekDay(weekDay: String, cid: Int) : DayOutputDto {
-       // if(!listDayOfWeek.contains(day.weekDays.uppercase())) throw InvalidOpenDay()
-        val dayOfWeek = getDayOfWeekFromDate(weekDay)
-        val schedule = scheduleRepository.getScheduleByCompany_Id(cid) ?: throw CompanyNotFound()
-        println(dayOfWeek) // Saída: "Saturday"
-        val days = dayRepository.getDayByScheduleIdAndWeekDays(schedule.id, dayOfWeek)
-        val dayDb = day.mapToDayDb(day,schedule,service)
-        val db = dayRepository.save(dayDb)
-        return  DayOutputDto(db)
-    }*/
+   fun getScheduleByWeekDay(weekDay: String, cid: Int): List<String> {
+       val schedule = scheduleRepository.getScheduleByCompany_Id(cid) ?: throw CompanyNotFound()
+       val days = dayRepository.getDayByScheduleIdAndWeekDays(schedule.id, weekDay)
 
-   /* override fun addOpenDay(day: DayInputDto):DayOutputDto {
-        if(!listDayOfWeek.contains(day.weekDays.uppercase())) throw InvalidOpenDay()
-        val schedule = if(day.schedule != null) scheduleRepository.getReferenceById(day.schedule) else throw InvalidSchedule()
-        val service = day.service?.let { serviceRepository.findById(it).get() } ?: throw InvalidOpenDay()
-        val dayDb = day.mapToDayDb(day,schedule,service)
-        val db = dayRepository.save(dayDb)
-        return  DayOutputDto(db)
-    }*/
+       val startTime = days[0].beginHour
+       val endTime = days[0].endHour
+       val interval = schedule.betweenInterval
+       var currentTime = startTime
 
-    fun addOpenDays(day: List<DayInputDto>, companyId: Int, interval: String) {
+       val hoursList = mutableListOf<String>()
+
+       while (currentTime.before(endTime) || currentTime == endTime) {
+           hoursList.add(currentTime.toString())
+           currentTime = getEndHour(currentTime, interval!!)
+       }
+
+       return hoursList
+   }
+
+    fun getEndHour(tempo1: Time, tempo2: Time): Time {
+        val additionalTime = tempo2.time - tempo2.timezoneOffset * 60 * 1000
+        println(Time(tempo1.time + additionalTime))
+        return Time(tempo1.time + additionalTime)
+    }
+
+
+
+   fun addOpenDays(day: List<DayInputDto>, companyId: Int, interval: String) {
         companyRepository.findAllById(companyId) ?: throw InvalidSchedule()
         val schedule = scheduleRepository.getScheduleByCompany_Id(companyId) ?: throw InvalidSchedule()
         val intervalBetween = Time.valueOf(interval.plus(":00"))
         scheduleRepository.updateBetweenInterval(schedule.id, intervalBetween)
         val daysDb = day.map { it.mapToDayDb(it, schedule, null) }
         daysDb.forEach { dayRepository.save(it) }
-    }
-
+   }
 
     override fun updateBeginHour(id:Int,hour: String): Time {
         if(dayRepository.getDayById(id) == null ) throw InvalidDay()
@@ -108,6 +114,8 @@ class DayServices : IDayServices {
         return availableServices
     }
     */
+
+
     fun getDayOfWeekFromDate(dateString: String): String {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
         val date = LocalDate.parse(dateString, formatter)
@@ -115,5 +123,6 @@ class DayServices : IDayServices {
         val locale = Locale.getDefault()
         return dayOfWeek.getDisplayName(TextStyle.FULL, locale).substring(3).toUpperCase()
     }
+
 
 }
