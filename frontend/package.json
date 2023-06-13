@@ -22,6 +22,7 @@
     "bootstrap": "^5.3.0",
     "bootstrap-datepicker": "^1.10.0",
     "cdbreact": "^1.5.17",
+    "chart.js": "^3.5.1",
     "cldr-core": "^43.0.0",
     "cldr-dates-full": "^43.0.0",
     "cldr-numbers-full": "^43.0.0",
@@ -32,12 +33,14 @@
     "react-big-calendar": "^1.8.1",
     "react-bootstrap": "^1.6.7",
     "react-bootstrap-time-picker": "^2.0.1",
+    "react-chartjs-2": "^5.2.0",
     "react-datepicker": "^4.12.0",
     "react-dom": "^18.2.0",
     "react-native-calendar-timetable": "^1.0.6",
     "react-router-dom": "^6.11.2",
     "react-time-picker": "^6.2.0",
-    "reactstrap": "^9.1.10"
+    "reactstrap": "^9.1.10",
+    "recharts": "^2.6.2"
   },
   "devDependencies": {
     "@types/react": "^18.0.25",

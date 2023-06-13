@@ -7,14 +7,15 @@ import backend.jvm.repository.UserCompanyRepository
 import backend.jvm.repository.UserRepository
 import backend.jvm.services.dto.ServiceInputDto
 import backend.jvm.services.dto.ServiceOutputDto
-import backend.jvm.services.dto.UserOutputDto
 import backend.jvm.services.interfaces.IServServices
 import backend.jvm.utils.errorHandling.InvalidUser
+import backend.jvm.utils.errorHandling.UserNotFound
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.sql.Date
 import java.sql.Time
 import java.time.Duration
+import java.util.*
 
 @Service
 class ServServices : IServServices {
@@ -62,5 +63,12 @@ class ServServices : IServServices {
 
     override fun deleteService(serviceDB: ServiceDB){
         serviceRepository.delete(serviceDB)
+    }
+
+    fun getEarnedMoneyEmployee(userId: String, dateBegin: String, dateEnd: String,company: Int): Double {
+        val user = userRepository.getUserByToken(UUID.fromString(userId)) ?: throw UserNotFound()
+        val getBeginDate = Date.valueOf(dateBegin)
+        val getEndDate = Date.valueOf(dateEnd)
+        return serviceRepository.getEarnedMoneyByEmployee(user.id,company, getBeginDate, getEndDate) ?: 0.0
     }
 }

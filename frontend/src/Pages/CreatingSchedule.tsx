@@ -34,13 +34,13 @@ export function CreatingSchedule() {
         const selectedDays = schedule.filter(day => day.selected);
 
         if (selectedDays.length > 0) {
-            const startTime = selectedDays[0].beginHour;
-            const endTime = selectedDays[0].endHour;
+            const beginHour = selectedDays[0].beginHour;
+            const endHour = selectedDays[0].endHour;
 
             setSchedule(prevSchedule =>
                 prevSchedule.map(day => {
                     if (day.selected) {
-                        return { ...day, startTime, endTime };
+                        return { ...day, beginHour, endHour };
                     }
                     return day;
                 })
@@ -66,23 +66,23 @@ export function CreatingSchedule() {
                 beginHour: day.beginHour,
                 endHour: day.endHour
             }))
-            const resp = Fetch(`company/${id}/day/all?duration=${interval}`,
-                'POST',
-                body).response
-            if(!resp) return(<p>...loading...</p>);
-            if(resp.status) {
-                setCreate(false)
-                window.location.href = `/`
-                return(<></>);
-            }
-            if(resp){
-                console.log(resp)
-                const companyId = resp.id
-                console.log("company = ", companyId)
-                window.location.href = `/company/${companyId}/schedule`
-                return(
-                    <></>
-                )
+        const resp = Fetch(`company/${id}/day/all?duration=${interval}`,
+            'POST',
+            body).response
+        if(!resp) return(<p>...loading...</p>);
+        if(resp.status) {
+            setCreate(false)
+            window.location.href = `/`
+            return(<></>);
+        }
+        if(resp){
+            console.log(resp)
+            const companyId = resp.id
+            console.log("company = ", companyId)
+            window.location.href = `/company/${companyId}/schedule`
+            return(
+                <></>
+            )
         }
     }
 
@@ -142,7 +142,7 @@ export function CreatingSchedule() {
                                                         />
                                                     </div>
                                                 ))}
-                                                <button onClick={handleSameTimeButtonClick}>Mesmo horário</button>
+                                                <button onClick={handleSameTimeButtonClick}>Mesmo horÃ¡rio</button>
                                             </div>
 
                                             <label>

@@ -8,9 +8,10 @@ import backend.jvm.utils.UserRoles
 import backend.jvm.utils.errorHandling.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.sql.Time
 import java.sql.Date
+import java.sql.Time
 import java.util.*
+
 
 @Service
 class CompanyServices : ICompanyServices {
@@ -57,7 +58,7 @@ class CompanyServices : ICompanyServices {
         val comp = companyRepository.save(companyDb)
 
         userCompanyRepository.save(UserCompany(managerUser, comp, UserRoles.MANAGER.name))
-        val schedule = Schedule(comp,null,null,null)
+        val schedule = Schedule(comp,null,null,null,null)
         scheduleRepository.save(schedule)
 
         return CompanyOutputDto(comp)
@@ -120,12 +121,31 @@ class CompanyServices : ICompanyServices {
         return serviceRepository.getAllServicesFromACompany(id).map { ServiceOutputDto(it) }
     }
 
-    fun getCompanyByUserAndRole(userId: String, role: String): List<CompanyInfo>{
+    fun getCompanyByUserAndRole(userId: String, role: String): List<CompanyInfo> {
         val user = usersRepository.getUserByToken(UUID.fromString(userId)) ?: throw InvalidCredentials()
         val companyRepository = companyRepository.getCompanyByUserIdAndRole(user.id,role)
         return companyRepository.map {
             CompanyInfo(it.id,it.name)
         }
+    }
+
+    fun getAllEmployeesByCompanyAndMoney(cid: Int): List<Pair<UserInfo,Double>>{
+        val employees = usersRepository.getUserEmployeesByCompany(cid) ?: throw EmployeeNotFound()
+
+        val dateEnd = Date(System.currentTimeMillis())
+        val currentDate = Date(System.currentTimeMillis())
+        val calendar = Calendar.getInstance()
+        calendar.time = currentDate
+        calendar.add(Calendar.DAY_OF_MONTH, -30)
+        val dateBegin = Date(calendar.timeInMillis)
+
+        val earnedMoney = employees.map {
+            Pair(
+                UserInfo(it.id,it.name),
+                serviceRepository.getEarnedMoneyByEmployee(it.id,cid,dateBegin,dateEnd)?:0.0
+            )
+        }
+        return earnedMoney
     }
 
 

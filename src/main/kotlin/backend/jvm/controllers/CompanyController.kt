@@ -232,4 +232,16 @@ class CompanyController {
         }
     }
 
+    @RoleManager(["MANAGER","EMPLOYEE"])
+    @GetMapping("{cid}/employees-profit")
+    fun getAllEmployeesByCompanyAndMoney(@PathVariable cid: Int): ResponseEntity<List<Pair<UserInfo,Double>>>{
+        return try {
+            val response = companyServices.getAllEmployeesByCompanyAndMoney(cid)
+            ResponseEntity
+                .status(200)
+                .body(response)
+        }catch(e: Exception){
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
+        }
+    }
 }

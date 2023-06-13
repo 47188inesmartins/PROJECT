@@ -14,6 +14,7 @@ import {AddingVacations} from "../Pages/AddingVacations";
 import {CreatingServices} from "../Pages/CreatingServices";
 import {CreatingSchedule} from "../Pages/CreatingSchedule";
 import {Signup} from "../Pages/Signup";
+import {ProfitCompany} from "../Pages/ProfitCompany";
 
 
 const router = createBrowserRouter([{
@@ -70,6 +71,10 @@ const router = createBrowserRouter([{
         {
             "path": "/signup",
             "element": <Signup/>
+        },
+        {
+            "path": "/company/profits",
+            "element": <ProfitCompany/>
         }
     ]
 }])

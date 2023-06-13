@@ -14,7 +14,8 @@ data class ScheduleInputDto(
                 company,
                 appointment,
                 day,
-                vacation
+                vacation,
+                null
         )
 }
 

@@ -13,7 +13,7 @@ data class UserCredentials(val email: String, val password: String)
 
 data class CreatedUserOutput(val id: Int, val token: UUID)
 
-
+data class UserInfo(val id: Int, val name: String)
 data class UserOutputDto(
         val id: Int,
         val token: UUID,

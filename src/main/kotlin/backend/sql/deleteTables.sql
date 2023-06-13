@@ -11,6 +11,5 @@ delete from SCH_DAY cascade;
 delete from VACATION cascade;
 delete from USER_SERVICE cascade;
 
-delete from SCH_USER where email = 'grupo18@gmail.com';
 COMMIT;
 

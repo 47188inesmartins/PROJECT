@@ -1,7 +1,9 @@
 package backend.jvm.repository
 
 import backend.jvm.model.*
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import java.sql.Time
@@ -15,7 +17,9 @@ interface ScheduleRepository: JpaRepository<Schedule, Int> {
 
         fun getScheduleByCompany_Id(@Param("id") id: Int): Schedule?
 
+        @Modifying
         @Query(value = "update schedule set between_interval = :interval where id = :id ", nativeQuery = true)
+        @Transactional
         fun updateBetweenInterval(@Param("id") id: Int,@Param("interval") interval: Time)
 
 

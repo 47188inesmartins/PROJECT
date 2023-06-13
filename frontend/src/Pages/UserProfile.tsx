@@ -11,13 +11,16 @@ import {
     MDBBreadcrumbItem,
 } from 'mdb-react-ui-kit'
 import {Fetch} from "../Utils/useFetch";
-import {useContext} from "react";
+import {useContext, useState} from "react";
 import {LoggedInContextCookie} from "../Authentication/Authn";
+
 
 export function ProfilePage() {
     const token = useContext(LoggedInContextCookie).loggedInState.role
+
     const check = (token !== "GUEST" && token !== "CLIENT")
     const response = Fetch('/user/info','GET')
+
     return (
         <div>
             {
@@ -49,8 +52,15 @@ export function ProfilePage() {
                                                 style={{ width: '150px' }}
                                                 fluid />
                                             <p className="text-muted mb-1">{response.response.name}</p>
-                                            <div className="d-flex justify-content-center mb-2">
-                                            </div>
+
+                                        </MDBCardBody>
+                                    </MDBCard>
+                                    <MDBCard className="mb-4 mb-md-0">
+                                        <MDBCardBody>
+                                                <MDBCardText className="mb-4">My wallet </MDBCardText>
+                                                <a href={`/company/profits`} className="mb-1"  style={{ fontSize: '1.2rem' }}>
+                                                    <MDBCardText> Check your profits </MDBCardText>
+                                                </a>
                                         </MDBCardBody>
                                     </MDBCard>
                                 </MDBCol>
@@ -123,7 +133,7 @@ function CompanyRole(props:{role:String,Text:String}) {
                     <MDBCard className="mb-4 mb-md-0">
                         <MDBCardBody>
                             <MDBCardText className="mb-4">{props.Text}</MDBCardText>
-                            {resp.response.map((object: any) => (
+                            { resp.response.map((object: any) => (
                                 <a href={`/company/${object.id}/managing`} className="mb-1"  style={{ fontSize: '1.2rem' }}>
                                     <MDBCardText>{object.name}</MDBCardText>
                                 </a>
