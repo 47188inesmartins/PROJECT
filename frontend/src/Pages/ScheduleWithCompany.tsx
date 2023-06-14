@@ -12,13 +12,15 @@ import {Company} from "./Company";
 function TimePickerComponent (){
 
     const [startDate, setStartDate] = useState(new Date());
+    const [click, setClick] = useState<string|undefined>(undefined);
+
 
     const params = useParams()
     const id = params.id
 
 
     const handleClick = (value) => {
-        console.log(value)
+        setClick(value)
     }
 
     function getWeekDay(date: Date): string {
@@ -49,7 +51,9 @@ function TimePickerComponent (){
 
     return (
         <>
-            {!schedule.response?
+        {!click?
+            <>
+            {!schedule.response ?
                 <div> ..loading.. </div>
                 :
                 <div className="container-fluid px-0 px-sm-4 mx-auto">
@@ -69,9 +73,10 @@ function TimePickerComponent (){
                                         <div className="row text-center mx-0">
                                             {schedule.response.map((group, rowIndex) => (
                                                 <div className="row text-center mx-0" key={rowIndex}>
-                                                        <div className="col-md-2 col-4 my-1 px-2" key={rowIndex}>
-                                                            <div className="cell py-1">{group}</div>
-                                                        </div>
+                                                    <div className="col-md-2 col-4 my-1 px-2" key={rowIndex}>
+                                                        <div className="cell py-1"
+                                                             onClick={() => handleClick(group)}>{group}</div>
+                                                    </div>
                                                 </div>
                                             ))}
                                         </div>
@@ -83,6 +88,10 @@ function TimePickerComponent (){
                 </div>
             }
         </>
+        :
+        <PopUpMessage id={id} date={startDate} hour={click}/>
+    }
+    </>
     )
 }
 

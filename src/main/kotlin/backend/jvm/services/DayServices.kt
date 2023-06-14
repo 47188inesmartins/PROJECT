@@ -65,7 +65,7 @@ class DayServices : IDayServices {
        }
 
        return hoursList
-   }
+    }
 
     fun getEndHour(tempo1: Time, tempo2: Time): Time {
         val additionalTime = tempo2.time - tempo2.timezoneOffset * 60 * 1000

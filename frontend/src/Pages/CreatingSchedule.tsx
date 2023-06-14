@@ -72,7 +72,7 @@ export function CreatingSchedule() {
         if(!resp) return(<p>...loading...</p>);
         if(resp.status) {
             setCreate(false)
-            window.location.href = `/`
+            window.location.href = `/company/${id}/services`
             return(<></>);
         }
         if(resp){
@@ -142,7 +142,7 @@ export function CreatingSchedule() {
                                                         />
                                                     </div>
                                                 ))}
-                                                <button onClick={handleSameTimeButtonClick}>Mesmo horÃ¡rio</button>
+                                                <button onClick={handleSameTimeButtonClick}>Mesmo horário</button>
                                             </div>
 
                                             <label>
@@ -157,14 +157,14 @@ export function CreatingSchedule() {
 
                                             <button className="btn btn-outline-light btn-lg px-5" type="submit"
                                                     onClick={handleCreate}>
-                                                Create
+                                                Next
                                             </button>
                                             <br/>
                                             <br/>
                                             <br/>
                                             <button className="btn btn-outline-light btn-lg px-5" type="submit"
                                                     onClick={() => {
-                                                    }}>Cancel
+                                                    }}>Configurate later
                                             </button>
                                         </div>
                                     </div>

@@ -4,6 +4,8 @@ import {Fetch} from "../Utils/useFetch";
 import {useState} from "react";
 import MyCalendar from "./AdvancedCalendar";
 import "../Style/Test.css";
+import _default from "chart.js/dist/plugins/plugin.tooltip";
+import backgroundColor = _default.defaults.backgroundColor;
 
 export function MyCompany() {
     const a = useParams()
@@ -106,19 +108,19 @@ export function MyCompany() {
 
             <MyCalendar/>
             <button className="btn btn-outline-light btn-lg px-5" type="submit"
-                    onClick={handleAddVacation}>Add vacation
+                    onClick={handleAddVacation} style={{backgroundColor: 'black'}}>Add vacation
             </button>
             <br/>
             <button className="btn btn-outline-light btn-lg px-5" type="submit"
-                    onClick={handleAddEmployees}>Add employees
+                    onClick={handleAddEmployees} style={{backgroundColor: 'black'}}>Add employees
             </button>
             <br/>
             <button className="btn btn-outline-light btn-lg px-5" type="submit"
-                    onClick={handleChangeSchedule}>Change schedule
+                    onClick={handleChangeSchedule} style={{backgroundColor: 'black'}}>Change schedule
             </button>
             <br/>
             <button className="btn btn-outline-light btn-lg px-5" type="submit"
-                    onClick={handleAddServices}>Add services
+                    onClick={handleAddServices} style={{backgroundColor: 'black'}}>Add services
             </button>
        </div>
     );

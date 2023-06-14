@@ -67,10 +67,10 @@ const MyCalendar: React.FC = () => {
 
     const selectedEventInfo = selectedEvent ? (
         <div>
-            <h3>Detalhes do Evento:</h3>
-            <div>Título: {selectedEvent.title}</div>
-            <div>Hora de início: {selectedEvent.start.toLocaleTimeString()}</div>
-            <div>Hora de fim: {selectedEvent.end.toLocaleTimeString()}</div>
+            <h3>Events details:</h3>
+            <div>Title: {selectedEvent.title}</div>
+            <div>Begin hour: {selectedEvent.start.toLocaleTimeString()}</div>
+            <div>End hour: {selectedEvent.end.toLocaleTimeString()}</div>
         </div>
     ) : null;
 
