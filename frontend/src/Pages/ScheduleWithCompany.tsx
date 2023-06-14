@@ -4,6 +4,10 @@ import "react-datepicker/dist/react-datepicker.css";
 import '../Style/Schedule.css'
 import {Fetch} from "../Utils/useFetch";
 import {useParams} from "react-router-dom";
+import {Navigate} from "react-router";
+import {Button, Modal} from "react-bootstrap";
+import {MyAppointments} from "./MyAppointments";
+import {Company} from "./Company";
 
 function TimePickerComponent (){
 
@@ -34,6 +38,13 @@ function TimePickerComponent (){
 
     const schedule = Fetch(`company/${id}/day/week-day?day=${weekDay}`, "GET")
 
+    if(schedule.response){
+        if(schedule.response.length === 0){
+            return <>
+                    <p> No available Schedule </p>
+            </>
+        }
+    }
     console.log("schedule = ",schedule)
 
     return (
@@ -73,6 +84,117 @@ function TimePickerComponent (){
             }
         </>
     )
+}
+
+
+function PopUpMessage(props:{id:string|undefined,date:Date,hour:string}) {
+    const [show, setShow] = useState(true);
+
+    const params = useParams()
+    const id = params.id
+
+    const handleClose = () => {
+        setShow(false);
+        window.location.href = `/company/${props.id}`;
+    }
+
+
+    if(props.id == undefined) return <Navigate to = {`/company/${id}`} replace={true}></Navigate>
+
+    return (
+        <>
+                    <Company/>
+                    <Modal
+                        show={show}
+                        onHide={handleClose}
+                        backdrop="static"
+                        keyboard={false}
+                    >
+                        <Modal.Header closeButton>
+                            <Modal.Title>Available Services</Modal.Title>
+                        </Modal.Header>
+                            <FetchAvailableServices id={props.id} date={props.date} hour={props.hour}/>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={handleClose}>
+                                Close
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
+        </>
+    );
+}
+
+function FetchAvailableServices(props:{id:string,date:Date,hour:string}){
+    console.log("")
+    //const response = Fetch(`/company/${props.id}/appointment/services/availability?hour_begin=${props.hour}&date=${props.date}`,'GET')
+
+    const response = Fetch(`/company/${props.id}/services`,'GET')
+
+
+    function PopUpEmployees(){
+          return <PopUpEmployee/>
+    }
+
+    console.log("Response pop",response.response)
+
+    return  <Modal.Body>
+        {response.response ?
+            <>{response.response.length === 0 ?
+                <></> :
+                    <>
+                        {
+                            response.response.map((service) => (
+                                <div className="row text-center mx-0" key={service.id}>
+                                    <div className="col-md-2 col-4 my-1 px-2" key={service.id}>
+                                        <div className="cell py-1"
+                                             onClick={() => PopUpEmployees()}>{service.serviceName}</div>
+                                    </div>
+                                </div>
+                            ))
+                        }
+                    </>
+            }</>
+            :
+            <>No available Services :( </>
+        }
+    </Modal.Body>
+}
+
+function PopUpEmployee(){
+    const [show, setShow] = useState(true);
+    const [cancel, setCancel] = useState(false);
+    const params = useParams()
+    const id = params.id
+
+    const handleClose = () => {
+        setShow(false);
+        window.location.href = `/company/${id}`;
+    }
+
+    const handleCancel = () => setCancel(true);
+
+  return  <>
+                <Company/>
+                <Modal
+                    show={show}
+                    onHide={handleClose}
+                    backdrop="static"
+                    keyboard={false}
+                >
+                    <Modal.Header closeButton>
+                        <Modal.Title>Available Employees for that service</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                       cenasss
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={handleClose}>
+                            Close
+                        </Button>
+                        <Button variant="primary" onClick = {handleCancel}>Cancel</Button>
+                    </Modal.Footer>
+                </Modal>
+    </>
 }
 
 export default TimePickerComponent;

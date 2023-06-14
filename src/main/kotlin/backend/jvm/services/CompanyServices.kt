@@ -148,5 +148,10 @@ class CompanyServices : ICompanyServices {
         return earnedMoney
     }
 
+    fun getAppointmentsByCompany(cid: Int): List<AppointmentOutputDto> {
+        val schedule =  scheduleRepository.getScheduleByCompany_Id(cid)?: throw InvalidSchedule()
+        val appointments = appointmentRepository.getAppointmentsBySchedule(schedule.id)
+        return appointments.map { AppointmentOutputDto(it) }
 
+    }
 }

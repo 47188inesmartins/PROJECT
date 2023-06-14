@@ -29,12 +29,12 @@ const MyCalendar: React.FC = () => {
 
     const myEventsList: Event[] = [
         {
-            title: 'Evento 1',
+            title: 'Luisa unhas',
             start: new Date(2023, 5, 6, 10, 0),
             end: new Date(2023, 5, 6, 12, 0),
         },
         {
-            title: 'Evento 2',
+            title: 'Maria Pintar',
             start: new Date(2023, 5, 7, 14, 0),
             end: new Date(2023, 5, 7, 16, 0),
         },

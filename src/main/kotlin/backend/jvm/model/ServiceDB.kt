@@ -30,7 +30,7 @@ class ServiceDB{
     val duration: Time
 
     @Column(name = "number_max")
-    val numberMax: Int
+    val numberMax: Int?
 
     @Column(name = "price")
     val price: Double
@@ -69,7 +69,7 @@ class ServiceDB{
         this.day = listOf()
     }
 
-    constructor(name : String, duration: Time, numberMax: Int, price: Double, company: Company, users: List<UserDB>){
+    constructor(name : String, duration: Time, numberMax: Int?, price: Double, company: Company, users: List<UserDB>?){
         this.name = name
         this.duration = duration
         this.numberMax = numberMax

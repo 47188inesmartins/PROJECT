@@ -1,5 +1,6 @@
 package backend
 
+import backend.jvm.utils.Hashing
 import org.jdbi.v3.core.Jdbi
 import org.postgresql.ds.PGSimpleDataSource
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -15,3 +16,5 @@ class ProjectApplication
 fun main(args: Array<String>) {
 	runApplication<ProjectApplication>(*args)
 }
+
+

@@ -77,14 +77,14 @@ class AppointmentServices : IAppointmentServices {
         if(getCurrentDate().after(getAppointment.appDate) && getCurrentHour() > getAppointment.appHour)
             return appointmentRepository.deleteById(id)
 
-        val getEmployee = getAppointment.usersDB?.firstOrNull {
+        /*val getEmployee = getAppointment.usersDB?.firstOrNull {
             val role = userRepository.getRole(it.id)
             (role == UserRoles.EMPLOYEE.name ||role == UserRoles.MANAGER.name)
         }
         if(getEmployee == null) EmployeeNotFound()
 
         val unavailabilityDB = unavailabilityRepository.getUnavailabilityDBByUserDB(getEmployee!!)
-        if(unavailabilityDB != null)  unavailabilityRepository.deleteById(unavailabilityDB.id)
+        if(unavailabilityDB != null)  unavailabilityRepository.deleteById(unavailabilityDB.id)*/
 
         appointmentRepository.deleteById(id)
     }
@@ -110,7 +110,8 @@ class AppointmentServices : IAppointmentServices {
         val d = Date.valueOf(date)
         val dur = Time.valueOf("00:30:00")
         val weekDay = getDayOfWeek(d)
-        val services = servicesRepository.getAvailableServicesByHour(weekDay, bh, companyId)
+        val a  =  bh.toString()
+        val services = servicesRepository.getAvailableServicesByHour(weekDay, a, companyId)
         val serv = services.filter {
              userRepository.getAvailableEmployeesByService(it.id, d, bh, getEndHour(bh, dur)).isNotEmpty()
         }

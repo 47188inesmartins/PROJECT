@@ -37,4 +37,7 @@ interface AppointmentRepository: JpaRepository<Appointment, Int>{
 
     @Query(value = "select * from appointment a inner join appointment_user au on a.id = au.appointment_id and au.user_id =:id", nativeQuery = true)
     fun getAppointmentByUserDB(@Param("id") id: Int): List<Appointment>
+
+    @Query(value = "select * from APPOINTMENT inner join SCHEDULE S on S.id = APPOINTMENT.schedule_id and APPOINTMENT.schedule_id = :schedule ", nativeQuery = true)
+    fun getAppointmentsBySchedule(@Param("schedule") schedule: Int):List<Appointment>
 }

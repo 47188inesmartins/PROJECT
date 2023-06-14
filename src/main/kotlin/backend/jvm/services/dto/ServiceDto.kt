@@ -8,11 +8,12 @@ import java.sql.Time
 data class ServiceInputDto(
     val serviceName: String,
     val duration: String,
-    val numberMax: Int,
+    val numberMax: Int?,
     val price: Double,
-    val users: List<Int>
+    val users: List<Int>?
+
 ){
-    fun mapToService(db: ServiceInputDto, company: Company, users: List<UserDB>) : ServiceDB {
+    fun mapToService(db: ServiceInputDto, company: Company, users: List<UserDB>?) : ServiceDB {
         val d = Time.valueOf(duration) ?: throw Exception("invalid time")
         return ServiceDB(
             db.serviceName,
@@ -29,7 +30,7 @@ data class ServiceOutputDto(
     val id: Int,
     val serviceName: String,
     val duration: Time,
-    val numberMax: Int,
+    val numberMax: Int?,
     val price: Double,
     val company: Int
 ){

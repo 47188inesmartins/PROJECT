@@ -55,7 +55,7 @@ export function Layout() {
                             <div style={{ position: 'relative', minHeight: '100vh' }}>
                                 <CDBSidebarContent className="sidebar-content">
                                     <CDBSidebarMenu>
-                                        <NavLink to="/user/1/appointments">
+                                        <NavLink to="/user/6/appointments">
                                             <CDBSidebarMenuItem icon="columns">Appointments</CDBSidebarMenuItem>
                                         </NavLink>
                                         <NavLink to="/new/company">

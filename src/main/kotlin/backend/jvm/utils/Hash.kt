@@ -1,7 +1,6 @@
 package backend.jvm.utils
 
 import backend.jvm.services.UserServices
-import backend.jvm.services.dto.UserInputDto
 import java.security.MessageDigest
 
 object Hashing{
@@ -14,7 +13,4 @@ object Hashing{
     }
 
     fun verifyPasswordSecure(pass: String) = UserServices.PASSWORD_FORMAT.matches(pass)
-
-
 }
-

@@ -26,7 +26,7 @@ class ServiceController {
     @RoleManager(["MANAGER","EMPLOYEE"])
     @PostMapping("/company/{cid}")
     fun addService(@RequestBody service: ServiceInputDto, @PathVariable cid: Int): ResponseEntity<ServiceOutputDto> {
-        return try{
+        return try {
             val response = servServices.addService(service,cid)
             ResponseEntity.status(201)
                 .body(response)

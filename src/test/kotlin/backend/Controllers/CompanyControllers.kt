@@ -22,7 +22,6 @@ class CompanyControllersTest(@Autowired val mockMvc: MockMvc) {
 
     @Test
     fun getExistentCompanyWithoutAuth(){
-
         mockMvc.perform(get("/company/1"))
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))

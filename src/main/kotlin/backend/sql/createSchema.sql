@@ -121,9 +121,7 @@ create table if not exists SCH_DAY(
      interval_end time,
      week_days char(4) CHECK (week_days in ('MON','TUE','WED','THU','FRI','SAT','SUN')),
      schedule_id int,
-     service_id int,
      CONSTRAINT uc_sch_day UNIQUE (week_days, schedule_id),
-     CONSTRAINT uc_serv_day UNIQUE (week_days, service_id),
      foreign key (schedule_id) references SCHEDULE(id)
 );
 
@@ -154,4 +152,3 @@ insert into u_role (name) values ('EMPLOYEE');
 COMMIT;
 
 rollback;
-

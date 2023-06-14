@@ -31,8 +31,8 @@ class ServServices : IServServices {
 
     override fun addService(service: ServiceInputDto, companyId: Int): ServiceOutputDto {
         val company = companyRepository.getReferenceById(companyId)
-        val users = service.users.map{ userRepository.getReferenceById(it) }
-        users.forEach {
+        val users = service.users?.map{ userRepository.getReferenceById(it) }
+        users?.forEach {
             if(userCompanyRepository.findByCompanyAndUser(company, it) == null) throw InvalidUser()
         }
         val serv = service.mapToService(service,company,users)
@@ -65,10 +65,9 @@ class ServServices : IServServices {
         serviceRepository.delete(serviceDB)
     }
 
-    fun getEarnedMoneyEmployee(userId: String, dateBegin: String, dateEnd: String,company: Int): Double {
-        val user = userRepository.getUserByToken(UUID.fromString(userId)) ?: throw UserNotFound()
-        val getBeginDate = Date.valueOf(dateBegin)
-        val getEndDate = Date.valueOf(dateEnd)
-        return serviceRepository.getEarnedMoneyByEmployee(user.id,company, getBeginDate, getEndDate) ?: 0.0
+    fun getServiceByCompanyId(company: Int): List<ServiceOutputDto>{
+        val services = serviceRepository.getAllServicesFromACompany(company)
+        if(services.isEmpty()) return emptyList()
+        return services.map { ServiceOutputDto(it) }
     }
 }

@@ -150,7 +150,7 @@ function FetchCancelAppointment(props:{id:Number}){
     const params = useParams()
     const id = params.id
 
-    Fetch('/appointment/'+props.id,
+    const a = Fetch('/company/1/appointment/'+props.id,
         'DELETE')
     window.location.href = `/user/${id}/appointments`;
     return(<> </>);

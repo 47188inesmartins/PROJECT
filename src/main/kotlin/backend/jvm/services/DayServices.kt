@@ -50,6 +50,8 @@ class DayServices : IDayServices {
        val schedule = scheduleRepository.getScheduleByCompany_Id(cid) ?: throw CompanyNotFound()
        val days = dayRepository.getDayByScheduleIdAndWeekDays(schedule.id, weekDay)
 
+       if(days.isEmpty()) return emptyList()
+
        val startTime = days[0].beginHour
        val endTime = days[0].endHour
        val interval = schedule.betweenInterval
@@ -58,7 +60,7 @@ class DayServices : IDayServices {
        val hoursList = mutableListOf<String>()
 
        while (currentTime.before(endTime) || currentTime == endTime) {
-           hoursList.add(currentTime.toString())
+           hoursList.add(currentTime.toString().substring(0..4))
            currentTime = getEndHour(currentTime, interval!!)
        }
 

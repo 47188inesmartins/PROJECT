@@ -38,12 +38,13 @@ interface ServiceRepository : JpaRepository<ServiceDB, Int> {
     ):List<Pair<ServiceDB, Time>>
 
 
-    @Query(value = "select * from service s inner join sch_day sd on s.id = sd.service_id and sd.week_days = :weekDay " +
-            "and  (:beginHour  between sd.begin_hour and interval_begin or :beginHour between  interval_end and sd.end_hour) " +
+    @Query(value = "select s.id,s.service_name,s.duration,s.number_max,s.price,s.company_id " +
+            "from service s inner join SERVICE_DAY d on s.id = d.service_id inner join sch_day sd on sd.id = d.day_id and sd.week_days = :weekDay " +
+            "and (:beginHour between sd.begin_hour and interval_begin or :beginHour between  interval_end and sd.end_hour) " +
             "and (TIME :beginHour + (s.duration || ' minutes')::INTERVAL between sd.begin_hour and interval_begin " +
             "or TIME :beginHour + (s.duration || ' minutes')::INTERVAL between  interval_end and sd.end_hour) " +
-            "and s.company_id = :companyId", nativeQuery = true)
-    fun getAvailableServicesByHour(@Param("weekDay") weekDay: String, @Param("beginHour") beginHour: Time, @Param("companyId") companyId: Int): List<ServiceDB>
+            "and s.company_id = :companyId ", nativeQuery = true)
+    fun getAvailableServicesByHour(@Param("weekDay") weekDay: String, @Param("beginHour") beginHour: String, @Param("companyId") companyId: Int): List<ServiceDB>
 
     @Query(value = "select sum(s.price) as money from service s  " +
             "inner join USER_SERVICE US on s.id = US.service_id and US.user_id = :userId and s.company_id = :company " +
@@ -51,4 +52,7 @@ interface ServiceRepository : JpaRepository<ServiceDB, Int> {
             "inner join APPOINTMENT A on A.id = AU.appointment_id " +
             "and A.service_id = s.id and a.app_date>:dateBegin and a.app_date<:dateEnd ", nativeQuery = true)
     fun getEarnedMoneyByEmployee(@Param("userId")userId: Int,@Param("company")company: Int, @Param("dateBegin") dateBegin: Date, @Param("dateEnd") dateEnd: Date): Double?
+
+    @Query(value = "select * from service s where s.company_id = :company ", nativeQuery = true)
+    fun getServiceDBByHourAndDate(@Param("company") company: Int):List<ServiceDB>
 }
