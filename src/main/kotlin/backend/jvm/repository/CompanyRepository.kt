@@ -9,8 +9,14 @@ import java.util.*
 
 interface CompanyRepository : JpaRepository<Company, Int>{
 
+    @Query(value = "SELECT c.id FROM COMPANY c WHERE type = ANY(:categories)", nativeQuery = true)
+    fun getCompaniesByCategory(@Param("categories") categories: Array<String>): List<Int>?
+
     @Query(name = "getCompanyById")
     fun findAllById(id: Int): Company?
+
+    @Query(value = "Select * from company c where c.name ilike :search or c.description ilike :search or c.type ilike :search", nativeQuery = true)
+    fun getCompanyBySearch(@Param("search") search: String):List<Company>?
 
     fun findCompanyByNif(nif:String): Company?
 

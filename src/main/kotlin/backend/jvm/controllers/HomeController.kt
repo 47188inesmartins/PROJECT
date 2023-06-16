@@ -2,32 +2,38 @@ package backend.jvm.controllers
 
 
 
+import backend.jvm.services.UserServices
 import com.fasterxml.jackson.databind.ObjectMapper
 import kotlinx.serialization.json.Json
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.CrossOrigin
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.ResponseBody
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
+import org.springframework.web.context.request.RequestContextHolder
+import org.springframework.web.context.request.ServletRequestAttributes
 import org.springframework.web.server.ResponseStatusException
 
 
 @RestController
+@RequestMapping("/")
 class HomeController {
 
-    @GetMapping("/", produces= [MediaType.APPLICATION_JSON_VALUE])
-    @ResponseBody
-    fun home(): ResponseEntity<String> {
+    @Autowired
+    lateinit var userServices: UserServices
+
+
+    @GetMapping
+    fun home(): ResponseEntity<List<Int>> {
         return try {
-            val response = mapOf("message" to "Hello world")
-            val objectMapper = ObjectMapper()
-            val responseBody = objectMapper.writeValueAsString(response)!!
+            val requestAttributes = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes
+            val request = requestAttributes.request
+            val bearerToken = request.getHeader("Authorization")?.removePrefix("Bearer ")
+            val response = bearerToken?.let { userServices.getPersonalizedCompanies(it) }
             ResponseEntity
                 .status(HttpStatus.OK)
                 .header("Content-Type","application/json")
-                .body(responseBody)
+                .body(response)
         } catch (e: Exception) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Application error", e)
         }

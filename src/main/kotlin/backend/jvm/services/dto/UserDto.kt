@@ -52,9 +52,10 @@ data class UserInputDto(
         val companyId: Int?,
         val services: List<Int>?,
         val appointment: List<Int>?,
-        val unavailability: List<Int>?
+        val unavailability: List<Int>?,
+        val interests: String
 ){
-        fun mapToUser(dto: UserInputDto,pass: String,services: List<ServiceDB>?,appointment: List<Appointment>?,comp: List<UserCompany>?, roles: List<Role>, unavailabilityDB : List<UnavailabilityDB>?):UserDB{
+        fun mapToUser(dto: UserInputDto,pass: String,services: List<ServiceDB>?,appointment: List<Appointment>?,comp: List<UserCompany>?, roles: List<Role>, unavailabilityDB : List<UnavailabilityDB>?, interests: String):UserDB{
               return UserDB(
                       email = dto.email,
                       password = pass,
@@ -64,7 +65,8 @@ data class UserInputDto(
                       companies = comp,
                       appointments = appointment,
                       roles = roles,
-                      unavailabilityDB = unavailabilityDB
+                      unavailabilityDB = unavailabilityDB,
+                      interests = interests
                 )
         }
 }

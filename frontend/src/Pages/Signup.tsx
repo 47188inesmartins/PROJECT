@@ -14,6 +14,14 @@ import {useState} from "react";
 import {Fetch} from "../Utils/useFetch";
 import {Navigate} from "react-router";
 
+interface Categories {
+    'BEAUTY',
+    'LIFESTYLE',
+    'FITNESS',
+    'BUSINESS',
+    'OTHERS'
+}
+
 
 interface UserCredentials{
     name: string,
@@ -30,6 +38,24 @@ export function Signup() {
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
     const [submit, setSubmit] = useState<boolean>(false)
+    const categories = ['BEAUTY', 'LIFESTYLE', 'FITNESS', 'BUSINESS', 'EDUCATION', 'OTHERS'];
+    const [selectedCategories, setSelectedCategories] = useState("");
+
+    const handleCategoryClick = (category) => {
+        if (selectedCategories.includes(category)) {
+            const updatedCategories = selectedCategories
+                .split(",")
+                .filter((cat) => cat !== category)
+                .join(",");
+            setSelectedCategories(updatedCategories);
+        } else {
+            const updatedCategories = selectedCategories
+                ? selectedCategories + "," + category
+                : category;
+            setSelectedCategories(updatedCategories);
+        }
+    };
+
 
 
     const handleSubmit = () => {
@@ -106,7 +132,10 @@ export function Signup() {
                                               onChange={(e) => {setEmail(e.target.value)
                                         console.log(e.target.value)}
                                     }
+
                                     />
+
+
                                     <MDBInput wrapperClass='mb-4 mx-5 w-100'
                                               labelClass='text-white'
                                               label='Password'
@@ -116,9 +145,30 @@ export function Signup() {
                                               value={password}
                                               onChange={(e) => setPassword(e.target.value)}
                                     />
+                                    <a>What are your interests?</a>
 
+                                    <div>
+                                        {categories.map((category) => (
+                                            <button
+                                                key={category}
+                                                onClick={() => handleCategoryClick(category)}
+                                                style={{
+                                                    backgroundColor: selectedCategories.includes(category) ? "pink" : "white",
+                                                    padding: "8px 16px",
+                                                    border: "1px solid pink",
+                                                    borderRadius: "4px",
+                                                    marginRight: "8px",
+                                                    marginBottom: "8px",
+                                                    cursor: "pointer",
+                                                }}
+                                            >
+                                                {category}
+                                            </button>
+                                        ))}
+                                    </div>
+                                    <br/>
                                     <button className="btn btn-outline-light btn-lg px-5" type="submit"
-                                            onClick={handleSubmit}>Login
+                                            onClick={handleSubmit}>Signup
                                     </button>
 
                                     <div className='d-flex flex-row mt-3 mb-5'>

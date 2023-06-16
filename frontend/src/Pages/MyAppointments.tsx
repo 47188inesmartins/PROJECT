@@ -1,28 +1,24 @@
 import * as React from "react";
 import {useState} from "react";
 import {
-    MDBBtn,
     MDBCard,
     MDBCardBody,
-    MDBCheckbox,
     MDBCol,
     MDBContainer,
     MDBInput,
     MDBRow,
     MDBTable, MDBTableBody, MDBTableHead
 } from "mdb-react-ui-kit";
-import {Form, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import {Button, Modal} from "react-bootstrap";
 import {Navigate} from "react-router";
 import {Fetch} from "../Utils/useFetch";
 
 
 export function MyAppointments() {
-    const params = useParams()
     const [cancel, setCancel] = useState(false);
     const [idAppointment,setIdAppointment] = useState<undefined|Number>(undefined)
-    const id = params.id
-    const appointments = Fetch(`/user/${id}/appointments`,"GET")
+    const appointments = Fetch('/user/appointments',"GET").response
     console.log(appointments)
 
     const handleCancel = (idApp:Number) =>{
@@ -32,12 +28,14 @@ export function MyAppointments() {
 
     return (
             <div>
-                {!appointments.response?
+                {!appointments?
                     <div className="loading">
                         <div className="spinner-border" role="status">
                             <span className="sr-only">Loading...</span>
                         </div>
-                    </div>:(
+                    </div>
+                    :
+                    (
                         <section className="vh-100" style={{ backgroundColor: '#f7d8ba' }}>
                             {cancel?<PopUpMessage id={idAppointment}/>
                                 :<MDBContainer className="py-5 h-100">
@@ -68,7 +66,7 @@ export function MyAppointments() {
                                                             </tr>
                                                         </MDBTableHead>
                                                         <MDBTableBody>
-                                                            {appointments.response.futureAppointments.map((appointment: any)=> (
+                                                            {appointments.futureAppointments.map((appointment: any)=> (
                                                                 <tr>
                                                                     <th scope="row">{appointment.companyName}</th>
                                                                     <td>{appointment.employee}</td>
@@ -78,7 +76,7 @@ export function MyAppointments() {
                                                                     </td>
                                                                 </tr>
                                                             ))}
-                                                            {appointments.response.passedAppointments.map((appointment: any)=> (
+                                                            {appointments.passedAppointments.map((appointment: any)=> (
                                                                 <tr>
                                                                     <th scope="row">{appointment.companyName}</th>
                                                                     <td>{appointment.employee}</td>
@@ -95,8 +93,10 @@ export function MyAppointments() {
                                         </MDBCol>
                                     </MDBRow>
                                 </MDBContainer>
-                            }</section>
-                    )}
+                            }
+                        </section>
+                    )
+                }
             </div>
     );
 }
@@ -109,7 +109,7 @@ function PopUpMessage(props:{id:Number|undefined}) {
 
     const handleClose = () => {
         setShow(false);
-        window.location.href = `/user/${id}/appointments`;
+        window.location.href = '/user/appointments';
     }
     const handleCancel = () => setCancel(true);
 
@@ -148,7 +148,7 @@ function PopUpMessage(props:{id:Number|undefined}) {
 
 function FetchCancelAppointment(props:{id:Number}){
     const params = useParams()
-    const id = params.id
+    const id = params.idunavailability
 
     const a = Fetch('/company/1/appointment/'+props.id,
         'DELETE')

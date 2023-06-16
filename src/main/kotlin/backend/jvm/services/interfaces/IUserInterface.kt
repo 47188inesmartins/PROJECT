@@ -25,6 +25,6 @@ interface IUserInterface {
 
     fun addEmployees(companyId: Int, emails: List<String>)
 
-    fun getAllAppointmentsByUser(id: Int): AppointmentsUserInfo
+    fun getAllAppointmentsByUser(token: String): AppointmentsUserInfo
 
 }

@@ -14,7 +14,8 @@ import {AddingVacations} from "../Pages/AddingVacations";
 import {CreatingServices} from "../Pages/CreatingServices";
 import {CreatingSchedule} from "../Pages/CreatingSchedule";
 import {Signup} from "../Pages/Signup";
-import {ProfitCompany} from "../Pages/ProfitCompany";
+import {Search} from "../Pages/Search";
+//import {ProfitCompany} from "../Pages/ProfitCompany";
 
 
 const router = createBrowserRouter([{
@@ -34,7 +35,7 @@ const router = createBrowserRouter([{
             "element": <Company/>
         },
         {
-            "path": "/user/:id/appointments",
+            "path": "/user/appointments",
             "element": <MyAppointments/>
         },
         {
@@ -73,9 +74,13 @@ const router = createBrowserRouter([{
             "element": <Signup/>
         },
         {
+            "path": "/search",
+            "element": <Search/>
+        },
+       /* {
             "path": "/company/profits",
             "element": <ProfitCompany/>
-        }
+        }*/
     ]
 }])
 

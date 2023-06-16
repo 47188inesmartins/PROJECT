@@ -101,4 +101,15 @@ select s.id,s.service_name,s.duration,s.number_max,s.price,s.company_id
             and (:beginHour between sd.begin_hour and interval_begin or :beginHour between  interval_end and sd.end_hour)
             and (TIME :beginHour + (s.duration || ' minutes')::INTERVAL between sd.begin_hour and interval_begin
             or TIME :beginHour + (s.duration || ' minutes')::INTERVAL between  interval_end and sd.end_hour)
-            and s.company_id = :companyId
+            and s.company_id = :companyId;
+
+
+SELECT *
+FROM COMPANY
+WHERE type = ANY(ARRAY['beauty', 'LIFESTYLE', 'fitness']);
+
+SELECT id
+FROM company c
+WHERE LOWER(c.name) COLLATE utf8_general_ci LIKE '%inspecoes%'
+   OR c.description COLLATE utf8_general_ci LIKE '%kjasndjksndkj%'
+   OR c.type COLLATE utf8_general_ci LIKE '%fit%';

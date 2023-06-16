@@ -48,7 +48,7 @@ class UserServices : IUserInterface {
         val role = roleRepository.getRoleByName(UserRoles.CLIENT.name)
 
         val returnUser = userRepository.save(
-            user.mapToUser(user,Hashing.encodePass(user.password),servicesList,appList, null, listOf(role), null)
+            user.mapToUser(user,Hashing.encodePass(user.password),servicesList,appList, null, listOf(role), null, user.interests)
         )
 
         return CreatedUserOutput(returnUser.id, returnUser.token)
@@ -127,8 +127,9 @@ class UserServices : IUserInterface {
 
     }
 
-    override fun getAllAppointmentsByUser(id: Int): AppointmentsUserInfo{
-        val listAppointment = appointmentRepository.getAppointmentByUserDB(id)
+    override fun getAllAppointmentsByUser(token: String): AppointmentsUserInfo{
+        val user = userRepository.getUserByToken(UUID.fromString(token))?: throw UserNotFound()
+        val listAppointment = appointmentRepository.getAppointmentByUserDB(user.id)
         if(listAppointment.isEmpty()) return AppointmentsUserInfo()
 
         val currentDate = getCurrentDate()
@@ -160,6 +161,14 @@ class UserServices : IUserInterface {
             )
         }
     }
+
+
+    fun getPersonalizedCompanies(token: String): List<Int>?{
+        val user = userRepository.getUserByToken(UUID.fromString(token))?: throw UserNotFound()
+        val categoriesArray = user.interests.split(",").toTypedArray()
+        return companyRepository.getCompaniesByCategory(categoriesArray)
+    }
+
 
     fun getRoleByUserIdAndCompany(company: Int, user_id: String): String? {
         val token = userRepository.getUserByToken(UUID.fromString(user_id))

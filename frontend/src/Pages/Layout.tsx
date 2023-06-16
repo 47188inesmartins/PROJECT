@@ -28,10 +28,24 @@ export function Layout() {
     }
 
     function FetchLogout(){
-        Fetch("/user/logout", 'POST')
-        setIsLogout(false)
-        window.location.href = "/"
-        return <></>
+        const resp = Fetch("/user/logout", 'POST').response
+
+        if(!resp) {
+            return(<p>...loading...</p>);
+        }
+
+        if(resp.status) {
+            window.location.href = `/`
+            return(<></>);
+        }
+
+        if(resp){
+            setIsLogout(false)
+            window.location.href = '/'
+            return(
+                <></>
+            )
+        }
     }
 
     return (
@@ -55,7 +69,7 @@ export function Layout() {
                             <div style={{ position: 'relative', minHeight: '100vh' }}>
                                 <CDBSidebarContent className="sidebar-content">
                                     <CDBSidebarMenu>
-                                        <NavLink to="/user/6/appointments">
+                                        <NavLink to="/user/appointments">
                                             <CDBSidebarMenuItem icon="columns">Appointments</CDBSidebarMenuItem>
                                         </NavLink>
                                         <NavLink to="/new/company">

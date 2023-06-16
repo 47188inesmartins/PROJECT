@@ -45,6 +45,8 @@ class UserController {
         }
     }
 
+
+
     @RoleManager(["MANAGER","EMPLOYEE","CLIENT"])
     @DeleteMapping("/{id}")
     fun deleteUser(@PathVariable id: Int): ResponseEntity<Boolean>{
@@ -156,10 +158,13 @@ class UserController {
     }
 
     @RoleManager(["CLIENT"])
-    @GetMapping("/{id}/appointments")
-    fun getAllAppointments(@PathVariable id: Int): ResponseEntity<AppointmentsUserInfo> {
+    @GetMapping("/appointments")
+    fun getAllAppointments(): ResponseEntity<AppointmentsUserInfo> {
         return try {
-            val response = userServices.getAllAppointmentsByUser(id)
+            val requestAttributes = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes
+            val request = requestAttributes.request
+            val bearerToken = request.getHeader("Authorization")?.removePrefix("Bearer ")
+            val response = bearerToken?.let { userServices.getAllAppointmentsByUser(it) }
             ResponseEntity
                 .status(200)
                 .body(response)

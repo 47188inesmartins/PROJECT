@@ -44,6 +44,11 @@ class CompanyServices : ICompanyServices {
     @Autowired
     lateinit var userCompanyRepository: UserCompanyRepository
 
+    fun getSearchedCompanies(search: String?): List<CompanyOutputDto>?{
+        if(search == "null") return getAllCompanies()
+        return companyRepository.getCompanyBySearch("%${search}%")?.map { CompanyOutputDto(it) }
+    }
+
 
     override fun addCompany(token: String, company: CompanyInputDto): CompanyOutputDto {
 
@@ -73,6 +78,11 @@ class CompanyServices : ICompanyServices {
         val comp = companyRepository.getReferenceById(id)
         //if(comp == null) throw CompanyNotFound()
         return CompanyOutputDto(comp)
+    }
+
+    fun getCompaniesByCategories(categories: String):List<Int>?{
+        val categoriesArray = categories.split(",").toTypedArray()
+        return companyRepository.getCompaniesByCategory(categoriesArray)
     }
 
     override fun getCompanyByNif(nif: String): Company? {

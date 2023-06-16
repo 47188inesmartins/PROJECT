@@ -38,14 +38,6 @@ class Company {
         @OneToOne(mappedBy = "company")
         val schedule: Schedule?
 
-        /*@ManyToMany
-        @JoinTable(
-                name = "user_company",
-                joinColumns = [JoinColumn(name = "company_id")],
-                inverseJoinColumns = [JoinColumn(name = "user_id")]
-        )
-        val usersDB: List<UserDB>?*/
-
         @OneToMany(mappedBy = "company")
         val userCompany: List<UserCompany>?
 

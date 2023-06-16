@@ -6,7 +6,6 @@ import backend.jvm.services.CompanyServices
 import backend.jvm.services.UserServices
 import backend.jvm.services.dto.*
 import backend.jvm.utils.RoleManager
-import backend.jvm.utils.UserRoles
 import backend.jvm.utils.errorHandling.*
 import jakarta.persistence.EntityNotFoundException
 import kotlinx.serialization.json.jsonObject
@@ -30,7 +29,38 @@ class CompanyController {
     @Autowired
     lateinit var userServices: UserServices
 
-   // @RoleManager(["CLIENT", "MANAGER", "EMPLOYEE"])
+
+    @GetMapping("/home")
+    fun home(): ResponseEntity<List<Int>> {
+        return try{
+            val requestAttributes = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes
+            val request = requestAttributes.request
+            val bearerToken = request.getHeader("Authorization")?.removePrefix("Bearer ")
+            val response = bearerToken?.let { userServices.getPersonalizedCompanies(it) }
+            ResponseEntity
+                .status(HttpStatus.OK)
+                .header("Content-Type","application/json")
+                .body(response)
+        } catch (e: Exception) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Application error", e)
+        }
+    }
+
+    @GetMapping("/search")
+    fun searchForCompany(@RequestParam search: String?): ResponseEntity<List<CompanyOutputDto>> {
+        return try {
+            val response = companyServices.getSearchedCompanies(search)
+            ResponseEntity
+                .status(HttpStatus.OK)
+                .header("Content-Type","application/json")
+                .body(response)
+        } catch (e: Exception) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Application error", e)
+        }
+    }
+
+
+
     @PostMapping
     fun addCompany(
         @RequestBody company: CompanyInputDto
@@ -100,7 +130,6 @@ class CompanyController {
                 is EntityNotFoundException ->  throw ResponseStatusException(HttpStatus.NOT_FOUND, "Company not found", e)
                 else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Something went wrong", e)
             }
-
         }
     }
 
@@ -214,6 +243,19 @@ class CompanyController {
     fun getAllCompanies(): ResponseEntity<List<CompanyOutputDto>>{
         return try{
             val response = companyServices.getAllCompanies()
+            ResponseEntity.status(200).body(response)
+        }catch(e: Exception){
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
+        }
+    }
+
+    @GetMapping("/category")
+    fun getAllCompaniesByCategory(@RequestParam categories: String): ResponseEntity<List<Int>>{
+        return try{
+            val requestAttributes = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes
+            val request = requestAttributes.request
+            val bearerToken = request.getHeader("Authorization")?.removePrefix("Bearer ")
+            val response = companyServices.getCompaniesByCategories(categories)
             ResponseEntity.status(200).body(response)
         }catch(e: Exception){
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)

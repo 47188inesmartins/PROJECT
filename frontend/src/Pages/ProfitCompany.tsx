@@ -1,4 +1,4 @@
-import * as React from "react";
+/*import * as React from "react";
 import {MDBCard, MDBCardBody, MDBCardText, MDBCol, MDBContainer} from "mdb-react-ui-kit";
 import {BarChart, Bar, CartesianGrid, XAxis, YAxis, Rectangle, LabelList, Label} from 'recharts';
 import {Fetch} from "../Utils/useFetch";
@@ -113,3 +113,4 @@ export function Chart({ data }) {
 
 
 
+*/

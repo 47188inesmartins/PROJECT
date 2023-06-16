@@ -1,0 +1,26 @@
+/* SearchBar.css */
+
+.form-container {
+    display: flex;
+    align-items: center;
+}
+
+.input-field {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 8px;
+}
+
+.search-button {
+    padding: 8px 16px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.search-button:hover {
+    background-color: #45a049;
+}

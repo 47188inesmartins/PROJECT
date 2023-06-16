@@ -9,9 +9,11 @@ create table if not exists COMPANY (
    nif varchar(9) unique,
    address varchar(40),
    name varchar(20),
-   type varchar(30),
-   description varchar(300)
+   type varchar(100) check (type in ('BEAUTY','LIFESTYLE','FITNESS','BUSINESS','OTHERS')),
+   description varchar(300),
+   path_photo varchar(255)
 );
+
 
 create table if not exists COMPANY_NUMBERS(
     phone_number varchar(13),
@@ -26,6 +28,7 @@ create table if not exists SCH_USER (
     email varchar(50) unique CHECK (email LIKE '%@%'),
     password varchar(250),
     name varchar(200),
+    interests varchar(60),
     birthday date check (date(CURRENT_TIMESTAMP) >= birthday + interval '18 year'),
     availability varchar(15) not null default 'NONE' check (availability in ('AVAILABLE','UNAVAILABLE','NONE')),
     max_number_people int default 1

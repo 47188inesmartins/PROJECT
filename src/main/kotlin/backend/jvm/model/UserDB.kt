@@ -61,6 +61,9 @@ class UserDB {
         @OneToMany(mappedBy = "userDB")
         val unavailabilityDB : List<UnavailabilityDB>?
 
+        @Column(name = "interests")
+        val interests : String
+
         @ManyToMany
         @JoinTable(
                 name = "user_role",
@@ -95,6 +98,7 @@ class UserDB {
                 this.roles = listOf()
                 this.unavailabilityDB = listOf()
                 this.companies = listOf()
+                this.interests = ""
         }
 
         constructor(
@@ -106,7 +110,8 @@ class UserDB {
                 appointments: List<Appointment>?,
                 roles: List<Role>,
                 unavailabilityDB: List<UnavailabilityDB>?,
-                companies: List<UserCompany>?
+                companies: List<UserCompany>?,
+                interests: String
         ){
                 this.token = UUID.randomUUID()
                 this.email = email
@@ -119,6 +124,7 @@ class UserDB {
                 this.roles = roles
                 this.unavailabilityDB = unavailabilityDB
                 this.companies = companies
+                this.interests = interests
         }
 
         companion object{
