@@ -10,6 +10,7 @@ import backend.jvm.services.dto.ServiceOutputDto
 import backend.jvm.services.interfaces.IAppointmentServices
 import backend.jvm.utils.UserRoles
 import backend.jvm.utils.errorHandling.*
+import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.sql.Date
@@ -20,6 +21,7 @@ import java.util.Calendar.*
 
 
 @Service
+@Transactional
 class AppointmentServices : IAppointmentServices {
 
     @Autowired
@@ -37,6 +39,10 @@ class AppointmentServices : IAppointmentServices {
     @Autowired
     lateinit var unavailabilityRepository: UnavailabilityRepository
 
+    @Autowired
+    lateinit var dayRepository: DayRepository
+
+    @Transactional
     override fun addAppointment(appointment: AppointmentInputDto): AppointmentOutputDto {
         val service = servicesRepository.getServiceDBById(appointment.service)
             ?: throw ServiceNotFound()
@@ -105,18 +111,21 @@ class AppointmentServices : IAppointmentServices {
     }
 
 
-    override fun getAvailableServicesByAppointment(beginHour:String, date:String, companyId: Int):List<ServiceOutputDto>{
+    override fun getAvailableServicesByAppointment(beginHour:String, date:String, companyId: Int):List<ServiceOutputDto> {
         val bh = Time.valueOf(beginHour)
         val d = Date.valueOf(date)
-        val dur = Time.valueOf("00:30:00")
         val weekDay = getDayOfWeek(d)
-        val a  =  bh.toString()
-        val services = servicesRepository.getAvailableServicesByHour(weekDay, a, companyId)
+        val services = servicesRepository.getAvailableServicesByHour(weekDay, bh, companyId)
+        if(services.isEmpty()) return emptyList()
         val serv = services.filter {
-             userRepository.getAvailableEmployeesByService(it.id, d, bh, getEndHour(bh, dur)).isNotEmpty()
+             val day = dayRepository.getDayByServiceAndWeek(it.id, weekDay)
+             userRepository.getAvailableEmployeesByService(it.id, d, bh, getEndHour(bh, it.duration)).isNotEmpty() &&
+             ((day.beginHour < getEndHour(bh,it.duration) && getEndHour(bh,it.duration) < day.intervalBegin) ||
+              (day.intervalEnd!! < getEndHour(bh,it.duration) && getEndHour(bh,it.duration) < day.endHour))
         }
         return serv.map { ServiceOutputDto(it) }
     }
+
 
 
     fun getCurrentDate(): Date = Date.valueOf(LocalDate.now())

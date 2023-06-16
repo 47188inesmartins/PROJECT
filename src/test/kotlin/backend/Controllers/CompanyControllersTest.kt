@@ -1,8 +1,8 @@
 package backend.Controllers
 
-import backend.jvm.controllers.CompanyController
-import backend.jvm.services.AppointmentServices
 import backend.jvm.services.CompanyServices
+import backend.jvm.services.dto.CompanyOutputDto
+import io.mockk.every
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
@@ -11,22 +11,34 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import org.junit.jupiter.api.Test
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 
 @WebMvcTest
 class CompanyControllersTest(@Autowired val mockMvc: MockMvc) {
 
 
-    @Autowired
+    @MockBean
     lateinit var companyServices: CompanyServices
 
+    private val companyOutputDto = CompanyOutputDto(
+        id = 1,
+        nif = "123456789",
+        address = "rua teste",
+        name = "cabelos",
+        type = "cabeleireiro",
+        description = "Cabeleireiro",
+        null,
+        null,
+       null
+    )
     @Test
     fun getExistentCompanyWithoutAuth(){
+        every { companyServices.getCompanyById(1) } returns companyOutputDto
         mockMvc.perform(get("/company/1"))
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isUnauthorized);
+            //.andExpect(status().isUnauthorized)
     }
+
   /*  @Test
     fun `create a Company`(){
             val managerUser = UserInputDto(

@@ -28,7 +28,6 @@ dependencies {
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-	implementation("junit:junit:4.13.1")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("org.springframework.security:spring-security-core:5.7.3")
@@ -45,22 +44,19 @@ dependencies {
 	implementation("javax.persistence:javax.persistence-api:2.2")
 	implementation ("org.springframework.boot:spring-boot-starter-validation")
 	testImplementation(kotlin("test"))
-	testImplementation ("junit:junit:4.12")
 	testImplementation ("com.h2database:h2:2.1.214")
 
 	// for Geocoder
 	implementation ("com.google.maps:google-maps-services:2.1.2")
 
 	// JWT
-	implementation ("io.jsonwebtoken:jjwt:0.9.1")
-	implementation ("javax.servlet:javax.servlet-api:4.0.1")
-	implementation ("javax.servlet:jstl:1.2")
-	testImplementation ("org.springframework.boot:spring-boot-starter-test")
-
-		testImplementation ("org.junit.jupiter:junit-jupiter-engine")
-		testImplementation ("org.junit.jupiter:junit-jupiter-api")
-		testImplementation ("com.ninja-squad:springmockk:3.1.1")
-	//implementation ("org.springframework.boot:spring-boot-starter-security")
+	implementation("io.jsonwebtoken:jjwt:0.9.1")
+	implementation("javax.servlet:javax.servlet-api:4.0.1")
+	implementation("javax.servlet:jstl:1.2")
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("org.junit.jupiter:junit-jupiter-engine")
+	testImplementation("org.junit.jupiter:junit-jupiter-api")
+	testImplementation("com.ninja-squad:springmockk:3.1.1")
 }
 
 

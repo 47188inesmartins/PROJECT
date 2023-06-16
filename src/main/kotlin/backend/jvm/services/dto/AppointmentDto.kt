@@ -1,12 +1,8 @@
 package backend.jvm.services.dto
 
 import backend.jvm.model.*
-import backend.jvm.utils.errorHandling.AlreadyEmployee
 import java.sql.Date
 import java.sql.Time
-
-
-
 
 data class AppointmentInputDto(
     val appHour: String,
@@ -56,5 +52,13 @@ data class AppointmentInfo(
 data class AppointmentsUserInfo(
     val futureAppointments: List<AppointmentInfo> = emptyList(),
     val passedAppointments: List<AppointmentInfo> = emptyList()
+)
+
+data class AppointmentInfoEmployeeEnd(
+    val id: Int,
+    val appBeginHour: String,
+    val appEndHour:String,
+    val appDate: Date,
+    val employee: String
 )
 

@@ -107,21 +107,12 @@ export function MyCompany() {
             }
 
             <MyCalendar/>
-            <button className="btn btn-outline-light btn-lg px-5" type="submit"
-                    onClick={handleAddVacation} style={{backgroundColor: 'black'}}>Add vacation
-            </button>
-            <br/>
-            <button className="btn btn-outline-light btn-lg px-5" type="submit"
-                    onClick={handleAddEmployees} style={{backgroundColor: 'black'}}>Add employees
-            </button>
-            <br/>
-            <button className="btn btn-outline-light btn-lg px-5" type="submit"
-                    onClick={handleChangeSchedule} style={{backgroundColor: 'black'}}>Change schedule
-            </button>
-            <br/>
-            <button className="btn btn-outline-light btn-lg px-5" type="submit"
-                    onClick={handleAddServices} style={{backgroundColor: 'black'}}>Add services
-            </button>
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                <button className="btn btn-outline-light btn-lg px-5" type="submit" onClick={handleAddVacation} style={{ backgroundColor: 'black', marginRight: '10px' }}>Add vacation</button>
+                <button className="btn btn-outline-light btn-lg px-5" type="submit" onClick={handleAddEmployees} style={{ backgroundColor: 'black', marginRight: '10px' }}>Add employees</button>
+                <button className="btn btn-outline-light btn-lg px-5" type="submit" onClick={handleChangeSchedule} style={{ backgroundColor: 'black', marginRight: '10px' }}>Change schedule</button>
+                <button className="btn btn-outline-light btn-lg px-5" type="submit" onClick={handleAddServices} style={{ backgroundColor: 'black', marginRight: '10px' }}>Add services</button>
+            </div>
        </div>
     );
 }

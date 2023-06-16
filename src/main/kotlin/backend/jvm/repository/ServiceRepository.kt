@@ -1,7 +1,6 @@
 package backend.jvm.repository
 
 import backend.jvm.model.ServiceDB
-import backend.jvm.model.UserDB
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
@@ -38,13 +37,20 @@ interface ServiceRepository : JpaRepository<ServiceDB, Int> {
     ):List<Pair<ServiceDB, Time>>
 
 
-    @Query(value = "select s.id,s.service_name,s.duration,s.number_max,s.price,s.company_id " +
-            "from service s inner join SERVICE_DAY d on s.id = d.service_id inner join sch_day sd on sd.id = d.day_id and sd.week_days = :weekDay " +
-            "and (:beginHour between sd.begin_hour and interval_begin or :beginHour between  interval_end and sd.end_hour) " +
-            "and (TIME :beginHour + (s.duration || ' minutes')::INTERVAL between sd.begin_hour and interval_begin " +
-            "or TIME :beginHour + (s.duration || ' minutes')::INTERVAL between  interval_end and sd.end_hour) " +
-            "and s.company_id = :companyId ", nativeQuery = true)
-    fun getAvailableServicesByHour(@Param("weekDay") weekDay: String, @Param("beginHour") beginHour: String, @Param("companyId") companyId: Int): List<ServiceDB>
+    @Query(
+        value = "SELECT s.id, s.service_name, s.duration, s.number_max, s.price, s.company_id " +
+                "FROM service s " +
+                "INNER JOIN service_day d ON s.id = d.service_id " +
+                "INNER JOIN sch_day sd ON sd.id = d.day_id AND sd.week_days = :weekDay " +
+                "AND (:beginHour BETWEEN sd.begin_hour AND sd.interval_begin OR :beginHour BETWEEN sd.interval_end AND sd.end_hour) " +
+                "AND s.company_id = :companyId", nativeQuery = true
+    )
+    fun getAvailableServicesByHour(
+        @Param("weekDay") weekDay: String,
+        @Param("beginHour") beginHour: Time,
+        @Param("companyId") companyId: Int
+    ): List<ServiceDB>
+
 
     @Query(value = "select sum(s.price) as money from service s  " +
             "inner join USER_SERVICE US on s.id = US.service_id and US.user_id = :userId and s.company_id = :company " +
@@ -55,4 +61,6 @@ interface ServiceRepository : JpaRepository<ServiceDB, Int> {
 
     @Query(value = "select * from service s where s.company_id = :company ", nativeQuery = true)
     fun getServiceDBByHourAndDate(@Param("company") company: Int):List<ServiceDB>
+    @Query(value = "select s.id,s.service_name,s.duration,s.number_max,s.price,s.company_id from service s inner join appointment a on a.service_id = s.id and a.id = :appointment ", nativeQuery = true)
+    fun getServiceDBByAppointment(@Param("appointment") appointment: Int): ServiceDB
 }

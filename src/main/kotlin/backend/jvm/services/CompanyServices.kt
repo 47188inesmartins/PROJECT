@@ -158,10 +158,25 @@ class CompanyServices : ICompanyServices {
         return earnedMoney
     }
 
-    fun getAppointmentsByCompany(cid: Int): List<AppointmentOutputDto> {
+    fun getAppointmentsByCompany(cid: Int): List<AppointmentInfoEmployeeEnd> {
         val schedule =  scheduleRepository.getScheduleByCompany_Id(cid)?: throw InvalidSchedule()
         val appointments = appointmentRepository.getAppointmentsBySchedule(schedule.id)
-        return appointments.map { AppointmentOutputDto(it) }
+        if(appointments.isEmpty()) return emptyList()
 
+        return appointments.map {
+            val service = serviceRepository.getServiceDBByAppointment(it.id)
+            val employee  = it.usersDB?.firstOrNull { user ->
+                val role = usersRepository.getUserRoleByCompany(user.id,cid)
+                (role == UserRoles.EMPLOYEE.name ||role == UserRoles.MANAGER.name)
+            } ?: throw UserNotFound()
+            val endHour = Time(it.appHour.time + service.duration.time)
+            AppointmentInfoEmployeeEnd(
+                it.id,
+                it.appHour.toString(),
+                endHour.toString(),
+                it.appDate,
+                employee.name
+            )
+        }
     }
 }

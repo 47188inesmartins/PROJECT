@@ -13,12 +13,16 @@ import kotlinx.serialization.json.jsonPrimitive
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.util.StringUtils
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.context.request.RequestContextHolder
 import org.springframework.web.context.request.ServletRequestAttributes
+import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.server.ResponseStatusException
 import java.util.*
-
+import java.io.IOException
+import java.nio.file.Files
+import java.nio.file.Paths
 @RestController
 @RequestMapping(("/company"))
 class CompanyController {
@@ -284,6 +288,43 @@ class CompanyController {
                 .body(response)
         }catch(e: Exception){
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
+        }
+    }
+
+    @RoleManager(["MANAGER","EMPLOYEE"])
+    @GetMapping("{cid}/appointments-list")
+    fun getAllAppointmentsByCompany(@PathVariable cid: Int): ResponseEntity<List<AppointmentInfoEmployeeEnd>>{
+        return try {
+            val response = companyServices.getAppointmentsByCompany(cid)
+            ResponseEntity
+                .status(200)
+                .body(response)
+        }catch(e: Exception){
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
+        }
+    }
+
+    @PostMapping("{id}/upload")
+    fun uploadPhoto(@RequestParam("file") file: MultipartFile, @PathVariable id: String): ResponseEntity<String> {
+        if (file.isEmpty) {
+            return ResponseEntity.badRequest().body("Select a file to upload")
+        }
+
+        val fileName = StringUtils.cleanPath(file.originalFilename!!)
+        val uploadDir = "uploads" // Dir to save the upload Files
+
+        try {
+            Files.createDirectories(Paths.get(uploadDir))//if dir does not exist
+
+            val uniqueFileName = UUID.randomUUID().toString() + "_" + fileName
+
+            // Saves the file
+            val filePath = Paths.get(uploadDir, uniqueFileName).toAbsolutePath().normalize()
+            Files.copy(file.inputStream, filePath)
+
+            return ResponseEntity.ok().body("Your photo was uploaded")
+        } catch (ex: IOException) {
+            return ResponseEntity.status(500).body("Something went wrong try again")
         }
     }
 }

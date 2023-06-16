@@ -135,9 +135,10 @@ function PopUpMessage(props:{id:string|undefined,date:Date,hour:string}) {
 
 function FetchAvailableServices(props:{id:string,date:Date,hour:string}){
     console.log("")
-    //const response = Fetch(`/company/${props.id}/appointment/services/availability?hour_begin=${props.hour}&date=${props.date}`,'GET')
+    const response = Fetch(`/company/${props.id}/appointment/services/availability?hour_begin=${props.hour}&date=${props.date}`,'GET')
 
-    const response = Fetch(`/company/${props.id}/services`,'GET')
+    console.log(response)
+    //const response = Fetch(`/company/${props.id}/services`,'GET')
 
 
     function PopUpEmployees(){
@@ -149,7 +150,7 @@ function FetchAvailableServices(props:{id:string,date:Date,hour:string}){
     return  <Modal.Body>
         {response.response ?
             <>{response.response.length === 0 ?
-                <></> :
+                <> no available services </> :
                     <>
                         {
                             response.response.map((service) => (

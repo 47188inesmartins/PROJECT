@@ -1,5 +1,5 @@
 .rbc-btn-group button {
-    background-color: pink;
+    background-color: #ccf3dc;
     color: white;
     border: none;
     border-radius: 4px;
@@ -7,20 +7,26 @@
     margin-right: 4px;
     cursor: pointer;
 }
+.rbc-btn-group button {
+    background-color: #ccf3dc;
+    color: white;
+    border: none;
+    border-radius: 50%; /* Defina a borda dos botões como redonda */
+    padding: 4px 8px;
+    margin-right: 4px;
+    cursor: pointer;
+}
 
 .rbc-btn-group button:hover {
-    background-color: #ff69b4;
+    background-color: #ccf3dc;
 }
 
-.rbc-month-view .rbc-month-row {
-    background-color: white;
-}
 .rbc-month-view .rbc-day-bg:hover .rbc-day-bg-inner {
     background-color: pink;
 }
 
 .rbc-month-view .rbc-day-bg:hover {
-    background-color: pink;
+    background-color: #ccf3dc;
 }
 
 /* MyCalendar.css */
