@@ -134,7 +134,7 @@ function CompanyRole(props:{role:String,Text:String}) {
                         <MDBCardBody>
                             <MDBCardText className="mb-4">{props.Text}</MDBCardText>
                             { resp.response.map((object: any) => (
-                                <a href={`/company/${object.id}/managing`} className="mb-1"  style={{ fontSize: '1.2rem' }}>
+                                <a href={`/company/${object.id}/profile`} className="mb-1"  style={{ fontSize: '1.2rem' }}>
                                     <MDBCardText>{object.name}</MDBCardText>
                                 </a>
                             ))}

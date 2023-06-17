@@ -5,6 +5,7 @@ import backend.jvm.repository.CompanyRepository
 import backend.jvm.repository.ServiceRepository
 import backend.jvm.repository.UserCompanyRepository
 import backend.jvm.repository.UserRepository
+import backend.jvm.services.dto.DayInputDto
 import backend.jvm.services.dto.ServiceInputDto
 import backend.jvm.services.dto.ServiceOutputDto
 import backend.jvm.services.interfaces.IServServices
@@ -12,6 +13,7 @@ import backend.jvm.utils.errorHandling.InvalidUser
 import backend.jvm.utils.errorHandling.UserNotFound
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.springframework.web.bind.annotation.RequestBody
 import java.sql.Date
 import java.sql.Time
 import java.time.Duration
@@ -45,14 +47,6 @@ class ServServices : IServServices {
         return ServiceOutputDto(serv!!)
     }
 
-    /*override fun getAvailableEmployeesByService(id: Int, hourBegin: String, hourEnd: String, date: String): List<UserOutputDto>{
-        val hb = Time.valueOf(hourBegin)
-        val he = Time.valueOf(hourEnd)
-        val d = Date.valueOf(date)
-        val users = userRepository.getAvailableEmployeesByService(id, d, hb, he)
-        return users.map { UserOutputDto(it) }
-    }*/
-
     override fun changePrice(idService: Int,price: Double):Long{
         return serviceRepository.updatePrice(idService,price)
     }
@@ -70,4 +64,9 @@ class ServServices : IServServices {
         if(services.isEmpty()) return emptyList()
         return services.map { ServiceOutputDto(it) }
     }
+
+    fun changeSchedule(id: Int, day: List<DayInputDto>){
+        //TODO()
+    }
+
 }

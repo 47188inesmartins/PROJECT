@@ -17,6 +17,9 @@ import {Signup} from "../Pages/Signup";
 import {ProfitCompany} from "../Pages/ProfitCompany";
 import UploadPhoto from "../Pages/UploadPhoto";
 import {Search} from "../Pages/Search";
+import {CompanyProfile} from "../Pages/CompanyProfile";
+import {EditServiceSchedule} from "../Pages/EditServiceSchedule";
+//import {ProfitCompany} from "../Pages/ProfitCompany";
 
 
 const router = createBrowserRouter([{
@@ -79,9 +82,17 @@ const router = createBrowserRouter([{
             "element": <Search/>
         },
         {
+            "path": "/company/:id/profile",
+            "element": <CompanyProfile/>
+        },
+        {
+            "path": "/service/:id/schedule",
+            "element": <EditServiceSchedule/>
+        },
+       /* {
             "path": "/company/profits",
             "element": <ProfitCompany/>
-        },
+        },*/
         {
             "path": "/company/:id/upload-file",
             "element": <UploadPhoto/>

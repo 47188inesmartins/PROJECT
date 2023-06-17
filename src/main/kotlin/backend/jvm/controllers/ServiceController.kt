@@ -2,6 +2,7 @@ package backend.jvm.controllers
 
 import backend.jvm.model.ServiceDB
 import backend.jvm.services.ServServices
+import backend.jvm.services.dto.DayInputDto
 import backend.jvm.services.dto.ServiceInputDto
 import backend.jvm.services.dto.ServiceOutputDto
 import backend.jvm.services.dto.UserOutputDto
@@ -51,26 +52,23 @@ class ServiceController {
     }
 
 
- /*   @RoleManager(["MANAGER", "EMPLOYEE"])
-    @GetMapping("{id}/employees")
-    fun getAvailableEmployees(@RequestParam("date") date: String, @RequestParam("beginHour") beginHour: String, @RequestParam("endHour") endHour: String,
-                              @PathVariable id: Int
-    ): ResponseEntity<List<UserOutputDto>>{
-        println("id = $id")
-        return try{
-            val response = servServices.getAvailableEmployees(id, beginHour, endHour, date)
-            ResponseEntity.status(200)
-                .body(response)
-        }catch (e: Exception){
-            println("exception = $e")
-            ResponseEntity.status(400).body(null)
-        }
-    }
-*/
     @PutMapping("/{id}/price")
     fun updatePrice(@PathVariable id: Int, @RequestParam price: Double): ResponseEntity<Long> {
         return try {
             val response = servServices.changePrice(id, price)
+            ResponseEntity.status(200)
+                .body(response)
+        }catch(e: Exception){
+            ResponseEntity.status(400)
+                .body(null)
+        }
+    }
+
+
+    @PostMapping("/{id}/schedule")
+    fun updateSchedule(@PathVariable id: Int, @RequestBody day: List<DayInputDto>) {
+        try {
+            val response = servServices.changeSchedule(id, day)
             ResponseEntity.status(200)
                 .body(response)
         }catch(e: Exception){
@@ -99,7 +97,6 @@ class ServiceController {
     fun deleteServices(@RequestBody serviceDB: ServiceDB): ResponseEntity<String> {
         return try {
              servServices.deleteService(serviceDB)
-
              ResponseEntity.status(200)
                 .body("Service was deleted")
         }catch(e: Exception){

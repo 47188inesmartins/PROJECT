@@ -13,14 +13,19 @@ import {
 import {Fetch} from "../Utils/useFetch";
 import {useContext} from "react";
 import {LoggedInContextCookie} from "../Authentication/Authn";
+import {useParams} from "react-router-dom";
 
 
 export function CompanyProfile() {
 
     const token = useContext(LoggedInContextCookie).loggedInState.role
 
+    const params = useParams()
+    const id = params.id
+
+
     const check = (token !== "GUEST" && token !== "CLIENT")
-    const response = Fetch('/user/info','GET')
+    const response = Fetch(`/company/${id}`,'GET')
 
     return (
         <div>
@@ -38,7 +43,7 @@ export function CompanyProfile() {
                                 <MDBCol>
                                     <MDBBreadcrumb className="bg-light rounded-3 p-3 mb-4">
                                         <MDBBreadcrumbItem>
-                                            <a style={{color: "black", flex: 'center'}}>My Profile</a>
+                                            <a style={{color: "black", flex: 'center'}}>{response.response.name}</a>
                                         </MDBBreadcrumbItem>
                                     </MDBBreadcrumb>
                                 </MDBCol>
@@ -53,15 +58,18 @@ export function CompanyProfile() {
                                                 className="rounded-circle"
                                                 style={{ width: '150px' }}
                                                 fluid />
-                                            <p className="text-muted mb-1">{response.response.name}</p>
-
                                         </MDBCardBody>
                                     </MDBCard>
                                     <MDBCard className="mb-4 mb-md-0">
                                         <MDBCardBody>
-                                            <MDBCardText className="mb-4">My wallet </MDBCardText>
-                                            <a href={`/company/profits`} className="mb-1"  style={{ fontSize: '1.2rem' }}>
-                                                <MDBCardText> Check your profits </MDBCardText>
+                                            <a href={`/company/${id}/employees`} className="mb-1"  style={{ fontSize: '1.2rem' }}>
+                                                <MDBCardText> Add employees </MDBCardText>
+                                            </a>
+                                            <a href={`/company/${id}/vacation`} className="mb-1"  style={{ fontSize: '1.2rem' }}>
+                                                <MDBCardText> Add vacations </MDBCardText>
+                                            </a>
+                                            <a href={`/company/${id}/services`} className="mb-1"  style={{ fontSize: '1.2rem' }}>
+                                                <MDBCardText> Add services </MDBCardText>
                                             </a>
                                         </MDBCardBody>
                                     </MDBCard>
@@ -80,27 +88,72 @@ export function CompanyProfile() {
                                             <hr />
                                             <MDBRow>
                                                 <MDBCol sm="3">
-                                                    <MDBCardText>Email</MDBCardText>
+                                                    <MDBCardText>Address</MDBCardText>
                                                 </MDBCol>
                                                 <MDBCol sm="9">
-                                                    <MDBCardText className="text-muted">{response.response.email}</MDBCardText>
+                                                    <MDBCardText className="text-muted">{response.response.address}</MDBCardText>
+                                                </MDBCol>
+                                            </MDBRow>
+                                            <hr/>
+                                            <MDBRow>
+                                                <MDBCol sm="3">
+                                                    <MDBCardText>Type</MDBCardText>
+                                                </MDBCol>
+                                                <MDBCol sm="9">
+                                                    <MDBCardText className="text-muted">{response.response.type}</MDBCardText>
                                                 </MDBCol>
                                             </MDBRow>
                                             <hr />
                                             <MDBRow>
                                                 <MDBCol sm="3">
-                                                    <MDBCardText>Birthday</MDBCardText>
+                                                    <MDBCardText>Description</MDBCardText>
                                                 </MDBCol>
                                                 <MDBCol sm="9">
-                                                    <MDBCardText className="text-muted">{response.response.birthday}</MDBCardText>
+                                                    <MDBCardText className="text-muted">{response.response.description}</MDBCardText>
                                                 </MDBCol>
+                                            </MDBRow>
+                                            <hr />
+                                            <MDBRow>
+                                                <MDBCol sm="3">
+                                                    <MDBCardText>Service</MDBCardText>
+                                                </MDBCol>
+                                                {response.response.service.map((object: any) => (
+                                                    <MDBCol sm="9">
+                                                        <MDBCardText>{object.name}</MDBCardText>
+                                                    </MDBCol>
+                                                ))}
                                             </MDBRow>
                                         </MDBCardBody>
                                     </MDBCard>
                                     {check?
                                         <MDBRow>
-                                            <CompanyRole role={"MANAGER"} Text={"My managing companies"}/>
-                                            <CompanyRole role={"EMPLOYEE"} Text={"Works for"}/>
+                                            <MDBCol md="6">
+                                                <MDBCard className="mb-4 mb-md-0">
+                                                    <MDBCardBody>
+                                                        <MDBCardText className="mb-4">Services</MDBCardText>
+                                                        {response.response.service.map((object: any) => (
+                                                            <div className="d-flex justify-content-between align-items-center">
+                                                                <a style={{ fontSize: '1.2rem' }}>
+                                                                    <MDBCardText>{object.name}</MDBCardText>
+                                                                </a>
+                                                                <a href={`/service/${object.id}/schedule`} className="mb-1" >
+                                                                    <MDBCardText>Edit</MDBCardText>
+                                                                </a>
+                                                            </div>
+                                                        ))}
+                                                    </MDBCardBody>
+                                                </MDBCard>
+                                            </MDBCol>
+                                            <MDBCol md="6">
+                                                <MDBCard className="mb-4 mb-md-0">
+                                                    <MDBCardBody>
+                                                        <MDBCardText className="mb-4">Check {response.response.name}'s schedule</MDBCardText>
+                                                        <a href={`/company/${id}/managing`} className="mb-1" >
+                                                            <MDBCardText>Schedule</MDBCardText>
+                                                        </a>
+                                                    </MDBCardBody>
+                                                </MDBCard>
+                                            </MDBCol>
                                         </MDBRow>:
                                         <></>
                                     }

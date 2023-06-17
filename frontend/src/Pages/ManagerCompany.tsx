@@ -5,7 +5,6 @@ import {useState} from "react";
 import MyCalendar from "./AdvancedCalendar";
 import "../Style/Test.css";
 import _default from "chart.js/dist/plugins/plugin.tooltip";
-import backgroundColor = _default.defaults.backgroundColor;
 
 export function MyCompany() {
     const a = useParams()
@@ -105,14 +104,7 @@ export function MyCompany() {
             :
             <FetchChangeSchedule/>
             }
-
             <MyCalendar/>
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-                <button className="btn btn-outline-light btn-lg px-5" type="submit" onClick={handleAddVacation} style={{ backgroundColor: 'black', marginRight: '10px' }}>Add vacation</button>
-                <button className="btn btn-outline-light btn-lg px-5" type="submit" onClick={handleAddEmployees} style={{ backgroundColor: 'black', marginRight: '10px' }}>Add employees</button>
-                <button className="btn btn-outline-light btn-lg px-5" type="submit" onClick={handleChangeSchedule} style={{ backgroundColor: 'black', marginRight: '10px' }}>Change schedule</button>
-                <button className="btn btn-outline-light btn-lg px-5" type="submit" onClick={handleAddServices} style={{ backgroundColor: 'black', marginRight: '10px' }}>Add services</button>
-            </div>
        </div>
     );
 }

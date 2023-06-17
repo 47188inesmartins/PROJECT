@@ -80,13 +80,11 @@ export function Layout() {
                                         </NavLink>
                                     </CDBSidebarMenu>
                                 </CDBSidebarContent>
-                                <CDBSidebarFooter>
                                     <div style={{ position: 'absolute', bottom: '0', width: '100%' }}>
                                         <NavLink to="/">
-                                            <button onClick={handleLogout}> Logout </button>
+                                            <CDBSidebarMenuItem><button onClick={handleLogout}> Logout </button></CDBSidebarMenuItem>
                                         </NavLink>
                                     </div>
-                                </CDBSidebarFooter>
                             </div>
                             :
                             <div>
