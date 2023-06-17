@@ -1,9 +1,7 @@
 import * as React from "react";
 import {useState} from "react";
 import {Fetch} from "../Utils/useFetch";
-import {Navigate} from "react-router";
 import "../Style/CreatingCompany.css"
-import {useParams} from "react-router-dom";
 import { Dropdown } from "react-bootstrap";
 
 
@@ -89,6 +87,7 @@ export function CreatingCompany(){
                                                 website!</h2>
                                             <div className="form-outline form-white mb-4">
                                                 <input
+                                                    required={true}
                                                     type="text"
                                                     id="typeEmailX"
                                                     className="form-control form-control-lg"
@@ -119,6 +118,7 @@ export function CreatingCompany(){
                                             </div>
                                             <div className="form-outline form-white mb-4">
                                                 <input
+                                                    required={true}
                                                     type="text"
                                                     id="typePasswordX"
                                                     className="form-control form-control-lg"
@@ -129,6 +129,7 @@ export function CreatingCompany(){
                                             </div>
                                             <div className="form-outline form-white mb-4">
                                                 <input
+                                                    required={true}
                                                     type="text"
                                                     id="typePasswordX"
                                                     className="form-control form-control-lg"
@@ -139,6 +140,7 @@ export function CreatingCompany(){
                                             </div>
                                             <div className="form-outline form-white mb-4">
                                                 <input
+                                                    required={true}
                                                     type="text"
                                                     id="typePasswordX"
                                                     className="form-control form-control-lg"

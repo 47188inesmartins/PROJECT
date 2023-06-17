@@ -15,7 +15,8 @@ import {useContext} from "react";
 import {LoggedInContextCookie} from "../Authentication/Authn";
 
 
-export function ProfilePage() {
+export function CompanyProfile() {
+
     const token = useContext(LoggedInContextCookie).loggedInState.role
 
     const check = (token !== "GUEST" && token !== "CLIENT")
@@ -29,7 +30,8 @@ export function ProfilePage() {
                         <div className="spinner-border" role="status">
                             <span className="sr-only">Loading...</span>
                         </div>
-                    </div> :
+                    </div>
+                    :
                     <section style={{ backgroundColor: '#eee' }}>
                         <MDBContainer className="py-5">
                             <MDBRow>

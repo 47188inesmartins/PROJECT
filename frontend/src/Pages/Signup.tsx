@@ -27,7 +27,8 @@ interface UserCredentials{
     name: string,
     birthday:string
     email: string,
-    password: string
+    password: string,
+    interests: string
 }
 
 
@@ -39,20 +40,20 @@ export function Signup() {
     const [password, setPassword] = useState<string>("")
     const [submit, setSubmit] = useState<boolean>(false)
     const categories = ['BEAUTY', 'LIFESTYLE', 'FITNESS', 'BUSINESS', 'EDUCATION', 'OTHERS'];
-    const [selectedCategories, setSelectedCategories] = useState("");
+    const [interests, setInterests] = useState("");
 
     const handleCategoryClick = (category) => {
-        if (selectedCategories.includes(category)) {
-            const updatedCategories = selectedCategories
+        if (interests.includes(category)) {
+            const updatedCategories = interests
                 .split(",")
                 .filter((cat) => cat !== category)
                 .join(",");
-            setSelectedCategories(updatedCategories);
+            setInterests(updatedCategories);
         } else {
-            const updatedCategories = selectedCategories
-                ? selectedCategories + "," + category
+            const updatedCategories = interests
+                ? interests + "," + category
                 : category;
-            setSelectedCategories(updatedCategories);
+            setInterests(updatedCategories);
         }
     };
 
@@ -68,7 +69,8 @@ export function Signup() {
             name,
             birthday,
             email,
-            password
+            password,
+            interests
         }
         const resp = Fetch("/user", 'POST', userCredentials).response
         if(!resp) return(<p>...loading...</p>);
@@ -153,7 +155,7 @@ export function Signup() {
                                                 key={category}
                                                 onClick={() => handleCategoryClick(category)}
                                                 style={{
-                                                    backgroundColor: selectedCategories.includes(category) ? "pink" : "white",
+                                                    backgroundColor: interests.includes(category) ? "pink" : "white",
                                                     padding: "8px 16px",
                                                     border: "1px solid pink",
                                                     borderRadius: "4px",

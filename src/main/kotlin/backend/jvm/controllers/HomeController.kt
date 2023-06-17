@@ -3,11 +3,9 @@ package backend.jvm.controllers
 
 
 import backend.jvm.services.UserServices
-import com.fasterxml.jackson.databind.ObjectMapper
-import kotlinx.serialization.json.Json
+import backend.jvm.services.dto.CompanyOutputDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
-import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.context.request.RequestContextHolder
@@ -23,13 +21,14 @@ class HomeController {
     lateinit var userServices: UserServices
 
 
+
     @GetMapping
-    fun home(): ResponseEntity<List<Int>> {
-        return try {
+    fun home(): ResponseEntity<List<CompanyOutputDto>> {
+        return try{
             val requestAttributes = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes
             val request = requestAttributes.request
             val bearerToken = request.getHeader("Authorization")?.removePrefix("Bearer ")
-            val response = bearerToken?.let { userServices.getPersonalizedCompanies(it) }
+            val response = userServices.getPersonalizedCompanies(bearerToken)
             ResponseEntity
                 .status(HttpStatus.OK)
                 .header("Content-Type","application/json")

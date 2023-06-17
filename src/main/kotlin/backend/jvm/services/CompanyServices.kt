@@ -49,7 +49,6 @@ class CompanyServices : ICompanyServices {
         return companyRepository.getCompanyBySearch("%${search}%")?.map { CompanyOutputDto(it) }
     }
 
-
     override fun addCompany(token: String, company: CompanyInputDto): CompanyOutputDto {
 
         val managerUser = usersRepository.getUserByToken(UUID.fromString(token))?: throw UserNotFound()
@@ -80,10 +79,6 @@ class CompanyServices : ICompanyServices {
         return CompanyOutputDto(comp)
     }
 
-    fun getCompaniesByCategories(categories: String):List<Int>?{
-        val categoriesArray = categories.split(",").toTypedArray()
-        return companyRepository.getCompaniesByCategory(categoriesArray)
-    }
 
     override fun getCompanyByNif(nif: String): Company? {
         return companyRepository.findCompanyByNif(nif) ?: throw CompanyNotFound()
@@ -141,7 +136,6 @@ class CompanyServices : ICompanyServices {
 
     fun getAllEmployeesByCompanyAndMoney(cid: Int): List<Pair<UserInfo,Double>>{
         val employees = usersRepository.getUserEmployeesByCompany(cid) ?: throw EmployeeNotFound()
-
         val dateEnd = Date(System.currentTimeMillis())
         val currentDate = Date(System.currentTimeMillis())
         val calendar = Calendar.getInstance()
@@ -158,7 +152,7 @@ class CompanyServices : ICompanyServices {
         return earnedMoney
     }
 
-    fun getAppointmentsByCompany(cid: Int): List<AppointmentInfoEmployeeEnd> {
+    fun getAppointmentsByCompany(cid: Int): List<AppointmentInfoEmployeeEnd>{
         val schedule =  scheduleRepository.getScheduleByCompany_Id(cid)?: throw InvalidSchedule()
         val appointments = appointmentRepository.getAppointmentsBySchedule(schedule.id)
         if(appointments.isEmpty()) return emptyList()

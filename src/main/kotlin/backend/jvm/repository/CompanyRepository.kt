@@ -1,6 +1,7 @@
 package backend.jvm.repository
 
 import backend.jvm.model.*
+import backend.jvm.services.dto.CompanyOutputDto
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
@@ -9,8 +10,8 @@ import java.util.*
 
 interface CompanyRepository : JpaRepository<Company, Int>{
 
-    @Query(value = "SELECT c.id FROM COMPANY c WHERE type = ANY(:categories)", nativeQuery = true)
-    fun getCompaniesByCategory(@Param("categories") categories: Array<String>): List<Int>?
+    @Query(value = "SELECT * FROM COMPANY c WHERE type = ANY(:categories)", nativeQuery = true)
+    fun getCompaniesByCategory(@Param("categories") categories: Array<String>): List<Company>?
 
     @Query(name = "getCompanyById")
     fun findAllById(id: Int): Company?

@@ -21,7 +21,11 @@ export function Home() {
     const searchValue = getQueryParam('search');
     console.log(searchValue); // Saída: "abcdefg"
 
-    const response = Fetch(`/company/search?search=${searchValue}`, "GET");
+    var response
+
+    if(searchValue !== null)
+        response = Fetch(`/company/search?search=${searchValue}`, "GET");
+    else response = Fetch('/', "GET");
     console.log("response = ", response)
 
 
