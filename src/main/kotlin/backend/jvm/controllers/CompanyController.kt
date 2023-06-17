@@ -275,27 +275,26 @@ class CompanyController {
         }
     }
 
-    @PostMapping("{id}/upload")
-    fun uploadPhoto(@RequestParam("file") file: MultipartFile, @PathVariable id: String): ResponseEntity<String> {
-        if (file.isEmpty) {
-            return ResponseEntity.badRequest().body("Select a file to upload")
-        }
+    //@RoleManager(["MANAGER","EMPLOYEE"])
+    @PostMapping("/{cid}/upload")
+    fun uploadPhoto(@RequestParam("fileName") fileName: String, @PathVariable cid: Int): ResponseEntity<String> {
 
-        val fileName = StringUtils.cleanPath(file.originalFilename!!)
-        val uploadDir = "uploads" // Dir to save the upload Files
+        val uploadDir = "uploads" // Diretório para salvar os arquivos enviados
 
-        try {
-            Files.createDirectories(Paths.get(uploadDir))//if dir does not exist
+        return try {
+            Files.createDirectories(Paths.get(uploadDir)) // Cria o diretório se não existir
 
-            val uniqueFileName = UUID.randomUUID().toString() + "_" + fileName
-
-            // Saves the file
-            val filePath = Paths.get(uploadDir, uniqueFileName).toAbsolutePath().normalize()
-            Files.copy(file.inputStream, filePath)
-
-            return ResponseEntity.ok().body("Your photo was uploaded")
+            if (fileName.isNotEmpty()) {
+                val uniqueFileName = UUID.randomUUID().toString() + "_" + fileName
+                // Lógica de processamento do nome do arquivo aqui
+                companyServices.uploadPhoto(cid,uniqueFileName)
+                ResponseEntity.ok().body("Your photo was uploaded: $uniqueFileName")
+            } else {
+                ResponseEntity.badRequest().body("Invalid file name")
+            }
         } catch (ex: IOException) {
-            return ResponseEntity.status(500).body("Something went wrong try again")
+            ResponseEntity.status(400).body("Something went wrong. Please try again")
         }
     }
+
 }

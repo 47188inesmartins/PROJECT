@@ -21,9 +21,9 @@ data class UserOutputDto(
         val password: String,
         val name: String,
         val birthday: String,
-        val availability: String?,
+        val address: String,
         val companyId: List<Int?>?,
-        val services: List<Int>
+        val services: List<Int>,
 ){
         constructor(userDB: UserDB): this(
                 id = userDB.id,
@@ -31,8 +31,8 @@ data class UserOutputDto(
                 email = userDB.email,
                 password = userDB.password,
                 name = userDB.name,
+                address = userDB.address,
                 birthday = userDB.birthday.toString(),
-                availability = userDB.availability,
                 companyId = userDB.companies?.map { it.company?.id },
                 services = userDB.services?.map { it.id }?: emptyList()
         )
@@ -49,6 +49,7 @@ data class UserInputDto(
         val name: String,
         val birthday: String,
         val availability: String?,
+        val address: String,
         val companyId: Int?,
         val services: List<Int>?,
         val appointment: List<Int>?,
@@ -62,6 +63,7 @@ data class UserInputDto(
                       clientName = dto.name,
                       birth = Date.valueOf(dto.birthday),
                       serv = services,
+                      address = address,
                       companies = comp,
                       appointments = appointment,
                       roles = roles,

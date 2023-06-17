@@ -100,6 +100,9 @@ class CompanyServices : ICompanyServices {
         return companyRepository.getAppointmentsByDateAndHour(id, d, h).map { AppointmentOutputDto(it) }
     }
 
+    fun uploadPhoto(cid: Int, path: String) {
+        companyRepository.updatePhotoPath(cid,path)
+    }
     override fun getOpenDaysByCompany(id: Int): List<DayOutputDto>{
         return dayRepository.getOpenDays(id).map { DayOutputDto(it) }
     }

@@ -28,7 +28,8 @@ interface UserCredentials{
     birthday:string
     email: string,
     password: string,
-    interests: string
+    interests: string,
+    address: string
 }
 
 
@@ -41,6 +42,7 @@ export function Signup() {
     const [submit, setSubmit] = useState<boolean>(false)
     const categories = ['BEAUTY', 'LIFESTYLE', 'FITNESS', 'BUSINESS', 'EDUCATION', 'OTHERS'];
     const [interests, setInterests] = useState("");
+    const [address,SetAddress] = useState("");
 
     const handleCategoryClick = (category) => {
         if (interests.includes(category)) {
@@ -70,7 +72,8 @@ export function Signup() {
             birthday,
             email,
             password,
-            interests
+            interests,
+            address
         }
         const resp = Fetch("/user", 'POST', userCredentials).response
         if(!resp) return(<p>...loading...</p>);
@@ -107,6 +110,7 @@ export function Signup() {
                                               type='text'
                                               size="lg"
                                               value={name}
+                                              required={true}
                                               onChange={(e) => {
                                                 console.log(e.target.value)
                                                   setName(e.target.value)
@@ -121,7 +125,22 @@ export function Signup() {
                                               type='date'
                                               size="lg"
                                               value={birthday}
+                                              required={true}
                                               onChange={(e) => setBirthday(e.target.value)}
+                                    />
+
+                                    <MDBInput wrapperClass='mb-4 mx-5 w-100'
+                                              labelClass='text-white'
+                                              label='Address'
+                                              id='formControlLg'
+                                              type='email'
+                                              size="lg"
+                                              value={address}
+                                              required={true}
+                                              onChange={(e) => {SetAddress(e.target.value)
+                                        console.log(e.target.value)}
+                                    }
+
                                     />
 
                                     <MDBInput wrapperClass='mb-4 mx-5 w-100'
@@ -131,12 +150,12 @@ export function Signup() {
                                               type='email'
                                               size="lg"
                                               value={email}
+                                              required={true}
                                               onChange={(e) => {setEmail(e.target.value)
-                                        console.log(e.target.value)}
-                                    }
+                                                  console.log(e.target.value)}
+                                              }
 
                                     />
-
 
                                     <MDBInput wrapperClass='mb-4 mx-5 w-100'
                                               labelClass='text-white'

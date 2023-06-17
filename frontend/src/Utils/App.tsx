@@ -14,9 +14,9 @@ import {AddingVacations} from "../Pages/AddingVacations";
 import {CreatingServices} from "../Pages/CreatingServices";
 import {CreatingSchedule} from "../Pages/CreatingSchedule";
 import {Signup} from "../Pages/Signup";
+import {ProfitCompany} from "../Pages/ProfitCompany";
+import UploadPhoto from "../Pages/UploadPhoto";
 import {Search} from "../Pages/Search";
-import {CompanyProfile} from "../Pages/CompanyProfile";
-//import {ProfitCompany} from "../Pages/ProfitCompany";
 
 
 const router = createBrowserRouter([{
@@ -79,17 +79,13 @@ const router = createBrowserRouter([{
             "element": <Search/>
         },
         {
-            "path": "/company/profile",
-            "element": <CompanyProfile/>
-        },
-       /* {
             "path": "/company/profits",
             "element": <ProfitCompany/>
         },
         {
-            "path": "/company/pic",
+            "path": "/company/:id/upload-file",
             "element": <UploadPhoto/>
-        }*/
+        }
     ]
 }])
 

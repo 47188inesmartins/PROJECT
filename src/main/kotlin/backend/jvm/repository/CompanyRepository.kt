@@ -3,8 +3,10 @@ package backend.jvm.repository
 import backend.jvm.model.*
 import backend.jvm.services.dto.CompanyOutputDto
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
+import org.springframework.transaction.annotation.Transactional
 import java.sql.Time
 import java.util.*
 
@@ -41,4 +43,9 @@ interface CompanyRepository : JpaRepository<Company, Int>{
             "from COMPANY C inner join USER_COMPANY UC on uc.company_id = c.id " +
             "and uc.user_id = :user_id and uc.role = :role",nativeQuery = true)
     fun getCompanyByUserIdAndRole(@Param("user_id") user: Int, @Param("role") role: String): List<Company>
+
+    @Modifying
+    @Query(value = "update company c set c.path_photo = :path where id = :id ", nativeQuery = true)
+    @Transactional
+    fun updatePhotoPath(@Param("id") id: Int, @Param("path") path: String)
 }

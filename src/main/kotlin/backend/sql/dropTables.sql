@@ -14,6 +14,7 @@ drop table if exists USER_COMPANY cascade;
 drop table if exists USER_ROLE cascade;
 drop table if exists USER_SERVICE cascade;
 drop table if exists VACATION cascade;
+DROP TABLE IF EXISTS service_day CASCADE ;
 
 COMMIT;
 

@@ -55,14 +55,14 @@ class UserDB {
         @Column(name = "birthday")
         val birthday: Date
 
-        @Column(name = "availability")
-        val availability: String?
-
         @OneToMany(mappedBy = "userDB")
         val unavailabilityDB : List<UnavailabilityDB>?
 
         @Column(name = "interests")
         val interests : String
+
+        @Column(name = "address")
+        val address : String
 
         @ManyToMany
         @JoinTable(
@@ -93,7 +93,7 @@ class UserDB {
                 this.name = ""
                 this.birthday = Date.valueOf("2001-01-01")
                 this.services = null
-                this.availability = AVAILABILITY_STATE
+                this.address = " "
                 this.appointment = null
                 this.roles = listOf()
                 this.unavailabilityDB = listOf()
@@ -111,7 +111,8 @@ class UserDB {
                 roles: List<Role>,
                 unavailabilityDB: List<UnavailabilityDB>?,
                 companies: List<UserCompany>?,
-                interests: String
+                interests: String,
+                address: String
         ){
                 this.token = UUID.randomUUID()
                 this.email = email
@@ -119,16 +120,11 @@ class UserDB {
                 this.name = clientName
                 this.birthday = birth
                 this.services = serv
-                this.availability = AVAILABILITY_STATE
+                this.address = address
                 this.appointment = appointments
                 this.roles = roles
                 this.unavailabilityDB = unavailabilityDB
                 this.companies = companies
                 this.interests = interests
         }
-
-        companion object{
-                const val AVAILABILITY_STATE = "NONE"
-        }
-
 }

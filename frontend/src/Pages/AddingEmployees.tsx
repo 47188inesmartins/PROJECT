@@ -8,6 +8,7 @@ export function AddingEmployees() {
     const [create, setCreate] = useState<Boolean>(false)
     const [textBoxes, setTextBoxes] = useState([""]);
 
+    const id = useParams().id
     const addTextBox = () => {
         setTextBoxes(prevTextBoxes => [...prevTextBoxes, ""]);
     };
@@ -28,6 +29,10 @@ export function AddingEmployees() {
     const handleCreate = () => {
         setCreate(true)
     };
+
+    const handleLater = () => {
+        window.location.href = `/company/${id}/upload-file`;
+    }
 
 
     function FetchAddEmployees(){
@@ -93,6 +98,13 @@ export function AddingEmployees() {
                                             <button className="btn btn-outline-light btn-lg px-5" type="submit"
                                                     onClick={handleCancel}>Cancel
                                             </button>
+                                            <button className="btn btn-outline-light btn-lg px-5" type="submit"
+                                                    onClick={handleCancel}>Cancel
+                                            </button>
+                                            <button className="btn btn-outline-light btn-lg px-5" type="submit"
+                                                    onClick={handleLater}>Configure later
+                                            </button>
+
                                         </div>
                                     </div>
                                 </div>

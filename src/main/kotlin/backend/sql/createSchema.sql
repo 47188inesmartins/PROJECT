@@ -2,8 +2,6 @@ BEGIN;
 
 create schema if not exists public;
 
-CREATE EXTENSION IF NOT EXISTS pgcrypto;
-
 create table if not exists COMPANY (
    id serial primary key,
    nif varchar(9) unique,
@@ -27,11 +25,10 @@ create table if not exists SCH_USER (
     token UUID unique,
     email varchar(50) unique CHECK (email LIKE '%@%'),
     password varchar(250),
+    address varchar(250),
     name varchar(200),
     interests varchar(60),
-    birthday date check (date(CURRENT_TIMESTAMP) >= birthday + interval '18 year'),
-    availability varchar(15) not null default 'NONE' check (availability in ('AVAILABLE','UNAVAILABLE','NONE')),
-    max_number_people int default 1
+    birthday date check (date(CURRENT_TIMESTAMP) >= birthday + interval '16 year')
 );
 
 
