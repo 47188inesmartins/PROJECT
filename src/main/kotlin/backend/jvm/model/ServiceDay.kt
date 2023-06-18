@@ -11,12 +11,12 @@ class ServiceDay {
     var id: ServiceDayPK = ServiceDayPK()
 
     @ManyToOne
-    @MapsId("user")
+    @MapsId("day")
     @JoinColumn(name = "day_id")
     val day: Day?
 
     @ManyToOne
-    @MapsId("company")
+    @MapsId("service")
     @JoinColumn(name = "service_id")
     val service: ServiceDB?
 
