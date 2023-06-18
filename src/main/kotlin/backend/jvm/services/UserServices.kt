@@ -163,7 +163,10 @@ class UserServices : IUserInterface {
     }
 
     fun getPersonalizedCompanies(token: String?): List<CompanyOutputDto>?{
-        if(token == null) return companyRepository.findAll().map { CompanyOutputDto(it) }
+        if(token == null) {
+            val companys = companyRepository.findAll()
+            return companys.map { CompanyOutputDto(it) }
+        }
         val user = userRepository.getUserByToken(UUID.fromString(token))?: throw UserNotFound()
         val categoriesArray = user.interests.split(",").toTypedArray()
         val comps = companyRepository.getCompaniesByCategory(categoriesArray)

@@ -12,7 +12,6 @@ data class DayInputDto(
     val intervalEnd: String?,
     val weekDays: String,
     val schedule: Int?,
-    val service: List<Int>?,
 ) {
     fun mapToDayDb(dto: DayInputDto,schedule: Schedule?, service: List<ServiceDB>?): Day {
         val begin = Time.valueOf(dto.beginHour.plus(":00"))?: throw Exception("invalid hour")
@@ -45,7 +44,6 @@ data class DayOutputDto(
     val intervalEnd: String,
     val weekDays: String,
     val schedule: Int?,
-    val service: List<Int>?
 ) {
         constructor(day: Day):this(
             day.id,
@@ -55,7 +53,6 @@ data class DayOutputDto(
             day.intervalEnd.toString(),
             day.weekDays,
             day.schedule?.id,
-            day.service?.map{it.id}
         )
 }
 

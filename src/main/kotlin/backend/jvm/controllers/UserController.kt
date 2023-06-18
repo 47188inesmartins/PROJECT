@@ -30,12 +30,21 @@ class UserController {
     lateinit var userServices: UserServices
 
     @PostMapping
-    fun addUser(@RequestBody user: UserInputDto): ResponseEntity<CreatedUserOutput> {
+    fun signup(@RequestBody user: UserInputDto, response: HttpServletResponse): ResponseEntity<CreatedUserOutput> {
         return try {
-            val response = userServices.addUser(user)
+            val resp = userServices.addUser(user)
+            val token = resp.token
+            val cookieToken = ResponseCookie
+                .from("token", token.toString())
+                .maxAge(7 * 24 * 60 * 60 )
+                .path("/")
+                .httpOnly(true)
+                .secure(false)
+                .build()
+            response.addHeader(HttpHeaders.SET_COOKIE, cookieToken.toString())
             ResponseEntity
                 .status(201)
-                .body(response)
+                .body(resp)
         } catch (e: Exception) {
             when(e){
                 is InvalidEmail -> throw ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid Email",e)

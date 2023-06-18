@@ -43,7 +43,15 @@ function TimePickerComponent (){
     if(schedule.response){
         if(schedule.response.length === 0){
             return <>
-                    <p> No available Schedule </p>
+                <div className="card-header bg-dark">
+                    <div className="mx-0 mb-0 row justify-content-sm-center justify-content-start px-1">
+                        <DatePicker
+                            selected={startDate}
+                            onChange={(date) => handleDateChange(date)} // Atualiza o estado com a data selecionada
+                        />
+                    </div>
+                </div>
+                <a>Closed for the day</a>
             </>
         }
     }

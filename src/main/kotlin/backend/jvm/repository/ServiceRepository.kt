@@ -51,6 +51,12 @@ interface ServiceRepository : JpaRepository<ServiceDB, Int> {
         @Param("companyId") companyId: Int
     ): List<ServiceDB>
 
+    @Query(value = "select s.id,s.service_name,s.duration,s.number_max,s.price,s.company_id" +
+            "from service s " +
+            "where s.company_id = :companyId and " +
+            "not EXISTS ( select * from SERVICE_DAY d where s.id = d.service_id)", nativeQuery = true)
+    fun getNormalScheduleServices( @Param("companyId") companyId: Int): List<ServiceDB>
+
 
     @Query(value = "select sum(s.price) as money from service s  " +
             "inner join USER_SERVICE US on s.id = US.service_id and US.user_id = :userId and s.company_id = :company " +

@@ -25,7 +25,7 @@ export function Home() {
 
     if(searchValue !== null)
         response = Fetch(`/company/search?search=${searchValue}`, "GET");
-    else response = Fetch('/', "GET");
+    else response = Fetch('/company', "GET");
     console.log("response = ", response)
 
 

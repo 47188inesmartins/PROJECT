@@ -37,7 +37,7 @@ export function CompanyProfile() {
                         </div>
                     </div>
                     :
-                    <section style={{ backgroundColor: '#eee' }}>
+                    <section style={{ backgroundColor: 'darkslategray' }}>
                         <MDBContainer className="py-5">
                             <MDBRow>
                                 <MDBCol>

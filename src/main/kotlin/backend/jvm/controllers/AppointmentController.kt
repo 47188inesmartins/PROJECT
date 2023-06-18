@@ -42,6 +42,8 @@ class AppointmentController {
     fun getAllAppointmentsOfaCompany(){
 
     }
+
+
     @RoleManager(["CLIENT","MANAGER","EMPLOYEE"])
     @DeleteMapping("/{id}")
     fun deleteAppointment(@PathVariable id: Int, @PathVariable cid: Int): ResponseEntity<String> {
@@ -112,5 +114,4 @@ class AppointmentController {
             }
         }
     }
-
 }

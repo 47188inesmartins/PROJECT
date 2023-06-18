@@ -1,9 +1,7 @@
 package backend.jvm.services
 
-import backend.jvm.repository.CompanyRepository
-import backend.jvm.repository.DayRepository
-import backend.jvm.repository.ScheduleRepository
-import backend.jvm.repository.ServiceRepository
+import backend.jvm.model.ServiceDay
+import backend.jvm.repository.*
 import backend.jvm.services.dto.DayInputDto
 import backend.jvm.services.dto.DayOutputDto
 import backend.jvm.services.dto.ServiceOutputDto
@@ -36,12 +34,25 @@ class DayServices : IDayServices {
     @Autowired
     lateinit var serviceRepository: ServiceRepository
 
+    @Autowired
+    lateinit var serviceDayRepository: ServiceDayRepository
+
     override fun addOpenDay(day: DayInputDto):DayOutputDto {
         if(!listDayOfWeek.contains(day.weekDays.uppercase())) throw InvalidOpenDay()
         val schedule = if(day.schedule != null) scheduleRepository.getReferenceById(day.schedule) else throw InvalidSchedule()
-        val service = day.service?.map { index -> serviceRepository.getServiceDBById(index) ?: throw InvalidOpenDay() }
-        val dayDb = day.mapToDayDb(day,schedule,service)
+      //  val service = day.service?.map { index -> serviceRepository.getServiceDBById(index) ?: throw InvalidOpenDay() }
+        val dayDb = day.mapToDayDb(day,schedule,null)
         val db = dayRepository.save(dayDb)
+        return  DayOutputDto(db)
+    }
+
+    fun addSpecialDayByService(day: DayInputDto, serviceId: Int, companyId: Int):DayOutputDto {
+        if(!listDayOfWeek.contains(day.weekDays.uppercase())) throw InvalidOpenDay()
+        val schedule = scheduleRepository.getScheduleByCompany_Id(companyId) ?: throw InvalidSchedule()
+        val service = serviceRepository.getServiceDBById(serviceId) ?: throw InvalidService()
+        val dayDb = day.mapToDayDb(day,null,listOf(service))
+        val db = dayRepository.save(dayDb)
+        serviceDayRepository.save(ServiceDay(db, service))
         return  DayOutputDto(db)
     }
 
