@@ -57,6 +57,11 @@ dependencies {
 	testImplementation("org.junit.jupiter:junit-jupiter-engine")
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
 	testImplementation("com.ninja-squad:springmockk:3.1.1")
+
+
+	// Para processamento de arquivos multipart
+	implementation  ("org.springframework.boot:spring-boot-starter-validation")
+	implementation  ("commons-fileupload:commons-fileupload:1.4")
 }
 
 

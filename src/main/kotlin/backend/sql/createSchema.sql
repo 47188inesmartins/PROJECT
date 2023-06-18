@@ -9,7 +9,7 @@ create table if not exists COMPANY (
    name varchar(20),
    type varchar(100) check (type in ('BEAUTY','LIFESTYLE','FITNESS','BUSINESS','OTHERS')),
    description varchar(300),
-   path_photo varchar(255)
+   url varchar(255)
 );
 
 
@@ -152,3 +152,11 @@ insert into u_role (name) values ('EMPLOYEE');
 COMMIT;
 
 rollback;
+
+select s.id,s.service_name,s.duration,s.number_max,s.price,s.company_id
+from service s
+where s.company_id = 1 and
+not EXISTS ( select * from SERVICE_DAY d where s.id = d.service_id)
+
+
+

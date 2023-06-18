@@ -277,24 +277,18 @@ class CompanyController {
 
     //@RoleManager(["MANAGER","EMPLOYEE"])
     @PostMapping("/{cid}/upload")
-    fun uploadPhoto(@RequestParam("fileName") fileName: String, @PathVariable cid: Int): ResponseEntity<String> {
-
-        val uploadDir = "uploads" // Diretório para salvar os arquivos enviados
-
+    fun uploadImage(
+        @PathVariable cid: Int,
+        @RequestBody file: MultipartFile
+    ): ResponseEntity<String> {
         return try {
-            Files.createDirectories(Paths.get(uploadDir)) // Cria o diretório se não existir
-
-            if (fileName.isNotEmpty()) {
-                val uniqueFileName = UUID.randomUUID().toString() + "_" + fileName
-                // Lógica de processamento do nome do arquivo aqui
-                companyServices.uploadPhoto(cid,uniqueFileName)
-                ResponseEntity.ok().body("Your photo was uploaded: $uniqueFileName")
-            } else {
-                ResponseEntity.badRequest().body("Invalid file name")
-            }
-        } catch (ex: IOException) {
-            ResponseEntity.status(400).body("Something went wrong. Please try again")
+            val imageCompany = companyServices.uploadPhoto(cid,file)
+            ResponseEntity
+                .status(200)
+                .body("Upload done")
+        }catch(e: Exception){
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
         }
-    }
 
+    }
 }

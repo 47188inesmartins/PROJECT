@@ -20,6 +20,7 @@ data class CompanyInputDto(
             dto.name,
             dto.type,
             dto.description,
+            null,
             service,
             null,
             users
@@ -36,7 +37,8 @@ data class CompanyOutputDto(
     val description: String,
     val service: List<ServiceInfo>?,
     val schedule: Int?,
-    val users: List<CompanyUserRole>?
+    val users: List<CompanyUserRole>?,
+    val path:String?
 ){
     constructor(company: Company): this(
         id = company.id,
@@ -47,7 +49,8 @@ data class CompanyOutputDto(
         description = company.description,
         service = company.serviceDBS?.map { ServiceInfo(it.id, it.name,it.price,it.duration.toString()) },
         schedule = company.schedule?.id,
-        users = company.userCompany?.map { CompanyUserRole(it.id.user, it.role)}
+        users = company.userCompany?.map { CompanyUserRole(it.id.user, it.role)},
+        path = company.url
     )
 }
 

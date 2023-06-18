@@ -1,68 +1,91 @@
 import React, { useState } from 'react';
 import { Fetch } from '../Utils/useFetch';
-import {useParams} from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 function UploadPhoto() {
-    const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-    const id = useParams().id
-    const [selectedUpload, setSelectedUpload] = useState<boolean>(false);
+    const [selectedFile, setSelectedFile] = useState(null);
+    const params = useParams().id;
 
-    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (event.target.files && event.target.files.length > 0) {
-            const files = Array.from(event.target.files);
-            const validFiles = files.filter(
-                file => file.type === 'image/png' || file.type === 'image/jpeg'
-            );
-            setSelectedFiles(validFiles);
+    const handleFileDrop = (event) => {
+        event.preventDefault();
+        const file = event.dataTransfer.files[0];
+        if (file && (file.type === 'image/png' || file.type === 'image/jpeg')) {
+            setSelectedFile(file);
+        } else {
+            alert('Por favor, selecione um arquivo PNG ou JPEG válido.');
         }
     };
 
-    const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+    const handleFileUpload = async () => {
+        if (!selectedFile) {
+            alert('Por favor, selecione um arquivo.');
+            return;
+        }
+
+        try {
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+
+            const response = await fetch(`http://localhost:8000/api/company/${params}/upload`, {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                console.log('Upload concluído');
+            } else {
+                console.error('Erro durante o upload:', response.status);
+            }
+        } catch (error) {
+            console.error('Erro durante o upload:', error);
+        }
+    };
+
+    const handleDragOver = (event) => {
         event.preventDefault();
     };
 
-    const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
-        event.preventDefault();
-        if (event.dataTransfer.files && event.dataTransfer.files.length > 0) {
-            const files = Array.from(event.dataTransfer.files);
-            const validFiles = files.filter(
-                file => file.type === 'image/png' || file.type === 'image/jpeg'
-            );
-            setSelectedFiles(validFiles);
+    const handleFileSelect = (event) => {
+        const file = event.target.files[0];
+        if (file && (file.type === 'image/png' || file.type === 'image/jpeg')) {
+            setSelectedFile(file);
+        } else {
+            alert('Por favor, selecione um arquivo PNG ou JPEG válido.');
         }
     };
 
-    const handleUpload = () => {
-        setSelectedUpload(true)
-    }
-
-
-    return ( <>
-        {
-            selectedUpload?
-
-                <FetchUploadFile selectedFiles={selectedFiles}/>
-
-                :<div>
-                    <div
-                        onDragOver={handleDragOver}
-                        onDrop={handleDrop}
-                        style={{
-                            border: '1px dashed gray',
-                            padding: '2rem',
-                            marginBottom: '1rem',
-                        }}
-                    >
-                        Drop here your company picture
-                    </div>
-                    <input type="file" accept=".png,.jpg" onChange={handleFileChange} multiple />
-                    <button onClick={handleUpload}>Send</button>
-                 </div>
-        }
-        </>
+    return (
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <div
+                style={{
+                    width: '300px',
+                    height: '300px',
+                    border: '2px dashed gray',
+                    borderRadius: '5px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    marginBottom: '20px',
+                }}
+                onDrop={handleFileDrop}
+                onDragOver={handleDragOver}
+            >
+                {selectedFile ? (
+                    <img
+                        src={URL.createObjectURL(selectedFile)}
+                        alt="Imagem selecionada"
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
+                ) : (
+                    <span>Arraste e solte a imagem aqui ou selecione um arquivo</span>
+                )}
+            </div>
+            <input type="file" accept="image/png, image/jpeg" onChange={handleFileSelect} />
+            <button onClick={handleFileUpload}>Enviar</button>
+        </div>
     );
 }
-
 
 function FetchUploadFile(props:{selectedFiles}){
         const id = useParams().id

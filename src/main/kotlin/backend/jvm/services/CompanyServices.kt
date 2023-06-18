@@ -8,6 +8,12 @@ import backend.jvm.utils.UserRoles
 import backend.jvm.utils.errorHandling.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.springframework.util.StringUtils
+import org.springframework.web.multipart.MultipartFile
+import java.io.File
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.StandardCopyOption
 import java.sql.Date
 import java.sql.Time
 import java.util.*
@@ -19,6 +25,9 @@ class CompanyServices : ICompanyServices {
     companion object{
         const val NIF_NUMBERS = 9
     }
+
+   // @Value(photo) // Diretório para salvar as fotos
+    private val uploadDirectory: String = "kotlin\backend\files"
 
     @Autowired
     lateinit var companyRepository: CompanyRepository
@@ -175,5 +184,23 @@ class CompanyServices : ICompanyServices {
                 employee.name
             )
         }
+    }
+
+    fun uploadPhoto(cid: Int, image: MultipartFile){
+        val fileName = image.originalFilename?.let { StringUtils.cleanPath(it) }
+        if(fileName?.contains("..")!!){
+            println("not a a valid file");
+        }
+        val savePath = saveFile(image, fileName)
+        companyRepository.updatePhotoPath(cid,savePath)
+    }
+
+
+    private fun saveFile(file: MultipartFile, fileName: String): String {
+        val filePath: String = (uploadDirectory + File.separator) + fileName
+        val targetLocation: Path = Path.of(filePath)
+        Files.createDirectories(targetLocation.parent)
+        Files.copy(file.inputStream, targetLocation, StandardCopyOption.REPLACE_EXISTING)
+        return filePath
     }
 }

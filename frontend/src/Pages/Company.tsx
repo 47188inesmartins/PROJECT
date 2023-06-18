@@ -29,7 +29,7 @@ export function Company() {
     const id = params.id
 
     const company = Fetch(`/company/${id}`, "GET");
-
+    console.log(company)
 
     return (
         <div className="gradient-custom-2" style={{ backgroundColor: '#0e4378' }}>
@@ -41,21 +41,21 @@ export function Company() {
                             <MDBCard>
                                 <MDBRow>
                                     <MDBCol className="mb-2">
-                                        <MDBCardImage src="https://mdbcdn.b-cdn.net/img/Photos/Lightbox/Original/img%20(112).webp"
+                                        <MDBCardImage src={company.response.path}
                                                       alt="image 1" className="w-100 rounded-3" />
                                     </MDBCol>
                                     <MDBCol className="mb-2">
-                                        <MDBCardImage src="https://mdbcdn.b-cdn.net/img/Photos/Lightbox/Original/img%20(107).webp"
+                                        <MDBCardImage src={company.response.path}
                                                       alt="image 1" className="w-100 rounded-3" />
                                     </MDBCol>
                                 </MDBRow>
                                 <MDBRow className="g-2">
                                     <MDBCol className="mb-2">
-                                        <MDBCardImage src="https://mdbcdn.b-cdn.net/img/Photos/Lightbox/Original/img%20(108).webp"
+                                        <MDBCardImage src={company.response.path}
                                                       alt="image 1" className="w-100 rounded-3" />
                                     </MDBCol>
                                     <MDBCol className="mb-2">
-                                        <MDBCardImage src="https://mdbcdn.b-cdn.net/img/Photos/Lightbox/Original/img%20(114).webp"
+                                        <MDBCardImage src={company.response.path}
                                                       alt="image 1" className="w-100 rounded-3" />
                                     </MDBCol>
                                 </MDBRow>

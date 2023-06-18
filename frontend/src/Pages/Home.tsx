@@ -71,7 +71,7 @@ export function Home() {
                                                     <MDBRow className="mb-4 border-bottom pb-2">
                                                         <MDBCol size="3">
                                                             <img
-                                                                src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"
+                                                                src= {object.path}
                                                                 className="img-fluid shadow-1-strong rounded"
                                                                 alt="Hollywood Sign on The Hill"
                                                             />
