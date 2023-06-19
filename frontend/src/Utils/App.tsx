@@ -19,7 +19,6 @@ import UploadPhoto from "../Pages/UploadPhoto";
 import {Search} from "../Pages/Search";
 import {CompanyProfile} from "../Pages/CompanyProfile";
 import {EditServiceSchedule} from "../Pages/EditServiceSchedule";
-//import {ProfitCompany} from "../Pages/ProfitCompany";
 
 
 const router = createBrowserRouter([{
@@ -89,10 +88,10 @@ const router = createBrowserRouter([{
             "path": "/service/:id/schedule",
             "element": <EditServiceSchedule/>
         },
-       /* {
+        {
             "path": "/company/profits",
             "element": <ProfitCompany/>
-        },*/
+        },
         {
             "path": "/company/:id/upload-file",
             "element": <UploadPhoto/>

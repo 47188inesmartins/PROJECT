@@ -26,9 +26,6 @@ class CompanyServices : ICompanyServices {
         const val NIF_NUMBERS = 9
     }
 
-   // @Value(photo) // Diretório para salvar as fotos
-    private val uploadDirectory: String = "kotlin\backend\files"
-
     @Autowired
     lateinit var companyRepository: CompanyRepository
 
@@ -52,6 +49,8 @@ class CompanyServices : ICompanyServices {
 
     @Autowired
     lateinit var userCompanyRepository: UserCompanyRepository
+
+    private val uploadDirectory: String = "kotlin/backend/files"
 
     fun getSearchedCompanies(search: String?): List<CompanyOutputDto>?{
         if(search == "null") return getAllCompanies()
@@ -109,9 +108,7 @@ class CompanyServices : ICompanyServices {
         return companyRepository.getAppointmentsByDateAndHour(id, d, h).map { AppointmentOutputDto(it) }
     }
 
-    fun uploadPhoto(cid: Int, path: String) {
-        companyRepository.updatePhotoPath(cid,path)
-    }
+
     override fun getOpenDaysByCompany(id: Int): List<DayOutputDto>{
         return dayRepository.getOpenDays(id).map { DayOutputDto(it) }
     }

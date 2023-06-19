@@ -7,6 +7,11 @@ import {Fetch} from "../Utils/useFetch";
 import {useParams} from "react-router-dom";
 
 
+/*meter que o parametro interval entre blocks
+ é obrigatorio
+* */
+
+
 export function CreatingSchedule() {
     const daysOfWeek = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
 

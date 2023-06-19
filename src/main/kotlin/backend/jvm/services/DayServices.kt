@@ -9,6 +9,7 @@ import backend.jvm.services.interfaces.IDayServices
 import backend.jvm.utils.errorHandling.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.sql.Date
 import java.sql.Time
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -52,14 +53,14 @@ class DayServices : IDayServices {
         val service = serviceRepository.getServiceDBById(serviceId) ?: throw InvalidService()
         val dayDb = day.mapToDayDb(day,null,listOf(service))
         val db = dayRepository.save(dayDb)
-        serviceDayRepository.save(ServiceDay(db, service))
+      //  serviceDayRepository.save(ServiceDay(db, service))
         return  DayOutputDto(db)
     }
 
 
    fun getScheduleByWeekDay(weekDay: String, cid: Int): List<String> {
        val schedule = scheduleRepository.getScheduleByCompany_Id(cid) ?: throw CompanyNotFound()
-       val days = dayRepository.getDayByScheduleIdAndWeekDays(schedule.id, weekDay)
+       val days = dayRepository.getDayByScheduleIdAndWeekDays(schedule.id, getDayOfWeek(Date.valueOf(weekDay)))
 
        if(days.isEmpty()) return emptyList()
 
@@ -135,6 +136,24 @@ class DayServices : IDayServices {
         val dayOfWeek = date.dayOfWeek
         val locale = Locale.getDefault()
         return dayOfWeek.getDisplayName(TextStyle.FULL, locale).substring(3).toUpperCase()
+    }
+
+    fun getDayOfWeek(date : Date): String{
+        val utilDate = java.util.Date(date.time)
+        val calendar = Calendar.getInstance()
+        calendar.time = utilDate
+        val dayOfWeek = calendar[Calendar.DAY_OF_WEEK]
+
+        return when(dayOfWeek) {
+            Calendar.SUNDAY -> "SUN"
+            Calendar.MONDAY -> "MON"
+            Calendar.TUESDAY -> "TUE"
+            Calendar.WEDNESDAY -> "WED"
+            Calendar.THURSDAY -> "THU"
+            Calendar.FRIDAY -> "FRI"
+            Calendar.SATURDAY -> "SAT"
+            else -> "invalid data"
+        }
     }
 
 

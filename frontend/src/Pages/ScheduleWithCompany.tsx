@@ -8,10 +8,14 @@ import {Navigate} from "react-router";
 import {Button, Modal} from "react-bootstrap";
 import {MyAppointments} from "./MyAppointments";
 import {Company} from "./Company";
+import {MDBInput} from "mdb-react-ui-kit";
+import {today} from "@progress/kendo-react-scheduler/dist/es/messages";
+import { format } from 'date-fns';
+
 
 function TimePickerComponent (){
 
-    const [startDate, setStartDate] = useState(new Date());
+    const [startDate, setStartDate] = useState(format(new Date(), 'yyyy-MM-dd'));
     const [click, setClick] = useState<string|undefined>(undefined);
 
 
@@ -29,16 +33,13 @@ function TimePickerComponent (){
         return daysOfWeek[dayIndex];
     }
 
-    const myDate = startDate;
-    const weekDay = getWeekDay(myDate);
-
 
     function handleDateChange(date){
         setStartDate(date)
     }
 
 
-    const schedule = Fetch(`company/${id}/day/week-day?day=${weekDay}`, "GET")
+    const schedule = Fetch(`company/${id}/day/week-day?day=${startDate}`, "GET")
 
     if(schedule.response){
         if(schedule.response.length === 0){
@@ -71,9 +72,15 @@ function TimePickerComponent (){
                                 <form autoComplete="off">
                                     <div className="card-header bg-dark">
                                         <div className="mx-0 mb-0 row justify-content-sm-center justify-content-start px-1">
-                                            <DatePicker
-                                                selected={startDate}
-                                                onChange={(date) => handleDateChange(date)} // Atualiza o estado com a data selecionada
+                                            <MDBInput wrapperClass='mb-4 mx-5 w-100'
+                                                      labelClass='text-white'
+                                                      label=''
+                                                      id='formControlLg'
+                                                      type='date'
+                                                      size="lg"
+                                                      value={startDate}
+                                                      required={true}
+                                                      onChange={(e) => setStartDate(e.target.value)}
                                             />
                                         </div>
                                     </div>
@@ -104,7 +111,7 @@ function TimePickerComponent (){
 }
 
 
-function PopUpMessage(props:{id:string|undefined,date:Date,hour:string}) {
+function PopUpMessage(props:{id:string|undefined,date:string,hour:string}) {
     const [show, setShow] = useState(true);
 
     const params = useParams()
@@ -120,7 +127,6 @@ function PopUpMessage(props:{id:string|undefined,date:Date,hour:string}) {
 
     return (
         <>
-                    <Company/>
                     <Modal
                         show={show}
                         onHide={handleClose}
@@ -141,7 +147,7 @@ function PopUpMessage(props:{id:string|undefined,date:Date,hour:string}) {
     );
 }
 
-function FetchAvailableServices(props:{id:string,date:Date,hour:string}){
+function FetchAvailableServices(props:{id:string,date:string,hour:string}){
     console.log("")
     const response = Fetch(`/company/${props.id}/appointment/services/availability?hour_begin=${props.hour}&date=${props.date}`,'GET')
 
@@ -191,7 +197,7 @@ function PopUpEmployee(){
 
     const handleCancel = () => setCancel(true);
 
-  return  <>
+    return  <>
                 <Company/>
                 <Modal
                     show={show}

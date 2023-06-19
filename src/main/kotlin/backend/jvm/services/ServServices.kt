@@ -8,12 +8,16 @@ import backend.jvm.repository.UserRepository
 import backend.jvm.services.dto.DayInputDto
 import backend.jvm.services.dto.ServiceInputDto
 import backend.jvm.services.dto.ServiceOutputDto
+import backend.jvm.services.dto.UserOutputDto
 import backend.jvm.services.interfaces.IServServices
 import backend.jvm.utils.errorHandling.InvalidUser
 import backend.jvm.utils.errorHandling.UserNotFound
+import org.apache.catalina.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestParam
 import java.sql.Date
 import java.sql.Time
 import java.time.Duration
@@ -68,5 +72,4 @@ class ServServices : IServServices {
     fun changeSchedule(id: Int, day: List<DayInputDto>){
         //TODO()
     }
-
 }

@@ -4,6 +4,7 @@ import backend.jvm.services.AppointmentServices
 import backend.jvm.services.dto.AppointmentInputDto
 import backend.jvm.services.dto.AppointmentOutputDto
 import backend.jvm.services.dto.ServiceOutputDto
+import backend.jvm.services.dto.UserOutputDto
 import backend.jvm.utils.RoleManager
 import backend.jvm.utils.errorHandling.*
 import org.springframework.beans.factory.annotation.Autowired
@@ -103,7 +104,7 @@ class AppointmentController {
     @GetMapping("/services/availability")
     fun getAvailableServices(@RequestParam("hour_begin") hourBegin :String, @RequestParam("date") date :String,
                              @PathVariable cid: Int
-    ) :ResponseEntity<List<ServiceOutputDto>>{
+    ) :ResponseEntity<List<Pair<ServiceOutputDto, List<UserOutputDto>>>>{
         return try{
            val response = appointmentServices.getAvailableServicesByAppointment(hourBegin, date, cid)
             ResponseEntity.status(200) .body(response)

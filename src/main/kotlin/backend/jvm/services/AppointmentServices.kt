@@ -6,6 +6,7 @@ import backend.jvm.repository.*
 import backend.jvm.services.dto.AppointmentInputDto
 import backend.jvm.services.dto.AppointmentOutputDto
 import backend.jvm.services.dto.ServiceOutputDto
+import backend.jvm.services.dto.UserOutputDto
 import backend.jvm.services.interfaces.IAppointmentServices
 import backend.jvm.utils.UserRoles
 import backend.jvm.utils.errorHandling.*
@@ -100,28 +101,32 @@ class AppointmentServices : IAppointmentServices {
     }
 
 
-    override fun getAvailableServicesByAppointment(beginHour:String, date:String, companyId: Int):List<ServiceOutputDto>{
-        val bh = Time.valueOf(beginHour)
+    fun getAvailableServicesByAppointment(beginHour:String, date:String, companyId: Int): List<Pair<ServiceOutputDto, List<UserOutputDto>>>{
+        val bh = Time.valueOf(beginHour.plus(":00"))
         val d = Date.valueOf(date)
         val weekDay = getDayOfWeek(d)
         val schedule = scheduleRepository.getScheduleByCompany_Id(companyId)
             ?: throw ScheduleNotFound()
-        val services = servicesRepository.getNormalScheduleServices(companyId).filter {
-            val day = dayRepository.getDayByWeekDaysAndAndSchedule(weekDay, schedule.id)
-            userRepository.getAvailableEmployeesByService(it.id, d, bh, getEndHour(bh, it.duration)).isNotEmpty() &&
-                    ((day.beginHour < getEndHour(bh,it.duration) && getEndHour(bh,it.duration) < day.intervalBegin) ||
-                            (day.intervalEnd!! < getEndHour(bh,it.duration) && getEndHour(bh,it.duration) < day.endHour))
-        }
+        val services = servicesRepository.getNormalScheduleServices(companyId)
+        val day = dayRepository.getDayByWeekDaysAndAndSchedule(weekDay, schedule)
+
+        val s = services.map {
+            val employees = userRepository.getAvailableEmployeesByService(it.id, d, bh, getEndHour(bh, it.duration))
+                Pair(ServiceOutputDto(it), employees.map{user -> UserOutputDto(user)})
+        }.filter {  (it.second.isNotEmpty() &&
+            ((day.beginHour < getEndHour(bh,it.first.duration) && getEndHour(bh,it.first.duration) < day.intervalBegin) ||
+                    (day.intervalEnd!! < getEndHour(bh,it.first.duration) && getEndHour(bh,it.first.duration) < day.endHour))) }
 
         val specialServices = servicesRepository.getAvailableServicesByHour(weekDay, bh, companyId)
-        if (specialServices.isEmpty()) return services.map { ServiceOutputDto(it) }
+        if (specialServices.isEmpty()) return s
         val serv = specialServices.filter {
              val day = dayRepository.getDayByServiceAndWeek(it.id, weekDay)
              userRepository.getAvailableEmployeesByService(it.id, d, bh, getEndHour(bh, it.duration)).isNotEmpty() &&
              ((day.beginHour < getEndHour(bh,it.duration) && getEndHour(bh,it.duration) < day.intervalBegin) ||
               (day.intervalEnd!! < getEndHour(bh,it.duration) && getEndHour(bh,it.duration) < day.endHour))
         }
-        return serv.map { ServiceOutputDto(it) }
+        return emptyList()
+     //   return serv.map { ServiceOutputDto(it) }
     }
 
 
@@ -145,9 +150,8 @@ class AppointmentServices : IAppointmentServices {
         val utilDate = java.util.Date(date.time)
         val calendar = getInstance()
         calendar.time = utilDate
-        val dayOfWeek = calendar[DAY_OF_WEEK]
 
-        return when(dayOfWeek) {
+        return when(calendar[DAY_OF_WEEK]) {
             SUNDAY -> "SUN"
             MONDAY -> "MON"
             TUESDAY -> "TUE"

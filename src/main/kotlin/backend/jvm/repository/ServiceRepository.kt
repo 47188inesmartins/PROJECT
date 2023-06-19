@@ -51,7 +51,7 @@ interface ServiceRepository : JpaRepository<ServiceDB, Int> {
         @Param("companyId") companyId: Int
     ): List<ServiceDB>
 
-    @Query(value = "select s.id,s.service_name,s.duration,s.number_max,s.price,s.company_id" +
+    @Query(value = "select s.id,s.service_name,s.duration,s.number_max,s.price,s.company_id " +
             "from service s " +
             "where s.company_id = :companyId and " +
             "not EXISTS ( select * from SERVICE_DAY d where s.id = d.service_id)", nativeQuery = true)
