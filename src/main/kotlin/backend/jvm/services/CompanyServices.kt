@@ -188,6 +188,7 @@ class CompanyServices : ICompanyServices {
         if(fileName?.contains("..")!!){
             println("not a a valid file");
         }
+        //val encodedFile = Base64.getEncoder().encodeToString(image.bytes)
         val savePath = saveFile(image, fileName)
         companyRepository.updatePhotoPath(cid,savePath)
     }
@@ -199,5 +200,10 @@ class CompanyServices : ICompanyServices {
         Files.createDirectories(targetLocation.parent)
         Files.copy(file.inputStream, targetLocation, StandardCopyOption.REPLACE_EXISTING)
         return filePath
+    }
+
+     fun getEmployeesByCompany(cid: Int): List<UserOutputDto>{
+        val employees = usersRepository.getUserEmployeesByCompany(cid) ?: throw EmployeeNotFound()
+        return employees.map { UserOutputDto(it) }
     }
 }

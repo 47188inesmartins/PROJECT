@@ -113,7 +113,6 @@ export function ProfilePage() {
 
 function CompanyRole(props:{role:String,Text:String}) {
     const resp = Fetch(`/company/info?role=${props.role}`, 'GET')
-
     console.log("companies",resp.response)
     if(resp.response){
         if(resp.response.length === 0){

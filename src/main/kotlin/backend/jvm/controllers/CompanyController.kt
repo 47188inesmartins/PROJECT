@@ -290,5 +290,18 @@ class CompanyController {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
         }
 
+
+    }
+    @RoleManager(["MANAGER","EMPLOYEE","CLIENT"])
+    @GetMapping("/{cid}/employees")
+    fun getEmployeesByCompany( @PathVariable cid: Int): ResponseEntity<List<UserOutputDto>> {
+        return try {
+            val employee = companyServices.getEmployeesByCompany(cid)
+            ResponseEntity
+                .status(200)
+                .body(employee)
+        }catch(e: Exception){
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
+        }
     }
 }

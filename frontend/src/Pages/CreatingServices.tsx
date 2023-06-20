@@ -17,14 +17,14 @@ interface CompanyInputDto {
 
 
 export function CreatingServices(){
-
     const [companyName, setCompanyName] = useState<string>("");
     const [businessType, setBusinessType] = useState<string>("");
     const [address, setAddress] = useState<string>("");
     const [nif, setNif] = useState<string>("");
     const [description, setDescription] = useState<string>("");
     const [create, setCreate] = useState<Boolean>(false)
-
+    const [employees, setEmployees] = useState(false);
+    const [selectedFeatures, setSelectedFeatures] = useState([]);
 
     const companyData : CompanyInputDto = {
         nif : nif,
@@ -34,34 +34,27 @@ export function CreatingServices(){
         description: description
     }
 
-
     const handleCancel = () => {
         window.location.href = '/'; // Redireciona para a página inicial (home)
     };
 
-
     const handleCreate = () => {
-
         setCreate(true)
-
-
     };
 
-
-
-
-
-    const [services, setServices] = useState([{ serviceName: '', duration: '', price: '' }]);
+    const [services, setServices] = useState([{ serviceName: '', duration: '', price: '', users:[] }]);
 
     const addService = () => {
-        setServices(prevServices => [...prevServices, { serviceName: '', duration: '', price: '' }]);
+        setServices(prevServices => [...prevServices, { serviceName: '', duration: '', price: '', users:[] }]);
     };
 
     const handleServiceChange = (index, field, value) => {
         const updatedServices = [...services];
         updatedServices[index][field] = value;
+        console.log('E',updatedServices);
         setServices(updatedServices);
     };
+
 
     const [textBoxes, setTextBoxes] = useState([""]);
 
@@ -76,17 +69,65 @@ export function CreatingServices(){
         setTextBoxes(updatedTextBoxes);
     };
 
-    function FetchCreateServices(){
+    function FetchCreateServices() {
         const params = useParams()
         const id = params.id
-        console.log(textBoxes)
-        console.log(services)
+        console.log("AQUIIIIIIIII",textBoxes)
+        console.log("SERIVICEEEEEEEEEEEEE",services)
         const resp = Fetch(`/service/company/${id}`,
             'POST',
             services[0])
         console.log(resp)
         window.location.href = `/company/${id}/employees`
         return(<></>);
+    }
+
+    function Employees(props:{index}) {
+
+        const cid = useParams().id
+        const response = Fetch(`company/${cid}/employees`,'GET')
+        console.log("Employees",response)
+
+        if(response.response){
+            if(response.response.length === 0){
+                return <> No employees found </>
+            }
+        }
+        const handleFeatureChange = (event) => {
+            const selectedId = event.target.value;
+
+            if (selectedFeatures.includes(selectedId)) {
+                setSelectedFeatures(selectedFeatures.filter((id) => id !== selectedId));
+            } else {
+                setSelectedFeatures([...selectedFeatures, selectedId]);
+            }
+
+            handleServiceChange(props.index, 'users', selectedFeatures);
+        };
+
+
+        return (
+            <fieldset style={{ backgroundColor: "gray", padding: "10px" }}>
+                <legend>Choose your monster's features:</legend>
+                {response.response?
+                    <>
+                        {response.response.map((employee) => (
+                            <div key={employee.id}>
+                                <input
+                                    type="checkbox"
+                                    id={employee.id}
+                                    name={employee.id}
+                                    value={employee.id}
+                                    checked={selectedFeatures.includes(employee.id)}
+                                    onChange={handleFeatureChange}
+                                />
+                                <label htmlFor={employee.id}>{employee.name}</label>
+                            </div>
+                        ))}
+                    </>  : <></>
+                }
+            </fieldset>
+        );
     }
 
     return (
@@ -141,6 +182,7 @@ export function CreatingServices(){
                                                             Price
                                                         </label>
                                                     </div>
+                                                    <Employees index={index}/>
                                                 </div>
                                             ))}
                                         </div>
@@ -166,8 +208,34 @@ export function CreatingServices(){
                     </div>
                 </section>
             ) : (
-                <FetchCreateServices></FetchCreateServices>
+                <FetchCreateServices/>
             )}
         </div>
     );
 }
+
+function FetchEmployees(){
+    const cid = useParams().id
+    const response = Fetch(`company/${cid}/employees`,'GET')
+    console.log("Employees",response)
+
+    if(response.response){
+        if(response.response.length === 0){
+            return <> No employees found </>
+        }
+    }
+    return(
+        <>
+        {response.response?
+                <>
+                {response.response.map((employee) => (
+                        <option key={employee.id} value={employee.id}>
+                            {employee.name}
+                        </option>
+                    ))}</>:
+                <>No employees found</>
+        }
+        </>
+    )
+}
+

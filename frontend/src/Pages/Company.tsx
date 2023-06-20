@@ -41,21 +41,21 @@ export function Company() {
                             <MDBCard>
                                 <MDBRow>
                                     <MDBCol className="mb-2">
-                                        <MDBCardImage src={company.response.path}
-                                                      alt="image 1" className="w-100 rounded-3" />
+                                        <MDBCardImage src={URL.createObjectURL( company.response.path) }
+                                                      alt={company.response.path} className="w-100 rounded-3" />
                                     </MDBCol>
                                     <MDBCol className="mb-2">
-                                        <MDBCardImage src={company.response.path}
+                                        <MDBCardImage src={`data:image/jpeg;base64,${company.response.path}`}
                                                       alt="image 1" className="w-100 rounded-3" />
                                     </MDBCol>
                                 </MDBRow>
                                 <MDBRow className="g-2">
                                     <MDBCol className="mb-2">
-                                        <MDBCardImage src={company.response.path}
+                                        <MDBCardImage src={`data:image/jpeg;base64,${company.response.path}`}
                                                       alt="image 1" className="w-100 rounded-3" />
                                     </MDBCol>
                                     <MDBCol className="mb-2">
-                                        <MDBCardImage src={company.response.path}
+                                        <MDBCardImage src={`data:image/jpeg;base64,${company.response.path}`}
                                                       alt="image 1" className="w-100 rounded-3" />
                                     </MDBCol>
                                 </MDBRow>
