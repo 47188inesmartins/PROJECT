@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import '../Style/Schedule.css'
@@ -9,6 +9,8 @@ import {Button, Modal} from "react-bootstrap";
 import {MDBInput} from "mdb-react-ui-kit";
 import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
+import {LoggedInContextCookie} from "../Authentication/Authn";
+import { redirect } from 'react-router-dom';
 
 
 function TimePickerComponent (){
@@ -196,15 +198,51 @@ function PopUpEmployee(props: {employees, startDate, appHour}){
     const params = useParams()
     const id = params.id
     const [employeeId, setEmployeeId] = useState<number|undefined>(undefined)
+    const [dados, setDados] = useState({});
+    const [redirecionar, setRedirecionar] = useState(false);
 
     const handleCancel = () => {
         setShow(false);
         window.location.href = `/company/${id}`;
     }
-
+    const token = React.useContext(LoggedInContextCookie).loggedInState.token;
 
     function handleClick(value){
-        setEmployeeId(value)
+
+
+        const obj = {
+            appHour: props.appHour,
+            appDate: props.startDate,
+            service: props.employees.serviceId,
+            user: value
+        }
+
+        fetch(`/api/company/${id}/appointment`, {
+            method: 'POST',
+            body: JSON.stringify(obj),
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                setDados(data);
+                setRedirecionar(true);
+            })
+            .catch(error => {
+                console.error('Ocorreu um erro:', error);
+            });
+    }
+
+    useEffect(() => {
+        if (redirecionar) {
+            setRedirecionar(false);
+        }
+    }, [redirecionar]);
+
+    if (redirecionar) {
+        return <Navigate to = '/' />;
     }
 
     console.log(employeeId)
@@ -249,8 +287,6 @@ function PopUpEmployee(props: {employees, startDate, appHour}){
 
     console.log("in do popup employees")
     return  <>
-        {
-            !employeeId ?
                 <Modal
                     show={show}
                     onHide={handleCancel}
@@ -276,9 +312,6 @@ function PopUpEmployee(props: {employees, startDate, appHour}){
                         <Button variant="primary" onClick={handleCancel}>Cancel</Button>
                     </Modal.Footer>
                 </Modal>
-                :
-                <FetchAddAppointment/>
-        }
     </>
 }
 
