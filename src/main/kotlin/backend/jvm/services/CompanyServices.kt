@@ -52,7 +52,7 @@ class CompanyServices : ICompanyServices {
 
     private val uploadDirectory: String = "kotlin/backend/files"
 
-    fun getSearchedCompanies(search: String?): List<CompanyOutputDto>?{
+    override fun getSearchedCompanies(search: String?): List<CompanyOutputDto>?{
         if(search == "null") return getAllCompanies()
         return companyRepository.getCompanyBySearch("%${search}%")?.map { CompanyOutputDto(it) }
     }
@@ -169,7 +169,7 @@ class CompanyServices : ICompanyServices {
         return appointments.map {
             val service = serviceRepository.getServiceDBByAppointment(it.id)
             val employee  = it.usersDB?.firstOrNull { user ->
-                val role = usersRepository.getUserRoleByCompany(user.id,cid)
+                val role = user?.id?.let { it1 -> usersRepository.getUserRoleByCompany(it1,cid) }
                 (role == UserRoles.EMPLOYEE.name ||role == UserRoles.MANAGER.name)
             } ?: throw UserNotFound()
             val endHour = Time(it.appHour.time + service.duration.time)
@@ -186,7 +186,7 @@ class CompanyServices : ICompanyServices {
     fun uploadPhoto(cid: Int, image: MultipartFile){
         val fileName = image.originalFilename?.let { StringUtils.cleanPath(it) }
         if(fileName?.contains("..")!!){
-            println("not a a valid file");
+            println("not a valid file");
         }
         //val encodedFile = Base64.getEncoder().encodeToString(image.bytes)
         val savePath = saveFile(image, fileName)

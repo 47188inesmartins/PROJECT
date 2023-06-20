@@ -113,7 +113,7 @@ function PopUpMessage(props:{id:Number|undefined}) {
     }
     const handleCancel = () => setCancel(true);
 
-    if(props.id == undefined) return <Navigate to = {`/user/${id}/appointments`} replace={true}></Navigate>
+    if(props.id == undefined) return <Navigate to = {`/user/appointments`} replace={true}></Navigate>
     return (
         <>
             {!cancel?
@@ -152,6 +152,6 @@ function FetchCancelAppointment(props:{id:Number}){
 
     const a = Fetch('/company/1/appointment/'+props.id,
         'DELETE')
-    window.location.href = `/user/${id}/appointments`;
+    window.location.href = `/user/appointments`;
     return(<> </>);
 }

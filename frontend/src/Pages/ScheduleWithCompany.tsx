@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import '../Style/Schedule.css'
@@ -6,10 +6,7 @@ import {Fetch} from "../Utils/useFetch";
 import {useParams} from "react-router-dom";
 import {Navigate} from "react-router";
 import {Button, Modal} from "react-bootstrap";
-import {MyAppointments} from "./MyAppointments";
-import {Company} from "./Company";
 import {MDBInput} from "mdb-react-ui-kit";
-import {today} from "@progress/kendo-react-scheduler/dist/es/messages";
 import { format } from 'date-fns';
 
 
@@ -112,6 +109,7 @@ function TimePickerComponent (){
 
 
 function PopUpMessage(props:{id:string|undefined,date:string,hour:string}) {
+    console.log("props dat",props.date)
     const [show, setShow] = useState(true);
 
     const params = useParams()
@@ -148,93 +146,148 @@ function PopUpMessage(props:{id:string|undefined,date:string,hour:string}) {
 }
 
 function FetchAvailableServices(props:{id:string,date:string,hour:string}){
-    console.log("")
+
+    console.log("fetch available services ", props.date)
     const response = Fetch(`/company/${props.id}/appointment/services/availability?hour_begin=${props.hour}&date=${props.date}`,'GET')
-    const [submit, setSubmit] = useState(false)
+    const [employees, setEmployees] = useState({employees: undefined,
+        serviceId: undefined
+    })
     console.log(response)
-    //const response = Fetch(`/company/${props.id}/services`,'GET')
 
-
-    function PopUpEmployees(employees){
-        console.log("pop up employees")
-        return <PopUpEmployee props={employees}/>
+    function PopUpEmployees(serviceId, employees){
+        setEmployees({
+            employees: employees,
+            serviceId: serviceId
+        })
     }
 
     console.log("Response pop",response.response)
 
-    return  <Modal.Body>
-        {!submit?
+    return <Modal.Body>
+        {!employees.serviceId?
             <>
                 {response.response ?
-                    <>{response.response.length === 0 ?
-                        <> no available services </> :
-                        <>
-                            {
-                                response.response.map((service) => (
+                    <>
+                        {response.response.length === 0 ?
+                            <> no available services </>
+                            :
+                            <>
+                                {response.response.map((service) => (
                                     <div className="row text-center mx-0" key={service.first.id}>
                                         <div className="col-md-2 col-4 my-1 px-2" key={service.first.id}>
                                             <div className="cell py-1"
-                                                 onClick={() => PopUpEmployees(service.second)}>{service.first.serviceName}</div>
+                                                 onClick={() => PopUpEmployees(service.first.id, service.second)}>{service.first.serviceName}
+                                            </div>
                                         </div>
                                     </div>
                                 ))
-                            }
-                        </>
-                    }</>
+                                }
+                            </>
+                        }
+                    </>
                     :
-                    <>No available Services :( </>
+                    <>No available Services for this date </>
                 }
             </>
-            :
-            <>
-                <PopUpEmployees/>
+            :<>
+                <PopUpEmployee  appHour={props.hour} employees={employees} startDate={props.date}/>
             </>
         }
     </Modal.Body>
 }
 
-function PopUpEmployee(employees){
+function PopUpEmployee(props: {employees, startDate, appHour}){
     const [show, setShow] = useState(true);
-    const [cancel, setCancel] = useState(false);
     const params = useParams()
     const id = params.id
+    const [employeeId, setEmployeeId] = useState<number|undefined>(undefined)
 
-    const handleClose = () => {
+    const handleCancel = () => {
         setShow(false);
         window.location.href = `/company/${id}`;
     }
 
-    const handleCancel = () => setCancel(true);
+
+    function handleClick(value){
+        setEmployeeId(value)
+    }
+
+    console.log(employeeId)
+
+    function FetchAddAppointment(){
+
+        const obj = {
+            appHour: props.appHour,
+            appDate: props.startDate,
+            service: props.employees.serviceId,
+            user: employeeId
+        }
+
+        console.log("obj==",obj)
+
+        const resp = Fetch(`/company/${id}/appointment`,
+            'POST',
+            {
+                appHour: props.appHour,
+                appDate: props.startDate,
+                service: props.employees.serviceId,
+                user: employeeId
+            }
+        ).response
+
+        if(!resp) return(<p>...loading...</p>);
+
+        if(resp.status) {
+            setEmployeeId(undefined)
+            window.location.href = `/`
+            return(<></>);
+        }
+
+        if(resp){
+            alert("appointment has been scheduled!")
+            window.location.href = `/`
+            return(
+                <></>
+            )
+        }
+        return (<></>)
+    }
 
 
     console.log("dentro do popup employees")
     return  <>
-        <Company/>
-        <Modal
-            show={show}
-            onHide={handleClose}
-            backdrop="static"
-            keyboard={false}
-        >
-            <Modal.Header closeButton>
-                <Modal.Title>Available Employees for that service</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
+        {
+            !employeeId ?
 
-            </Modal.Body>
-            <Modal.Footer>
-                <Button variant="secondary" onClick={handleClose}>
-                    Close
-                </Button>
-                <Button variant="primary" onClick = {handleCancel}>Cancel</Button>
-            </Modal.Footer>
-        </Modal>
+                <Modal
+                    show={show}
+                    onHide={handleCancel}
+                    backdrop="static"
+                    keyboard={false}
+                >
+                    <Modal.Header closeButton>
+                        <Modal.Title>Available Employees for that service</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        {props.employees.employees.map((employee) => (
+                            <div className="row text-center mx-0" key={employee.id}>
+                                <div className="col-md-2 col-4 my-1 px-2" key={employee.id}>
+                                    <div className="cell py-1"
+                                         onClick={() => handleClick(employee.id)}>{employee.name}
+                                    </div>
+                                </div>
+                            </div>
+                        ))
+                        }
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="primary" onClick={handleCancel}>Cancel</Button>
+                    </Modal.Footer>
+                </Modal>
+                :
+                <FetchAddAppointment/>
+        }
     </>
 }
-/*
-{employees.map((employee) => (
-    <div>{employee}</div>
-)))}
-*/
 
 export default TimePickerComponent;

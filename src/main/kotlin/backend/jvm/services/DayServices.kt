@@ -1,20 +1,16 @@
 package backend.jvm.services
 
-import backend.jvm.model.ServiceDay
 import backend.jvm.repository.*
 import backend.jvm.services.dto.DayInputDto
 import backend.jvm.services.dto.DayOutputDto
-import backend.jvm.services.dto.ServiceOutputDto
 import backend.jvm.services.interfaces.IDayServices
 import backend.jvm.utils.errorHandling.*
+import backend.jvm.utils.time.addTimes
+import backend.jvm.utils.time.getDayOfWeek
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.sql.Date
 import java.sql.Time
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.time.format.TextStyle
-import java.util.*
 
 @Service
 class DayServices : IDayServices {
@@ -35,13 +31,10 @@ class DayServices : IDayServices {
     @Autowired
     lateinit var serviceRepository: ServiceRepository
 
-    @Autowired
-    lateinit var serviceDayRepository: ServiceDayRepository
 
     override fun addOpenDay(day: DayInputDto):DayOutputDto {
         if(!listDayOfWeek.contains(day.weekDays.uppercase())) throw InvalidOpenDay()
         val schedule = if(day.schedule != null) scheduleRepository.getReferenceById(day.schedule) else throw InvalidSchedule()
-      //  val service = day.service?.map { index -> serviceRepository.getServiceDBById(index) ?: throw InvalidOpenDay() }
         val dayDb = day.mapToDayDb(day,schedule,null)
         val db = dayRepository.save(dayDb)
         return  DayOutputDto(db)
@@ -49,52 +42,42 @@ class DayServices : IDayServices {
 
     fun addSpecialDayByService(day: DayInputDto, serviceId: Int, companyId: Int):DayOutputDto {
         if(!listDayOfWeek.contains(day.weekDays.uppercase())) throw InvalidOpenDay()
-        val schedule = scheduleRepository.getScheduleByCompany_Id(companyId) ?: throw InvalidSchedule()
         val service = serviceRepository.getServiceDBById(serviceId) ?: throw InvalidService()
         val dayDb = day.mapToDayDb(day,null,listOf(service))
         val db = dayRepository.save(dayDb)
-      //  serviceDayRepository.save(ServiceDay(db, service))
         return  DayOutputDto(db)
     }
 
 
-   fun getScheduleByWeekDay(weekDay: String, cid: Int): List<String> {
-       val schedule = scheduleRepository.getScheduleByCompany_Id(cid) ?: throw CompanyNotFound()
-       val days = dayRepository.getDayByScheduleIdAndWeekDays(schedule.id, getDayOfWeek(Date.valueOf(weekDay)))
+    fun getScheduleByWeekDay(weekDay: String, cid: Int): List<String> {
+        val schedule = scheduleRepository.getScheduleByCompany_Id(cid) ?: throw CompanyNotFound()
+        val days = dayRepository.getDayByScheduleIdAndWeekDays(schedule.id, getDayOfWeek(Date.valueOf(weekDay)))
 
-       if(days.isEmpty()) return emptyList()
+        if(days.isEmpty()) return emptyList()
 
-       val startTime = days[0].beginHour
-       val endTime = days[0].endHour
-       val interval = schedule.betweenInterval
-       var currentTime = startTime
+        val startTime = days[0].beginHour
+        val endTime = days[0].endHour
+        val interval = schedule.betweenInterval
+        var currentTime = startTime
 
-       val hoursList = mutableListOf<String>()
+        val hoursList = mutableListOf<String>()
 
-       while (currentTime.before(endTime) || currentTime == endTime) {
-           hoursList.add(currentTime.toString().substring(0..4))
-           currentTime = getEndHour(currentTime, interval!!)
-       }
+        while (currentTime.before(endTime) || currentTime == endTime) {
+            hoursList.add(currentTime.toString().substring(0..4))
+            currentTime = addTimes(currentTime, interval!!)
+        }
 
-       return hoursList
+        return hoursList
     }
 
-    fun getEndHour(tempo1: Time, tempo2: Time): Time {
-        val additionalTime = tempo2.time - tempo2.timezoneOffset * 60 * 1000
-        println(Time(tempo1.time + additionalTime))
-        return Time(tempo1.time + additionalTime)
-    }
-
-
-
-   fun addOpenDays(day: List<DayInputDto>, companyId: Int, interval: String) {
+    fun addOpenDays(day: List<DayInputDto>, companyId: Int, interval: String) {
         companyRepository.findAllById(companyId) ?: throw InvalidSchedule()
         val schedule = scheduleRepository.getScheduleByCompany_Id(companyId) ?: throw InvalidSchedule()
         val intervalBetween = Time.valueOf(interval.plus(":00"))
         scheduleRepository.updateBetweenInterval(schedule.id, intervalBetween)
         val daysDb = day.map { it.mapToDayDb(it, schedule, null) }
         daysDb.forEach { dayRepository.save(it) }
-   }
+    }
 
     override fun updateBeginHour(id:Int,hour: String): Time {
         if(dayRepository.getDayById(id) == null ) throw InvalidDay()
@@ -115,46 +98,4 @@ class DayServices : IDayServices {
         if(availableDays.isEmpty()) throw NoAvailableDays()
         return availableDays.map { DayOutputDto(it) }
     }
-
-    /*
-    fun getAvailableServiceByWeekDay(weekDay: String): List<ServiceOutputDto>{
-        if(!listDayOfWeek.contains(weekDay)) throw InvalidDay()
-        val getDay = dayRepository.getDayByWeekDays(weekDay).map { it.service }
-        val availableServices = mutableListOf<ServiceOutputDto>()
-        getDay.forEach {
-            if(it!= null) availableServices.add(ServiceOutputDto(it))
-        }
-        if (availableServices.isEmpty()) throw NoAvailableServices(weekDay)
-        return availableServices
-    }
-    */
-
-
-    fun getDayOfWeekFromDate(dateString: String): String {
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-        val date = LocalDate.parse(dateString, formatter)
-        val dayOfWeek = date.dayOfWeek
-        val locale = Locale.getDefault()
-        return dayOfWeek.getDisplayName(TextStyle.FULL, locale).substring(3).toUpperCase()
-    }
-
-    fun getDayOfWeek(date : Date): String{
-        val utilDate = java.util.Date(date.time)
-        val calendar = Calendar.getInstance()
-        calendar.time = utilDate
-        val dayOfWeek = calendar[Calendar.DAY_OF_WEEK]
-
-        return when(dayOfWeek) {
-            Calendar.SUNDAY -> "SUN"
-            Calendar.MONDAY -> "MON"
-            Calendar.TUESDAY -> "TUE"
-            Calendar.WEDNESDAY -> "WED"
-            Calendar.THURSDAY -> "THU"
-            Calendar.FRIDAY -> "FRI"
-            Calendar.SATURDAY -> "SAT"
-            else -> "invalid data"
-        }
-    }
-
-
 }

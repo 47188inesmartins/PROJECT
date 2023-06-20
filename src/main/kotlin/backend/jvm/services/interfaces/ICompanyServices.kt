@@ -6,6 +6,8 @@ import java.util.*
 
 interface ICompanyServices {
 
+    fun getSearchedCompanies(search: String?): List<CompanyOutputDto>?
+
     fun addCompany(token: String, company: CompanyInputDto): CompanyOutputDto
 
     fun deleteCompany(id: Int): Boolean

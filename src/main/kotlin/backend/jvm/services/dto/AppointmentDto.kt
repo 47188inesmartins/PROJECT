@@ -7,12 +7,12 @@ import java.sql.Time
 data class AppointmentInputDto(
     val appHour: String,
     val appDate: String,
-    val schedule: Int,
-    val user: List<Int>?,
+  //  val schedule: Int,
+    val user: Int?,
     val service: Int
 ) {
-    fun mapToAppointmentDb(dto: AppointmentInputDto, schedule: Schedule, user: List<UserDB>?, service: ServiceDB): Appointment {
-        val ah = Time.valueOf(dto.appHour)?: throw Exception("invalid hour")
+    fun mapToAppointmentDb(dto: AppointmentInputDto, schedule: Schedule, user: List<UserDB?>, service: ServiceDB): Appointment {
+        val ah = Time.valueOf(dto.appHour.plus(":00"))?: throw Exception("invalid hour")
         val ad = Date.valueOf(dto.appDate)?: throw Exception("invalid date")
         return Appointment(
             ah,
@@ -37,7 +37,7 @@ data class AppointmentOutputDto(
         appHour = appointment.appHour,
         appDate = appointment.appDate,
         schedule = appointment.schedule.id,
-        user = appointment.usersDB?.map { it.id },
+        user = appointment.usersDB?.map { it?.id },
         service = appointment.service.id
     )
 }

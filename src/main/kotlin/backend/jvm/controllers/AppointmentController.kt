@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.context.request.RequestContextHolder
+import org.springframework.web.context.request.ServletRequestAttributes
 import org.springframework.web.server.ResponseStatusException
 
 
@@ -21,11 +23,14 @@ class AppointmentController {
     @Autowired
     lateinit var appointmentServices: AppointmentServices
 
-    @RoleManager(["MANAGER", "CLIENT"])
+    @RoleManager(["MANAGER", "CLIENT", "EMPLOYEE"])
     @PostMapping("")
     fun addAppointment(@RequestBody appointment: AppointmentInputDto, @PathVariable cid: Int): ResponseEntity<AppointmentOutputDto> {
         return try {
-            val response = appointmentServices.addAppointment(appointment)
+            val requestAttributes = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes
+            val request = requestAttributes.request
+            val bearerToken = request.getHeader("Authorization")?.removePrefix("Bearer ")
+            val response = bearerToken?.let { appointmentServices.addAppointment(appointment, cid, it) }
             ResponseEntity.status(201)
                 .body(response)
         }catch (e: Exception) {

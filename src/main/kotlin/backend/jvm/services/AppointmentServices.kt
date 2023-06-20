@@ -8,18 +8,21 @@ import backend.jvm.services.dto.AppointmentOutputDto
 import backend.jvm.services.dto.ServiceOutputDto
 import backend.jvm.services.dto.UserOutputDto
 import backend.jvm.services.interfaces.IAppointmentServices
-import backend.jvm.utils.UserRoles
 import backend.jvm.utils.errorHandling.*
+import backend.jvm.utils.time.getDayOfWeek
+import backend.jvm.utils.time.addTimes
+import backend.jvm.utils.time.getCurrentDate
+import backend.jvm.utils.time.getCurrentHour
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.sql.Date
 import java.sql.Time
-import java.time.LocalDate
 import java.util.*
-import java.util.Calendar.*
 
-
+/**
+ * Service class for managing appointments.
+ */
 @Service
 @Transactional
 class AppointmentServices : IAppointmentServices {
@@ -42,66 +45,102 @@ class AppointmentServices : IAppointmentServices {
     @Autowired
     lateinit var dayRepository: DayRepository
 
+    /**
+     * Add an appointment.
+     * @param appointment The appointment details.
+     * @param cid The company ID.
+     * @param token The authentication token.
+     * @return The created appointment.
+     * @throws ServiceNotFound if the service is not found.
+     * @throws InvalidAppointment if the appointment is invalid.
+     * @throws UserNotFound if the user is not found.
+     * @throws ScheduleNotFound if the schedule is not found.
+     */
     @Transactional
-    override fun addAppointment(appointment: AppointmentInputDto): AppointmentOutputDto {
+    override fun addAppointment(appointment: AppointmentInputDto, cid: Int, token: String): AppointmentOutputDto {
+        val userClient = userRepository.getUserByToken(UUID.fromString(token))
         val service = servicesRepository.getServiceDBById(appointment.service)
             ?: throw ServiceNotFound()
+        if (appointment.user == null) throw InvalidAppointment()
+        val employee = userRepository.getUserById(appointment.user) ?: throw UserNotFound()
 
-        val user = appointment.user?.map { userId ->
-            userRepository.getUserById(userId) ?: throw UserNotFound()
-        }
-
-        val employee = user?.firstOrNull { user ->
-            val role = userRepository.getRole(user.id)
-            role in listOf(UserRoles.EMPLOYEE.name, UserRoles.MANAGER.name)
-        }
-
-        val schedule = scheduleRepository.getScheduleById(appointment.schedule)
+        val schedule = scheduleRepository.getScheduleById(cid)
             ?: throw ScheduleNotFound()
 
-        val appointmentDb = appointment.mapToAppointmentDb(appointment, schedule, user, service)
+        val appointmentDb = appointment.mapToAppointmentDb(appointment, schedule, listOf(userClient, employee), service)
         val savedAppointment = appointmentRepository.save(appointmentDb)
 
         val endTime = savedAppointment.appHour.time + service.duration.time
         val time = Time(endTime)
 
         val unavailabilityDb = UnavailabilityDB(
-            getCurrentDate(),
+            Date.valueOf(appointment.appDate),
             null,
             savedAppointment.appHour,
             time,
-            employee ?: throw UserNotFound()
+            employee
         )
         unavailabilityRepository.save(unavailabilityDb)
 
         return AppointmentOutputDto(savedAppointment)
     }
 
+    /**
+     * Deletes an appointment by ID.
+     * @param id The appointment ID.
+     * @throws AppointmentNotFound if the appointment is not found.
+     */
     override fun deleteAppointment(id: Int) {
         val getAppointment = appointmentRepository.findById(id).get()
-        if(getAppointment.equals(Optional.empty<Appointment>())) throw AppointmentNotFound()
-        if(getCurrentDate().after(getAppointment.appDate) && getCurrentHour() > getAppointment.appHour)
+        if (getAppointment.equals(Optional.empty<Appointment>())) throw AppointmentNotFound()
+        if (getCurrentDate().after(getAppointment.appDate) && getCurrentHour() > getAppointment.appHour)
             return appointmentRepository.deleteById(id)
         appointmentRepository.deleteById(id)
     }
 
+    /**
+     * Get an appointment by ID.
+     * @param id The appointment ID.
+     * @return The appointment with the specified ID.
+     * @throws AppointmentNotFound if the appointment is not found.
+     */
     override fun getAppointmentById(id: Int): AppointmentOutputDto? {
         val isAppointment = appointmentRepository.findById(id)
-        if(!isAppointment.isPresent) throw AppointmentNotFound()
+        if (!isAppointment.isPresent) throw AppointmentNotFound()
         val appointment = isAppointment.get()
         return AppointmentOutputDto(appointment)
     }
 
-    override fun getAppointmentByDateAndHour (sid: Int, appHour: String, appDate: String) : List<AppointmentOutputDto> {
+    /**
+     * Get appointments by date and hour.
+     * @param sid The schedule ID.
+     * @param appHour The appointment hour.
+     * @param appDate The appointment date.
+     * @return The list of appointments.
+     * @throws EmptyAppointments if no appointments are found.
+     */
+    override fun getAppointmentByDateAndHour(sid: Int, appHour: String, appDate: String): List<AppointmentOutputDto> {
         val date = Date.valueOf(appDate)
         val hour = Time.valueOf(appHour)
         val appointments = appointmentRepository.getAppointmentByDateAndHour(sid, date, hour)
-        if(appointments.isEmpty()) throw EmptyAppointments()
-        return appointments.map{ AppointmentOutputDto(it) }
+        if (appointments.isEmpty()) throw EmptyAppointments()
+        return appointments.map { AppointmentOutputDto(it) }
     }
 
+    /**
+     * Gets an available services by appointment details.
+     * @param beginHour The beginning hour.
+     * @param date The date.
+     * @param companyId The company ID.
+     * @return The list of available services and their corresponding employees.
+     * @throws ScheduleNotFound if the schedule is not found.
+     */
 
-    fun getAvailableServicesByAppointment(beginHour:String, date:String, companyId: Int): List<Pair<ServiceOutputDto, List<UserOutputDto>>>{
+    override fun getAvailableServicesByAppointment(
+        beginHour: String,
+        date: String,
+        companyId: Int
+    ): List<Pair<ServiceOutputDto, List<UserOutputDto>>> {
         val bh = Time.valueOf(beginHour.plus(":00"))
         val d = Date.valueOf(date)
         val weekDay = getDayOfWeek(d)
@@ -111,55 +150,20 @@ class AppointmentServices : IAppointmentServices {
         val day = dayRepository.getDayByWeekDaysAndAndSchedule(weekDay, schedule)
 
         val s = services.map {
-            val employees = userRepository.getAvailableEmployeesByService(it.id, d, bh, getEndHour(bh, it.duration))
-                Pair(ServiceOutputDto(it), employees.map{user -> UserOutputDto(user)})
-        }.filter {  (it.second.isNotEmpty() &&
-            ((day.beginHour < getEndHour(bh,it.first.duration) && getEndHour(bh,it.first.duration) < day.intervalBegin) ||
-                    (day.intervalEnd!! < getEndHour(bh,it.first.duration) && getEndHour(bh,it.first.duration) < day.endHour))) }
+            val employees = userRepository.getAvailableEmployeesByService(it.id, d, bh, addTimes(bh, it.duration))
+            Pair(ServiceOutputDto(it), employees.map { user -> UserOutputDto(user) })
+        }.filter { (it.second.isNotEmpty() &&
+                ((day.beginHour < addTimes(bh, it.first.duration) && addTimes(bh, it.first.duration) < day.intervalBegin) ||
+                        (day.intervalEnd!! < addTimes(bh, it.first.duration) && addTimes(bh, it.first.duration) < day.endHour))) }
 
         val specialServices = servicesRepository.getAvailableServicesByHour(weekDay, bh, companyId)
         if (specialServices.isEmpty()) return s
         val serv = specialServices.filter {
-             val day = dayRepository.getDayByServiceAndWeek(it.id, weekDay)
-             userRepository.getAvailableEmployeesByService(it.id, d, bh, getEndHour(bh, it.duration)).isNotEmpty() &&
-             ((day.beginHour < getEndHour(bh,it.duration) && getEndHour(bh,it.duration) < day.intervalBegin) ||
-              (day.intervalEnd!! < getEndHour(bh,it.duration) && getEndHour(bh,it.duration) < day.endHour))
+            val day = dayRepository.getDayByServiceAndWeek(it.id, weekDay)
+            userRepository.getAvailableEmployeesByService(it.id, d, bh, addTimes(bh, it.duration)).isNotEmpty() &&
+                    ((day.beginHour < addTimes(bh, it.duration) && addTimes(bh, it.duration) < day.intervalBegin) ||
+                            (day.intervalEnd!! < addTimes(bh, it.duration) && addTimes(bh, it.duration) < day.endHour))
         }
         return emptyList()
-     //   return serv.map { ServiceOutputDto(it) }
-    }
-
-
-
-    fun getCurrentDate(): Date = Date.valueOf(LocalDate.now())
-
-
-    fun getCurrentHour(): Time{
-        val currentTime = getInstance().time
-        return Time(currentTime.time)
-    }
-
-
-    fun getEndHour(tempo1: Time, tempo2: Time): Time {
-        val additionalTime = tempo2.time - tempo2.timezoneOffset * 60 * 1000
-        return Time(tempo1.time + additionalTime)
-    }
-
-
-    fun getDayOfWeek(date : Date): String{
-        val utilDate = java.util.Date(date.time)
-        val calendar = getInstance()
-        calendar.time = utilDate
-
-        return when(calendar[DAY_OF_WEEK]) {
-            SUNDAY -> "SUN"
-            MONDAY -> "MON"
-            TUESDAY -> "TUE"
-            WEDNESDAY -> "WED"
-            THURSDAY -> "THU"
-            FRIDAY -> "FRI"
-            SATURDAY -> "SAT"
-            else -> "invalid data"
-        }
     }
 }

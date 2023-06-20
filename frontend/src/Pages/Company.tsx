@@ -77,11 +77,11 @@ export function Company() {
                                                 <tr>
                                                     <th
                                                         style={{ paddingTop: '12px', paddingBottom: '12px', textAlign: 'left', backgroundColor: '#8faacf', color: 'white' }}>
-                                                        Nome </th>
+                                                        Service </th>
                                                     <th style={{ paddingTop: '12px', paddingBottom: '12px', textAlign: 'left', backgroundColor: '#8faacf', color: 'white' }}>
-                                                        Preço </th>
+                                                        Price </th>
                                                     <th style={{ paddingTop: '12px', paddingBottom: '12px', textAlign: 'left', backgroundColor: '#8faacf', color: 'white' }}>
-                                                        Duração </th>
+                                                        Duration </th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>

@@ -54,7 +54,7 @@ class Appointment {
         inverseJoinColumns = [JoinColumn(name = "user_id")]
     )
 
-    val usersDB : List<UserDB>?
+    val usersDB : List<UserDB?>?
 
 
 
@@ -66,7 +66,7 @@ class Appointment {
         this.service = ServiceDB()
     }
 
-    constructor(appHour: Time, appDate : Date, scheduleId: Schedule, userDBId: List<UserDB>?, serviceDB: ServiceDB) {
+    constructor(appHour: Time, appDate : Date, scheduleId: Schedule, userDBId: List<UserDB?>?, serviceDB: ServiceDB) {
         this.appHour = appHour
         this.appDate = appDate
         this.schedule = scheduleId

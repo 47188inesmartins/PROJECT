@@ -28,8 +28,6 @@ class UserServices : IUserInterface {
     @Autowired
     lateinit var userCompanyRepository: UserCompanyRepository
 
-
-
     companion object{
         val EMAIL_FORMAT = Regex("""^\w+@\w+\.\w+$""")
         val PASSWORD_FORMAT = Regex("^(?=.*\\d)(?=.*[!@#\$%^&*])(?=.*[a-zA-Z]).{8,}$")
@@ -69,10 +67,6 @@ class UserServices : IUserInterface {
         return userRepository.changeRole(id,name)
     }
 
- /*   override fun getRoleByUser(id: Int):String?{
-        return userRepository.getRole(id)?: throw UserNotFound()
-    }
-*/
     override fun changePassword(password: String, id: Int): String{
         if(!Hashing.verifyPasswordSecure(password)) throw InvalidPassword()
         val pass = Hashing.encodePass(password)
@@ -148,8 +142,8 @@ class UserServices : IUserInterface {
 
             if(it.usersDB == null) throw InvalidAppointment()
             val employee = it.usersDB.firstOrNull { user ->
-                userRepository.getUserDBByIdAndRole(UserRoles.EMPLOYEE.name,user.id)!= null ||
-                userRepository.getUserDBByIdAndRole(UserRoles.MANAGER.name,user.id)!= null
+                user?.let { it1 -> userRepository.getUserDBByIdAndRole(UserRoles.EMPLOYEE.name, it1.id) } != null ||
+                user?.let { it1 -> userRepository.getUserDBByIdAndRole(UserRoles.MANAGER.name, it1.id) } != null
             }?: throw UserNotFound()
 
             AppointmentInfo(
@@ -186,4 +180,5 @@ class UserServices : IUserInterface {
         val getEndDate = Date.valueOf(dateEnd)
         return servicesRepository.getEarnedMoneyByEmployee(user.id,company, getBeginDate, getEndDate) ?: 0.0
     }
+
 }
