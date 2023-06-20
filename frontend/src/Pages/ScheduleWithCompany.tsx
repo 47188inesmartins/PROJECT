@@ -220,38 +220,30 @@ function PopUpEmployee(props: {employees, startDate, appHour}){
             user: employeeId
         }
 
-        console.log("obj==",obj)
-
-
-
-            const resp = Fetch(`/company/${id}/appointment`,
-                    'POST',
-                    {
-                        appHour: props.appHour,
-                        appDate: props.startDate,
-                        service: props.employees.serviceId,
-                        user: employeeId
-                    }
-                ).response
-
+        const resp = Fetch(`/company/${id}/appointment`,
+                'POST',
+                {
+                    appHour: props.appHour,
+                    appDate: props.startDate,
+                    service: props.employees.serviceId,
+                    user: employeeId
+                }
+            ).response
 
         if(!resp){
             return(<p>...loading...</p>);
         }
 
         if(resp.status) {
-            setEmployeeId(undefined)
             return(<Navigate to = "/" replace={true}></Navigate>);
         }
 
         if(resp){
-          //  setEmployeeId(undefined)
             alert("appointment has been scheduled!")
             return(
                 <Navigate to = "/" replace={true}></Navigate>
             )
         }
-      //  return (<Navigate to = "/" replace={true}></Navigate>)
     }
 
 

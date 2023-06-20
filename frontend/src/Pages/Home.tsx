@@ -136,6 +136,7 @@ function SearchBar() {
                     <FetchSearch/>
                 </div>
                 :
+
                 <form onSubmit={handleSubmit}>
                     <input
                         type="text"

@@ -18,13 +18,6 @@ import ScheduleWithCompany from "./ScheduleWithCompany";
 
 export function Company() {
 
-    const [selectedTime, setSelectedTime] = useState('');
-
-
-    const handleTimeChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
-        setSelectedTime(event.target.value);
-    };
-
     const params = useParams()
     const id = params.id
 
@@ -76,7 +69,7 @@ export function Company() {
                                                 <thead>
                                                 <tr>
                                                     <th
-                                                        style={{ paddingTop: '12px', paddingBottom: '12px', textAlign: 'left', backgroundColor: '#8faacf', color: 'white' }}>
+                                                        style={{ paddingTop: '12px', paddingBottom: '12px', textAlign: 'left', backgroundColor: "#8faacf", color: 'white' }}>
                                                         Service </th>
                                                     <th style={{ paddingTop: '12px', paddingBottom: '12px', textAlign: 'left', backgroundColor: '#8faacf', color: 'white' }}>
                                                         Price </th>

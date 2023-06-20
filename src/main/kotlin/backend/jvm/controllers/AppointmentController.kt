@@ -43,12 +43,6 @@ class AppointmentController {
         }
     }
 
-    @RoleManager(["MANAGER", "CLIENT"])
-    @GetMapping("/my-appointmenst")
-    fun getAllAppointmentsOfaCompany(){
-
-    }
-
 
     @RoleManager(["CLIENT","MANAGER","EMPLOYEE"])
     @DeleteMapping("/{id}")
@@ -120,4 +114,5 @@ class AppointmentController {
             }
         }
     }
+
 }
