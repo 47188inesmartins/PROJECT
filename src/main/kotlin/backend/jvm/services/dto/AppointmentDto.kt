@@ -29,7 +29,7 @@ data class AppointmentOutputDto(
     val appHour: Time,
     val appDate: Date,
     val schedule: Int,
-    val user:   List<Int>?,
+    val user:   List<Int?>?,
     val service: Int
 ){
     constructor(appointment: Appointment) : this(
