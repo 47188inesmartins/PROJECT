@@ -45,7 +45,7 @@ interface CompanyRepository : JpaRepository<Company, Int>{
     fun getCompanyByUserIdAndRole(@Param("user_id") user: Int, @Param("role") role: String): List<Company>
 
     @Modifying
-    @Query(value = "update company set path_photo = :path where id = :id ", nativeQuery = true)
+    @Query(value = "update company set url = :path where id = :id ", nativeQuery = true)
     @Transactional
-    fun updatePhotoPath(@Param("id") id: Int, @Param("path") path: String)
+    fun updatePhotoPath(@Param("id") id: Int, @Param("path") path: ByteArray)
 }

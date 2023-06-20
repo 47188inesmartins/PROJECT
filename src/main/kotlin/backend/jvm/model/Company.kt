@@ -32,8 +32,10 @@ class Company {
         @Column(name = "description")
         val description:String
 
-        @Column(name = "url")
-        val url: String?
+
+        //@Lob
+        @Column(name = "url", columnDefinition = "BYTEA")
+        val url: ByteArray?
 
         @OneToMany(mappedBy = "company")
         val serviceDBS: List<ServiceDB>?
@@ -53,10 +55,10 @@ class Company {
                 this.serviceDBS = null
                 this.schedule = null
                 this.userCompany = listOf()
-                this.url = ""
+                this.url = null
         }
 
-        constructor(nif: String, address: String, compName: String, compType: String, description: String, url: String?, serviceDB: List<ServiceDB>?, schedule: Schedule?, usersDB: List<UserCompany>?){
+        constructor(nif: String, address: String, compName: String, compType: String, description: String, url: ByteArray?, serviceDB: List<ServiceDB>?, schedule: Schedule?, usersDB: List<UserCompany>?){
                 this.nif = nif
                 this.address = address
                 this.name = compName

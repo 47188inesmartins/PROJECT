@@ -21,7 +21,6 @@ export function Fetch(url: string, method: string, requestBody: any = null): Fet
     const authorization: { 'Content-Type': string; Authorization?: string; } = (token !== "")
         ? {'Content-Type': 'application/json', 'Authorization': `Bearer ${token} `}
         : {'Content-Type': 'application/json'};
-
     const hostUrl = HOST + url
 
     useEffect(() => {

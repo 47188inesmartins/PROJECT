@@ -199,17 +199,16 @@ function PopUpEmployee(props: {employees, startDate, appHour}){
     const id = params.id
     const [employeeId, setEmployeeId] = useState<number|undefined>(undefined)
     const [dados, setDados] = useState({});
-    const [redirecionar, setRedirecionar] = useState(false);
+
 
     const handleCancel = () => {
         setShow(false);
         window.location.href = `/company/${id}`;
     }
     const token = React.useContext(LoggedInContextCookie).loggedInState.token;
+    const [redirecionar, setRedirecionar] = useState(false);
 
     function handleClick(value){
-
-
         const obj = {
             appHour: props.appHour,
             appDate: props.startDate,
@@ -247,7 +246,7 @@ function PopUpEmployee(props: {employees, startDate, appHour}){
 
     console.log(employeeId)
 
-    function FetchAddAppointment(){
+    /*function FetchAddAppointment(){
 
         const navigate = useNavigate()
 
@@ -282,7 +281,7 @@ function PopUpEmployee(props: {employees, startDate, appHour}){
                 <Navigate to = "/" replace={true}></Navigate>
             )
         }
-    }
+    }*/
 
 
     console.log("in do popup employees")

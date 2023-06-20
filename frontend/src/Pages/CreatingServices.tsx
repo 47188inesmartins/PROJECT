@@ -33,9 +33,9 @@ export function CreatingServices(){
         type:businessType,
         description: description
     }
-
+    const id = useParams().id
     const handleCancel = () => {
-        window.location.href = '/'; // Redireciona para a página inicial (home)
+        window.location.href = `/company/${id}/upload-file`; // Redireciona para a página inicial (home)
     };
 
     const handleCreate = () => {

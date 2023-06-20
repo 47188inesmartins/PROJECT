@@ -38,7 +38,7 @@ data class CompanyOutputDto(
     val service: List<ServiceInfo>?,
     val schedule: Int?,
     val users: List<CompanyUserRole>?,
-    val path:String?
+    val path:ByteArray?
 ){
     constructor(company: Company): this(
         id = company.id,

@@ -128,7 +128,8 @@ class CompanyServices : ICompanyServices {
 
 
     override fun getAllCompanies(): List<CompanyOutputDto>{
-        return companyRepository.findAll().map{ CompanyOutputDto(it) }
+       val a = companyRepository.findAll().map{ CompanyOutputDto(it) }
+        return a
     }
 
     override fun getAllServices(id: Int): List<ServiceOutputDto>{
@@ -188,9 +189,9 @@ class CompanyServices : ICompanyServices {
         if(fileName?.contains("..")!!){
             println("not a valid file");
         }
-        //val encodedFile = Base64.getEncoder().encodeToString(image.bytes)
-        val savePath = saveFile(image, fileName)
-        companyRepository.updatePhotoPath(cid,savePath)
+        val encodedFile = image.bytes
+        //val savePath = saveFile(image, fileName)
+        companyRepository.updatePhotoPath(cid,encodedFile)
     }
 
 

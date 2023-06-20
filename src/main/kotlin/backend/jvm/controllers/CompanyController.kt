@@ -282,7 +282,7 @@ class CompanyController {
         @RequestBody file: MultipartFile
     ): ResponseEntity<String> {
         return try {
-            val imageCompany = companyServices.uploadPhoto(cid,file)
+            companyServices.uploadPhoto(cid,file)
             ResponseEntity
                 .status(200)
                 .body("Upload done")

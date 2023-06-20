@@ -31,7 +31,7 @@ export function AddingEmployees() {
     };
 
     const handleLater = () => {
-        window.location.href = `/company/${id}/upload-file`;
+        window.location.href = `/company/${id}/services`;
     }
 
 

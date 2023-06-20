@@ -9,7 +9,7 @@ create table if not exists COMPANY (
    name varchar(20),
    type varchar(100) check (type in ('BEAUTY','LIFESTYLE','FITNESS','BUSINESS','OTHERS')),
    description varchar(300),
-   url varchar(255)
+   url BYTEA
 );
 
 

@@ -77,7 +77,7 @@ export function CreatingSchedule() {
         if(!resp) return(<p>...loading...</p>);
         if(resp.status) {
             setCreate(false)
-            window.location.href = `/company/${id}/services`
+            window.location.href = `/company/${id}/employees`
             return(<></>);
         }
         if(resp){

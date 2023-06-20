@@ -31,7 +31,9 @@ function UploadPhoto() {
                 body: formData
             });
 
-            if (response.ok) {
+            if (response.status === 200) {
+                alert("your image is uploaded")
+                window.location.href = '/'
                 console.log('Upload concluído');
             } else {
                 console.error('Erro durante o upload:', response.status);
