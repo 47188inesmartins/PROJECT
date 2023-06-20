@@ -47,7 +47,7 @@ export function Home() {
                     overflowY: "auto"}}>
                     {!response.response ?
                         <p>Loading...</p>
-                     :
+                        :
                         <div>
                             {response.response.length === 0 ?
                                 <MDBContainer className="py-5">
@@ -59,6 +59,8 @@ export function Home() {
                                 <a>No matches found</a>
 
                                 </div>
+
+                                        <br/>
                                     </MDBCard>
                                 </MDBContainer>:
                                 <MDBContainer className="py-5">

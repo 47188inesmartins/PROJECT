@@ -41,7 +41,7 @@ export function Company() {
                             <MDBCard>
                                 <MDBRow>
                                     <MDBCol className="mb-2">
-                                        <MDBCardImage src={URL.createObjectURL( company.response.path) }
+                                        <MDBCardImage
                                                       alt={company.response.path} className="w-100 rounded-3" />
                                     </MDBCol>
                                     <MDBCol className="mb-2">

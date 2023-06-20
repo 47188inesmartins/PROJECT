@@ -8,6 +8,7 @@ import {Navigate} from "react-router";
 import {Button, Modal} from "react-bootstrap";
 import {MDBInput} from "mdb-react-ui-kit";
 import { format } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
 
 
 function TimePickerComponent (){
@@ -15,51 +16,44 @@ function TimePickerComponent (){
     const [startDate, setStartDate] = useState(format(new Date(), 'yyyy-MM-dd'));
     const [click, setClick] = useState<string|undefined>(undefined);
 
-
     const params = useParams()
     const id = params.id
-
 
     const handleClick = (value) => {
         setClick(value)
     }
 
-    function getWeekDay(date: Date): string {
-        const daysOfWeek = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
-        const dayIndex = date.getDay();
-        return daysOfWeek[dayIndex];
-    }
-
-
     function handleDateChange(date){
         setStartDate(date)
     }
 
+    const schedule = Fetch(`company/${id}/day/week-day?day=${startDate}`, "GET").response
 
-    const schedule = Fetch(`company/${id}/day/week-day?day=${startDate}`, "GET")
-
-    if(schedule.response){
-        if(schedule.response.length === 0){
-            return <>
-                <div className="card-header bg-dark">
-                    <div className="mx-0 mb-0 row justify-content-sm-center justify-content-start px-1">
-                        <DatePicker
-                            selected={startDate}
-                            onChange={(date) => handleDateChange(date)} // Atualiza o estado com a data selecionada
-                        />
+    if(schedule){
+        if(schedule.length === 0){
+            return (
+                <>
+                    <div className="card-header bg-dark">
+                        <div className="mx-0 mb-0 row justify-content-sm-center justify-content-start px-1">
+                            <DatePicker
+                                selected={startDate}
+                                onChange={(date) => handleDateChange(date)}
+                            />
+                        </div>
                     </div>
-                </div>
-                <a>Closed for the day</a>
-            </>
+                    <a>Closed for the day</a>
+                </>
+            )
         }
     }
+
     console.log("schedule = ",schedule)
 
     return (
         <>
             {!click?
                 <>
-                    {!schedule.response ?
+                    {!schedule?
                         <div> ..loading.. </div>
                         :
                         <div className="container-fluid px-0 px-sm-4 mx-auto">
@@ -83,7 +77,7 @@ function TimePickerComponent (){
                                             </div>
                                             <div className="card-body p-3 p-sm-5">
                                                 <div className="row text-center mx-0">
-                                                    {schedule.response.map((group, rowIndex) => (
+                                                    {schedule.map((group, rowIndex) => (
                                                         <div className="row text-center mx-0" key={rowIndex}>
                                                             <div className="col-md-2 col-4 my-1 px-2" key={rowIndex}>
                                                                 <div className="cell py-1"
@@ -189,7 +183,8 @@ function FetchAvailableServices(props:{id:string,date:string,hour:string}){
                     <>No available Services for this date </>
                 }
             </>
-            :<>
+            :
+            <>
                 <PopUpEmployee  appHour={props.hour} employees={employees} startDate={props.date}/>
             </>
         }
@@ -216,6 +211,8 @@ function PopUpEmployee(props: {employees, startDate, appHour}){
 
     function FetchAddAppointment(){
 
+        const navigate = useNavigate()
+
         const obj = {
             appHour: props.appHour,
             appDate: props.startDate,
@@ -225,40 +222,43 @@ function PopUpEmployee(props: {employees, startDate, appHour}){
 
         console.log("obj==",obj)
 
-        const resp = Fetch(`/company/${id}/appointment`,
-            'POST',
-            {
-                appHour: props.appHour,
-                appDate: props.startDate,
-                service: props.employees.serviceId,
-                user: employeeId
-            }
-        ).response
 
-        if(!resp) return(<p>...loading...</p>);
+
+            const resp = Fetch(`/company/${id}/appointment`,
+                    'POST',
+                    {
+                        appHour: props.appHour,
+                        appDate: props.startDate,
+                        service: props.employees.serviceId,
+                        user: employeeId
+                    }
+                ).response
+
+
+        if(!resp){
+            return(<p>...loading...</p>);
+        }
 
         if(resp.status) {
             setEmployeeId(undefined)
-            window.location.href = `/`
-            return(<></>);
+            return(<Navigate to = "/" replace={true}></Navigate>);
         }
 
         if(resp){
+          //  setEmployeeId(undefined)
             alert("appointment has been scheduled!")
-            window.location.href = `/`
             return(
-                <></>
+                <Navigate to = "/" replace={true}></Navigate>
             )
         }
-        return (<></>)
+      //  return (<Navigate to = "/" replace={true}></Navigate>)
     }
 
 
-    console.log("dentro do popup employees")
+    console.log("in do popup employees")
     return  <>
         {
             !employeeId ?
-
                 <Modal
                     show={show}
                     onHide={handleCancel}
