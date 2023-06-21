@@ -15,8 +15,14 @@ import "../Style/LayoutCompany.css"
 
 export function Layout() {
 
-    const auth = React.useContext(LoggedInContextCookie).loggedInState.auth
+    const context = React.useContext(LoggedInContextCookie).loggedInState
+    const auth = context.auth
+    const role = context.role
+    console.log(role)
 
+   /* const hasManager = role.some((user) => user.role === "MANAGER");
+    const hasEmployee = role.some((user) => user.role === "EMPLOYEE");
+*/
     return (
         <div>
             <div
@@ -40,8 +46,11 @@ export function Layout() {
                                     <NavLink to="/user/appointments">
                                         <CDBSidebarMenuItem icon="columns">Appointments</CDBSidebarMenuItem>
                                     </NavLink>
+                                    {
+
+                                    }
                                     <NavLink to="/new/company">
-                                        <CDBSidebarMenuItem icon="table">Company</CDBSidebarMenuItem>
+                                        <CDBSidebarMenuItem icon="table">My Companies</CDBSidebarMenuItem>
                                     </NavLink>
                                     <NavLink to="/user/profile">
                                         <CDBSidebarMenuItem icon="user">Profile</CDBSidebarMenuItem>
@@ -72,6 +81,11 @@ export function Layout() {
                                 </CDBSidebarMenu>
                             </CDBSidebarContent>
                             <div style={{ position: 'absolute', bottom: '0', width: '100%' }}>
+                                <CDBSidebarMenu>
+                                    <NavLink to="/signup">
+                                        <CDBSidebarMenuItem>Register your company</CDBSidebarMenuItem>
+                                    </NavLink>
+                                </CDBSidebarMenu>
                                 <CDBSidebarMenu>
                                     <NavLink to="/login">
                                         <CDBSidebarMenuItem>Login</CDBSidebarMenuItem>

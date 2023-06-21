@@ -193,21 +193,7 @@ export function Signup() {
                                 <button className="btn btn-outline-light btn-lg px-5" type="submit"
                                         onClick={handleSubmit}>Signup
                                 </button>
-
-                                <div className='d-flex flex-row mt-3 mb-5'>
-                                    <MDBBtn tag='a' color='none' className='m-3' style={{color: 'white'}}>
-                                        <MDBIcon fab icon='facebook-f' size="lg"/>
-                                    </MDBBtn>
-
-                                    <MDBBtn tag='a' color='none' className='m-3' style={{color: 'white'}}>
-                                        <MDBIcon fab icon='twitter' size="lg"/>
-                                    </MDBBtn>
-
-                                    <MDBBtn tag='a' color='none' className='m-3' style={{color: 'white'}}>
-                                        <MDBIcon fab icon='google' size="lg"/>
-                                    </MDBBtn>
-                                </div>
-
+                                <br/>
                                 <div>
                                     <p className="mb-0">Already have an account? <a href="/login"
                                     className="text-white-50 fw-bold">Login</a></p>

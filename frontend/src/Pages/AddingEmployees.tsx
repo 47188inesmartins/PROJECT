@@ -33,9 +33,7 @@ export function AddingEmployees() {
         const params = useParams()
         const id = params.id
         const body = {emails:textBoxes}
-        console.log(body)
         const resp = Fetch(`/company/${id}/employee`, 'POST', body)
-        console.log(resp)
         if(resp.response)
             window.location.href = "/"
         return(

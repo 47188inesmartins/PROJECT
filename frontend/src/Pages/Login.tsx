@@ -80,26 +80,10 @@ export function Login() {
                                               onChange={(e) => setPassword(e.target.value)}
                                     />
 
-                                    <p className="small mb-3 pb-lg-2"><a className="text-white-50" href="#!">Forgot
-                                        password?</a></p>
                                     <button className="btn btn-outline-light btn-lg px-5" type="submit"
                                             onClick={handleSubmit}>Login
                                     </button>
-
-                                    <div className='d-flex flex-row mt-3 mb-5'>
-                                        <MDBBtn tag='a' color='none' className='m-3' style={{color: 'white'}}>
-                                            <MDBIcon fab icon='facebook-f' size="lg"/>
-                                        </MDBBtn>
-
-                                        <MDBBtn tag='a' color='none' className='m-3' style={{color: 'white'}}>
-                                            <MDBIcon fab icon='twitter' size="lg"/>
-                                        </MDBBtn>
-
-                                        <MDBBtn tag='a' color='none' className='m-3' style={{color: 'white'}}>
-                                            <MDBIcon fab icon='google' size="lg"/>
-                                        </MDBBtn>
-                                    </div>
-
+                                    <br/>
                                     <div>
                                         <p className="mb-0">Don't have an account? <a href="/signup"
                                                                                       className="text-white-50 fw-bold">Sign
