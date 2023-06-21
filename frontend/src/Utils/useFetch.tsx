@@ -4,6 +4,7 @@ import {
     useEffect
 } from 'react';
 import {LoggedInContextCookie} from "../Authentication/Authn";
+import {Navigate} from "react-router";
 const HOST = "http://localhost:8000/api"
 
 export type FetchResponse = {
@@ -62,3 +63,22 @@ export function Fetch(url: string, method: string, requestBody: any = null): Fet
     return {response:content,error:error}
 }
 
+export function SimpleFetch(url:string , body = null, method:string = 'GET'){
+    const token = React.useContext(LoggedInContextCookie).loggedInState.token;
+    console.log("TOKEN = ", token)
+    const authorization: { 'Content-Type': string; Authorization?: string; } = (token !== "")
+        ? {'Content-Type': 'application/json', 'Authorization': `Bearer ${token} `}
+        : {'Content-Type': 'application/json'};
+    const hostUrl = HOST + url
+
+    fetch(hostUrl, {
+            method: method,
+            body: JSON.stringify(body),
+            headers: authorization
+        })
+            .then(response => response.json())
+            .catch(error => {
+                console.error('Ocorreu um erro:', error);
+    });
+
+}

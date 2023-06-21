@@ -3,8 +3,10 @@ package backend.jvm.repository
 import backend.jvm.model.UserDB
 import backend.jvm.services.dto.URoles
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
+import org.springframework.transaction.annotation.Transactional
 import java.sql.Date
 import java.sql.Time
 import java.util.UUID
@@ -70,4 +72,9 @@ interface UserRepository: JpaRepository<UserDB, Int> {
      @Query(value = "(select uc.role from sch_user u inner join user_company uc on (u.id = :user and uc.user_id =u.id  and uc.company_id = :company " +
              "and (uc.role = 'EMPLOYEE' or uc.role = 'MANAGER')))", nativeQuery = true)
      fun getUserRoleByCompany(@Param("user") user: Int, @Param("company") company: Int): String?
+
+     @Modifying
+     @Query(value = "update sch_user set profile_pic = :pic where id = :id ", nativeQuery = true)
+     @Transactional
+     fun updateUserPicture(@Param("id") id: Int, @Param("pic") pic: ByteArray)
 }

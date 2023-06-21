@@ -187,10 +187,9 @@ class CompanyServices : ICompanyServices {
     fun uploadPhoto(cid: Int, image: MultipartFile){
         val fileName = image.originalFilename?.let { StringUtils.cleanPath(it) }
         if(fileName?.contains("..")!!){
-            println("not a valid file");
+            println("not a valid file")
         }
         val encodedFile = image.bytes
-        //val savePath = saveFile(image, fileName)
         companyRepository.updatePhotoPath(cid,encodedFile)
     }
 

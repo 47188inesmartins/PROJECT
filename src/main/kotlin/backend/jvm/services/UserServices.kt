@@ -8,6 +8,8 @@ import backend.jvm.utils.*
 import backend.jvm.utils.errorHandling.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.springframework.util.StringUtils
+import org.springframework.web.multipart.MultipartFile
 import kotlin.collections.List
 import java.sql.Date
 import java.util.*
@@ -48,7 +50,6 @@ class UserServices : IUserInterface {
         val returnUser = userRepository.save(
             user.mapToUser(user,Hashing.encodePass(user.password),servicesList,appList, null, listOf(role), null, user.interests, user.profilePic)
         )
-
         return CreatedUserOutput(returnUser.id, returnUser.token)
     }
 
@@ -181,4 +182,12 @@ class UserServices : IUserInterface {
         return servicesRepository.getEarnedMoneyByEmployee(user.id,company, getBeginDate, getEndDate) ?: 0.0
     }
 
+    fun updateUserProfilePicture(id: Int, image: MultipartFile){
+        val fileName = image.originalFilename?.let { StringUtils.cleanPath(it) }
+        if(fileName?.contains("..")!!){
+            println("not a valid file")
+        }
+        val encodedFile = image.bytes
+        userRepository.updateUserPicture(id,encodedFile)
+    }
 }

@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.context.request.RequestContextHolder
 import org.springframework.web.context.request.ServletRequestAttributes
+import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.server.ResponseStatusException
 import java.util.*
 
@@ -198,6 +199,21 @@ class UserController {
                 .body(response)
         }catch (e: InvalidCredentials) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Not appointment", e)
+        }
+    }
+
+  //  @RoleManager(["MANAGER","EMPLOYEE","CLIENT"])
+    @PostMapping("{id}/profile-pic")
+    fun uploadProfilePic(@PathVariable id: Int,
+                          @RequestBody file: MultipartFile
+    ): ResponseEntity<String> {
+        return try {
+            userServices.updateUserProfilePicture(id,file)
+            ResponseEntity
+                .status(200)
+                .body("Upload done")
+        }catch(e: Exception){
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
         }
     }
 

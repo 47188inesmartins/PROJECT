@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import '../Style/Schedule.css'
-import {Fetch} from "../Utils/useFetch";
+import {Fetch, SimpleFetch} from "../Utils/useFetch";
 import {useParams} from "react-router-dom";
 import {Navigate} from "react-router";
 import {Button, Modal} from "react-bootstrap";
@@ -214,6 +214,8 @@ function PopUpEmployee(props: {employees, startDate, appHour}){
             user: value
         }
 
+        SimpleFetch(`/api/company/${id}/appointment`,obj,'POST')
+        setRedirecionar(true);
         fetch(`/api/company/${id}/appointment`, {
             method: 'POST',
             body: JSON.stringify(obj),
@@ -229,7 +231,7 @@ function PopUpEmployee(props: {employees, startDate, appHour}){
             })
             .catch(error => {
                 console.error('Ocorreu um erro:', error);
-            });
+        });
     }
 
     useEffect(() => {

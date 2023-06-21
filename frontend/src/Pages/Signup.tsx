@@ -30,7 +30,7 @@ export function Signup() {
     const categories = ['BEAUTY', 'LIFESTYLE', 'FITNESS', 'BUSINESS', 'EDUCATION', 'OTHERS'];
     const [interests, setInterests] = useState("");
     const [address,SetAddress] = useState("");
-    const [data, setData] = useState({});
+    const [data, setData] = useState(undefined);
     const [redirect, setRedirect] = useState(false);
 
     const handleCategoryClick = (category) => {
@@ -87,7 +87,10 @@ export function Signup() {
     }, [redirect]);
 
     if (redirect) {
-        return <Navigate to='/'/>;
+        const userId = data.id
+        console.log("datata",data)
+        window.location.href = `user/${userId}/upload-pic`
+        return <></>;
     }
 
     return (

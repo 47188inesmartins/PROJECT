@@ -24,6 +24,7 @@ data class UserOutputDto(
         val address: String,
         val companyId: List<Int?>?,
         val services: List<Int>,
+        val profilePic: ByteArray?
 ){
         constructor(userDB: UserDB): this(
                 id = userDB.id,
@@ -34,7 +35,8 @@ data class UserOutputDto(
                 address = userDB.address,
                 birthday = userDB.birthday.toString(),
                 companyId = userDB.companies?.map { it.company?.id },
-                services = userDB.services?.map { it.id }?: emptyList()
+                services = userDB.services?.map { it.id }?: emptyList(),
+                profilePic = userDB.profilePic
         )
 
         private fun mapToUserOutput(list: List<ServiceDB>?):List<Int>{
