@@ -19,13 +19,6 @@ export function AddingEmployees() {
         setTextBoxes(updatedTextBoxes);
     };
 
-
-
-    const handleCancel = () => {
-        window.location.href = '/'; // Redireciona para a página inicial (home)
-    };
-
-
     const handleCreate = () => {
         setCreate(true)
     };
@@ -95,12 +88,6 @@ export function AddingEmployees() {
                                             <br/>
                                             <br/>
                                             <br/>
-                                            <button className="btn btn-outline-light btn-lg px-5" type="submit"
-                                                    onClick={handleCancel}>Cancel
-                                            </button>
-                                            <button className="btn btn-outline-light btn-lg px-5" type="submit"
-                                                    onClick={handleCancel}>Cancel
-                                            </button>
                                             <button className="btn btn-outline-light btn-lg px-5" type="submit"
                                                     onClick={handleLater}>Configure later
                                             </button>

@@ -34,7 +34,7 @@ function UploadPhoto() {
             if (response.status === 200) {
                 alert("your image is uploaded")
                 window.location.href = '/'
-                console.log('Upload concluído');
+                console.log('Upload concluído', response);
             } else {
                 console.error('Erro durante o upload:', response.status);
             }
@@ -87,24 +87,6 @@ function UploadPhoto() {
             <button onClick={handleFileUpload}>Enviar</button>
         </div>
     );
-}
-
-function FetchUploadFile(props:{selectedFiles}){
-        const id = useParams().id
-       if (props.selectedFiles.length > 0) {
-            try {
-                const formData = new FormData();
-                    formData.append('files', props.selectedFiles[0].name);
-                    console.log("file",props.selectedFiles[0].name)
-                    const response = Fetch(`company/${id}/upload?fileName=${props.selectedFiles[0].name}`, 'POST');
-                    console.log("AQUI",response)
-                    return <> file no teu perfil </>
-                // Upload bem-sucedido para todos os arquivos
-            } catch (error) {
-                console.log(error);
-            }
-        }
-       return <> no file to update </>
 }
 
 export default UploadPhoto;

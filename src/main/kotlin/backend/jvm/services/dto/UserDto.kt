@@ -54,9 +54,19 @@ data class UserInputDto(
         val services: List<Int>?,
         val appointment: List<Int>?,
         val unavailability: List<Int>?,
-        val interests: String
+        val interests: String,
+        val profilePic: ByteArray?
 ){
-        fun mapToUser(dto: UserInputDto,pass: String,services: List<ServiceDB>?,appointment: List<Appointment>?,comp: List<UserCompany>?, roles: List<Role>, unavailabilityDB : List<UnavailabilityDB>?, interests: String):UserDB{
+        fun mapToUser(dto: UserInputDto,
+                      pass: String,
+                      services: List<ServiceDB>?,
+                      appointment: List<Appointment>?,
+                      comp: List<UserCompany>?,
+                      roles: List<Role>,
+                      unavailabilityDB : List<UnavailabilityDB>?,
+                      interests: String,
+                      profilePic: ByteArray?
+        ):UserDB{
               return UserDB(
                       email = dto.email,
                       password = pass,
@@ -68,7 +78,8 @@ data class UserInputDto(
                       appointments = appointment,
                       roles = roles,
                       unavailabilityDB = unavailabilityDB,
-                      interests = interests
+                      interests = interests,
+                      profilePic = profilePic
                 )
         }
 }

@@ -8,9 +8,7 @@ import {Navigate} from "react-router";
 import {Button, Modal} from "react-bootstrap";
 import {MDBInput} from "mdb-react-ui-kit";
 import { format } from 'date-fns';
-import { useNavigate } from 'react-router-dom';
 import {LoggedInContextCookie} from "../Authentication/Authn";
-import { redirect } from 'react-router-dom';
 
 
 function TimePickerComponent (){
@@ -197,18 +195,18 @@ function PopUpEmployee(props: {employees, startDate, appHour}){
     const [show, setShow] = useState(true);
     const params = useParams()
     const id = params.id
-    const [employeeId, setEmployeeId] = useState<number|undefined>(undefined)
     const [dados, setDados] = useState({});
-
+    const [redirecionar, setRedirecionar] = useState(false);
 
     const handleCancel = () => {
         setShow(false);
         window.location.href = `/company/${id}`;
     }
     const token = React.useContext(LoggedInContextCookie).loggedInState.token;
-    const [redirecionar, setRedirecionar] = useState(false);
 
     function handleClick(value){
+
+
         const obj = {
             appHour: props.appHour,
             appDate: props.startDate,
@@ -241,77 +239,39 @@ function PopUpEmployee(props: {employees, startDate, appHour}){
     }, [redirecionar]);
 
     if (redirecionar) {
+        alert("Your appointment has been scheduled")
         return <Navigate to = '/' />;
     }
 
-    console.log(employeeId)
-
-    /*function FetchAddAppointment(){
-
-        const navigate = useNavigate()
-
-        const obj = {
-            appHour: props.appHour,
-            appDate: props.startDate,
-            service: props.employees.serviceId,
-            user: employeeId
-        }
-
-        const resp = Fetch(`/company/${id}/appointment`,
-                'POST',
-                {
-                    appHour: props.appHour,
-                    appDate: props.startDate,
-                    service: props.employees.serviceId,
-                    user: employeeId
-                }
-            ).response
-
-        if(!resp){
-            return(<p>...loading...</p>);
-        }
-
-        if(resp.status) {
-            return(<Navigate to = "/" replace={true}></Navigate>);
-        }
-
-        if(resp){
-            alert("appointment has been scheduled!")
-            return(
-                <Navigate to = "/" replace={true}></Navigate>
-            )
-        }
-    }*/
-
-
-    console.log("in do popup employees")
-    return  <>
-                <Modal
-                    show={show}
-                    onHide={handleCancel}
-                    backdrop="static"
-                    keyboard={false}
-                >
-                    <Modal.Header closeButton>
-                        <Modal.Title>Available Employees for that service</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        {props.employees.employees.map((employee) => (
-                            <div className="row text-center mx-0" key={employee.id}>
-                                <div className="col-md-2 col-4 my-1 px-2" key={employee.id}>
-                                    <div className="cell py-1"
-                                         onClick={() => handleClick(employee.id)}>{employee.name}
-                                    </div>
+    return(
+        <>
+            <Modal
+                show={show}
+                onHide={handleCancel}
+                backdrop="static"
+                keyboard={false}
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>Available Employees for that service</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {props.employees.employees.map((employee) => (
+                        <div className="row text-center mx-0" key={employee.id}>
+                            <div className="col-md-2 col-4 my-1 px-2" key={employee.id}>
+                                <div className="cell py-1"
+                                     onClick={() => handleClick(employee.id)}>{employee.name}
                                 </div>
                             </div>
-                        ))
-                        }
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="primary" onClick={handleCancel}>Cancel</Button>
-                    </Modal.Footer>
-                </Modal>
-    </>
+                        </div>
+                    ))
+                    }
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="primary" onClick={handleCancel}>Cancel</Button>
+                </Modal.Footer>
+            </Modal>
+        </>
+    )
 }
 
 export default TimePickerComponent;

@@ -46,7 +46,7 @@ class UserServices : IUserInterface {
         val role = roleRepository.getRoleByName(UserRoles.CLIENT.name)
 
         val returnUser = userRepository.save(
-            user.mapToUser(user,Hashing.encodePass(user.password),servicesList,appList, null, listOf(role), null, user.interests)
+            user.mapToUser(user,Hashing.encodePass(user.password),servicesList,appList, null, listOf(role), null, user.interests, user.profilePic)
         )
 
         return CreatedUserOutput(returnUser.id, returnUser.token)

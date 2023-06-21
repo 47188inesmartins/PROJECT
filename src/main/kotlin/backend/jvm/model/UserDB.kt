@@ -64,6 +64,9 @@ class UserDB {
         @Column(name = "address")
         val address : String
 
+        @Column(name = "profile_pic", columnDefinition = "BYTEA")
+        val profilePic: ByteArray?
+
         @ManyToMany
         @JoinTable(
                 name = "user_role",
@@ -99,6 +102,7 @@ class UserDB {
                 this.unavailabilityDB = listOf()
                 this.companies = listOf()
                 this.interests = ""
+                this.profilePic = null
         }
 
         constructor(
@@ -112,7 +116,8 @@ class UserDB {
                 unavailabilityDB: List<UnavailabilityDB>?,
                 companies: List<UserCompany>?,
                 interests: String,
-                address: String
+                address: String,
+                profilePic: ByteArray?
         ){
                 this.token = UUID.randomUUID()
                 this.email = email
@@ -126,5 +131,6 @@ class UserDB {
                 this.unavailabilityDB = unavailabilityDB
                 this.companies = companies
                 this.interests = interests
+                this.profilePic = profilePic
         }
 }

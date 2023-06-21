@@ -14,14 +14,6 @@ import {useState} from "react";
 import {Fetch} from "../Utils/useFetch";
 import {Navigate} from "react-router";
 
-interface Categories {
-    'BEAUTY',
-    'LIFESTYLE',
-    'FITNESS',
-    'BUSINESS',
-    'OTHERS'
-}
-
 
 interface UserCredentials{
     name: string,
