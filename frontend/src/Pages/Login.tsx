@@ -10,19 +10,13 @@ import {
     MDBIcon
 }
     from 'mdb-react-ui-kit';
-import {Navigate} from "react-router";
 import {useState} from "react";
 import {Fetch} from "../Utils/useFetch";
-
-
-
-
 
 interface UserCredentials{
     email: string,
     password: string
 }
-
 
 export function Login() {
 
@@ -40,9 +34,7 @@ export function Login() {
             email,
             password
         }
-        console.log(email, password)
         const resp = Fetch("/user/login", 'POST', userCredentials)
-        console.log("login feito")
         if(resp.response)
             window.location.href = "/"
         return(
@@ -50,7 +42,6 @@ export function Login() {
                 {resp.response?
                     <a>loading...</a>:
                     <a></a>
-                    //  <Navigate to={`/`} replace={true}/>
                 }
             </>
         );

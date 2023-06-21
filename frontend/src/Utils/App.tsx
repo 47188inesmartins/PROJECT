@@ -19,6 +19,7 @@ import UploadPhoto from "../Pages/UploadPhoto";
 import {Search} from "../Pages/Search";
 import {CompanyProfile} from "../Pages/CompanyProfile";
 import {EditServiceSchedule} from "../Pages/EditServiceSchedule";
+import {Logout} from "../Pages/Logout";
 
 
 const router = createBrowserRouter([{
@@ -95,6 +96,10 @@ const router = createBrowserRouter([{
         {
             "path": "/company/:id/upload-file",
             "element": <UploadPhoto/>
+        },
+        {
+            "path": "/logout",
+            "element": <Logout/>
         }
     ]
 }])
