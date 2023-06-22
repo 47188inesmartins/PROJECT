@@ -5,18 +5,13 @@ import "../Style/CreatingSchedule.css"
 import 'rc-picker/assets/index.css';
 import {Fetch} from "../Utils/useFetch";
 import {useParams} from "react-router-dom";
-
-
-/*meter que o parametro interval entre blocks
- é obrigatorio
-* */
+import {convertMinutesToHHMMSS} from "../Utils/formater";
 
 
 export function CreatingSchedule() {
     const daysOfWeek = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
 
     const [create, setCreate] = useState<boolean>(false)
-    const [interval, setInterval] = useState('')
 
     const [schedule, setSchedule] = useState(
         daysOfWeek.map(day => ({
@@ -27,10 +22,52 @@ export function CreatingSchedule() {
         }))
     );
 
+    const [isOpen, setIsOpen] = useState(false);
+    const [selectedValue, setSelectedValue] = useState(null);
+
+    const handleDropdownToggle = () => {
+        setIsOpen(!isOpen);
+    };
+
+    const handleOptionClick = (value) => {
+        setSelectedValue(
+            value
+          //  convertMinutesToHHMMSS(value)
+        );
+        setIsOpen(false);
+    };
+
+    console.log("selected value = ", selectedValue)
+
+    const renderOptions = () => {
+        const options = [];
+        for (let i = 1; i <= 200; i++) {
+            options.push(
+                <div
+                    key={i}
+                    className="dropdown-option"
+                    onClick={() => handleOptionClick(i)}
+                >
+                    {i} minutes
+                </div>
+            );
+        }
+        return options;
+    };
+
     const handleTimeChange = (index, field, value) => {
         setSchedule(prevSchedule => {
             const updatedSchedule = [...prevSchedule];
             updatedSchedule[index][field] = value;
+
+            if (field === "endHour" && value < updatedSchedule[index].beginHour) {
+                updatedSchedule[index].beginHour = value; // Atualiza a hora de início para ser igual à hora de término
+            }
+
+            if (field === "beginHour" && value > updatedSchedule[index].endHour) {
+                updatedSchedule[index].endHour = value; // Atualiza a hora de início para ser igual à hora de término
+            }
+
             return updatedSchedule;
         });
     };
@@ -71,7 +108,7 @@ export function CreatingSchedule() {
                 beginHour: day.beginHour,
                 endHour: day.endHour
             }))
-        const resp = Fetch(`company/${id}/day/all?duration=${interval}`,
+        const resp = Fetch(`company/${id}/day/all?duration=${convertMinutesToHHMMSS(selectedValue)}`,
             'POST',
             body).response
         if(!resp) return(<p>...loading...</p>);
@@ -104,72 +141,101 @@ export function CreatingSchedule() {
         );
     }
 
-    function handleIntervalChange(value){
-        setInterval(value)
-    }
 
 
 
     return (
         <div>
-            {!create ?
+            {!create ? (
                 <section className="vh-100 gradient-custom">
                     <div className="container py-5 h-100">
                         <div className="row d-flex justify-content-center align-items-center h-100">
                             <div className="col-12 col-md-8 col-lg-6 col-xl-5">
-                                <div className="card bg-dark text-white" style={{borderRadius: '1rem'}}>
+                                <div className="card bg-dark text-white" style={{ borderRadius: '1rem' }}>
                                     <div className="card-body p-5 text-center">
                                         <div className="mb-md-5 mt-md-4 pb-5">
-                                            <h2 className="fw-bold mb-2 text-uppercase">
-                                                Personalize your schedule
-                                            </h2>
-                                            <br/><br/>
-                                            <div>
-                                                {schedule.map((day, index) => (
-                                                    <div key={index}>
-                                                        <label>
-                                                            <input
-                                                                type="checkbox"
-                                                                checked={day.selected}
-                                                                onChange={e => handleCheckboxChange(index, e.target.checked)}
-                                                            />
-                                                            {day.weekDays}
-                                                        </label>
-                                                        <input
-                                                            type="time"
-                                                            value={day.beginHour}
-                                                            onChange={e => handleTimeChange(index, 'beginHour', e.target.value)}
-                                                        />
-                                                        <input
-                                                            type="time"
-                                                            value={day.endHour}
-                                                            onChange={e => handleTimeChange(index, 'endHour', e.target.value)}
-                                                        />
-                                                    </div>
-                                                ))}
-                                                <button onClick={handleSameTimeButtonClick}>Mesmo horário</button>
+                                            <h2 className="bold">Define your company's schedule!</h2>
+                                            <br /><br />
+                                            <div className="table-container">
+                                                <table className="schedule-table">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>Selected</th>
+                                                        <th>Week Day</th>
+                                                        <th>Begin Hour</th>
+                                                        <th>End Hour</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {schedule.map((day, index) => (
+                                                        <tr key={index}>
+                                                            <td>
+                                                                <input
+                                                                    type="checkbox"
+                                                                    checked={day.selected}
+                                                                    onChange={(e) => handleCheckboxChange(index, e.target.checked)}
+                                                                />
+                                                            </td>
+                                                            <td>{day.weekDays}</td>
+                                                            <td>
+                                                                <input
+                                                                    type="time"
+                                                                    value={day.beginHour}
+                                                                    onChange={(e) => handleTimeChange(index, "beginHour", e.target.value)}
+                                                                    step="600" // Adicione essa linha
+                                                                />
+                                                            </td>
+                                                            <td>
+                                                                <input
+                                                                    type="time"
+                                                                    value={day.endHour}
+                                                                    min={day.beginHour}
+                                                                    onChange={(e) => handleTimeChange(index, "endHour", e.target.value)}
+                                                                    step="600" // Adicione essa linha
+                                                                />
+                                                            </td>
+                                                        </tr>
+                                                    ))}
+                                                    </tbody>
+                                                </table>
+                                                <button onClick={handleSameTimeButtonClick}>Same Time</button>
                                             </div>
+                                            <br />
+                                            <div className="container">
+                                                <div className="row">
+                                                    <div className="col-lg-12">
+                                                        <div className="btn-group">
+                                                            <div className="dropdown">
+                                                                <label>
+                                                                    Duration between each block (in minutes):
+                                                                </label>
+                                                                <br />
+                                                                <button className="dropdown-toggle" onClick={handleDropdownToggle}>
+                                                                    {selectedValue?
+                                                                        `${selectedValue} minutes`:
+                                                                        "Select a number"
+                                                                    }
+                                                                </button>
+                                                                {isOpen && (
+                                                                    <div className="dropdown-options-container">
+                                                                        <div className="dropdown-options">{renderOptions()}</div>
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br /><br />
 
-                                            <label>
-                                                Duration between each block
-                                            </label>
-                                            <input
-                                                type="time"
-                                                value={interval}
-                                                onChange={e => handleIntervalChange(e.target.value)}
-                                            />
-                                            <br/><br/>
-
-                                            <button className="btn btn-outline-light btn-lg px-5" type="submit"
-                                                    onClick={handleCreate}>
+                                            <button className="btn btn-outline-light btn-lg px-5" type="submit" onClick={handleCreate}>
                                                 Next
                                             </button>
-                                            <br/>
-                                            <br/>
-                                            <br/>
-                                            <button className="btn btn-outline-light btn-lg px-5" type="submit"
-                                                    onClick={() => {
-                                                    }}>Configurate later
+                                            <br />
+                                            <br />
+                                            <br />
+                                            <button className="btn btn-outline-light btn-lg px-5" type="submit" onClick={() => {}}>
+                                                Configure Later
                                             </button>
                                         </div>
                                     </div>
@@ -178,9 +244,9 @@ export function CreatingSchedule() {
                         </div>
                     </div>
                 </section>
-                :
-                <FetchCreateDays/>
-            }
+            ) : (
+                <FetchCreateDays />
+            )}
         </div>
     );
 }

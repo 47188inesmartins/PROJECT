@@ -37,8 +37,10 @@ export function MyAppointments() {
                     :
                     (
                         <section className="vh-100" style={{ backgroundColor: '#f7d8ba' }}>
-                            {cancel?<PopUpMessage id={idAppointment}/>
-                                :<MDBContainer className="py-5 h-100">
+                            {cancel?
+                                <PopUpMessage id={idAppointment}/>
+                                :
+                                <MDBContainer className="py-5 h-100">
                                     <MDBRow className="d-flex justify-content-center align-items-center">
                                         <MDBCol lg="9" xl="7">
                                             <MDBCard className="rounded-3">
@@ -56,38 +58,53 @@ export function MyAppointments() {
                                                             <button style={{ backgroundColor: '#f7d8ba' }} className="btn btn-outline-light btn-lg px-2" type="button" onClick={()=>{}}>Search</button>
                                                         </MDBCol>
                                                     </MDBRow>
-                                                    <MDBTable className="mb-4">
-                                                        <MDBTableHead>
-                                                            <tr>
-                                                                <th scope="col">Company</th>
-                                                                <th scope="col">Employee</th>
-                                                                <th scope="col">Date</th>
-                                                                <th scope="col"></th>
-                                                            </tr>
-                                                        </MDBTableHead>
-                                                        <MDBTableBody>
-                                                            {appointments.futureAppointments.map((appointment: any)=> (
-                                                                <tr>
-                                                                    <th scope="row">{appointment.companyName}</th>
-                                                                    <td>{appointment.employee}</td>
-                                                                    <td>{appointment.appDate} at {appointment.appHour}</td>
-                                                                    <td>
-                                                                        <button style={{backgroundColor:'#d14319'}} className="btn btn-outline-light btn-lg px-5" type="button" onClick={() => handleCancel(appointment.id)}>Cancel</button>
-                                                                    </td>
-                                                                </tr>
-                                                            ))}
-                                                            {appointments.passedAppointments.map((appointment: any)=> (
-                                                                <tr>
-                                                                    <th scope="row">{appointment.companyName}</th>
-                                                                    <td>{appointment.employee}</td>
-                                                                    <td>{appointment.appDate} at {appointment.appHour}</td>
-                                                                    <td>
-                                                                        <button style={{backgroundColor:'#F0A818'}} className="btn btn-outline-light btn-lg px-5" type="button" onClick={()=> handleCancel(appointment.id)}>Delete</button>
-                                                                    </td>
-                                                                </tr>
-                                                            ))}
-                                                        </MDBTableBody>
-                                                    </MDBTable>
+                                                            {appointments.futureAppointments.length === 0 && appointments.passedAppointments.length === 0?
+                                                                <>
+                                                                    <br/>
+                                                                    You don't have any appointments, start using our app!
+                                                                </>
+                                                                :
+                                                                <>
+                                                                <MDBTable className="mb-4">
+                                                                    <MDBTableHead>
+                                                                        <tr>
+                                                                            <th scope="col">Company</th>
+                                                                            <th scope="col">Employee</th>
+                                                                            <th scope="col">Date</th>
+                                                                            <th scope="col"></th>
+                                                                        </tr>
+                                                                    </MDBTableHead>
+                                                                    <MDBTableBody>
+                                                                    {appointments.futureAppointments.map((appointment: any) => (
+                                                                        <tr>
+                                                                            <th scope="row">{appointment.companyName}</th>
+                                                                            <td>{appointment.employee}</td>
+                                                                            <td>{appointment.appDate} at {appointment.appHour}</td>
+                                                                            <td>
+                                                                                <button
+                                                                                    style={{backgroundColor: '#d14319'}}
+                                                                                    className="btn btn-outline-light btn-lg px-5"
+                                                                                    type="button"
+                                                                                    onClick={() => handleCancel(appointment.id)}>Cancel
+                                                                                </button>
+                                                                            </td>
+                                                                        </tr>
+                                                                    ))}
+                                                                    {appointments.passedAppointments.map((appointment: any)=> (
+                                                                        <tr>
+                                                                            <th scope="row">{appointment.companyName}</th>
+                                                                            <td>{appointment.employee}</td>
+                                                                            <td>{appointment.appDate} at {appointment.appHour}</td>
+                                                                            <td>
+                                                                                <button style={{backgroundColor:'#F0A818'}} className="btn btn-outline-light btn-lg px-5" type="button" onClick={()=> handleCancel(appointment.id)}>Delete</button>
+                                                                            </td>
+                                                                        </tr>
+                                                                    ))}
+                                                                    </MDBTableBody>
+                                                                </MDBTable>
+                                                                </>
+                                                            }
+
                                                 </MDBCardBody>
                                             </MDBCard>
                                         </MDBCol>

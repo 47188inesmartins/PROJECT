@@ -1,10 +1,8 @@
 import * as React from "react";
-import {useState} from "react";
-import {Fetch} from "../Utils/useFetch";
-import "../Style/CreatingCompany.css"
+import { useState } from "react";
+import { Fetch } from "../Utils/useFetch";
+import "../Style/CreatingCompany.css";
 import { Dropdown } from "react-bootstrap";
-
-
 
 interface CompanyInputDto {
     nif: string;
@@ -14,77 +12,75 @@ interface CompanyInputDto {
     description: string;
 }
 
-
-export function CreatingCompany(){
-
+export function CreatingCompany() {
     const [companyName, setCompanyName] = useState<string>("");
     const [businessType, setBusinessType] = useState<string>("");
     const [address, setAddress] = useState<string>("");
     const [nif, setNif] = useState<string>("");
     const [description, setDescription] = useState<string>("");
-    const [create, setCreate] = useState<Boolean>(false)
-    const categories = ['BEAUTY', 'LIFESTYLE', 'FITNESS', 'BUSINESS', 'OTHERS', "EDUCATION"];
+    const [create, setCreate] = useState<boolean>(false);
+    const categories = ["BEAUTY", "LIFESTYLE", "FITNESS", "BUSINESS", "OTHERS", "EDUCATION"];
     const [selectedCategory, setSelectedCategory] = useState("");
 
     const handleCategorySelect = (category) => {
         setSelectedCategory(category);
     };
 
-
-    const companyData : CompanyInputDto = {
-        nif : nif,
-        address : address,
+    const companyData: CompanyInputDto = {
+        nif: nif,
+        address: address,
         name: companyName,
-        type:selectedCategory,
-        description: description
-    }
-
+        type: selectedCategory,
+        description: description,
+    };
 
     const handleCancel = () => {
-        window.location.href = '/'; // Redireciona para a página inicial (home)
+        window.location.href = "/";
     };
-
 
     const handleCreate = () => {
-        setCreate(true)
+        setCreate(true);
     };
 
+    function FetchCreateCompany() {
+        const resp = Fetch("/company", "POST", companyData).response;
 
-    function FetchCreateCompany(){
-        const resp = Fetch('/company',
-            'POST',
-            companyData).response
+        if (!resp) return <p>...loading...</p>;
 
-        if(!resp) return(<p>...loading...</p>);
-
-        if(resp.status) {
-            setCreate(false)
-            window.location.href = `/`
-            return(<></>);
+        if (resp.status) {
+            setCreate(false);
+            window.location.href = `/`;
+            return <></>;
         }
 
-        if(resp){
-            const companyId = resp.id
-            window.location.href = `/company/${companyId}/schedule`
-            return(
-                <></>
-            )
+        if (resp) {
+            const companyId = resp.id;
+            window.location.href = `/company/${companyId}/schedule`;
+            return <></>;
         }
     }
 
+    const isFormValid = () => {
+        return (
+            companyName.length >= 3 &&
+            selectedCategory.length >= 3 &&
+            address.length >= 3 &&
+            nif.length === 9 &&
+            description.length >= 3
+        );
+    };
 
     return (
-        <div style = {{backgroundColor :  '#0e4378' }}>
-            {!create ?
+        <div style={{ backgroundColor: "#0e4378" }}>
+            {!create ? (
                 <section className="vh-100 gradient-custom">
                     <div className="container py-5 h-100">
                         <div className="row d-flex justify-content-center align-items-center h-100">
                             <div className="col-12 col-md-8 col-lg-6 col-xl-5">
-                                <div className="card bg-white text-dark" style={{borderRadius: '1rem'}}>
+                                <div className="card bg-pink text-dark" style={{ borderRadius: "1rem" }}>
                                     <div className="card-body p-5 text-center">
                                         <div className="mb-md-5 mt-md-4 pb-5">
-                                            <h2 className="fw-bold mb-2 text-uppercase">Register your company on our
-                                                website!</h2>
+                                            <h2 className="fw-bold mb-2 text-uppercase">Register your company on our website!</h2>
                                             <div className="form-outline form-white mb-4">
                                                 <input
                                                     required={true}
@@ -94,7 +90,9 @@ export function CreatingCompany(){
                                                     value={companyName}
                                                     onChange={(e) => setCompanyName(e.target.value)}
                                                 />
-                                                <label className="form-label" htmlFor="typeEmailX">Company name</label>
+                                                <label className="form-label" htmlFor="typeEmailX">
+                                                    Company name
+                                                </label>
                                             </div>
                                             <div className="form-outline form-white mb-4">
                                                 <Dropdown>
@@ -113,8 +111,9 @@ export function CreatingCompany(){
                                                         ))}
                                                     </Dropdown.Menu>
                                                 </Dropdown>
-                                                <label className="form-label" htmlFor="typePasswordX">Type of
-                                                    business</label>
+                                                <label className="form-label" htmlFor="typePasswordX">
+                                                    Type of business
+                                                </label>
                                             </div>
                                             <div className="form-outline form-white mb-4">
                                                 <input
@@ -125,7 +124,9 @@ export function CreatingCompany(){
                                                     value={address}
                                                     onChange={(e) => setAddress(e.target.value)}
                                                 />
-                                                <label className="form-label" htmlFor="typePasswordX">Address</label>
+                                                <label className="form-label" htmlFor="typePasswordX">
+                                                    Address
+                                                </label>
                                             </div>
                                             <div className="form-outline form-white mb-4">
                                                 <input
@@ -135,8 +136,12 @@ export function CreatingCompany(){
                                                     className="form-control form-control-lg"
                                                     value={nif}
                                                     onChange={(e) => setNif(e.target.value)}
+                                                    pattern="[0-9]{0,9}"
+                                                    maxLength={9}
                                                 />
-                                                <label className="form-label" htmlFor="typePasswordX">NIF</label>
+                                                <label className="form-label" htmlFor="typePasswordX">
+                                                    NIF
+                                                </label>
                                             </div>
                                             <div className="form-outline form-white mb-4">
                                                 <input
@@ -147,20 +152,31 @@ export function CreatingCompany(){
                                                     value={description}
                                                     onChange={(e) => setDescription(e.target.value)}
                                                 />
-                                                <label className="form-label"
-                                                       htmlFor="typePasswordX">Description</label>
+                                                <label className="form-label" htmlFor="typePasswordX">
+                                                    Description
+                                                </label>
                                             </div>
 
-                                            <button className="btn btn-outline-light btn-lg px-5" type="submit"
-                                                    onClick={handleCreate} style={{backgroundColor : 'black'}}>
+                                            <button
+                                                className="btn btn-outline-light btn-lg px-5"
+                                                type="submit"
+                                                onClick={handleCreate}
+                                                style={{ backgroundColor: "black" }}
+                                                disabled={!isFormValid()}
+                                            >
                                                 Next
                                             </button>
-                                            <br/>
-                                            <br/>
-                                            <br/>
+                                            <br />
+                                            <br />
+                                            <br />
 
-                                            <button className="btn btn-outline-light btn-lg px-5" type="submit"
-                                                    onClick={handleCancel} style={{backgroundColor : 'black'}}>Cancel
+                                            <button
+                                                className="btn btn-outline-light btn-lg px-5"
+                                                type="submit"
+                                                onClick={handleCancel}
+                                                style={{ backgroundColor: "black" }}
+                                            >
+                                                Cancel
                                             </button>
                                         </div>
                                     </div>
@@ -169,9 +185,9 @@ export function CreatingCompany(){
                         </div>
                     </div>
                 </section>
-                :
+            ) : (
                 <FetchCreateCompany />
-            }
+            )}
         </div>
     );
 }

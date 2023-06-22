@@ -65,7 +65,7 @@ interface UserRepository: JpaRepository<UserDB, Int> {
 
 
      @Query(value = "select * from SCH_USER s inner join user_company us on us.company_id = :company " +
-             "and us.user_id = s.id and us.role = 'EMPLOYEE'", nativeQuery = true)
+             "and us.user_id = s.id and (us.role = 'EMPLOYEE' or us.role = 'MANAGER')", nativeQuery = true)
      fun getUserEmployeesByCompany(@Param("company") company: Int): List<UserDB>?
 
 
