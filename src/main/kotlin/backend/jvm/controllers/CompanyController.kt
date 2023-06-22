@@ -277,10 +277,7 @@ class CompanyController {
 
     //@RoleManager(["MANAGER","EMPLOYEE"])
     @PostMapping("/{cid}/upload")
-    fun uploadImage(
-        @PathVariable cid: Int,
-        @RequestBody file: MultipartFile
-    ): ResponseEntity<String> {
+    fun uploadImage(@PathVariable cid: Int, @RequestBody file: Array<MultipartFile>): ResponseEntity<String> {
         return try {
             companyServices.uploadPhoto(cid,file)
             ResponseEntity
@@ -289,8 +286,6 @@ class CompanyController {
         }catch(e: Exception){
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
         }
-
-
     }
     @RoleManager(["MANAGER","EMPLOYEE","CLIENT"])
     @GetMapping("/{cid}/employees")

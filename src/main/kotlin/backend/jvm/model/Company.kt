@@ -34,8 +34,8 @@ class Company {
 
 
         //@Lob
-        @Column(name = "url", columnDefinition = "BYTEA")
-        val url: ByteArray?
+       /* @Column(name = "url", columnDefinition = "BYTEA")
+        val url: ByteArray?*/
 
         @OneToMany(mappedBy = "company")
         val serviceDBS: List<ServiceDB>?
@@ -46,6 +46,9 @@ class Company {
         @OneToMany(mappedBy = "company")
         val userCompany: List<UserCompany>?
 
+        @OneToMany(mappedBy = "company", cascade = [CascadeType.ALL])
+        val images: List<Image>?
+
         constructor() {
                 this.nif = ""
                 this.address = ""
@@ -55,10 +58,10 @@ class Company {
                 this.serviceDBS = null
                 this.schedule = null
                 this.userCompany = listOf()
-                this.url = null
+                this.images = listOf()
         }
 
-        constructor(nif: String, address: String, compName: String, compType: String, description: String, url: ByteArray?, serviceDB: List<ServiceDB>?, schedule: Schedule?, usersDB: List<UserCompany>?){
+        constructor(image:List<Image>?, nif: String, address: String, compName: String, compType: String, description: String, serviceDB: List<ServiceDB>?, schedule: Schedule?, usersDB: List<UserCompany>?){
                 this.nif = nif
                 this.address = address
                 this.name = compName
@@ -67,7 +70,7 @@ class Company {
                 this.serviceDBS = serviceDB
                 this.schedule = schedule
                 this.userCompany = usersDB
-                this.url = url
+                this.images = image
         }
 
 }

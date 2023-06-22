@@ -15,12 +15,12 @@ data class CompanyInputDto(
 ){
     fun mapToCompanyDto(dto: CompanyInputDto, service: List<ServiceDB>?, users: List<UserCompany>?): Company{
         return Company(
+            null,
             dto.nif,
             dto.address,
             dto.name,
             dto.type,
             dto.description,
-            null,
             service,
             null,
             users
@@ -38,7 +38,7 @@ data class CompanyOutputDto(
     val service: List<ServiceInfo>?,
     val schedule: Int?,
     val users: List<CompanyUserRole>?,
-    val path:ByteArray?
+    val path: List<ByteArray?>?
 ){
     constructor(company: Company): this(
         id = company.id,
@@ -50,7 +50,7 @@ data class CompanyOutputDto(
         service = company.serviceDBS?.map { ServiceInfo(it.id, it.name,it.price,it.duration.toString()) },
         schedule = company.schedule?.id,
         users = company.userCompany?.map { CompanyUserRole(it.id.user, it.role)},
-        path = company.url
+        path = company.images?.map { it.image }
     )
 }
 

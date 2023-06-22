@@ -50,6 +50,9 @@ class CompanyServices : ICompanyServices {
     @Autowired
     lateinit var userCompanyRepository: UserCompanyRepository
 
+    @Autowired
+    lateinit var imageRepository: ImageRepository
+
     private val uploadDirectory: String = "kotlin/backend/files"
 
     override fun getSearchedCompanies(search: String?): List<CompanyOutputDto>?{
@@ -57,6 +60,12 @@ class CompanyServices : ICompanyServices {
         return companyRepository.getCompanyBySearch("%${search}%")?.map { CompanyOutputDto(it) }
     }
 
+    /**
+     * Creates a new company and associates a manager for the company created
+     * @param token Identifies user
+     * @param company Company receive from frontend
+     * @return CompanyOutputDto info aof the saved company
+     */
     override fun addCompany(token: String, company: CompanyInputDto): CompanyOutputDto {
 
         val managerUser = usersRepository.getUserByToken(UUID.fromString(token))?: throw UserNotFound()
@@ -76,6 +85,12 @@ class CompanyServices : ICompanyServices {
         return CompanyOutputDto(comp)
     }
 
+    /**
+     * Deletes a company
+     * @param id that is the id of the company to be deleted
+     * @return boolean true if the company was deleted
+     * @exception IllegalArgumentException
+     */
     override fun deleteCompany(id: Int): Boolean{
         companyRepository.deleteById(id)
         return true
@@ -86,7 +101,6 @@ class CompanyServices : ICompanyServices {
         //if(comp == null) throw CompanyNotFound()
         return CompanyOutputDto(comp)
     }
-
 
     override fun getCompanyByNif(nif: String): Company? {
         return companyRepository.findCompanyByNif(nif) ?: throw CompanyNotFound()
@@ -184,26 +198,34 @@ class CompanyServices : ICompanyServices {
         }
     }
 
-    fun uploadPhoto(cid: Int, image: MultipartFile){
-        val fileName = image.originalFilename?.let { StringUtils.cleanPath(it) }
-        if(fileName?.contains("..")!!){
-            println("not a valid file")
+    /**
+     * @param cid
+     */
+    fun uploadPhoto(cid: Int, images: Array<MultipartFile>){
+        val company = companyRepository.findAllById(cid) ?: throw CompanyNotFound()
+
+        images.forEach {image ->
+            val fileName = image.originalFilename?.let { StringUtils.cleanPath(it) }
+            if(fileName?.contains("..")!!){
+                println("not a valid file")
+            }
+            val encodedFile = image.bytes
+            imageRepository.save(Image(encodedFile,company))
         }
-        val encodedFile = image.bytes
-        companyRepository.updatePhotoPath(cid,encodedFile)
+
+        //companyRepository.updatePhotoPath(cid,encodedFile)
     }
 
 
+     fun getEmployeesByCompany(cid: Int): List<UserOutputDto>{
+        val employees = usersRepository.getUserEmployeesByCompany(cid) ?: throw EmployeeNotFound()
+        return employees.map { UserOutputDto(it) }
+    }
     private fun saveFile(file: MultipartFile, fileName: String): String {
         val filePath: String = (uploadDirectory + File.separator) + fileName
         val targetLocation: Path = Path.of(filePath)
         Files.createDirectories(targetLocation.parent)
         Files.copy(file.inputStream, targetLocation, StandardCopyOption.REPLACE_EXISTING)
         return filePath
-    }
-
-     fun getEmployeesByCompany(cid: Int): List<UserOutputDto>{
-        val employees = usersRepository.getUserEmployeesByCompany(cid) ?: throw EmployeeNotFound()
-        return employees.map { UserOutputDto(it) }
     }
 }

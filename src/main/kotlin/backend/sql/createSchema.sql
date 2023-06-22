@@ -8,10 +8,16 @@ create table if not exists COMPANY (
    address varchar(40),
    name varchar(20),
    type varchar(100) check (type in ('BEAUTY','LIFESTYLE','FITNESS','BUSINESS','OTHERS')),
-   description varchar(300),
-   url BYTEA
+   description varchar(300)
+  -- ,url BYTEA
 );
 
+create table if not exists IMAGES_COMPANY (
+    id serial primary key ,
+    company_id int,
+    image BYTEA,
+    foreign key (company_id) references COMPANY(id)
+);
 
 create table if not exists COMPANY_NUMBERS(
     phone_number varchar(13),
