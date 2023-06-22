@@ -70,7 +70,6 @@ class UserController {
         }
     }
 
-   // @RoleManager(["MANAGER","EMPLOYEE","CLIENT"])
     @GetMapping("/info")
     fun getUserById(): ResponseEntity<UserOutputDto> {
         return try {

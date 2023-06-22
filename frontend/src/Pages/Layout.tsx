@@ -20,9 +20,11 @@ export function Layout() {
     const role = context.role
     console.log(role)
 
-   /* const hasManager = role.some((user) => user.role === "MANAGER");
+    const hasManager = role.some((user) => user.role === "MANAGER");
     const hasEmployee = role.some((user) => user.role === "EMPLOYEE");
-*/
+
+    console.log("has manager = ", hasManager, hasEmployee)
+
     return (
         <div>
             <div
@@ -46,12 +48,13 @@ export function Layout() {
                                     <NavLink to="/user/appointments">
                                         <CDBSidebarMenuItem icon="columns">Appointments</CDBSidebarMenuItem>
                                     </NavLink>
-                                    {
-
+                                    {hasManager || hasEmployee?
+                                        <NavLink to="/my/companies">
+                                            <CDBSidebarMenuItem icon="table">My Companies</CDBSidebarMenuItem>
+                                        </NavLink>
+                                        :
+                                        <></>
                                     }
-                                    <NavLink to="/new/company">
-                                        <CDBSidebarMenuItem icon="table">My Companies</CDBSidebarMenuItem>
-                                    </NavLink>
                                     <NavLink to="/user/profile">
                                         <CDBSidebarMenuItem icon="user">Profile</CDBSidebarMenuItem>
                                     </NavLink>
@@ -71,9 +74,6 @@ export function Layout() {
                                 <CDBSidebarMenu>
                                     <NavLink to="/login">
                                         <CDBSidebarMenuItem icon="columns">Appointments</CDBSidebarMenuItem>
-                                    </NavLink>
-                                    <NavLink to="/new/company">
-                                        <CDBSidebarMenuItem icon="table">Company</CDBSidebarMenuItem>
                                     </NavLink>
                                     <NavLink to="/login">
                                         <CDBSidebarMenuItem icon="user">Profile</CDBSidebarMenuItem>

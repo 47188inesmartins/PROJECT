@@ -18,7 +18,7 @@ import {LoggedInContextCookie} from "../Authentication/Authn";
 export function ProfilePage() {
     const token = useContext(LoggedInContextCookie).loggedInState.role
 
-    const check = (token !== "GUEST" && token !== "CLIENT")
+    const check = false //(token !== "GUEST" && token !== "CLIENT")
     const response = Fetch('/user/info','GET')
 
     return (
@@ -101,6 +101,15 @@ export function ProfilePage() {
                                         <MDBRow>
                                             <MDBCol sm="3">
                                                 <MDBCardText>Birthday</MDBCardText>
+                                            </MDBCol>
+                                            <MDBCol sm="9">
+                                                <MDBCardText className="text-muted">{response.response.birthday}</MDBCardText>
+                                            </MDBCol>
+                                        </MDBRow>
+                                        <hr />
+                                        <MDBRow>
+                                            <MDBCol sm="3">
+                                                <MDBCardText>Address</MDBCardText>
                                             </MDBCol>
                                             <MDBCol sm="9">
                                                 <MDBCardText className="text-muted">{response.response.birthday}</MDBCardText>

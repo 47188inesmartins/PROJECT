@@ -8,7 +8,6 @@ import {MyAppointments} from "../Pages/MyAppointments";
 import {CreatingCompany} from "../Pages/CreatingCompany";
 import {Layout} from "../Pages/Layout";
 import {AddingEmployees} from "../Pages/AddingEmployees";
-import {MyCompany} from "../Pages/ManagerCompany";
 import {ProfilePage} from "../Pages/UserProfile";
 import {AddingVacations} from "../Pages/AddingVacations";
 import {CreatingServices} from "../Pages/CreatingServices";
@@ -17,10 +16,13 @@ import {Signup} from "../Pages/Signup";
 import {ProfitCompany} from "../Pages/ProfitCompany";
 import UploadPhoto from "../Pages/UploadPhoto";
 import {Search} from "../Pages/Search";
-import {CompanyProfile} from "../Pages/CompanyProfile";
+import {CompanyProfileManaging} from "../Pages/CompanyProfileManaging";
 import {EditServiceSchedule} from "../Pages/EditServiceSchedule";
 import {UploadProfilePicture} from "../Pages/UploadProfilePicture";
 import {Logout} from "../Pages/Logout";
+import {MyCompanies} from "../Pages/MyCompanies";
+import {CompanyProfileEmploying} from "../Pages/CompanyProfileEmploying";
+import {ManagingEmployees} from "../Pages/ManagingEmployees";
 
 
 const router = createBrowserRouter([{
@@ -56,7 +58,11 @@ const router = createBrowserRouter([{
         },
         {
             "path": "/company/:id/managing",
-            "element": <MyCompany />
+            "element": <CompanyProfileManaging />
+        },
+        {
+            "path": "/company/:id/employing",
+            "element": <CompanyProfileEmploying />
         },
         {
             "path": "/company/:id/vacation",
@@ -84,7 +90,7 @@ const router = createBrowserRouter([{
         },
         {
             "path": "/company/:id/profile",
-            "element": <CompanyProfile/>
+            "element": <CompanyProfileManaging/>
         },
         {
             "path": "/service/:id/schedule",
@@ -105,6 +111,14 @@ const router = createBrowserRouter([{
         {
             "path": "/logout",
             "element": <Logout/>
+        },
+        {
+            "path": "/my/companies",
+            "element": <MyCompanies/>
+        },
+        {
+            "path": "/company/:id/managing/employees",
+            "element": <ManagingEmployees/>
         }
     ]
 }])

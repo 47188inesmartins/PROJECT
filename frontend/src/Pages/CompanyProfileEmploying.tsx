@@ -16,7 +16,7 @@ import {LoggedInContextCookie} from "../Authentication/Authn";
 import {useParams} from "react-router-dom";
 
 
-export function CompanyProfile() {
+export function CompanyProfileEmploying() {
 
     const token = useContext(LoggedInContextCookie).loggedInState.role
 
@@ -24,7 +24,7 @@ export function CompanyProfile() {
     const id = params.id
 
 
-    const check = (token !== "GUEST" && token !== "CLIENT")
+    const check = false// (token !== "GUEST" && token !== "CLIENT")
     const response = Fetch(`/company/${id}`,'GET')
 
     return (

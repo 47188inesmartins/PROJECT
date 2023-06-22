@@ -9,7 +9,7 @@ const TOKEN_PARAM = "token"
 
 
 
-export async function fetchGetSession(onSuccess: (token: string, role: string) => void) {
+export async function fetchGetSession(onSuccess: (token: string, role: Array<any>) => void) {
     console.log("fetch get session")
     try {
         const resp = await fetch('/api/user/check-session',
@@ -25,7 +25,7 @@ export async function fetchGetSession(onSuccess: (token: string, role: string) =
 
 
         if(response.second == null)
-            return onSuccess(response.first, "CLIENT")
+            return onSuccess(response.first,  ["CLIENT"])
 
         console.log("token =", token, " role = ", role)
         onSuccess(token, role)

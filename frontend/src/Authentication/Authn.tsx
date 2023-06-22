@@ -7,23 +7,23 @@ import {
 import {fetchGetSession} from "./cookieHandler";
 
 export const LoggedInContextCookie = createContext({
-    loggedInState: { auth: false, token: '', role: 'guest' },
+    loggedInState: { auth: false, token: '', role: Array<any>('guest') },
 });
 
 export function AuthnContainer({ children }: { children: React.ReactNode }) {
     const [authenticated, setAuthenticated] = useState({
         auth: false,
         token: '',
-        role: 'guest'
+        role: Array<any>('guest')
     });
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetchGetSession((token: string, id: string) => {
+        fetchGetSession((token: string, id: Array<any>) => {
             if (token) {
                 setAuthenticated({ auth: true, token: token, role: id });
             } else {
-                setAuthenticated({ auth: false, token: '', role: 'guest' });
+                setAuthenticated({ auth: false, token: '', role: Array<any>('guest') });
             }
             setLoading(false);
         }).catch((error) => {
