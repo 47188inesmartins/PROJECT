@@ -4,7 +4,7 @@ import {useState} from "react";
 import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
-import {Fetch} from "../Utils/useFetch";
+import {Fetch} from "../../Utils/useFetch";
 import {Navigate} from "react-router";
 import {useParams} from "react-router-dom";
 

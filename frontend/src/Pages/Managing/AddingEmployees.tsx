@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import {Fetch} from "../Utils/useFetch";
+import {Fetch} from "../../Utils/useFetch";
 import {useParams} from "react-router-dom";
 
 export function AddingEmployees() {

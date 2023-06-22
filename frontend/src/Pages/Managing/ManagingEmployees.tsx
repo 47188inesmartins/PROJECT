@@ -1,16 +1,44 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { Link, useParams } from "react-router-dom";
-import { Fetch } from "../Utils/useFetch";
-import "../Style/ManagingEmployees.css";
+import { Fetch } from "../../Utils/useFetch";
+import "../../Style/ManagingEmployees.css";
+import {LoggedInContextCookie} from "../../Authentication/Authn";
+import {Navigate} from "react-router";
 
 export function ManagingEmployees() {
     const cid = useParams().id;
+    const token =  React.useContext(LoggedInContextCookie).loggedInState.token
+    const [redirect, setRedirect] = useState(false)
     const response = Fetch(`company/${cid}/employees`, "GET");
     console.log("Employees", response);
 
     const handleDelete = (employeeId) => {
-        // Lógica para deletar o funcionário com o ID `employeeId`
+        console.log("handledelete", employeeId)
+        fetch(`/api/company/${cid}/employees?id=${employeeId}`,{
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        })
+            .then(response => {
+                setRedirect(true);
+            })
+            .catch(error => {
+                console.error('Ocorreu um erro:', error);
+            });
     };
+
+    useEffect(() => {
+        if (redirect) {
+            setRedirect(false);
+        }
+    }, [redirect]);
+
+    if (redirect) {
+        alert("Employee has been removed from your company")
+        window.location.href = `/company/${cid}/managing/employees`;
+    }
 
     const handleProfit = (employeeId) => {
         // Lógica para realizar ação de profit para o funcionário com o ID `employeeId`

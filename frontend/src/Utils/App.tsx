@@ -7,9 +7,9 @@ import {Company} from "../Pages/Company";
 import {MyAppointments} from "../Pages/MyAppointments";
 import {CreatingCompany} from "../Pages/CreatingCompany";
 import {Layout} from "../Pages/Layout";
-import {AddingEmployees} from "../Pages/AddingEmployees";
+import {AddingEmployees} from "../Pages/Managing/AddingEmployees";
 import {ProfilePage} from "../Pages/UserProfile";
-import {AddingVacations} from "../Pages/AddingVacations";
+import {AddingVacations} from "../Pages/Managing/AddingVacations";
 import {CreatingServices} from "../Pages/CreatingServices";
 import {CreatingSchedule} from "../Pages/CreatingSchedule";
 import {Signup} from "../Pages/Signup";
@@ -22,7 +22,7 @@ import {UploadProfilePicture} from "../Pages/UploadProfilePicture";
 import {Logout} from "../Pages/Logout";
 import {MyCompanies} from "../Pages/MyCompanies";
 import {CompanyProfileEmploying} from "../Pages/CompanyProfileEmploying";
-import {ManagingEmployees} from "../Pages/ManagingEmployees";
+import {ManagingEmployees} from "../Pages/Managing/ManagingEmployees";
 
 
 const router = createBrowserRouter([{

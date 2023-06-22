@@ -18,7 +18,7 @@ export function Layout() {
     const context = React.useContext(LoggedInContextCookie).loggedInState
     const auth = context.auth
     const role = context.role
-    console.log(role)
+    console.log(typeof role)
 
     const hasManager = role.some((user) => user.role === "MANAGER");
     const hasEmployee = role.some((user) => user.role === "EMPLOYEE");

@@ -9,13 +9,13 @@ import {
     MDBInput,
     MDBIcon
 } from 'mdb-react-ui-kit';
-import {useEffect, useState} from "react";
-import {Navigate} from "react-router";
-import {LoggedInContextCookie} from "../Authentication/Authn";
+import { useEffect, useState } from "react";
+import { Navigate } from "react-router";
+import { LoggedInContextCookie } from "../Authentication/Authn";
 
-interface UserCredentials{
+interface UserCredentials {
     name: string,
-    birthday:string
+    birthday: string
     email: string,
     password: string,
     interests: string,
@@ -29,9 +29,10 @@ export function Signup() {
     const [password, setPassword] = useState<string>("")
     const categories = ['BEAUTY', 'LIFESTYLE', 'FITNESS', 'BUSINESS', 'EDUCATION', 'OTHERS'];
     const [interests, setInterests] = useState("");
-    const [address,SetAddress] = useState("");
+    const [address, SetAddress] = useState("");
     const [data, setData] = useState(undefined);
     const [redirect, setRedirect] = useState(false);
+    const [showPassword, setShowPassword] = useState(false); // Estado para controlar a exibição da senha
 
     const handleCategoryClick = (category) => {
         if (interests.includes(category)) {
@@ -51,7 +52,6 @@ export function Signup() {
     const token = React.useContext(LoggedInContextCookie).loggedInState.token;
 
     const handleSubmit = () => {
-
         const userCredentials: UserCredentials = {
             name,
             birthday,
@@ -77,7 +77,6 @@ export function Signup() {
             .catch(error => {
                 console.error('An error has occurred:', error);
             });
-
     }
 
     useEffect(() => {
@@ -88,7 +87,7 @@ export function Signup() {
 
     if (redirect) {
         const userId = data.id
-        console.log("datata",data)
+        console.log("datata", data)
         window.location.href = `user/${userId}/upload-pic`
         return <></>;
     }
@@ -98,76 +97,88 @@ export function Signup() {
             <MDBContainer fluid>
                 <MDBRow className='d-flex justify-content-center align-items-center h-100'>
                     <MDBCol col='12'>
-
                         <MDBCard className='bg-dark text-white my-5 mx-auto'
-                                 style={{borderRadius: '1rem', maxWidth: '400px'}}>
+                                 style={{ borderRadius: '1rem', maxWidth: '400px' }}>
                             <MDBCardBody className='p-5 d-flex flex-column align-items-center mx-auto w-100'>
-
                                 <h2 className="fw-bold mb-2 text-uppercase">Signup</h2>
                                 <p className="text-white-50 mb-5">Signup to our website!</p>
 
-                                <MDBInput wrapperClass='mb-4 mx-5 w-100'
-                                          labelClass='text-white'
-                                          label='Name'
-                                          id='formControlLg'
-                                          type='text'
-                                          size="lg"
-                                          value={name}
-                                          required={true}
-                                          onChange={(e) => {
-                                            console.log(e.target.value)
-                                              setName(e.target.value)
-
-                                          }}
+                                <MDBInput
+                                    wrapperClass='mb-4 mx-5 w-100'
+                                    labelClass='text-white'
+                                    label='Name'
+                                    id='formControlLg'
+                                    type='text'
+                                    size="lg"
+                                    value={name}
+                                    required={true}
+                                    onChange={(e) => {
+                                        console.log(e.target.value)
+                                        setName(e.target.value)
+                                    }}
                                 />
 
-                                <MDBInput wrapperClass='mb-4 mx-5 w-100'
-                                          labelClass='text-white'
-                                          label='Birthday'
-                                          id='formControlLg'
-                                          type='date'
-                                          size="lg"
-                                          value={birthday}
-                                          required={true}
-                                          onChange={(e) => setBirthday(e.target.value)}
+                                <MDBInput
+                                    wrapperClass='mb-4 mx-5 w-100'
+                                    labelClass='text-white'
+                                    label='Birthday'
+                                    id='formControlLg'
+                                    type='date'
+                                    size="lg"
+                                    value={birthday}
+                                    required={true}
+                                    onChange={(e) => setBirthday(e.target.value)}
                                 />
 
-                                <MDBInput wrapperClass='mb-4 mx-5 w-100'
-                                          labelClass='text-white'
-                                          label='Address'
-                                          id='formControlLg'
-                                          type='email'
-                                          size="lg"
-                                          value={address}
-                                          required={true}
-                                          onChange={(e) => {SetAddress(e.target.value)
-                                    console.log(e.target.value)}
-                                }
-
+                                <MDBInput
+                                    wrapperClass='mb-4 mx-5 w-100'
+                                    labelClass='text-white'
+                                    label='Address'
+                                    id='formControlLg'
+                                    type='email'
+                                    size="lg"
+                                    value={address}
+                                    required={true}
+                                    onChange={(e) => {
+                                        SetAddress(e.target.value)
+                                        console.log(e.target.value)
+                                    }}
                                 />
 
-                                <MDBInput wrapperClass='mb-4 mx-5 w-100'
-                                          labelClass='text-white'
-                                          label='Email address'
-                                          id='formControlLg'
-                                          type='email'
-                                          size="lg"
-                                          value={email}
-                                          required={true}
-                                          onChange={(e) => {setEmail(e.target.value)
-                                              console.log(e.target.value)}
-                                          }
+                                <MDBInput
+                                    wrapperClass='mb-4 mx-5 w-100'
+                                    labelClass='text-white'
+                                    label='Email address'
+                                    id='formControlLg'
+                                    type='email'
+                                    size="lg"
+                                    value={email}
+                                    required={true}
+                                    onChange={(e) => {
+                                        setEmail(e.target.value)
+                                        console.log(e.target.value)
+                                    }}
                                 />
 
-                                <MDBInput wrapperClass='mb-4 mx-5 w-100'
-                                          labelClass='text-white'
-                                          label='Password'
-                                          id='formControlLg'
-                                          type='password'
-                                          size="lg"
-                                          value={password}
-                                          onChange={(e) => setPassword(e.target.value)}
-                                />
+                                <div className='position-relative'>
+                                    <MDBInput
+                                        wrapperClass='mb-4 mx-5 w-100'
+                                        labelClass='text-white'
+                                        label='Password'
+                                        id='formControlLg'
+                                        type={showPassword ? 'text' : 'password'} // Alterna entre texto e senha
+                                        size="lg"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                    />
+                                    <MDBIcon
+                                        icon={showPassword ? 'eye-slash' : 'eye'} // Ícone do olho aberto ou fechado
+                                        className='position-absolute top-50 end-0 translate-middle-y pe-3'
+                                        style={{ cursor: 'pointer' }}
+                                        onClick={() => setShowPassword(!showPassword)} // Alterna a exibição da senha ao clicar no ícone
+                                    />
+                                </div>
+
                                 <a>What are your interests?</a>
 
                                 <div>
@@ -189,14 +200,14 @@ export function Signup() {
                                         </button>
                                     ))}
                                 </div>
-                                <br/>
+                                <br />
                                 <button className="btn btn-outline-light btn-lg px-5" type="submit"
                                         onClick={handleSubmit}>Signup
                                 </button>
-                                <br/>
+                                <br />
                                 <div>
                                     <p className="mb-0">Already have an account? <a href="/login"
-                                    className="text-white-50 fw-bold">Login</a></p>
+                                                                                    className="text-white-50 fw-bold">Login</a></p>
                                 </div>
                             </MDBCardBody>
                         </MDBCard>

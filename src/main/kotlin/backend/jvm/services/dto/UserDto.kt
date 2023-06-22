@@ -1,6 +1,7 @@
 package backend.jvm.services.dto
 
 import backend.jvm.model.*
+import backend.jvm.utils.UserRoles
 import java.sql.Date
 import java.util.*
 
@@ -87,6 +88,6 @@ data class UserInputDto(
 }
 
 
-data class CompanyRole(val companyId: Int, val role: String)
+data class CompanyRole(val companyId: Int? = null, val role: String = UserRoles.GUEST.name)
 
 data class ReceiveMoney(val money: String)

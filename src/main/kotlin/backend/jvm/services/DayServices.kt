@@ -73,7 +73,7 @@ class DayServices : IDayServices {
     fun addOpenDays(day: List<DayInputDto>, companyId: Int, interval: String) {
         companyRepository.findAllById(companyId) ?: throw InvalidSchedule()
         val schedule = scheduleRepository.getScheduleByCompany_Id(companyId) ?: throw InvalidSchedule()
-        val intervalBetween = Time.valueOf(interval.plus(":00"))
+        val intervalBetween = Time.valueOf(interval)
         scheduleRepository.updateBetweenInterval(schedule.id, intervalBetween)
         val daysDb = day.map { it.mapToDayDb(it, schedule, null) }
         daysDb.forEach { dayRepository.save(it) }

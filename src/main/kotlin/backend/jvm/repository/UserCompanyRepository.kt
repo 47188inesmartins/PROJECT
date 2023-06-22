@@ -20,4 +20,8 @@ interface UserCompanyRepository : JpaRepository<UserCompany, UserCompanyPK> {
 
     @Query(value = "select u.role from user_company u where u.user_id=:user_id and u.company_id=:company_id", nativeQuery = true)
     fun getRoleByCompanyAndUser(@Param("company_id")company: Int, @Param("user_id") user_id: Int): String?
+
+    @Query(value = "delete from user_company where user_id = :userId and company_id = :companyId and role = 'EMPLOYEE'", nativeQuery = true)
+    fun deleteAllByCompanyAndUserAndRole(@Param("companyId") company: Int, @Param("userId") user_id: Int)
+
 }

@@ -126,16 +126,18 @@ class UserController {
     @GetMapping("/check-session")
     fun check(
               request:HttpServletRequest
-    ): ResponseEntity<Pair<String, Any>> {
+    ): ResponseEntity<Pair<String?, List<CompanyRole>>> {
         try {
-           //  response.addHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
-            // println(token)
              val cookies = request.cookies.first()
-             val t = cookies ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid token")
-             val roles = userServices.getRolesByToken(t.value)
 
-             val body = if(roles.isEmpty()) Pair(t.value, UserRoles.CLIENT.name)
-             else Pair(t.value, roles)
+
+             val roles = userServices.getRolesByToken(cookies.value)
+
+             val body = if(cookies == null)
+                 Pair(null, listOf(CompanyRole()))
+             else if(roles.isEmpty())
+                 Pair(cookies.value, listOf(CompanyRole(role = UserRoles.CLIENT.name)))
+             else Pair(cookies.value, roles)
 
              return ResponseEntity
                  .status(200)
@@ -215,23 +217,6 @@ class UserController {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
         }
     }
-
- /*  @RoleManager(["MANAGER","EMPLOYEE"])
-    @GetMapping("company/{cid}/receive-money")
-    fun getAllEmployeeEarnedMoney(
-                               @PathVariable cid: Int
-    ): ResponseEntity<ReceiveMoney>{
-        return try {
-
-           // val res = bearerToken?.let { userServices.getEarnedMoneyEmployee(it,dateBegin,dateEnd,cid) }
-            val response = ReceiveMoney("1")
-            ResponseEntity
-                .status(200)
-                .body(response)
-        }catch (e: InvalidCredentials) {
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Not appointment", e)
-        }
-    }*/
 }
 
 

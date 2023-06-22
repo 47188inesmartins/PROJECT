@@ -203,7 +203,6 @@ class CompanyServices : ICompanyServices {
      */
     fun uploadPhoto(cid: Int, images: Array<MultipartFile>){
         val company = companyRepository.findAllById(cid) ?: throw CompanyNotFound()
-
         images.forEach {image ->
             val fileName = image.originalFilename?.let { StringUtils.cleanPath(it) }
             if(fileName?.contains("..")!!){
@@ -212,15 +211,14 @@ class CompanyServices : ICompanyServices {
             val encodedFile = image.bytes
             imageRepository.save(Image(encodedFile,company))
         }
-
-        //companyRepository.updatePhotoPath(cid,encodedFile)
     }
 
 
-     fun getEmployeesByCompany(cid: Int): List<UserOutputDto>{
+    fun getEmployeesByCompany(cid: Int): List<UserOutputDto>{
         val employees = usersRepository.getUserEmployeesByCompany(cid) ?: throw EmployeeNotFound()
         return employees.map { UserOutputDto(it) }
     }
+
     private fun saveFile(file: MultipartFile, fileName: String): String {
         val filePath: String = (uploadDirectory + File.separator) + fileName
         val targetLocation: Path = Path.of(filePath)
@@ -228,4 +226,15 @@ class CompanyServices : ICompanyServices {
         Files.copy(file.inputStream, targetLocation, StandardCopyOption.REPLACE_EXISTING)
         return filePath
     }
+
+
+    fun removeEmployeeFromCompany(cid: Int, employeeId: Int){
+        userCompanyRepository.deleteAllByCompanyAndUserAndRole(cid, employeeId)
+        //remover os appointments deste employee
+    }
+
+
+
+
+
 }

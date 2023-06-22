@@ -23,10 +23,6 @@ export async function fetchGetSession(onSuccess: (token: string, role: Array<any
         const token = response.first
         const role = response.second
 
-
-        if(response.second == null)
-            return onSuccess(response.first,  ["CLIENT"])
-
         console.log("token =", token, " role = ", role)
         onSuccess(token, role)
 

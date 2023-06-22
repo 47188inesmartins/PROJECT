@@ -295,4 +295,17 @@ class CompanyController {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
         }
     }
+
+    @RoleManager(["MANAGER"])
+    @DeleteMapping("/{cid}/employees")
+    fun removeEmployee( @PathVariable cid: Int, @RequestParam id: Int): ResponseEntity<String>{
+        return try {
+            val a = companyServices.removeEmployeeFromCompany(cid, id)
+            ResponseEntity
+                .status(200)
+                .body("delete successful")
+        }catch(e: Exception){
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
+        }
+    }
 }
