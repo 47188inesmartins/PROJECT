@@ -128,7 +128,8 @@ class CompanyServices : ICompanyServices {
     }
 
     override fun getVacationByCompany(id: Int): List<VacationOutputDto>{
-        return vacationRepository.getVacationsByCompany(id).map { VacationOutputDto(it) }
+        val schedule = scheduleRepository.getScheduleByCompany_Id(id) ?: throw ScheduleNotFound()
+        return vacationRepository.getVacationsByScheduleId(schedule.id).map { VacationOutputDto(it) }
     }
 
     override fun changeAddress(id: Int, address: String){

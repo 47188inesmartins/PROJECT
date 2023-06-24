@@ -1,16 +1,15 @@
 package backend.jvm.services
 
 import backend.jvm.model.ServiceDB
-import backend.jvm.repository.CompanyRepository
-import backend.jvm.repository.ServiceRepository
-import backend.jvm.repository.UserCompanyRepository
-import backend.jvm.repository.UserRepository
+import backend.jvm.model.ServiceDay
+import backend.jvm.repository.*
 import backend.jvm.services.dto.DayInputDto
 import backend.jvm.services.dto.ServiceInputDto
 import backend.jvm.services.dto.ServiceOutputDto
 import backend.jvm.services.dto.UserOutputDto
 import backend.jvm.services.interfaces.IServServices
 import backend.jvm.utils.errorHandling.InvalidUser
+import backend.jvm.utils.errorHandling.ScheduleNotFound
 import backend.jvm.utils.errorHandling.UserNotFound
 import org.apache.catalina.User
 import org.springframework.beans.factory.annotation.Autowired
@@ -34,8 +33,17 @@ class ServServices : IServServices {
     lateinit var userRepository : UserRepository
     @Autowired
     lateinit var userCompanyRepository : UserCompanyRepository
+    @Autowired
+    lateinit var scheduleRepository : ScheduleRepository
+    @Autowired
+    lateinit var dayRepository : DayRepository
+    @Autowired
+    lateinit var serviceDayRepository : ServiceDayRepository
+
 
     override fun addService(service: ServiceInputDto, companyId: Int): ServiceOutputDto {
+        val schedule = scheduleRepository.getScheduleByCompany_Id(companyId) ?: throw ScheduleNotFound()
+        val days = dayRepository.getDayByScheduleId(schedule.id)
         val company = companyRepository.getReferenceById(companyId)
         val users = service.users?.map{ userRepository.getReferenceById(it) }
         users?.forEach {
@@ -43,6 +51,7 @@ class ServServices : IServServices {
         }
         val serv = service.mapToService(service,company,users)
         val savedService = serviceRepository.save(serv)
+        days.map { serviceDayRepository.save(ServiceDay(it, savedService)) }
         return ServiceOutputDto(savedService)
     }
 
