@@ -65,11 +65,14 @@ export function CompanyProfileManaging() {
                                             <a href={`/company/${id}/managing/employees`} className="mb-1"  style={{ fontSize: '1.2rem' }}>
                                                 <MDBCardText> Manage employees </MDBCardText>
                                             </a>
-                                            <a href={`/company/${id}/vacation`} className="mb-1"  style={{ fontSize: '1.2rem' }}>
-                                                <MDBCardText> Manage vacations </MDBCardText>
+                                            <a href={`/company/${id}/managing/vacations`} className="mb-1"  style={{ fontSize: '1.2rem' }}>
+                                                <MDBCardText> Manage company's vacations </MDBCardText>
                                             </a>
                                             <a href={`/company/${id}/services`} className="mb-1"  style={{ fontSize: '1.2rem' }}>
-                                                <MDBCardText> Manage services </MDBCardText>
+                                                <MDBCardText> Manage company's services </MDBCardText>
+                                            </a>
+                                            <a href={`/company/${id}/services`} className="mb-1"  style={{ fontSize: '1.2rem' }}>
+                                                <MDBCardText> Add personal break </MDBCardText>
                                             </a>
                                         </MDBCardBody>
                                     </MDBCard>

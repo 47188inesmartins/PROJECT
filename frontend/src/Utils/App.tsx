@@ -23,6 +23,7 @@ import {Logout} from "../Pages/Logout";
 import {MyCompanies} from "../Pages/MyCompanies";
 import {CompanyProfileEmploying} from "../Pages/CompanyProfileEmploying";
 import {ManagingEmployees} from "../Pages/Managing/ManagingEmployees";
+import {ManagingVacations} from "../Pages/Managing/ManagingVacations";
 
 
 const router = createBrowserRouter([{
@@ -119,6 +120,10 @@ const router = createBrowserRouter([{
         {
             "path": "/company/:id/managing/employees",
             "element": <ManagingEmployees/>
+        },
+        {
+            "path": "/company/:id/managing/vacations",
+            "element": <ManagingVacations/>
         }
     ]
 }])

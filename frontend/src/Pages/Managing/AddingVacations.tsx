@@ -5,7 +5,6 @@ import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
 import {Fetch} from "../../Utils/useFetch";
-import {Navigate} from "react-router";
 import {useParams} from "react-router-dom";
 
 
@@ -36,15 +35,13 @@ export function AddingVacations () {
         console.log(vacationDate)
 
         const params = useParams()
-        const companyId = params.id
-        const resp = Fetch(`/company/${companyId}/vacation`,
+        const cid = params.id
+        const resp = Fetch(`/company/${cid}/vacation`,
             'POST',
             vacationDate
         )
-        console.log("RESP =======", resp)
-        window.location.href = "/"
-        return(<Navigate to = "/" replace={true}></Navigate>);
-        //return(<></>)
+        window.location.href = `/company/${cid}/managing/vacations`
+        return(<></>);
     }
 
 

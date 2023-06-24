@@ -213,8 +213,8 @@ class CompanyController {
         }
     }
 
-    @GetMapping("/{id}/vacation")
-    fun getVacation(@PathVariable id: Int): ResponseEntity<List<VacationOutputDto>>{
+    @GetMapping("/{id}/vacations")
+    fun getVacations(@PathVariable id: Int): ResponseEntity<List<VacationOutputDto>>{
         return try{
             val response = companyServices.getVacationByCompany(id)
             ResponseEntity.status(200).body(response)
