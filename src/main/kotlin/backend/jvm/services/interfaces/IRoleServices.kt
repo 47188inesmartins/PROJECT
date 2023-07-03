@@ -8,4 +8,6 @@ interface IRoleServices {
 
     fun deleteRole(id: Int): Boolean
 
+    fun getRoleByToken(token: String): String
+
 }

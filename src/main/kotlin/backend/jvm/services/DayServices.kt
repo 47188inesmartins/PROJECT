@@ -14,6 +14,7 @@ import java.sql.Time
 
 @Service
 class DayServices : IDayServices {
+
     companion object{
         val listDayOfWeek = listOf("MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN")
     }
@@ -27,10 +28,8 @@ class DayServices : IDayServices {
     @Autowired
     lateinit var companyRepository: CompanyRepository
 
-
     @Autowired
     lateinit var serviceRepository: ServiceRepository
-
 
     override fun addOpenDay(day: DayInputDto):DayOutputDto {
         if(!listDayOfWeek.contains(day.weekDays.uppercase())) throw InvalidOpenDay()
@@ -40,7 +39,7 @@ class DayServices : IDayServices {
         return  DayOutputDto(db)
     }
 
-    fun addSpecialDayByService(day: DayInputDto, serviceId: Int, companyId: Int):DayOutputDto {
+    override fun addSpecialDayByService(day: DayInputDto, serviceId: Int, companyId: Int):DayOutputDto {
         if(!listDayOfWeek.contains(day.weekDays.uppercase())) throw InvalidOpenDay()
         val service = serviceRepository.getServiceDBById(serviceId) ?: throw InvalidService()
         val dayDb = day.mapToDayDb(day,null,listOf(service))
@@ -48,8 +47,7 @@ class DayServices : IDayServices {
         return  DayOutputDto(db)
     }
 
-
-    fun getScheduleByWeekDay(weekDay: String, cid: Int): List<String> {
+    override fun getScheduleByWeekDay(weekDay: String, cid: Int): List<String> {
         val schedule = scheduleRepository.getScheduleByCompany_Id(cid) ?: throw CompanyNotFound()
         val days = dayRepository.getDayByScheduleIdAndWeekDays(schedule.id, getDayOfWeek(Date.valueOf(weekDay)))
 
@@ -70,7 +68,7 @@ class DayServices : IDayServices {
         return hoursList
     }
 
-    fun addOpenDays(day: List<DayInputDto>, companyId: Int, interval: String) {
+    override fun addOpenDays(day: List<DayInputDto>, companyId: Int, interval: String) {
         companyRepository.findAllById(companyId) ?: throw InvalidSchedule()
         val schedule = scheduleRepository.getScheduleByCompany_Id(companyId) ?: throw InvalidSchedule()
         val intervalBetween = Time.valueOf(interval)
@@ -98,4 +96,5 @@ class DayServices : IDayServices {
         if(availableDays.isEmpty()) throw NoAvailableDays()
         return availableDays.map { DayOutputDto(it) }
     }
+
 }

@@ -89,11 +89,6 @@ class UserServices : IUserInterface {
         return userRepository.getUserByToken(t) ?: throw InvalidToken()
     }
 
-    fun getRoleByToken(token: String): String? {
-        val user = userRepository.getUserByToken(UUID.fromString(token))?.id ?: throw UserNotFound()
-        return  userRepository.getRole(user)
-    }
-
     fun getRolesByToken(token: String): List<CompanyRole> {
         val user = userRepository.getUserByToken(UUID.fromString(token))?.id ?: throw UserNotFound()
         val companyRoleRep = userCompanyRepository.getUserCompanyByUserId(user)
@@ -101,8 +96,6 @@ class UserServices : IUserInterface {
             CompanyRole(it.company!!.id,it.role)
         }
     }
-
-
 
     override fun addEmployees(companyId: Int, emails: List<String>){
         val user = emails.map {email ->
@@ -116,10 +109,8 @@ class UserServices : IUserInterface {
         }
 
         newEmployees.forEach {
-            //userRepository.changeAvailabilityAndMaxNumber(UserAvailability.AVAILABLE.name, 1, it.id)
             userCompanyRepository.save(UserCompany(it, company, UserRoles.EMPLOYEE.name))
         }
-
     }
 
     override fun getAllAppointmentsByUser(token: String): AppointmentsUserInfo{
@@ -136,7 +127,7 @@ class UserServices : IUserInterface {
         return AppointmentsUserInfo(mapToAppointmentsInfo(soonerApp),mapToAppointmentsInfo(latterApp))
     }
 
-    fun mapToAppointmentsInfo(listAppointments: List<Appointment>):List<AppointmentInfo>{
+    override fun mapToAppointmentsInfo(listAppointments: List<Appointment>):List<AppointmentInfo>{
         if(listAppointments.isEmpty()) return emptyList()
         return listAppointments.map {
             val getCompany = companyRepository.getCompanyBySchedule(it.schedule.id)?:throw CompanyNotFound()
@@ -157,10 +148,10 @@ class UserServices : IUserInterface {
         }
     }
 
-    fun getPersonalizedCompanies(token: String?): List<CompanyOutputDto>?{
+    override fun getPersonalizedCompanies(token: String?): List<CompanyOutputDto>?{
         if(token == null) {
-            val companys = companyRepository.findAll()
-            return companys.map { CompanyOutputDto(it) }
+            val companies = companyRepository.findAll()
+            return companies.map { CompanyOutputDto(it) }
         }
         val user = userRepository.getUserByToken(UUID.fromString(token))?: throw UserNotFound()
         val categoriesArray = user.interests.split(",").toTypedArray()
@@ -168,21 +159,20 @@ class UserServices : IUserInterface {
         return comps?.map { CompanyOutputDto(it) }
     }
 
-
-    fun getRoleByUserIdAndCompany(company: Int, user_id: String): String? {
+    override fun getRoleByUserIdAndCompany(company: Int, user_id: String): String? {
         val token = userRepository.getUserByToken(UUID.fromString(user_id))
         return if (token == null)  null
         else userCompanyRepository.getRoleByCompanyAndUser(company, token.id)
     }
 
-    fun getEarnedMoneyEmployee(userId: String, dateBegin: String, dateEnd: String,company: Int): Double {
+    override fun getEarnedMoneyEmployee(userId: String, dateBegin: String, dateEnd: String,company: Int): Double {
         val user = userRepository.getUserByToken(UUID.fromString(userId)) ?: throw UserNotFound()
         val getBeginDate = Date.valueOf(dateBegin)
         val getEndDate = Date.valueOf(dateEnd)
         return servicesRepository.getEarnedMoneyByEmployee(user.id,company, getBeginDate, getEndDate) ?: 0.0
     }
 
-    fun updateUserProfilePicture(id: Int, image: MultipartFile){
+    override fun updateUserProfilePicture(id: Int, image: MultipartFile){
         val fileName = image.originalFilename?.let { StringUtils.cleanPath(it) }
         if(fileName?.contains("..")!!){
             println("not a valid file")

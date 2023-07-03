@@ -7,6 +7,36 @@ import {useParams} from "react-router-dom";
 export function CreatingServices(){
     const [create, setCreate] = useState<Boolean>(false)
     const [selectedFeatures, setSelectedFeatures] = useState([]);
+    const [isOpen, setIsOpen] = useState(false);
+    const [selectedValue, setSelectedValue] = useState(null);
+
+    const renderOptions = () => {
+        const options = [];
+        for (let i = 1; i <= 200; i++) {
+            options.push(
+                <div
+                    key={i}
+                    className="dropdown-option"
+                    onClick={() => handleOptionClick(i)}
+                >
+                    {i} minutes
+                </div>
+            );
+        }
+        return options;
+    };
+
+    const handleDropdownToggle = () => {
+        setIsOpen(!isOpen);
+    };
+
+    const handleOptionClick = (value) => {
+        setSelectedValue(
+            value
+            //  convertMinutesToHHMMSS(value)
+        );
+        setIsOpen(false);
+    };
 
     const id = useParams().id
     const handleCancel = () => {
@@ -113,16 +143,23 @@ export function CreatingServices(){
                                                         </label>
                                                     </div>
                                                     <div className="form-outline form-white mb-4">
-                                                        <input
-                                                            type="text"
-                                                            id={`serviceDuration-${index}`}
-                                                            className="form-control form-control-lg"
-                                                            value={service.duration}
-                                                            onChange={e => handleServiceChange(index, 'duration', e.target.value)}
-                                                            />
-                                                            <label className="form-label" htmlFor={`serviceDuration-${index}`}>
-                                                            Duration
-                                                        </label>
+                                                        <div className="dropdown">
+                                                            <label>
+                                                                Duration
+                                                            </label>
+                                                            <br />
+                                                            <button className="dropdown-toggle" onClick={handleDropdownToggle}>
+                                                                {selectedValue?
+                                                                    `${selectedValue} minutes`:
+                                                                    "Select a number"
+                                                                }
+                                                            </button>
+                                                            {isOpen && (
+                                                                <div className="dropdown-options-container">
+                                                                    <div className="dropdown-options">{renderOptions()}</div>
+                                                                </div>
+                                                            )}
+                                                        </div>
                                                     </div>
                                                     <div className="form-outline form-white mb-4">
                                                         <input

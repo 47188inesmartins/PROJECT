@@ -6,14 +6,11 @@ import backend.jvm.services.dto.*
 import backend.jvm.services.interfaces.ICompanyServices
 import backend.jvm.utils.UserRoles
 import backend.jvm.utils.errorHandling.*
+import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.util.StringUtils
 import org.springframework.web.multipart.MultipartFile
-import java.io.File
-import java.nio.file.Files
-import java.nio.file.Path
-import java.nio.file.StandardCopyOption
 import java.sql.Date
 import java.sql.Time
 import java.util.*
@@ -28,37 +25,24 @@ class CompanyServices : ICompanyServices {
 
     @Autowired
     lateinit var companyRepository: CompanyRepository
-
     @Autowired
     lateinit var scheduleRepository: ScheduleRepository
-
     @Autowired
     lateinit var usersRepository: UserRepository
-
     @Autowired
     lateinit var serviceRepository: ServiceRepository
-
     @Autowired
     lateinit var appointmentRepository: AppointmentRepository
-
     @Autowired
     lateinit var dayRepository: DayRepository
-
     @Autowired
     lateinit var vacationRepository: VacationRepository
-
     @Autowired
     lateinit var userCompanyRepository: UserCompanyRepository
-
     @Autowired
     lateinit var imageRepository: ImageRepository
 
-    private val uploadDirectory: String = "kotlin/backend/files"
 
-    override fun getSearchedCompanies(search: String?): List<CompanyOutputDto>?{
-        if(search == "null") return getAllCompanies()
-        return companyRepository.getCompanyBySearch("%${search}%")?.map { CompanyOutputDto(it) }
-    }
 
     /**
      * Creates a new company and associates a manager for the company created
@@ -66,6 +50,7 @@ class CompanyServices : ICompanyServices {
      * @param company Company receive from frontend
      * @return CompanyOutputDto info aof the saved company
      */
+    @Transactional(rollbackOn = [Exception::class])
     override fun addCompany(token: String, company: CompanyInputDto): CompanyOutputDto {
 
         val managerUser = usersRepository.getUserByToken(UUID.fromString(token))?: throw UserNotFound()
@@ -98,7 +83,6 @@ class CompanyServices : ICompanyServices {
 
     override fun getCompanyById(id: Int): CompanyOutputDto {
         val comp = companyRepository.getReferenceById(id)
-        //if(comp == null) throw CompanyNotFound()
         return CompanyOutputDto(comp)
     }
 
@@ -121,7 +105,6 @@ class CompanyServices : ICompanyServices {
         companyRepository.findAllById(id) ?: throw CompanyNotFound()
         return companyRepository.getAppointmentsByDateAndHour(id, d, h).map { AppointmentOutputDto(it) }
     }
-
 
     override fun getOpenDaysByCompany(id: Int): List<DayOutputDto>{
         return dayRepository.getOpenDays(id).map { DayOutputDto(it) }
@@ -214,28 +197,18 @@ class CompanyServices : ICompanyServices {
         }
     }
 
-
     fun getEmployeesByCompany(cid: Int): List<UserOutputDto>{
         val employees = usersRepository.getUserEmployeesByCompany(cid) ?: throw EmployeeNotFound()
         return employees.map { UserOutputDto(it) }
     }
-
-    private fun saveFile(file: MultipartFile, fileName: String): String {
-        val filePath: String = (uploadDirectory + File.separator) + fileName
-        val targetLocation: Path = Path.of(filePath)
-        Files.createDirectories(targetLocation.parent)
-        Files.copy(file.inputStream, targetLocation, StandardCopyOption.REPLACE_EXISTING)
-        return filePath
-    }
-
 
     fun removeEmployeeFromCompany(cid: Int, employeeId: Int){
         userCompanyRepository.deleteAllByCompanyAndUserAndRole(cid, employeeId)
         //remover os appointments deste employee
     }
 
-
-
-
-
+    override fun getSearchedCompanies(search: String?): List<CompanyOutputDto>?{
+        if(search == "null") return getAllCompanies()
+        return companyRepository.getCompanyBySearch("%${search}%")?.map { CompanyOutputDto(it) }
+    }
 }

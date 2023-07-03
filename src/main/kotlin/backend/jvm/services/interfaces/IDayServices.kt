@@ -8,6 +8,12 @@ interface IDayServices {
 
     fun addOpenDay(day: DayInputDto): DayOutputDto
 
+    fun addSpecialDayByService(day: DayInputDto, serviceId: Int, companyId: Int):DayOutputDto
+
+    fun getScheduleByWeekDay(weekDay: String, cid: Int): List<String>
+
+    fun addOpenDays(day: List<DayInputDto>, companyId: Int, interval: String)
+
     fun updateBeginHour(id:Int,hour: String): Time
 
     fun updateEndHour(id:Int,hour: String): Time

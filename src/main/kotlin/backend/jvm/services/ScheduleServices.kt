@@ -61,16 +61,4 @@ class ScheduleServices: IScheduleServices {
     override fun getScheduleById(id:Int): ScheduleOutputDto?{
         return ScheduleOutputDto(scheduleRepository.findById(id).get())
     }
-
-  /*  override fun getOpenDaysBySchedule(id: Int): List<DayOutputDto> {
-        val openDays = dayRepository.getDayByScheduleId(id)
-        if(openDays.isEmpty()) throw  ScheduleOpenDays()
-        return openDays.map { DayOutputDto(it) }
-    }
-
-    override fun getVacation(id: Int): List<VacationOutputDto>{
-        val vacation = vacationRepository.getVacationsByScheduleId(id)
-        return vacation.map { VacationOutputDto(it) }
-    }
-    */
 }

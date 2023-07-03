@@ -5,7 +5,6 @@ import backend.jvm.services.ServServices
 import backend.jvm.services.dto.DayInputDto
 import backend.jvm.services.dto.ServiceInputDto
 import backend.jvm.services.dto.ServiceOutputDto
-import backend.jvm.services.dto.UserOutputDto
 import backend.jvm.utils.RoleManager
 import jakarta.persistence.EntityNotFoundException
 import org.springframework.beans.factory.annotation.Autowired
@@ -76,8 +75,7 @@ class ServiceController {
         }
     }
 
-
-    @PostMapping("/{id}/schedule")
+    @PutMapping("/{id}/schedule")
     fun updateSchedule(@PathVariable id: Int, @RequestBody day: List<DayInputDto>) {
         try {
             val response = servServices.changeSchedule(id, day)
@@ -88,7 +86,6 @@ class ServiceController {
                 .body(null)
         }
     }
-
 
     @RoleManager(["MANAGER", "EMPLOYEE"])
     @PutMapping("/{id}/duration")
@@ -103,7 +100,6 @@ class ServiceController {
         }
     }
 
-
     @RoleManager(["MANAGER"])
     @DeleteMapping
     fun deleteServices(@RequestBody serviceDB: ServiceDB): ResponseEntity<String> {
@@ -116,7 +112,6 @@ class ServiceController {
                 .body(null)
         }
     }
-
 }
 
 

@@ -136,16 +136,11 @@ class AppointmentServices : IAppointmentServices {
      * @throws ScheduleNotFound if the schedule is not found.
      */
 
-    override fun getAvailableServicesByAppointment(
-        beginHour: String,
-        date: String,
-        companyId: Int
-    ): List<Pair<ServiceOutputDto, List<UserOutputDto>>> {
+    override fun getAvailableServicesByAppointment(beginHour: String, date: String, companyId: Int): List<Pair<ServiceOutputDto, List<UserOutputDto>>> {
         val bh = Time.valueOf(beginHour.plus(":00"))
         val d = Date.valueOf(date)
         val weekDay = getDayOfWeek(d)
-        val schedule = scheduleRepository.getScheduleByCompany_Id(companyId)
-            ?: throw ScheduleNotFound()
+        val schedule = scheduleRepository.getScheduleByCompany_Id(companyId) ?: throw ScheduleNotFound()
         val services = servicesRepository.getNormalScheduleServices(companyId)
         val day = dayRepository.getDayByWeekDaysAndAndSchedule(weekDay, schedule)
 
@@ -156,14 +151,6 @@ class AppointmentServices : IAppointmentServices {
                 ((day.beginHour < addTimes(bh, it.first.duration) && addTimes(bh, it.first.duration) < day.intervalBegin) ||
                         (day.intervalEnd!! < addTimes(bh, it.first.duration) && addTimes(bh, it.first.duration) < day.endHour))) }
 
-        val specialServices = servicesRepository.getAvailableServicesByHour(weekDay, bh, companyId)
-        if (specialServices.isEmpty()) return s
-        val serv = specialServices.filter {
-            val day = dayRepository.getDayByServiceAndWeek(it.id, weekDay)
-            userRepository.getAvailableEmployeesByService(it.id, d, bh, addTimes(bh, it.duration)).isNotEmpty() &&
-                    ((day.beginHour < addTimes(bh, it.duration) && addTimes(bh, it.duration) < day.intervalBegin) ||
-                            (day.intervalEnd!! < addTimes(bh, it.duration) && addTimes(bh, it.duration) < day.endHour))
-        }
         return emptyList()
     }
 }
