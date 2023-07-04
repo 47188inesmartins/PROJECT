@@ -16,7 +16,9 @@ import {LoggedInContextCookie} from "../Authentication/Authn";
 
 
 export function ProfilePage() {
-    const token = useContext(LoggedInContextCookie).loggedInState.role
+    const role = useContext(LoggedInContextCookie).loggedInState.role
+    const roleCheck = ((role.indexOf('manager') === -1) && (role.indexOf('employee') === -1))
+
 
     const check = false //(token !== "GUEST" && token !== "CLIENT")
     const response = Fetch('/user/info','GET')
@@ -70,10 +72,15 @@ export function ProfilePage() {
                                 </MDBCard>
                                 <MDBCard className="mb-4 mb-md-0">
                                     <MDBCardBody>
-                                            <MDBCardText className="mb-4">My wallet </MDBCardText>
-                                            <a href={`/company/profits`} className="mb-1"  style={{ fontSize: '1.2rem' }}>
-                                                <MDBCardText> Check your profits </MDBCardText>
-                                            </a>
+                                        {roleCheck?
+                                            <>
+                                                <MDBCardText className="mb-4">My wallet </MDBCardText>
+                                                <a href={`/company/profits`} className="mb-1"  style={{ fontSize: '1.2rem' }}>
+                                                    <MDBCardText> Check your profits </MDBCardText>
+                                                </a>
+                                            </> :
+                                            <></>
+                                        }
                                     </MDBCardBody>
                                 </MDBCard>
                             </MDBCol>

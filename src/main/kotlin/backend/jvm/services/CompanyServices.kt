@@ -6,6 +6,8 @@ import backend.jvm.services.dto.*
 import backend.jvm.services.interfaces.ICompanyServices
 import backend.jvm.utils.UserRoles
 import backend.jvm.utils.errorHandling.*
+import backend.jvm.utils.getCurrentDate
+import backend.jvm.utils.getCurrentTime
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -39,6 +41,7 @@ class CompanyServices : ICompanyServices {
     lateinit var vacationRepository: VacationRepository
     @Autowired
     lateinit var userCompanyRepository: UserCompanyRepository
+
     @Autowired
     lateinit var imageRepository: ImageRepository
 
@@ -81,13 +84,24 @@ class CompanyServices : ICompanyServices {
         return true
     }
 
+    /**
+     * Gets a company by the given id
+     * @param id that represents the company
+     * @param CompanyOutputDto info of the company returned
+     */
     override fun getCompanyById(id: Int): CompanyOutputDto {
         val comp = companyRepository.getReferenceById(id)
         return CompanyOutputDto(comp)
     }
 
-    override fun getCompanyByNif(nif: String): Company? {
-        return companyRepository.findCompanyByNif(nif) ?: throw CompanyNotFound()
+    /**
+     * Gets a company by the given id
+     * @param nif that represents the company
+     * @param CompanyOutputDto info of the company returned
+     */
+    override fun getCompanyByNif(nif: String): CompanyOutputDto {
+       val c =   companyRepository.findCompanyByNif(nif) ?: throw CompanyNotFound()
+        return CompanyOutputDto(c)
     }
 
     override fun getAllServicesByCompany(id: Int): List<ServiceOutputDto>{
@@ -143,21 +157,35 @@ class CompanyServices : ICompanyServices {
     }
 
     fun getAllEmployeesByCompanyAndMoney(cid: Int): List<Pair<UserInfo,Double>>{
-        val employees = usersRepository.getUserEmployeesByCompany(cid) ?: throw EmployeeNotFound()
+        val employees = usersRepository.getUsersEmployeesByCompany(cid) ?: throw EmployeeNotFound()
         val dateEnd = Date(System.currentTimeMillis())
+        val earnedMoney = employees.map {
+            Pair(
+                UserInfo(it.id,it.name),
+                serviceRepository.getEarnedMoneyByEmployee(it.id,cid,getDateForLastDays(),dateEnd)?:0.0
+            )
+        }
+        return earnedMoney
+    }
+
+    fun getEarnedMoneyByEmployee(employee: Int, company: Int): Double {
+        return serviceRepository.getEarnedMoneyByEmployee(
+            employee,
+            company,
+            getDateForLastDays(),
+            Date(System.currentTimeMillis())) ?:0.0
+    }
+
+    /**
+     * returns the date 30 days ago
+     * @return Date that is the date of 30 days ago
+     */
+    private fun getDateForLastDays(): Date{
         val currentDate = Date(System.currentTimeMillis())
         val calendar = Calendar.getInstance()
         calendar.time = currentDate
         calendar.add(Calendar.DAY_OF_MONTH, -30)
-        val dateBegin = Date(calendar.timeInMillis)
-
-        val earnedMoney = employees.map {
-            Pair(
-                UserInfo(it.id,it.name),
-                serviceRepository.getEarnedMoneyByEmployee(it.id,cid,dateBegin,dateEnd)?:0.0
-            )
-        }
-        return earnedMoney
+        return Date(calendar.timeInMillis)
     }
 
     fun getAppointmentsByCompany(cid: Int): List<AppointmentInfoEmployeeEnd>{
@@ -183,7 +211,9 @@ class CompanyServices : ICompanyServices {
     }
 
     /**
-     * @param cid
+     * Saves the uploaded image and associates them with the company
+     * @param cid company id
+     * @param images array with the images received
      */
     fun uploadPhoto(cid: Int, images: Array<MultipartFile>){
         val company = companyRepository.findAllById(cid) ?: throw CompanyNotFound()
@@ -197,14 +227,25 @@ class CompanyServices : ICompanyServices {
         }
     }
 
+    /**
+     * Gets the list of the employees that works for the specified company
+     * @param cid indicates the company id
+     * @return List<UserOutputDto> returns the list of employees of the company
+     */
     fun getEmployeesByCompany(cid: Int): List<UserOutputDto>{
-        val employees = usersRepository.getUserEmployeesByCompany(cid) ?: throw EmployeeNotFound()
+        val employees = usersRepository.getUsersEmployeesByCompany(cid) ?: throw EmployeeNotFound()
         return employees.map { UserOutputDto(it) }
     }
 
+    /**
+     * Removes the association with a company and a user and
+     * deletes all future appointments of that user
+     * @param cid Company id
+     * @param employeeId users id
+     */
     fun removeEmployeeFromCompany(cid: Int, employeeId: Int){
         userCompanyRepository.deleteAllByCompanyAndUserAndRole(cid, employeeId)
-        //remover os appointments deste employee
+        appointmentRepository.deleteAppointmentByDateAndEmployee(employeeId,getCurrentTime(),getCurrentDate())
     }
 
     override fun getSearchedCompanies(search: String?): List<CompanyOutputDto>?{

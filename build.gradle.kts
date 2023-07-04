@@ -49,19 +49,24 @@ dependencies {
 	// for Geocoder
 	implementation ("com.google.maps:google-maps-services:2.1.2")
 
+
 	// JWT
 	implementation("io.jsonwebtoken:jjwt:0.9.1")
 	implementation("javax.servlet:javax.servlet-api:4.0.1")
 	implementation("javax.servlet:jstl:1.2")
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
-	testImplementation("org.junit.jupiter:junit-jupiter-engine")
-	testImplementation("org.junit.jupiter:junit-jupiter-api")
-	testImplementation("com.ninja-squad:springmockk:3.1.1")
+	implementation ("com.auth0:java-jwt:4.2.1")
 
+	// for sending emails
+	implementation ("org.springframework.boot:spring-boot-starter-mail")
 
 	// Para processamento de arquivos multipart
 	implementation  ("org.springframework.boot:spring-boot-starter-validation")
 	implementation  ("commons-fileupload:commons-fileupload:1.4")
+
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("org.junit.jupiter:junit-jupiter-engine")
+	testImplementation("org.junit.jupiter:junit-jupiter-api")
+	testImplementation("com.ninja-squad:springmockk:3.1.1")
 }
 
 

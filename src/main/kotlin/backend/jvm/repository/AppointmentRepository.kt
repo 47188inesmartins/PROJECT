@@ -2,6 +2,7 @@ package backend.jvm.repository
 
 import backend.jvm.model.*
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import java.sql.Time
@@ -40,4 +41,10 @@ interface AppointmentRepository: JpaRepository<Appointment, Int>{
 
     @Query(value = "select * from APPOINTMENT where APPOINTMENT.schedule_id = :schedule ", nativeQuery = true)
     fun getAppointmentsBySchedule(@Param("schedule") schedule: Int):List<Appointment>
+
+    @Modifying
+    @Query(value = "delete * from APPOINTMENT a where exist ( select * from  appointment_user au where " +
+            "a.id = au.appointment_id and au.user_id =:user) and a.app_hour > :hour and a.app_date > :date  ", nativeQuery = true)
+    fun deleteAppointmentByDateAndEmployee(@Param("user") user: Int, @Param("hour") hour: Time,@Param("date") date: Date )
+
 }

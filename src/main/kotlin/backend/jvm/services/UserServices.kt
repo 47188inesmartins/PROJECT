@@ -6,13 +6,19 @@ import backend.jvm.services.dto.*
 import backend.jvm.services.interfaces.IUserInterface
 import backend.jvm.utils.*
 import backend.jvm.utils.errorHandling.*
+import backend.jvm.utils.hashUtils.PasswordDecoder
+import backend.jvm.utils.hashUtils.SecurityConfig
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.util.StringUtils
 import org.springframework.web.multipart.MultipartFile
 import kotlin.collections.List
 import java.sql.Date
 import java.util.*
+import kotlin.jvm.Throws
 
 @Service
 class UserServices : IUserInterface {
@@ -29,6 +35,10 @@ class UserServices : IUserInterface {
     lateinit var roleRepository: RoleRepository
     @Autowired
     lateinit var userCompanyRepository: UserCompanyRepository
+    @Autowired
+    private lateinit var passwordEncoder: PasswordEncoder
+    @Autowired
+    private lateinit var passwordDecoder: PasswordDecoder
 
     companion object{
         val EMAIL_FORMAT = Regex("""^\w+@\w+\.\w+$""")
@@ -47,8 +57,15 @@ class UserServices : IUserInterface {
         if(user.appointment != null ) user.appointment.forEach { appList.add(appointmentRepository.findById(it).get()) }
         val role = roleRepository.getRoleByName(UserRoles.CLIENT.name)
 
+        val encodePassword = passwordEncoder.encode(user.password)
+        val token = passwordEncoder.encode(UUID.randomUUID().toString())
         val returnUser = userRepository.save(
-            user.mapToUser(user,Hashing.encodePass(user.password),servicesList,appList, null, listOf(role), null, user.interests, user.profilePic)
+            user.mapToUser(
+                user,
+                encodePassword,
+                servicesList,
+                appList, null,
+                listOf(role), null, user.interests, user.profilePic)
         )
         return CreatedUserOutput(returnUser.id, returnUser.token)
     }
@@ -79,9 +96,10 @@ class UserServices : IUserInterface {
     }
 
     override fun getUsersByEmailAndPassword (email: String, password: String): UserOutputDto {
-        val user = userRepository.getUsersByEmailPass(Hashing.encodePass(password),email)
-            ?: throw InvalidCredentials()
-        return UserOutputDto(user)
+        val user = userRepository.getUsersByEmail(email) ?: throw UserNotFound()
+        val passwordEncode = passwordDecoder.getSavedPassword(user.password,password)
+        return if(passwordEncode)  UserOutputDto(user)
+        else throw InvalidCredentials()
     }
 
     override fun getUserByToken(token: String):UserDB?{

@@ -75,6 +75,7 @@ export function Signup() {
                 setRedirect(true);
             })
             .catch(error => {
+                window.alert(error)
                 console.error('An error has occurred:', error);
             });
     }
@@ -88,6 +89,7 @@ export function Signup() {
     if (redirect) {
         const userId = data.id
         console.log("datata", data)
+        console.log("userId", userId)
         window.location.href = `user/${userId}/upload-pic`
         return <></>;
     }

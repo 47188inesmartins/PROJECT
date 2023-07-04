@@ -1,5 +1,6 @@
 package backend.jvm.controllers
 
+import backend.jvm.services.EmailSenderService
 import backend.jvm.services.UserServices
 import backend.jvm.services.dto.*
 import backend.jvm.utils.RoleManager
@@ -30,6 +31,9 @@ class UserController {
     @Autowired
     lateinit var userServices: UserServices
 
+    @Autowired
+    lateinit var emailSenderService: EmailSenderService
+
     @PostMapping
     fun signup(@RequestBody user: UserInputDto, response: HttpServletResponse): ResponseEntity<CreatedUserOutput> {
         return try {
@@ -43,9 +47,14 @@ class UserController {
                 .secure(false)
                 .build()
             response.addHeader(HttpHeaders.SET_COOKIE, cookieToken.toString())
+            emailSenderService.sendEmail(
+                user.email,
+                "Confirm your account!",
+                "Confirm account"
+            )
             ResponseEntity
-                .status(201)
-                .body(resp)
+                    .status(201)
+                    .body(resp)
         } catch (e: Exception) {
             when(e){
                 is InvalidEmail -> throw ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid Email",e)

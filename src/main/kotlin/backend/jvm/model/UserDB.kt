@@ -2,7 +2,8 @@ package backend.jvm.model
 
 import jakarta.persistence.*
 import java.sql.Date
-import java.util.UUID
+import java.util.*
+
 
 /**
  *
@@ -56,13 +57,13 @@ class UserDB {
         val birthday: Date
 
         @OneToMany(mappedBy = "userDB")
-        val unavailabilityDB : List<UnavailabilityDB>?
+        val unavailabilityDB: List<UnavailabilityDB>?
 
         @Column(name = "interests")
-        val interests : String
+        val interests: String
 
         @Column(name = "address")
-        val address : String
+        val address: String
 
         @Column(name = "profile_pic", columnDefinition = "BYTEA")
         val profilePic: ByteArray?
@@ -89,7 +90,7 @@ class UserDB {
         @ManyToMany(mappedBy = "usersDB")
         val appointment: List<Appointment>?
 
-        constructor(){
+        constructor() {
                 this.token = UUID.randomUUID()
                 this.email = ""
                 this.password = ""
@@ -106,10 +107,10 @@ class UserDB {
         }
 
         constructor(
-                email:String,
-                password:String,
-                clientName:String,
-                birth:Date,
+                email: String,
+                password: String,
+                clientName: String,
+                birth: Date,
                 serv: List<ServiceDB>?,
                 appointments: List<Appointment>?,
                 roles: List<Role>,
@@ -118,7 +119,7 @@ class UserDB {
                 interests: String,
                 address: String,
                 profilePic: ByteArray?
-        ){
+        ) {
                 this.token = UUID.randomUUID()
                 this.email = email
                 this.password = password

@@ -119,7 +119,7 @@ class CompanyController {
 
     @RoleManager(["MANAGER","EMPLOYEE"])
     @GetMapping("/nif")
-    fun findCompanyByNif(@RequestParam nif: String): ResponseEntity<Company> {
+    fun findCompanyByNif(@RequestParam nif: String): ResponseEntity<CompanyOutputDto> {
         return try {
             val response = companyServices.getCompanyByNif(nif)
             ResponseEntity
@@ -250,6 +250,19 @@ class CompanyController {
     fun getAllEmployeesByCompanyAndMoney(@PathVariable cid: Int): ResponseEntity<List<Pair<UserInfo,Double>>>{
         return try {
             val response = companyServices.getAllEmployeesByCompanyAndMoney(cid)
+            ResponseEntity
+                .status(200)
+                .body(response)
+        }catch(e: Exception){
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
+        }
+    }
+
+    @RoleManager(["MANAGER","EMPLOYEE"])
+    @GetMapping("{cid}/employee-profit/{id}")
+    fun getEmployeesByCompanyAndMoney(@PathVariable cid: Int, @PathVariable id: Int): ResponseEntity<Double>{
+        return try {
+            val response = companyServices.getEarnedMoneyByEmployee(id,cid)
             ResponseEntity
                 .status(200)
                 .body(response)

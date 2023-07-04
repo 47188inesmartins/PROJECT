@@ -14,7 +14,7 @@ interface ICompanyServices {
 
     fun getCompanyById(id: Int): CompanyOutputDto
 
-    fun getCompanyByNif(nif: String): Company?
+    fun getCompanyByNif(nif: String): CompanyOutputDto?
 
     fun getAllServicesByCompany(id: Int): List<ServiceOutputDto>
 
