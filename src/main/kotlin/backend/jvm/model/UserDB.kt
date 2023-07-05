@@ -1,5 +1,6 @@
 package backend.jvm.model
 
+import backend.jvm.model.appointment.Appointment
 import jakarta.persistence.*
 import java.sql.Date
 import java.util.*
@@ -68,6 +69,9 @@ class UserDB {
         @Column(name = "profile_pic", columnDefinition = "BYTEA")
         val profilePic: ByteArray?
 
+        @Column(name = "status")
+        val status: String
+
         @ManyToMany
         @JoinTable(
                 name = "user_role",
@@ -104,21 +108,23 @@ class UserDB {
                 this.companies = listOf()
                 this.interests = ""
                 this.profilePic = null
+                this.status = "PENDING"
         }
 
         constructor(
-                email: String,
-                password: String,
-                clientName: String,
-                birth: Date,
-                serv: List<ServiceDB>?,
-                appointments: List<Appointment>?,
-                roles: List<Role>,
-                unavailabilityDB: List<UnavailabilityDB>?,
-                companies: List<UserCompany>?,
-                interests: String,
-                address: String,
-                profilePic: ByteArray?
+            email: String,
+            password: String,
+            clientName: String,
+            birth: Date,
+            serv: List<ServiceDB>?,
+            appointments: List<Appointment>?,
+            roles: List<Role>,
+            unavailabilityDB: List<UnavailabilityDB>?,
+            companies: List<UserCompany>?,
+            interests: String,
+            address: String,
+            profilePic: ByteArray?,
+            status: String
         ) {
                 this.token = UUID.randomUUID()
                 this.email = email
@@ -133,5 +139,6 @@ class UserDB {
                 this.companies = companies
                 this.interests = interests
                 this.profilePic = profilePic
+                this.status = status
         }
 }

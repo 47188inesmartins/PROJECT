@@ -36,9 +36,7 @@ class ServiceDay {
 @Embeddable
 class ServiceDayPK() : Serializable {
 
-    // @Column(name = "user_id", insertable=false, updatable=false)
     var day: Int = 0
-    // @Column(name = "company_id", insertable=false, updatable=false)
     var service: Int = 0
 
     constructor(day: Int, service: Int) : this() {

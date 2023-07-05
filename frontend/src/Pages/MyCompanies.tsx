@@ -60,7 +60,7 @@ function CompanyRole(props:{role:String,Text:String}) {
     }
     return(
         <>
-            {!resp.response?
+            e{!resp.response?
                 <div className="loading">
                     <div className="spinner-border" role="status">
                         <span className="sr-only">Loading...</span>
@@ -77,7 +77,7 @@ function CompanyRole(props:{role:String,Text:String}) {
                                         <a href={`/company/${object.id}/managing`} className="mb-1"  style={{ fontSize: '1.2rem' }}>
                                             <MDBCardText>{object.name}</MDBCardText>
                                         </a>
-                                    :
+                                        :
                                         <a href={`/company/${object.id}/employing`} className="mb-1"  style={{ fontSize: '1.2rem' }}>
                                             <MDBCardText>{object.name}</MDBCardText>
                                         </a>
@@ -91,4 +91,3 @@ function CompanyRole(props:{role:String,Text:String}) {
         </>
     );
 }
-

@@ -79,4 +79,9 @@ interface UserRepository: JpaRepository<UserDB, Int> {
      @Query(value = "update sch_user set profile_pic = :pic where id = :id ", nativeQuery = true)
      @Transactional
      fun updateUserPicture(@Param("id") id: Int, @Param("pic") pic: ByteArray)
+
+     @Modifying
+     @Query(value = "update sch_user set status = 'VALIDATED' where email = :email", nativeQuery = true)
+     @Transactional
+     fun changeStatusByEmail(@Param("email") email: String)
 }

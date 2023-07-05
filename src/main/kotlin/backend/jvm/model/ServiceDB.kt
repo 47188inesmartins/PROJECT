@@ -1,5 +1,6 @@
 package backend.jvm.model
 
+import backend.jvm.model.appointment.Appointment
 import jakarta.persistence.*
 import java.sql.Time
 

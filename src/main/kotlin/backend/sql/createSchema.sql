@@ -35,7 +35,8 @@ create table if not exists SCH_USER (
     name varchar(200),
     interests varchar(60),
     birthday date check (date(CURRENT_TIMESTAMP) >= birthday + interval '16 year'),
-    profile_pic BYTEA
+    profile_pic BYTEA,
+    status varchar(250) default 'PENDING'
 );
 
 

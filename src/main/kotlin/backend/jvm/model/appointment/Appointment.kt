@@ -1,5 +1,8 @@
-package backend.jvm.model
+package backend.jvm.model.appointment
 
+import backend.jvm.model.Schedule
+import backend.jvm.model.ServiceDB
+import backend.jvm.model.UserDB
 import jakarta.persistence.*
 import java.sql.Time
 import java.sql.Date

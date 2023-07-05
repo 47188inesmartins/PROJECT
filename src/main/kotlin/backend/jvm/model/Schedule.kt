@@ -1,5 +1,6 @@
 package backend.jvm.model
 
+import backend.jvm.model.appointment.Appointment
 import jakarta.persistence.*
 import java.sql.Time
 
@@ -25,7 +26,6 @@ class Schedule {
     @Column(name = "between_interval")
     val betweenInterval : Time?
 
-
     @OneToMany(mappedBy = "schedule")
     val appointment: List<Appointment>?
 
@@ -43,7 +43,7 @@ class Schedule {
         this.betweenInterval = null
     }
 
-    constructor(companyId: Company,appointment: List<Appointment>?,day: List<Day>?,vacation: List<Vacation>?, betweenInterval : Time?){
+    constructor(companyId: Company, appointment: List<Appointment>?, day: List<Day>?, vacation: List<Vacation>?, betweenInterval : Time?){
         this.company = companyId
         this.appointment = appointment
         this.day = day

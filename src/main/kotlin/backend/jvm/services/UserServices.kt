@@ -1,16 +1,14 @@
 package backend.jvm.services
 
 import backend.jvm.model.*
+import backend.jvm.model.appointment.Appointment
 import backend.jvm.repository.*
 import backend.jvm.services.dto.*
 import backend.jvm.services.interfaces.IUserInterface
 import backend.jvm.utils.*
 import backend.jvm.utils.errorHandling.*
 import backend.jvm.utils.hashUtils.PasswordDecoder
-import backend.jvm.utils.hashUtils.SecurityConfig
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.core.GrantedAuthority
-import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.util.StringUtils
@@ -18,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile
 import kotlin.collections.List
 import java.sql.Date
 import java.util.*
-import kotlin.jvm.Throws
 
 @Service
 class UserServices : IUserInterface {
@@ -97,6 +94,7 @@ class UserServices : IUserInterface {
 
     override fun getUsersByEmailAndPassword (email: String, password: String): UserOutputDto {
         val user = userRepository.getUsersByEmail(email) ?: throw UserNotFound()
+        if(user.status == "PENDING") throw UserNotFound()
         val passwordEncode = passwordDecoder.getSavedPassword(user.password,password)
         return if(passwordEncode)  UserOutputDto(user)
         else throw InvalidCredentials()
@@ -197,5 +195,9 @@ class UserServices : IUserInterface {
         }
         val encodedFile = image.bytes
         userRepository.updateUserPicture(id,encodedFile)
+    }
+
+    fun validateAccount(email: String){
+        userRepository.changeStatusByEmail(email)
     }
 }

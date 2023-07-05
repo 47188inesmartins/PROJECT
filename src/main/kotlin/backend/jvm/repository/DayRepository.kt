@@ -35,7 +35,7 @@ interface DayRepository : JpaRepository<Day, Int> {
     @Query(value = "select * from sch_day where week_days = :weekDays and schedule_id = :schedule_id", nativeQuery = true)
     fun getDayByScheduleIdAndWeekDays(@Param("schedule_id") schedule_id: Int, @Param("weekDays") weekDays: String):List<Day>
 
-    fun getDayByWeekDaysAndAndSchedule(weekDays: String, schedule_id: Schedule): Day
+    fun getDayByWeekDaysAndSchedule(weekDays: String, schedule_id: Schedule): Day
 
     @Query(value = "select sd.id,sd.begin_hour,sd.end_hour,sd.interval_begin,sd.interval_end,sd.week_days,sd.schedule_id" +
             " from sch_day sd on sd.week_days = :weekDays inner join service_day s " +

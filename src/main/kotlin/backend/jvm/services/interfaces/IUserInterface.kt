@@ -1,7 +1,6 @@
 package backend.jvm.services.interfaces
 
-import backend.jvm.model.Appointment
-import backend.jvm.model.UserCompany
+import backend.jvm.model.appointment.Appointment
 import backend.jvm.model.UserDB
 import backend.jvm.services.dto.*
 import org.springframework.web.multipart.MultipartFile

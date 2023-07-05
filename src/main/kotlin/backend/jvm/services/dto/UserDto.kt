@@ -1,6 +1,7 @@
 package backend.jvm.services.dto
 
 import backend.jvm.model.*
+import backend.jvm.model.appointment.Appointment
 import backend.jvm.utils.UserRoles
 import java.sql.Date
 import java.util.*
@@ -82,7 +83,8 @@ data class UserInputDto(
                       roles = roles,
                       unavailabilityDB = unavailabilityDB,
                       interests = interests,
-                      profilePic = profilePic
+                      profilePic = profilePic,
+                      status = "PENDING"
                 )
         }
 }

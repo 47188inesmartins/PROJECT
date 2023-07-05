@@ -1,6 +1,6 @@
 package backend.jvm.services
 
-import backend.jvm.model.Appointment
+import backend.jvm.model.appointment.Appointment
 import backend.jvm.model.UnavailabilityDB
 import backend.jvm.repository.*
 import backend.jvm.services.dto.AppointmentInputDto
@@ -141,16 +141,15 @@ class AppointmentServices : IAppointmentServices {
         val d = Date.valueOf(date)
         val weekDay = getDayOfWeek(d)
         val schedule = scheduleRepository.getScheduleByCompany_Id(companyId) ?: throw ScheduleNotFound()
-        val services = servicesRepository.getNormalScheduleServices(companyId)
-        val day = dayRepository.getDayByWeekDaysAndAndSchedule(weekDay, schedule)
+        val services = servicesRepository.getAllServicesFromACompany(companyId)
+        val day = dayRepository.getDayByWeekDaysAndSchedule(weekDay, schedule)
 
-        val s = services.map {
+        return services.map {
             val employees = userRepository.getAvailableEmployeesByService(it.id, d, bh, addTimes(bh, it.duration))
             Pair(ServiceOutputDto(it), employees.map { user -> UserOutputDto(user) })
-        }.filter { (it.second.isNotEmpty() &&
+        }.filter{ (it.second.isNotEmpty() &&
                 ((day.beginHour < addTimes(bh, it.first.duration) && addTimes(bh, it.first.duration) < day.intervalBegin) ||
-                        (day.intervalEnd!! < addTimes(bh, it.first.duration) && addTimes(bh, it.first.duration) < day.endHour))) }
-
-        return emptyList()
+                        (day.intervalEnd!! <= addTimes(bh, it.first.duration) && addTimes(bh, it.first.duration) <= day.endHour)))
+        }
     }
 }

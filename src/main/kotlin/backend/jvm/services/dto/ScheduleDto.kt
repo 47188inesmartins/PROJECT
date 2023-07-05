@@ -1,6 +1,7 @@
 package backend.jvm.services.dto
 
 import backend.jvm.model.*
+import backend.jvm.model.appointment.Appointment
 
 
 data class ScheduleInputDto(

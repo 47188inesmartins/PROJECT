@@ -1,6 +1,7 @@
 package backend.jvm.services.dto
 
 import backend.jvm.model.*
+import backend.jvm.model.appointment.Appointment
 import java.sql.Date
 import java.sql.Time
 
