@@ -1,12 +1,12 @@
 package backend.jvm.services
 
-import backend.jvm.model.appointment.Appointment
-import backend.jvm.model.UnavailabilityDB
-import backend.jvm.repository.*
-import backend.jvm.services.dto.AppointmentInputDto
-import backend.jvm.services.dto.AppointmentOutputDto
-import backend.jvm.services.dto.ServiceOutputDto
-import backend.jvm.services.dto.UserOutputDto
+import backend.jvm.model.appointment.AppointmentEntity
+import backend.jvm.model.unavailability.UnavailabilityEntity
+import backend.jvm.dao.*
+import backend.jvm.model.appointment.AppointmentInputDto
+import backend.jvm.model.appointment.AppointmentOutputDto
+import backend.jvm.model.service.ServiceOutputDto
+import backend.jvm.model.user.UserOutputDto
 import backend.jvm.services.interfaces.IAppointmentServices
 import backend.jvm.utils.errorHandling.*
 import backend.jvm.utils.time.getDayOfWeek
@@ -28,22 +28,22 @@ import java.util.*
 class AppointmentServices : IAppointmentServices {
 
     @Autowired
-    lateinit var appointmentRepository: AppointmentRepository
+    lateinit var appointmentDao: AppointmentDao
 
     @Autowired
-    lateinit var servicesRepository: ServiceRepository
+    lateinit var servicesRepository: ServiceDao
 
     @Autowired
-    lateinit var userRepository: UserRepository
+    lateinit var userDao: UserDao
 
     @Autowired
-    lateinit var scheduleRepository: ScheduleRepository
+    lateinit var scheduleDao: ScheduleDao
 
     @Autowired
-    lateinit var unavailabilityRepository: UnavailabilityRepository
+    lateinit var unavailabilityDao: UnavailabilityDao
 
     @Autowired
-    lateinit var dayRepository: DayRepository
+    lateinit var dayDao: DayDao
 
     /**
      * Add an appointment.
@@ -58,29 +58,29 @@ class AppointmentServices : IAppointmentServices {
      */
     @Transactional
     override fun addAppointment(appointment: AppointmentInputDto, cid: Int, token: String): AppointmentOutputDto {
-        val userClient = userRepository.getUserByToken(UUID.fromString(token))
+        val userClient = userDao.getUserByToken(UUID.fromString(token))
         val service = servicesRepository.getServiceDBById(appointment.service)
             ?: throw ServiceNotFound()
         if (appointment.user == null) throw InvalidAppointment()
-        val employee = userRepository.getUserById(appointment.user) ?: throw UserNotFound()
+        val employee = userDao.getUserById(appointment.user) ?: throw UserNotFound()
 
-        val schedule = scheduleRepository.getScheduleById(cid)
+        val schedule = scheduleDao.getScheduleById(cid)
             ?: throw ScheduleNotFound()
 
         val appointmentDb = appointment.mapToAppointmentDb(appointment, schedule, listOf(userClient, employee), service)
-        val savedAppointment = appointmentRepository.save(appointmentDb)
+        val savedAppointment = appointmentDao.save(appointmentDb)
 
         val endTime = savedAppointment.appHour.time + service.duration.time
         val time = Time(endTime)
 
-        val unavailabilityDb = UnavailabilityDB(
+        val unavailabilityEntity = UnavailabilityEntity(
             Date.valueOf(appointment.appDate),
             null,
             savedAppointment.appHour,
             time,
             employee
         )
-        unavailabilityRepository.save(unavailabilityDb)
+        unavailabilityDao.save(unavailabilityEntity)
 
         return AppointmentOutputDto(savedAppointment)
     }
@@ -91,11 +91,11 @@ class AppointmentServices : IAppointmentServices {
      * @throws AppointmentNotFound if the appointment is not found.
      */
     override fun deleteAppointment(id: Int) {
-        val getAppointment = appointmentRepository.findById(id).get()
-        if (getAppointment.equals(Optional.empty<Appointment>())) throw AppointmentNotFound()
+        val getAppointment = appointmentDao.findById(id).get()
+        if (getAppointment.equals(Optional.empty<AppointmentEntity>())) throw AppointmentNotFound()
         if (getCurrentDate().after(getAppointment.appDate) && getCurrentHour() > getAppointment.appHour)
-            return appointmentRepository.deleteById(id)
-        appointmentRepository.deleteById(id)
+            return appointmentDao.deleteById(id)
+        appointmentDao.deleteById(id)
     }
 
     /**
@@ -105,7 +105,7 @@ class AppointmentServices : IAppointmentServices {
      * @throws AppointmentNotFound if the appointment is not found.
      */
     override fun getAppointmentById(id: Int): AppointmentOutputDto? {
-        val isAppointment = appointmentRepository.findById(id)
+        val isAppointment = appointmentDao.findById(id)
         if (!isAppointment.isPresent) throw AppointmentNotFound()
         val appointment = isAppointment.get()
         return AppointmentOutputDto(appointment)
@@ -122,7 +122,7 @@ class AppointmentServices : IAppointmentServices {
     override fun getAppointmentByDateAndHour(sid: Int, appHour: String, appDate: String): List<AppointmentOutputDto> {
         val date = Date.valueOf(appDate)
         val hour = Time.valueOf(appHour)
-        val appointments = appointmentRepository.getAppointmentByDateAndHour(sid, date, hour)
+        val appointments = appointmentDao.getAppointmentByDateAndHour(sid, date, hour)
         if (appointments.isEmpty()) throw EmptyAppointments()
         return appointments.map { AppointmentOutputDto(it) }
     }
@@ -140,12 +140,12 @@ class AppointmentServices : IAppointmentServices {
         val bh = Time.valueOf(beginHour.plus(":00"))
         val d = Date.valueOf(date)
         val weekDay = getDayOfWeek(d)
-        val schedule = scheduleRepository.getScheduleByCompany_Id(companyId) ?: throw ScheduleNotFound()
+        val schedule = scheduleDao.getScheduleByCompany_Id(companyId) ?: throw ScheduleNotFound()
         val services = servicesRepository.getAllServicesFromACompany(companyId)
-        val day = dayRepository.getDayByWeekDaysAndSchedule(weekDay, schedule)
+        val day = dayDao.getDayByWeekDaysAndSchedule(weekDay, schedule)
 
         return services.map {
-            val employees = userRepository.getAvailableEmployeesByService(it.id, d, bh, addTimes(bh, it.duration))
+            val employees = userDao.getAvailableEmployeesByService(it.id, d, bh, addTimes(bh, it.duration))
             Pair(ServiceOutputDto(it), employees.map { user -> UserOutputDto(user) })
         }.filter{ (it.second.isNotEmpty() &&
                 ((day.beginHour < addTimes(bh, it.first.duration) && addTimes(bh, it.first.duration) < day.intervalBegin) ||

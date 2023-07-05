@@ -1,5 +1,6 @@
 package backend.jvm.model
 
+import backend.jvm.model.company.CompanyEntity
 import jakarta.persistence.*
 import javax.persistence.Column
 
@@ -14,16 +15,16 @@ class  CompanyNumbers{
         @Id
         @Column(name = "company_id")
         @ManyToOne
-        val companyId: Company?
+        val companyEntityId: CompanyEntity?
 
-        constructor(phoneNumber:String,cid: Company){
+        constructor(phoneNumber:String,cid: CompanyEntity){
                 this.phoneNumber = phoneNumber
-                this.companyId = cid
+                this.companyEntityId = cid
         }
 
         constructor(){
                 this.phoneNumber = ""
-                this.companyId = null
+                this.companyEntityId = null
         }
 
 }

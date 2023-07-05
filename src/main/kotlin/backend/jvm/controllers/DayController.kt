@@ -1,8 +1,8 @@
 package backend.jvm.controllers
 
 import backend.jvm.services.DayServices
-import backend.jvm.services.dto.DayInputDto
-import backend.jvm.services.dto.DayOutputDto
+import backend.jvm.model.day.DayInputDto
+import backend.jvm.model.day.DayOutputDto
 import backend.jvm.utils.RoleManager
 import backend.jvm.utils.errorHandling.InvalidOpenDay
 import backend.jvm.utils.errorHandling.InvalidSchedule

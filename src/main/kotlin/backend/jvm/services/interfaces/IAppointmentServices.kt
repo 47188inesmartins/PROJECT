@@ -1,11 +1,9 @@
 package backend.jvm.services.interfaces
 
-import backend.jvm.model.ServiceDB
-import backend.jvm.services.dto.AppointmentInputDto
-import backend.jvm.services.dto.AppointmentOutputDto
-import backend.jvm.services.dto.ServiceOutputDto
-import backend.jvm.services.dto.UserOutputDto
-import java.sql.Time
+import backend.jvm.model.appointment.AppointmentInputDto
+import backend.jvm.model.appointment.AppointmentOutputDto
+import backend.jvm.model.service.ServiceOutputDto
+import backend.jvm.model.user.UserOutputDto
 
 interface IAppointmentServices {
 

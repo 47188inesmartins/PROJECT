@@ -1,5 +1,7 @@
 package backend.jvm.controllers
 
+import backend.jvm.model.appointment.AppointmentsUserInfo
+import backend.jvm.model.user.*
 import backend.jvm.services.EmailSenderService
 import backend.jvm.services.UserServices
 import backend.jvm.services.dto.*
@@ -100,7 +102,7 @@ class UserController {
     }
 
     @PostMapping("/login")
-    fun login(@RequestBody credentials: UserCredentials,response: HttpServletResponse): ResponseEntity<UUID> {
+    fun login(@RequestBody credentials: UserCredentials, response: HttpServletResponse): ResponseEntity<UUID> {
         return try {
             val user = userServices.getUsersByEmailAndPassword(credentials.email,credentials.password)
             val cookieToken = ResponseCookie

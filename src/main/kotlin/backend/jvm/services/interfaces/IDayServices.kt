@@ -1,14 +1,14 @@
 package backend.jvm.services.interfaces
 
-import backend.jvm.services.dto.DayInputDto
-import backend.jvm.services.dto.DayOutputDto
+import backend.jvm.model.day.DayInputDto
+import backend.jvm.model.day.DayOutputDto
 import java.sql.Time
 
 interface IDayServices {
 
     fun addOpenDay(day: DayInputDto): DayOutputDto
 
-    fun addSpecialDayByService(day: DayInputDto, serviceId: Int, companyId: Int):DayOutputDto
+    fun addSpecialDayByService(day: DayInputDto, serviceId: Int, companyId: Int): DayOutputDto
 
     fun getScheduleByWeekDay(weekDay: String, cid: Int): List<String>
 

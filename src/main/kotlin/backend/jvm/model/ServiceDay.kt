@@ -1,5 +1,7 @@
 package backend.jvm.model
 
+import backend.jvm.model.day.DayEntity
+import backend.jvm.model.service.ServiceEntity
 import jakarta.persistence.*
 import java.io.Serializable
 
@@ -13,21 +15,21 @@ class ServiceDay {
     @ManyToOne
     @MapsId("day")
     @JoinColumn(name = "day_id")
-    val day: Day?
+    val dayEntity: DayEntity?
 
     @ManyToOne
     @MapsId("service")
     @JoinColumn(name = "service_id")
-    val service: ServiceDB?
+    val service: ServiceEntity?
 
 
     constructor(){
-        this.day = null
+        this.dayEntity = null
         this.service = null
     }
 
-    constructor(day: Day, service: ServiceDB){
-        this.day = day
+    constructor(dayEntity: DayEntity, service: ServiceEntity){
+        this.dayEntity = dayEntity
         this.service = service
     }
 }

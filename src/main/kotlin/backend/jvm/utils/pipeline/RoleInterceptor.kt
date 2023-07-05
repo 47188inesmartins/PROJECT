@@ -1,6 +1,6 @@
 package backend.jvm.utils.pipeline
 
-import backend.jvm.repository.UserCompanyRepository
+import backend.jvm.dao.UserCompanyDao
 import backend.jvm.services.UserServices
 import backend.jvm.utils.UserRoles
 import backend.jvm.utils.errorHandling.InvalidUser
@@ -16,7 +16,7 @@ import org.springframework.web.servlet.ModelAndView
 @Component
 class RoleInterceptor (
     val userServices: UserServices,
-    val userCompanyRepository: UserCompanyRepository
+    val userCompanyDao: UserCompanyDao
 ) : HandlerInterceptor {
 
     override fun postHandle(

@@ -2,6 +2,18 @@ package backend.jvm.controllers
 
 import kotlinx.serialization.json.Json
 import backend.jvm.model.*
+import backend.jvm.model.appointment.AppointmentInfoEmployeeEnd
+import backend.jvm.model.appointment.AppointmentOutputDto
+import backend.jvm.model.company.CompanyInfo
+import backend.jvm.model.company.CompanyInputDto
+import backend.jvm.model.company.CompanyOutputDto
+import backend.jvm.model.day.DayOutputDto
+import backend.jvm.model.service.ServiceOutputDto
+import backend.jvm.model.user.CreatedUserOutput
+import backend.jvm.model.user.UserEmails
+import backend.jvm.model.user.UserInfo
+import backend.jvm.model.user.UserOutputDto
+import backend.jvm.model.vacation.VacationOutputDto
 import backend.jvm.services.CompanyServices
 import backend.jvm.services.UserServices
 import backend.jvm.services.dto.*

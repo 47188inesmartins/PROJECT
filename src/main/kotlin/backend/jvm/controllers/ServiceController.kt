@@ -1,10 +1,10 @@
 package backend.jvm.controllers
 
-import backend.jvm.model.ServiceDB
+import backend.jvm.model.service.ServiceEntity
 import backend.jvm.services.ServServices
-import backend.jvm.services.dto.DayInputDto
-import backend.jvm.services.dto.ServiceInputDto
-import backend.jvm.services.dto.ServiceOutputDto
+import backend.jvm.model.day.DayInputDto
+import backend.jvm.model.service.ServiceInputDto
+import backend.jvm.model.service.ServiceOutputDto
 import backend.jvm.utils.RoleManager
 import jakarta.persistence.EntityNotFoundException
 import org.springframework.beans.factory.annotation.Autowired
@@ -102,9 +102,9 @@ class ServiceController {
 
     @RoleManager(["MANAGER"])
     @DeleteMapping
-    fun deleteServices(@RequestBody serviceDB: ServiceDB): ResponseEntity<String> {
+    fun deleteServices(@RequestBody serviceEntity: ServiceEntity): ResponseEntity<String> {
         return try {
-             servServices.deleteService(serviceDB)
+             servServices.deleteService(serviceEntity)
              ResponseEntity.status(200)
                 .body("Service was deleted")
         }catch(e: Exception){

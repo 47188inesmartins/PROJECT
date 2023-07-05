@@ -18,7 +18,7 @@ class EmailSenderService {
     fun sendValidationEmail(recipientEmail: String) {
         val message = javaMailSender.createMimeMessage()
         val helper = MimeMessageHelper(message, true)
-        val emailContent = EmailMessages.ValidateAccount(recipientEmail)
+        val emailContent = EmailMessages.validateAccount(recipientEmail)
         helper.setTo(recipientEmail)
         helper.setSubject("Activate account")
         helper.setText(emailContent, true)

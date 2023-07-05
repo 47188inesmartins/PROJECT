@@ -1,11 +1,11 @@
 package backend.jvm.services
 
-import backend.jvm.model.ServiceDB
+import backend.jvm.model.service.ServiceEntity
 import backend.jvm.model.ServiceDay
-import backend.jvm.repository.*
-import backend.jvm.services.dto.DayInputDto
-import backend.jvm.services.dto.ServiceInputDto
-import backend.jvm.services.dto.ServiceOutputDto
+import backend.jvm.dao.*
+import backend.jvm.model.day.DayInputDto
+import backend.jvm.model.service.ServiceInputDto
+import backend.jvm.model.service.ServiceOutputDto
 import backend.jvm.services.interfaces.IServServices
 import backend.jvm.utils.errorHandling.InvalidUser
 import backend.jvm.utils.errorHandling.ScheduleNotFound
@@ -20,57 +20,57 @@ import java.time.Duration
 class ServServices : IServServices {
 
     @Autowired
-    lateinit var serviceRepository: ServiceRepository
+    lateinit var serviceDao: ServiceDao
     @Autowired
-    lateinit var companyRepository : CompanyRepository
+    lateinit var companyDao : CompanyDao
     @Autowired
-    lateinit var userRepository : UserRepository
+    lateinit var userDao : UserDao
     @Autowired
-    lateinit var userCompanyRepository : UserCompanyRepository
+    lateinit var userCompanyDao : UserCompanyDao
     @Autowired
-    lateinit var scheduleRepository : ScheduleRepository
+    lateinit var scheduleDao : ScheduleDao
     @Autowired
-    lateinit var dayRepository : DayRepository
+    lateinit var dayDao : DayDao
     @Autowired
-    lateinit var serviceDayRepository : ServiceDayRepository
+    lateinit var serviceDayDao : ServiceDayDao
 
 
     override fun addService(service: ServiceInputDto, companyId: Int): ServiceOutputDto {
-        val schedule = scheduleRepository.getScheduleByCompany_Id(companyId) ?: throw ScheduleNotFound()
-        val days = dayRepository.getDayByScheduleId(schedule.id)
-        val company = companyRepository.getReferenceById(companyId)
-        val users = service.users?.map{ userRepository.getReferenceById(it) }
+        val schedule = scheduleDao.getScheduleByCompany_Id(companyId) ?: throw ScheduleNotFound()
+        val days = dayDao.getDayByScheduleId(schedule.id)
+        val company = companyDao.getReferenceById(companyId)
+        val users = service.users?.map{ userDao.getReferenceById(it) }
         users?.forEach {
-            if(userCompanyRepository.findByCompanyAndUser(company, it) == null) throw InvalidUser()
+            if(userCompanyDao.findByCompanyAndUser(company, it) == null) throw InvalidUser()
         }
         val serv = service.mapToService(service,company,users)
-        val savedService = serviceRepository.save(serv)
-        days.map { serviceDayRepository.save(ServiceDay(it, savedService)) }
+        val savedService = serviceDao.save(serv)
+        days.map { serviceDayDao.save(ServiceDay(it, savedService)) }
         return ServiceOutputDto(savedService)
     }
 
     override fun getServiceById(id: Int): ServiceOutputDto {
-        val serv = serviceRepository.getServiceDBById(id)
+        val serv = serviceDao.getServiceDBById(id)
         return ServiceOutputDto(serv!!)
     }
 
     override fun changePrice(idService: Int,price: Double):Long{
-        return serviceRepository.updatePrice(idService,price)
+        return serviceDao.updatePrice(idService,price)
     }
 
     override fun changeDuration(idService: Int,duration: String): Duration {
-        return serviceRepository.updateDuration(idService,Time.valueOf(duration))
+        return serviceDao.updateDuration(idService,Time.valueOf(duration))
     }
 
-    override fun deleteService(serviceDB: ServiceDB){
-        serviceRepository.delete(serviceDB)
+    override fun deleteService(serviceEntity: ServiceEntity){
+        serviceDao.delete(serviceEntity)
     }
 
     @Transactional
     fun changeSchedule(id: Int, day: List<DayInputDto>){
-        val days = day.map { dayRepository.save(it.mapToDayDb(it, null, null))}
-        val serv = serviceRepository.getServiceDBById(id)?: throw ServiceNotFound()
-        serviceDayRepository.deleteAllByService_Id(id)
-        days.map{ serviceDayRepository.save(ServiceDay(it, serv)) }
+        val days = day.map { dayDao.save(it.mapToDayDb(it, null, null))}
+        val serv = serviceDao.getServiceDBById(id)?: throw ServiceNotFound()
+        serviceDayDao.deleteAllByService_Id(id)
+        days.map{ serviceDayDao.save(ServiceDay(it, serv)) }
     }
 }

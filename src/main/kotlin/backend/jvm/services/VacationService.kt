@@ -1,9 +1,9 @@
 package backend.jvm.services
 
-import backend.jvm.repository.ScheduleRepository
-import backend.jvm.repository.VacationRepository
-import backend.jvm.services.dto.VacationInputDto
-import backend.jvm.services.dto.VacationOutputDto
+import backend.jvm.dao.ScheduleDao
+import backend.jvm.dao.VacationDao
+import backend.jvm.model.vacation.VacationInputDto
+import backend.jvm.model.vacation.VacationOutputDto
 import backend.jvm.services.interfaces.IVacationServices
 import backend.jvm.utils.errorHandling.CompanyNotFound
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,40 +14,40 @@ import java.sql.Date
 class VacationService : IVacationServices {
 
     @Autowired
-    lateinit var vacationRepository: VacationRepository
+    lateinit var vacationDao: VacationDao
 
     @Autowired
-    lateinit var scheduleRepository: ScheduleRepository
+    lateinit var scheduleDao: ScheduleDao
 
     override fun addVacation(vacation: VacationInputDto, company: Int): VacationOutputDto {
-        val schedule = scheduleRepository.getScheduleByCompany_Id(company)?: throw CompanyNotFound()
+        val schedule = scheduleDao.getScheduleByCompany_Id(company)?: throw CompanyNotFound()
         val db = vacation.mapToVacationDb(vacation,schedule)
         if(!db.dateBegin.before(db.dateEnd)) throw Exception("Invalid dates")
-        return VacationOutputDto(vacationRepository.save(db))
+        return VacationOutputDto(vacationDao.save(db))
     }
 
     override fun getVacation(id: Int): VacationOutputDto {
-        val vacation = vacationRepository.findById(id)
+        val vacation = vacationDao.findById(id)
         if(vacation.isEmpty) throw Exception("The company doesn't has vacation")
         return VacationOutputDto(vacation.get())
     }
 
     override fun deleteVacation(vacation: Int){
-        vacationRepository.deleteById(vacation)
+        vacationDao.deleteById(vacation)
     }
 
     override fun changeBeginDate(id:Int, date: String): Date {
-        val getVacation = vacationRepository.getReferenceById(id)
+        val getVacation = vacationDao.getReferenceById(id)
         val newDate = Date.valueOf(date)?: throw Exception("Invalid new begin date")
         if(!getVacation.dateBegin.after(newDate)) throw Exception("Invalid new begin date")
-        return vacationRepository.changeBeginDate(id, newDate)
+        return vacationDao.changeBeginDate(id, newDate)
     }
 
     override fun changeEndDate(id:Int,date: String): Date {
-        val getVacation = vacationRepository.getReferenceById(id)
+        val getVacation = vacationDao.getReferenceById(id)
         val newDate = Date.valueOf(date) ?: throw Exception("Invalid new end date")
         if(!getVacation.dateBegin.before(newDate)) throw Exception("Invalid new end date")
-        return vacationRepository.changeEndDate(id, newDate)
+        return vacationDao.changeEndDate(id, newDate)
     }
 
 }

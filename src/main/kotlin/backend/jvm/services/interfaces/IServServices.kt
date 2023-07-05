@@ -1,9 +1,8 @@
 package backend.jvm.services.interfaces
 
-import backend.jvm.model.ServiceDB
-import backend.jvm.services.dto.ServiceInputDto
-import backend.jvm.services.dto.ServiceOutputDto
-import backend.jvm.services.dto.UserOutputDto
+import backend.jvm.model.service.ServiceEntity
+import backend.jvm.model.service.ServiceInputDto
+import backend.jvm.model.service.ServiceOutputDto
 import java.time.Duration
 
 interface IServServices {
@@ -17,5 +16,5 @@ interface IServServices {
 
     fun changeDuration(idService: Int,duration: String): Duration
 
-    fun deleteService(serviceDB: ServiceDB)
+    fun deleteService(serviceEntity: ServiceEntity)
 }

@@ -1,8 +1,8 @@
 package backend.jvm.controllers
 
 import backend.jvm.services.VacationService
-import backend.jvm.services.dto.VacationInputDto
-import backend.jvm.services.dto.VacationOutputDto
+import backend.jvm.model.vacation.VacationInputDto
+import backend.jvm.model.vacation.VacationOutputDto
 import backend.jvm.utils.RoleManager
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
