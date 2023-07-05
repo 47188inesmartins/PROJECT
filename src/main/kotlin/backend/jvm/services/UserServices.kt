@@ -113,7 +113,7 @@ class UserServices : IUserInterface {
         val user = userDao.getUserByToken(UUID.fromString(token))?.id ?: throw UserNotFound()
         val companyRoleRep = userCompanyDao.getUserCompanyByUserId(user)
         return companyRoleRep.map {
-            CompanyRole(it.companyEntity!!.id,it.role)
+            CompanyRole(it.company!!.id,it.role)
         }
     }
 
@@ -152,8 +152,8 @@ class UserServices : IUserInterface {
         return listAppointmentEntities.map {
             val getCompany = companyDao.getCompanyBySchedule(it.schedule.id)?:throw CompanyNotFound()
 
-            if(it.usersDB == null) throw InvalidAppointment()
-            val employee = it.usersDB.firstOrNull { user ->
+            if(it.user == null) throw InvalidAppointment()
+            val employee = it.user.firstOrNull { user ->
                 user?.let { it1 -> userDao.getUserDBByIdAndRole(UserRoles.EMPLOYEE.name, it1.id) } != null ||
                 user?.let { it1 -> userDao.getUserDBByIdAndRole(UserRoles.MANAGER.name, it1.id) } != null
             }?: throw UserNotFound()

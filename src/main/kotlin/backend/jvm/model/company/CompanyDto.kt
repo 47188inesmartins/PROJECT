@@ -48,7 +48,7 @@ data class CompanyOutputDto(
         name = companyEntity.name,
         type = companyEntity.type,
         description = companyEntity.description,
-        service = companyEntity.serviceEntities?.map { ServiceInfo(it.id, it.name,it.price,it.duration.toString()) },
+        service = companyEntity.service?.map { ServiceInfo(it.id, it.name,it.price,it.duration.toString()) },
         schedule = companyEntity.schedule?.id,
         users = companyEntity.userCompany?.map { CompanyUserRole(it.id.user, it.role) },
         path = companyEntity.entities?.map { it.image }

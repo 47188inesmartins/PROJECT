@@ -23,33 +23,33 @@ class ScheduleEntity {
 
     @OneToOne
     @JoinColumn(name = "company_id", unique = true)
-    val companyEntity : CompanyEntity
+    val company : CompanyEntity
 
     @Column(name = "between_interval")
     val betweenInterval : Time?
 
     @OneToMany(mappedBy = "schedule")
-    val appointmentEntity: List<AppointmentEntity>?
+    val appointment: List<AppointmentEntity>?
 
     @OneToMany(mappedBy = "schedule")
-    val dayEntity: List<DayEntity>?
+    val day: List<DayEntity>?
 
     @OneToMany(mappedBy = "schedule")
-    val vacationEntity: List<VacationEntity>?
+    val vacation: List<VacationEntity>?
 
     constructor(){
-        this.companyEntity = CompanyEntity()
-        this.appointmentEntity = listOf()
-        this.dayEntity = listOf()
-        this.vacationEntity = listOf()
+        this.company = CompanyEntity()
+        this.appointment = listOf()
+        this.day = listOf()
+        this.vacation = listOf()
         this.betweenInterval = null
     }
 
     constructor(companyEntityId: CompanyEntity, appointmentEntity: List<AppointmentEntity>?, dayEntity: List<DayEntity>?, vacationEntity: List<VacationEntity>?, betweenInterval : Time?){
-        this.companyEntity = companyEntityId
-        this.appointmentEntity = appointmentEntity
-        this.dayEntity = dayEntity
-        this.vacationEntity = vacationEntity
+        this.company = companyEntityId
+        this.appointment = appointmentEntity
+        this.day = dayEntity
+        this.vacation = vacationEntity
         this.betweenInterval = betweenInterval
     }
 }

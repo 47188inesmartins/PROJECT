@@ -40,10 +40,10 @@ class ServiceEntity{
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
-    val companyEntity : CompanyEntity
+    val company : CompanyEntity
 
     @OneToMany(mappedBy = "service")
-    val appointmentEntity: List<AppointmentEntity>?
+    val appointment: List<AppointmentEntity>?
 
     @ManyToMany
     @JoinTable(
@@ -51,7 +51,7 @@ class ServiceEntity{
         joinColumns = [JoinColumn(name = "service_id")],
         inverseJoinColumns = [JoinColumn(name = "day_id")]
     )
-    val dayEntity: List<DayEntity>?
+    val day: List<DayEntity>?
 
     @ManyToMany
     @JoinTable(
@@ -59,17 +59,17 @@ class ServiceEntity{
         joinColumns = [JoinColumn(name = "service_id")],
         inverseJoinColumns = [JoinColumn(name = "user_id")]
     )
-    val userEntity: List<UserEntity>?
+    val user: List<UserEntity>?
 
     constructor(){
         this.name = ""
         this.duration = Time.valueOf("00:00:00")
         this.numberMax = 0
         this.price = 0.0
-        this.companyEntity = CompanyEntity()
-        this.userEntity = listOf()
-        this.appointmentEntity = listOf()
-        this.dayEntity = listOf()
+        this.company = CompanyEntity()
+        this.user = listOf()
+        this.appointment = listOf()
+        this.day = listOf()
     }
 
     constructor(name : String, duration: Time, numberMax: Int?, price: Double, companyEntity: CompanyEntity, users: List<UserEntity>?){
@@ -77,10 +77,10 @@ class ServiceEntity{
         this.duration = duration
         this.numberMax = numberMax
         this.price = price
-        this.companyEntity = companyEntity
-        this.userEntity = users
-        this.appointmentEntity = null
-        this.dayEntity = null
+        this.company = companyEntity
+        this.user = users
+        this.appointment = null
+        this.day = null
     }
 
 }

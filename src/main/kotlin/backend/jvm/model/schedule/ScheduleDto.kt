@@ -31,9 +31,9 @@ data class ScheduleOutputDto(
 ){
     constructor( scheduleDb: ScheduleEntity):this(
         id = scheduleDb.id,
-        companyId = scheduleDb.companyEntity.id,
-        appointment = scheduleDb.appointmentEntity?.map { it.id },
-        day = scheduleDb.dayEntity?.map { it.id },
-        vacation = scheduleDb.vacationEntity?.map { it.id }
+        companyId = scheduleDb.company.id,
+        appointment = scheduleDb.appointment?.map { it.id },
+        day = scheduleDb.day?.map { it.id },
+        vacation = scheduleDb.vacation?.map { it.id }
     )
 }

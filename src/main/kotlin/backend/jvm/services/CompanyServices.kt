@@ -208,7 +208,7 @@ class CompanyServices : ICompanyServices {
 
         return appointments.map {
             val service = serviceDao.getServiceDBByAppointment(it.id)
-            val employee  = it.usersDB?.firstOrNull { user ->
+            val employee  = it.user?.firstOrNull { user ->
                 val role = user?.id?.let { it1 -> usersRepository.getUserRoleByCompany(it1,cid) }
                 (role == UserRoles.EMPLOYEE.name ||role == UserRoles.MANAGER.name)
             } ?: throw UserNotFound()

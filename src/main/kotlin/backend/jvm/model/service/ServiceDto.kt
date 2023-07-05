@@ -39,6 +39,6 @@ data class ServiceOutputDto(
         duration = service.duration,
         numberMax = service.numberMax,
         price = service.price,
-        company = service.companyEntity.id
+        company = service.company.id
     )
 }

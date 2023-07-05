@@ -18,16 +18,16 @@ class ImageEntity {
 
     @ManyToOne
     @JoinColumn(name = "company_id")
-    val companyEntity: CompanyEntity?
+    val company: CompanyEntity?
 
     constructor(){
         this.image = null
-        this.companyEntity = null
+        this.company = null
     }
 
     constructor(image: ByteArray?, companyEntity: CompanyEntity) {
         this.image = image
-        this.companyEntity = companyEntity
+        this.company = companyEntity
     }
 }
 

@@ -46,7 +46,7 @@ data class UnavailabilityOutputDto(
         dateEnd = unavailability.dateEnd.toString(),
         hourBegin = unavailability.hourBegin.toString(),
         hourEnd = unavailability.hourEnd.toString(),
-        user = unavailability.userEntity.id
+        user = unavailability.user.id
     )
 }
 

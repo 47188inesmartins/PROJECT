@@ -38,7 +38,7 @@ data class UserOutputDto(
                 name = userEntity.name,
                 address = userEntity.address,
                 birthday = userEntity.birthday.toString(),
-                companyId = userEntity.companies?.map { it.companyEntity?.id },
+                companyId = userEntity.companies?.map { it.company?.id },
                 services = userEntity.services?.map { it.id }?: emptyList(),
                 profilePic = userEntity.profilePic
         )

@@ -20,19 +20,19 @@ class UserCompany {
     @ManyToOne
     @MapsId("company")
     @JoinColumn(name = "company_id")
-    val companyEntity: CompanyEntity?
+    val company: CompanyEntity?
 
     val role: String
 
     constructor(){
         this.user = null
-        this.companyEntity = null
+        this.company = null
         this.role = ""
     }
 
     constructor(user: UserEntity, companyEntity: CompanyEntity, role: String){
         this.user = user
-        this.companyEntity = companyEntity
+        this.company = companyEntity
         this.role = role
     }
 

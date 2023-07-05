@@ -7,7 +7,7 @@ import backend.jvm.model.UserCompany
 import jakarta.persistence.*
 import javax.persistence.Column
 
-@Entity(name = "Company")
+@Entity(name = "CompanyEntity")
 @Table(name = "company")
 @org.hibernate.annotations.NamedQuery(
         name = "getCompanyById",
@@ -41,16 +41,16 @@ class CompanyEntity {
        /* @Column(name = "url", columnDefinition = "BYTEA")
         val url: ByteArray?*/
 
-        @OneToMany(mappedBy = "companyEntity")
-        val serviceEntities: List<ServiceEntity>?
+        @OneToMany(mappedBy = "company")
+        val service: List<ServiceEntity>?
 
-        @OneToOne(mappedBy = "companyEntity")
+        @OneToOne(mappedBy = "company")
         val schedule: ScheduleEntity?
 
-        @OneToMany(mappedBy = "companyEntity")
+        @OneToMany(mappedBy = "company")
         val userCompany: List<UserCompany>?
 
-        @OneToMany(mappedBy = "companyEntity", cascade = [CascadeType.ALL])
+        @OneToMany(mappedBy = "company", cascade = [CascadeType.ALL])
         val entities: List<ImageEntity>?
 
         constructor() {
@@ -59,7 +59,7 @@ class CompanyEntity {
                 this.name = ""
                 this.type = ""
                 this.description = ""
-                this.serviceEntities = null
+                this.service = null
                 this.schedule = null
                 this.userCompany = listOf()
                 this.entities = listOf()
@@ -71,7 +71,7 @@ class CompanyEntity {
                 this.name = compName
                 this.type = compType
                 this.description = description
-                this.serviceEntities = serviceEntity
+                this.service = serviceEntity
                 this.schedule = schedule
                 this.userCompany = usersDB
                 this.entities = imageEntity

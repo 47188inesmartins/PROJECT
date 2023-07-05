@@ -41,6 +41,7 @@ import java.util.*
 )
 
 class UserEntity {
+
         @Id
         @Column(name = "id")
         @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,9 +62,6 @@ class UserEntity {
         @Column(name = "birthday")
         val birthday: Date
 
-        @OneToMany(mappedBy = "userEntity")
-        val unavailabilityEntity: List<UnavailabilityEntity>?
-
         @Column(name = "interests")
         val interests: String
 
@@ -75,6 +73,9 @@ class UserEntity {
 
         @Column(name = "status")
         val status: String
+
+        @OneToMany(mappedBy = "user")
+        val unavailability: List<UnavailabilityEntity>?
 
         @ManyToMany
         @JoinTable(
@@ -95,8 +96,8 @@ class UserEntity {
         @OneToMany(mappedBy = "user")
         val companies: List<UserCompany>?
 
-        @ManyToMany(mappedBy = "usersDB")
-        val appointmentEntity: List<AppointmentEntity>?
+        @ManyToMany(mappedBy = "user")
+        val appointment: List<AppointmentEntity>?
 
         constructor() {
                 this.token = UUID.randomUUID()
@@ -106,9 +107,9 @@ class UserEntity {
                 this.birthday = Date.valueOf("2001-01-01")
                 this.services = null
                 this.address = " "
-                this.appointmentEntity = null
+                this.appointment = null
                 this.roles = listOf()
-                this.unavailabilityEntity = listOf()
+                this.unavailability = listOf()
                 this.companies = listOf()
                 this.interests = ""
                 this.profilePic = null
@@ -137,9 +138,9 @@ class UserEntity {
                 this.birthday = birth
                 this.services = serv
                 this.address = address
-                this.appointmentEntity = appointmentEntities
+                this.appointment = appointmentEntities
                 this.roles = roles
-                this.unavailabilityEntity = unavailabilityEntity
+                this.unavailability = unavailabilityEntity
                 this.companies = companies
                 this.interests = interests
                 this.profilePic = profilePic

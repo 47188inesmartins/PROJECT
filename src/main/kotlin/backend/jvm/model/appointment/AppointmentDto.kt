@@ -39,7 +39,7 @@ data class AppointmentOutputDto(
         appHour = appointmentEntity.appHour,
         appDate = appointmentEntity.appDate,
         schedule = appointmentEntity.schedule.id,
-        user = appointmentEntity.usersDB?.map { it?.id },
+        user = appointmentEntity.user?.map { it?.id },
         service = appointmentEntity.service.id
     )
 }

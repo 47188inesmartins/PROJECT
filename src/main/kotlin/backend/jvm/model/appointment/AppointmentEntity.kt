@@ -57,7 +57,7 @@ class AppointmentEntity {
         inverseJoinColumns = [JoinColumn(name = "user_id")]
     )
 
-    val usersDB : List<UserEntity?>?
+    val user : List<UserEntity?>?
 
 
 
@@ -65,7 +65,7 @@ class AppointmentEntity {
         this.appHour = Time.valueOf("00:00:00")
         this.appDate = Date.valueOf("2000-01-01")
         this.schedule = ScheduleEntity()
-        this.usersDB = null
+        this.user = null
         this.service = ServiceEntity()
     }
 
@@ -73,7 +73,7 @@ class AppointmentEntity {
         this.appHour = appHour
         this.appDate = appDate
         this.schedule = scheduleId
-        this.usersDB = userEntityId
+        this.user = userEntityId
         this.service = serviceEntity
     }
 }

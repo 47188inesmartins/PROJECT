@@ -36,7 +36,7 @@ class UnavailabilityServices : IUnavailabilityServices {
     override fun getUnavailabilityByUser(user: Int): UnavailabilityOutputDto{
         val getUser = userDao.findById(user).get()
         return UnavailabilityOutputDto(
-            unavailabilityDao.getUnavailabilityDBByUserDBId(getUser)
+            unavailabilityDao.getUnavailabilityEntitiesByUser(getUser)
         )
     }
 
