@@ -5,6 +5,7 @@ import backend.jvm.model.unavailability.UnavailabilityEntity
 import backend.jvm.model.UserCompany
 import backend.jvm.model.appointment.AppointmentEntity
 import backend.jvm.model.service.ServiceEntity
+import backend.jvm.utils.Geolocation
 import jakarta.persistence.*
 import java.sql.Date
 import java.util.*
@@ -68,6 +69,12 @@ class UserEntity {
         @Column(name = "address")
         val address: String
 
+        @Column(name = "latitude")
+        val latitude: Double
+
+        @Column(name = "longitude")
+        val longitude: Double
+
         @Column(name = "profile_pic", columnDefinition = "BYTEA")
         val profilePic: ByteArray?
 
@@ -114,9 +121,12 @@ class UserEntity {
                 this.interests = ""
                 this.profilePic = null
                 this.status = "PENDING"
+                this.latitude = 0.0
+                this.longitude = 0.0
         }
 
         constructor(
+                coordinates: Geolocation,
                 email: String,
                 password: String,
                 clientName: String,
@@ -145,5 +155,7 @@ class UserEntity {
                 this.interests = interests
                 this.profilePic = profilePic
                 this.status = status
+                this.latitude = coordinates.latitude
+                this.longitude = coordinates.longitude
         }
 }

@@ -46,7 +46,10 @@ class CompanyController {
     @GetMapping("/search")
     fun searchForCompany(@RequestParam search: String?): ResponseEntity<List<CompanyOutputDto>> {
         return try {
-            val response = companyServices.getSearchedCompanies(search)
+            val requestAttributes = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes
+            val request = requestAttributes.request
+            val bearerToken = request.getHeader("Authorization")?.removePrefix("Bearer ")
+            val response = companyServices.getSearchedCompanies(search,bearerToken)
             ResponseEntity
                 .status(HttpStatus.OK)
                 .header("Content-Type","application/json")

@@ -6,6 +6,8 @@ create table if not exists COMPANY (
    id serial primary key,
    nif varchar(9) unique,
    address varchar(40),
+   latitude double precision,
+   longitude double precision,
    name varchar(20),
    type varchar(100) check (type in ('BEAUTY','LIFESTYLE','FITNESS','BUSINESS','OTHERS')),
    description varchar(300)
@@ -32,6 +34,8 @@ create table if not exists SCH_USER (
     email varchar(50) unique CHECK (email LIKE '%@%'),
     password varchar(250),
     address varchar(250),
+    latitude double precision,
+    longitude double precision,
     name varchar(200),
     interests varchar(60),
     birthday date check (date(CURRENT_TIMESTAMP) >= birthday + interval '16 year'),

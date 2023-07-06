@@ -17,10 +17,8 @@ import backend.jvm.model.vacation.VacationOutputDto
 import backend.jvm.dao.*
 import backend.jvm.services.dto.*
 import backend.jvm.services.interfaces.ICompanyServices
-import backend.jvm.utils.UserRoles
+import backend.jvm.utils.*
 import backend.jvm.utils.errorHandling.*
-import backend.jvm.utils.getCurrentDate
-import backend.jvm.utils.getCurrentTime
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -58,7 +56,8 @@ class CompanyServices : ICompanyServices {
     @Autowired
     lateinit var imageDao: ImageDao
 
-
+    @Autowired
+    lateinit var userDao: UserDao
 
     /**
      * Creates a new company and associates a manager for the company created
@@ -72,11 +71,13 @@ class CompanyServices : ICompanyServices {
         val managerUser = usersRepository.getUserByToken(UUID.fromString(token))?: throw UserNotFound()
         company.users?.add(managerUser.id)
 
+        val coordinates = getCompanyCoordinates(company.street,company.city,company.country)
+
         if(company.nif.length != NIF_NUMBERS ) throw InvalidNif()
         if(companyDao.findCompanyByNif(company.nif) != null) throw NifAlreadyExist()
 
         val services = company.service?.map { serviceDao.getReferenceById(it) }
-        val companyDb = company.mapToCompanyDto(company, services, null)
+        val companyDb = company.mapToCompanyDto(coordinates,company, services, null)
         val comp = companyDao.save(companyDb)
 
         userCompanyDao.save(UserCompany(managerUser, comp, UserRoles.MANAGER.name))
@@ -84,6 +85,11 @@ class CompanyServices : ICompanyServices {
         scheduleDao.save(schedule)
 
         return CompanyOutputDto(comp)
+    }
+
+    private fun getCompanyCoordinates(street: String,city: String,country: String):Geolocation{
+        val getAddressInfo = AddressInformation(street,city,country)
+        return GeoCoder().getGeolocation(getAddressInfo) ?: throw InvalidAddress()
     }
 
     /**
@@ -261,8 +267,46 @@ class CompanyServices : ICompanyServices {
         appointmentDao.deleteAppointmentByDateAndEmployee(employeeId,getCurrentTime(),getCurrentDate())
     }
 
-    override fun getSearchedCompanies(search: String?): List<CompanyOutputDto>?{
+    override fun getSearchedCompanies(token: String?,search: String?): List<CompanyOutputDto>?{
         if(search == "null") return getAllCompanies()
-        return companyDao.getCompanyBySearch("%${search}%")?.map { CompanyOutputDto(it) }
+        val allCompanies = companyDao.getCompanyBySearch("%${search}%")
+        if(token == null) return  allCompanies?.map { CompanyOutputDto(it) }
+        val user = userDao.getUserByToken(UUID.fromString(token))?: throw UserNotFound()
+        val userLocation = Geolocation(user.latitude,user.longitude)
+        return getCompaniesByUserLocation(userLocation,allCompanies!!,false).map { CompanyOutputDto(it) }
+    }
+
+    override fun getPersonalizedCompanies(token: String?): List<CompanyOutputDto>?{
+        if(token == null) {
+            val companies = companyDao.findAll()
+            return companies.map { CompanyOutputDto(it) }
+        }
+        val user = userDao.getUserByToken(UUID.fromString(token))?: throw UserNotFound()
+        val userLocation = Geolocation(user.latitude,user.longitude)
+        val categoriesArray = user.interests.split(",").toTypedArray()
+        val comps = companyDao.getCompaniesByCategory(categoriesArray)!!
+        return getCompaniesByUserLocation(userLocation,comps,true).map { CompanyOutputDto(it) }
+    }
+
+    /**
+     * Gets the companies that has a distance of 5.5 kms of the user
+     * @param userLocation that containes the coordinates of the user address
+     * @param companiesList the companies receive
+     * @param order true if we want to show all companies order by distance or only the companies nearby the user
+     * @return nearby companies
+     */
+    private fun getCompaniesByUserLocation(userLocation: Geolocation, companiesList: List<CompanyEntity>,order:Boolean): List<CompanyEntity> {
+        val nearCompanies = mutableListOf<CompanyEntity>()
+        val distance = 5.5
+        companiesList.forEach {company ->
+            val companyLocation = Geolocation(company.latitude,company.longitude)
+            val distanceUserComp = GeoCoder().calculateHaversineDistance(userLocation,companyLocation)
+            if(distanceUserComp <= distance){
+                nearCompanies.add(0,company)
+            }else{
+                if(order) nearCompanies.add(company)
+            }
+        }
+        return nearCompanies
     }
 }

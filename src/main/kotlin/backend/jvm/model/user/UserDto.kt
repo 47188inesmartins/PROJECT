@@ -4,6 +4,8 @@ import backend.jvm.model.*
 import backend.jvm.model.appointment.AppointmentEntity
 import backend.jvm.model.service.ServiceEntity
 import backend.jvm.model.unavailability.UnavailabilityEntity
+import backend.jvm.utils.AddressUtils
+import backend.jvm.utils.Geolocation
 import backend.jvm.utils.UserRoles
 import java.sql.Date
 import java.util.*
@@ -55,7 +57,9 @@ data class UserInputDto(
         val name: String,
         val birthday: String,
         val availability: String?,
-        val address: String,
+        val street: String,
+        val city: String,
+        val country: String,
         val companyId: Int?,
         val services: List<Int>?,
         val appointment: List<Int>?,
@@ -71,15 +75,17 @@ data class UserInputDto(
                       roles: List<Role>,
                       unavailabilityEntity : List<UnavailabilityEntity>?,
                       interests: String,
-                      profilePic: ByteArray?
+                      profilePic: ByteArray?,
+                      coordinates: Geolocation
         ): UserEntity {
               return UserEntity(
+                      coordinates,
                       email = dto.email,
                       password = pass,
                       clientName = dto.name,
                       birth = Date.valueOf(dto.birthday),
                       serv = services,
-                      address = address,
+                      address = AddressUtils.addressInfo(street,city,country),
                       companies = comp,
                       appointmentEntities = appointmentEntity,
                       roles = roles,

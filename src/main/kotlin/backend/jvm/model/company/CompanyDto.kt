@@ -2,23 +2,28 @@ package backend.jvm.model.company
 
 import backend.jvm.model.*
 import backend.jvm.model.service.ServiceEntity
+import backend.jvm.utils.AddressUtils
+import backend.jvm.utils.Geolocation
 
 data class ServiceInfo(val id: Int, val name: String, val price: Double, val duration: String)
 
 data class CompanyInputDto(
     val nif: String,
-    val address: String,
+    val street: String,
+    val city: String,
+    val country: String,
     val name: String,
     val type: String,
     val description: String,
     val service: List<Int>?,
     val users: MutableList<Int>?
 ){
-    fun mapToCompanyDto(dto: CompanyInputDto, service: List<ServiceEntity>?, users: List<UserCompany>?): CompanyEntity {
+    fun mapToCompanyDto(coordinates: Geolocation, dto: CompanyInputDto, service: List<ServiceEntity>?, users: List<UserCompany>?): CompanyEntity {
         return CompanyEntity(
+            coordinates,
             null,
             dto.nif,
-            dto.address,
+            AddressUtils.addressInfo(street,city,country),
             dto.name,
             dto.type,
             dto.description,

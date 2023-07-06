@@ -4,6 +4,7 @@ import backend.jvm.model.image.ImageEntity
 import backend.jvm.model.schedule.ScheduleEntity
 import backend.jvm.model.service.ServiceEntity
 import backend.jvm.model.UserCompany
+import backend.jvm.utils.Geolocation
 import jakarta.persistence.*
 import javax.persistence.Column
 
@@ -27,6 +28,12 @@ class CompanyEntity {
         @Column(name = "address")
         val address: String
 
+        @Column(name = "latitude")
+        val latitude: Double
+
+        @Column(name = "longitude")
+        val longitude: Double
+
         @Column(name = "name")
         val name: String
 
@@ -35,11 +42,6 @@ class CompanyEntity {
 
         @Column(name = "description")
         val description:String
-
-
-        //@Lob
-       /* @Column(name = "url", columnDefinition = "BYTEA")
-        val url: ByteArray?*/
 
         @OneToMany(mappedBy = "company")
         val service: List<ServiceEntity>?
@@ -59,13 +61,15 @@ class CompanyEntity {
                 this.name = ""
                 this.type = ""
                 this.description = ""
+                this.latitude = 0.0
+                this.longitude = 0.0
                 this.service = null
                 this.schedule = null
                 this.userCompany = listOf()
                 this.entities = listOf()
         }
 
-        constructor(imageEntity:List<ImageEntity>?, nif: String, address: String, compName: String, compType: String, description: String, serviceEntity: List<ServiceEntity>?, schedule: ScheduleEntity?, usersDB: List<UserCompany>?){
+        constructor(coordinates: Geolocation,imageEntity:List<ImageEntity>?, nif: String, address: String, compName: String, compType: String, description: String, serviceEntity: List<ServiceEntity>?, schedule: ScheduleEntity?, usersDB: List<UserCompany>?){
                 this.nif = nif
                 this.address = address
                 this.name = compName
@@ -75,6 +79,8 @@ class CompanyEntity {
                 this.schedule = schedule
                 this.userCompany = usersDB
                 this.entities = imageEntity
+                this.latitude = coordinates.latitude
+                this.longitude = coordinates.longitude
         }
 
 }

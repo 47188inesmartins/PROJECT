@@ -37,7 +37,7 @@ interface IUserInterface {
 
     fun updateUserProfilePicture(id: Int, image: MultipartFile)
 
-    fun getPersonalizedCompanies(token: String?): List<CompanyOutputDto>?
+
 
     fun mapToAppointmentsInfo(listAppointmentEntities: List<AppointmentEntity>):List<AppointmentInfo>
 

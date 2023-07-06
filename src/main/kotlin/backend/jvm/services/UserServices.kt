@@ -51,6 +51,8 @@ class UserServices : IUserInterface {
         if(!PASSWORD_FORMAT.matches(user.password)) throw PasswordInsecure()
         if(userDao.getUsersByEmail(user.email) != null) throw EmailAlreadyExists()
 
+        val coordinates = getUserCoordinates(user.street,user.city,user.country)
+
         val servicesList = mutableListOf<ServiceEntity>()
         val appList =  mutableListOf<AppointmentEntity>()
 
@@ -59,17 +61,19 @@ class UserServices : IUserInterface {
         val role = roleDao.getRoleByName(UserRoles.CLIENT.name)
 
         val encodePassword = passwordEncoder.encode(user.password)
-        val token = passwordEncoder.encode(UUID.randomUUID().toString())
+
         val returnUser = userDao.save(
             user.mapToUser(
                 user,
                 encodePassword,
                 servicesList,
                 appList, null,
-                listOf(role), null, user.interests, user.profilePic)
+                listOf(role), null, user.interests, user.profilePic,coordinates)
         )
         return CreatedUserOutput(returnUser.id, returnUser.token)
     }
+
+
 
     override fun deleteUser(id: Int): Boolean {
         if(userDao.findById(id).isEmpty) return false
@@ -168,17 +172,6 @@ class UserServices : IUserInterface {
         }
     }
 
-    override fun getPersonalizedCompanies(token: String?): List<CompanyOutputDto>?{
-        if(token == null) {
-            val companies = companyDao.findAll()
-            return companies.map { CompanyOutputDto(it) }
-        }
-        val user = userDao.getUserByToken(UUID.fromString(token))?: throw UserNotFound()
-        val categoriesArray = user.interests.split(",").toTypedArray()
-        val comps = companyDao.getCompaniesByCategory(categoriesArray)
-        return comps?.map { CompanyOutputDto(it) }
-    }
-
     override fun getRoleByUserIdAndCompany(company: Int, user_id: String): String? {
         val token = userDao.getUserByToken(UUID.fromString(user_id))
         return if (token == null)  null
@@ -203,5 +196,10 @@ class UserServices : IUserInterface {
 
     fun validateAccount(email: String){
         userDao.changeStatusByEmail(email)
+    }
+
+    private fun getUserCoordinates(street: String,city: String,country: String):Geolocation{
+        val getAddressInfo = AddressInformation(street,city,country)
+        return GeoCoder().getGeolocation(getAddressInfo) ?: throw InvalidAddress()
     }
 }

@@ -4,6 +4,7 @@ package backend.jvm.controllers
 
 import backend.jvm.services.UserServices
 import backend.jvm.model.company.CompanyOutputDto
+import backend.jvm.services.CompanyServices
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -18,7 +19,7 @@ import org.springframework.web.server.ResponseStatusException
 class HomeController {
 
     @Autowired
-    lateinit var userServices: UserServices
+    lateinit var companyServices: CompanyServices
 
 
 
@@ -28,7 +29,7 @@ class HomeController {
             val requestAttributes = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes
             val request = requestAttributes.request
             val bearerToken = request.getHeader("Authorization")?.removePrefix("Bearer ")
-            val response = userServices.getPersonalizedCompanies(bearerToken)
+            val response = companyServices.getPersonalizedCompanies(bearerToken)
             ResponseEntity
                 .status(HttpStatus.OK)
                 .header("Content-Type","application/json")
