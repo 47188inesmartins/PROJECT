@@ -1,9 +1,12 @@
 package backend.jvm.services
 
+import backend.jvm.utils.emails.EmailMessages
+import jakarta.mail.MessagingException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.MimeMessageHelper
 import org.springframework.stereotype.Service
+
 
 @Service
 class EmailSenderService {
@@ -11,15 +14,14 @@ class EmailSenderService {
     @Autowired
     lateinit var javaMailSender: JavaMailSender
 
-    fun sendEmail(email:String,body:String,subject:String){
-
-        val mimeMessage = javaMailSender.createMimeMessage()
-        val mimeMessageHelper = MimeMessageHelper(mimeMessage,true)
-        mimeMessageHelper.setFrom("scheduleitapp1@gmail.com")
-        mimeMessageHelper.setTo(email)
-        mimeMessageHelper.setText(body)
-        mimeMessageHelper.setSubject(subject)
-
-        javaMailSender.send(mimeMessage)
+    @Throws(MessagingException::class)
+    fun sendValidationEmail(recipientEmail: String) {
+        val message = javaMailSender.createMimeMessage()
+        val helper = MimeMessageHelper(message, true)
+        val emailContent = EmailMessages.validateAccount(recipientEmail)
+        helper.setTo(recipientEmail)
+        helper.setSubject("Activate account")
+        helper.setText(emailContent, true)
+        javaMailSender.send(message)
     }
 }

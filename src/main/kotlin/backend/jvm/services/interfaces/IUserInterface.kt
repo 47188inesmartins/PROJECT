@@ -1,9 +1,13 @@
 package backend.jvm.services.interfaces
 
-import backend.jvm.model.Appointment
-import backend.jvm.model.UserCompany
-import backend.jvm.model.UserDB
-import backend.jvm.services.dto.*
+import backend.jvm.model.appointment.AppointmentEntity
+import backend.jvm.model.user.UserEntity
+import backend.jvm.model.appointment.AppointmentInfo
+import backend.jvm.model.appointment.AppointmentsUserInfo
+import backend.jvm.model.company.CompanyOutputDto
+import backend.jvm.model.user.CreatedUserOutput
+import backend.jvm.model.user.UserInputDto
+import backend.jvm.model.user.UserOutputDto
 import org.springframework.web.multipart.MultipartFile
 
 interface IUserInterface {
@@ -25,7 +29,7 @@ interface IUserInterface {
 
     fun getRoleByUserIdAndCompany(company: Int, user_id: String): String?
 
-    fun getUserByToken(token: String): UserDB?
+    fun getUserByToken(token: String): UserEntity?
 
     fun addEmployees(companyId: Int, emails: List<String>)
 
@@ -35,6 +39,6 @@ interface IUserInterface {
 
     fun getPersonalizedCompanies(token: String?): List<CompanyOutputDto>?
 
-    fun mapToAppointmentsInfo(listAppointments: List<Appointment>):List<AppointmentInfo>
+    fun mapToAppointmentsInfo(listAppointmentEntities: List<AppointmentEntity>):List<AppointmentInfo>
 
 }

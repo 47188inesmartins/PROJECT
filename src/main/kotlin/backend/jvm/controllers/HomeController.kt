@@ -3,7 +3,7 @@ package backend.jvm.controllers
 
 
 import backend.jvm.services.UserServices
-import backend.jvm.services.dto.CompanyOutputDto
+import backend.jvm.model.company.CompanyOutputDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

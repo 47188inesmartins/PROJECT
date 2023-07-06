@@ -1,19 +1,5 @@
 package backend.database
 
-import backend.jvm.model.Company
-import backend.jvm.model.Role
-import backend.jvm.model.UserDB
-import backend.jvm.repository.RoleRepository
-import backend.jvm.repository.UserRepository
-import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
-import org.springframework.test.context.junit4.SpringRunner
-import java.sql.Date
-import java.util.*
-import kotlin.test.assertEquals
 /*
 
 @RunWith(SpringRunner::class)

@@ -113,3 +113,6 @@ FROM company c
 WHERE LOWER(c.name) COLLATE utf8_general_ci LIKE '%inspecoes%'
    OR c.description COLLATE utf8_general_ci LIKE '%kjasndjksndkj%'
    OR c.type COLLATE utf8_general_ci LIKE '%fit%';
+
+
+SELECT * FROM table WHERE lower(unaccent(table.id)) = lower('Jose')

@@ -1,13 +1,13 @@
 package backend.jvm.services.interfaces
 
-import backend.jvm.services.dto.VacationInputDto
-import backend.jvm.services.dto.VacationOutputDto
+import backend.jvm.model.vacation.VacationInputDto
+import backend.jvm.model.vacation.VacationOutputDto
 import java.sql.Date
 
 interface IVacationServices {
     fun getVacation(id: Int): VacationOutputDto
 
-    fun addVacation(vacation: VacationInputDto, company: Int):VacationOutputDto
+    fun addVacation(vacation: VacationInputDto, company: Int): VacationOutputDto
 
     fun deleteVacation(vacation: Int)
 

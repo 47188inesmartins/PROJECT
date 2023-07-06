@@ -1,8 +1,8 @@
 package backend.jvm.services
 
-import backend.jvm.repository.*
-import backend.jvm.services.dto.DayInputDto
-import backend.jvm.services.dto.DayOutputDto
+import backend.jvm.dao.*
+import backend.jvm.model.day.DayInputDto
+import backend.jvm.model.day.DayOutputDto
 import backend.jvm.services.interfaces.IDayServices
 import backend.jvm.utils.errorHandling.*
 import backend.jvm.utils.time.addTimes
@@ -20,36 +20,36 @@ class DayServices : IDayServices {
     }
 
     @Autowired
-    lateinit var dayRepository:DayRepository
+    lateinit var dayDao:DayDao
 
     @Autowired
-    lateinit var scheduleRepository: ScheduleRepository
+    lateinit var scheduleDao: ScheduleDao
 
     @Autowired
-    lateinit var companyRepository: CompanyRepository
+    lateinit var companyDao: CompanyDao
 
     @Autowired
-    lateinit var serviceRepository: ServiceRepository
+    lateinit var serviceDao: ServiceDao
 
-    override fun addOpenDay(day: DayInputDto):DayOutputDto {
+    override fun addOpenDay(day: DayInputDto): DayOutputDto {
         if(!listDayOfWeek.contains(day.weekDays.uppercase())) throw InvalidOpenDay()
-        val schedule = if(day.schedule != null) scheduleRepository.getReferenceById(day.schedule) else throw InvalidSchedule()
+        val schedule = if(day.schedule != null) scheduleDao.getReferenceById(day.schedule) else throw InvalidSchedule()
         val dayDb = day.mapToDayDb(day,schedule,null)
-        val db = dayRepository.save(dayDb)
+        val db = dayDao.save(dayDb)
         return  DayOutputDto(db)
     }
 
-    override fun addSpecialDayByService(day: DayInputDto, serviceId: Int, companyId: Int):DayOutputDto {
+    override fun addSpecialDayByService(day: DayInputDto, serviceId: Int, companyId: Int): DayOutputDto {
         if(!listDayOfWeek.contains(day.weekDays.uppercase())) throw InvalidOpenDay()
-        val service = serviceRepository.getServiceDBById(serviceId) ?: throw InvalidService()
+        val service = serviceDao.getServiceDBById(serviceId) ?: throw InvalidService()
         val dayDb = day.mapToDayDb(day,null,listOf(service))
-        val db = dayRepository.save(dayDb)
+        val db = dayDao.save(dayDb)
         return  DayOutputDto(db)
     }
 
     override fun getScheduleByWeekDay(weekDay: String, cid: Int): List<String> {
-        val schedule = scheduleRepository.getScheduleByCompany_Id(cid) ?: throw CompanyNotFound()
-        val days = dayRepository.getDayByScheduleIdAndWeekDays(schedule.id, getDayOfWeek(Date.valueOf(weekDay)))
+        val schedule = scheduleDao.getScheduleByCompany_Id(cid) ?: throw CompanyNotFound()
+        val days = dayDao.getDayByScheduleIdAndWeekDays(schedule.id, getDayOfWeek(Date.valueOf(weekDay)))
 
         if(days.isEmpty()) return emptyList()
 
@@ -69,30 +69,30 @@ class DayServices : IDayServices {
     }
 
     override fun addOpenDays(day: List<DayInputDto>, companyId: Int, interval: String) {
-        companyRepository.findAllById(companyId) ?: throw InvalidSchedule()
-        val schedule = scheduleRepository.getScheduleByCompany_Id(companyId) ?: throw InvalidSchedule()
+        companyDao.findAllById(companyId) ?: throw InvalidSchedule()
+        val schedule = scheduleDao.getScheduleByCompany_Id(companyId) ?: throw InvalidSchedule()
         val intervalBetween = Time.valueOf(interval)
-        scheduleRepository.updateBetweenInterval(schedule.id, intervalBetween)
+        scheduleDao.updateBetweenInterval(schedule.id, intervalBetween)
         val daysDb = day.map { it.mapToDayDb(it, schedule, null) }
-        daysDb.forEach { dayRepository.save(it) }
+        daysDb.forEach { dayDao.save(it) }
     }
 
     override fun updateBeginHour(id:Int,hour: String): Time {
-        if(dayRepository.getDayById(id) == null ) throw InvalidDay()
-        return dayRepository.updateBeginHour(id, Time.valueOf(hour))
+        if(dayDao.getDayById(id) == null ) throw InvalidDay()
+        return dayDao.updateBeginHour(id, Time.valueOf(hour))
     }
 
     override fun updateEndHour(id:Int,hour: String): Time {
-        if(dayRepository.getDayById(id) == null ) throw InvalidDay()
-        return dayRepository.updateEndHour(id,Time.valueOf(hour))
+        if(dayDao.getDayById(id) == null ) throw InvalidDay()
+        return dayDao.updateEndHour(id,Time.valueOf(hour))
     }
 
     override fun deleteDay(day: Int){
-        dayRepository.deleteById(day)
+        dayDao.deleteById(day)
     }
 
     override fun getAvailableDaysByService(serviceId: Int): List<DayOutputDto> {
-        val availableDays = dayRepository.getAvailableServicesDay(serviceId)
+        val availableDays = dayDao.getAvailableServicesDay(serviceId)
         if(availableDays.isEmpty()) throw NoAvailableDays()
         return availableDays.map { DayOutputDto(it) }
     }

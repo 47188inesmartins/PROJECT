@@ -1,12 +1,9 @@
 package backend.jvm.services
 
-import backend.jvm.repository.*
-import backend.jvm.services.dto.DayOutputDto
-import backend.jvm.services.dto.ScheduleInputDto
-import backend.jvm.services.dto.ScheduleOutputDto
-import backend.jvm.services.dto.VacationOutputDto
+import backend.jvm.dao.*
+import backend.jvm.model.schedule.ScheduleInputDto
+import backend.jvm.model.schedule.ScheduleOutputDto
 import backend.jvm.services.interfaces.IScheduleServices
-import backend.jvm.utils.errorHandling.ScheduleOpenDays
 import org.springframework.beans.factory.annotation.Autowired
 import java.util.*
 import org.springframework.stereotype.Service
@@ -15,15 +12,15 @@ import org.springframework.stereotype.Service
 class ScheduleServices: IScheduleServices {
 
     @Autowired
-    lateinit var scheduleRepository: ScheduleRepository
+    lateinit var scheduleDao: ScheduleDao
     @Autowired
-    lateinit var companyRepository: CompanyRepository
+    lateinit var companyDao: CompanyDao
     @Autowired
-    lateinit var dayRepository: DayRepository
+    lateinit var dayDao: DayDao
     @Autowired
-    lateinit var appointmentRepository: AppointmentRepository
+    lateinit var appointmentDao: AppointmentDao
     @Autowired
-    lateinit var vacationRepository: VacationRepository
+    lateinit var vacationDao: VacationDao
 
     /**
      * add a schedule
@@ -33,13 +30,13 @@ class ScheduleServices: IScheduleServices {
      */
 
     override fun addSchedule(schedule: ScheduleInputDto): ScheduleOutputDto {
-        val company = companyRepository.getReferenceById(schedule.companyId)
-        val day = schedule.day?.map { dayRepository.getReferenceById(it) }
-        val app = schedule.appointment?.map { appointmentRepository.getReferenceById(it) }
-        val vacation = schedule.vacation?.map { vacationRepository.getReferenceById(it) }
+        val company = companyDao.getReferenceById(schedule.companyId)
+        val day = schedule.day?.map { dayDao.getReferenceById(it) }
+        val app = schedule.appointment?.map { appointmentDao.getReferenceById(it) }
+        val vacation = schedule.vacation?.map { vacationDao.getReferenceById(it) }
 
         val scheduleDb = schedule.mapToSchedule(company ,app ,day ,vacation)
-        return ScheduleOutputDto(scheduleRepository.save(scheduleDb))
+        return ScheduleOutputDto(scheduleDao.save(scheduleDb))
 
     }
 
@@ -49,7 +46,7 @@ class ScheduleServices: IScheduleServices {
      * @exception IllegalArgumentException – in case the given id is null
      */
     override fun deleteSchedule(id: Int){
-        scheduleRepository.deleteById(id)
+        scheduleDao.deleteById(id)
     }
 
     /**
@@ -59,6 +56,6 @@ class ScheduleServices: IScheduleServices {
      * @exception NoSuchElementException – if no value is present
      */
     override fun getScheduleById(id:Int): ScheduleOutputDto?{
-        return ScheduleOutputDto(scheduleRepository.findById(id).get())
+        return ScheduleOutputDto(scheduleDao.findById(id).get())
     }
 }

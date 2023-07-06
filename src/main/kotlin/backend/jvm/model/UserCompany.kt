@@ -1,5 +1,7 @@
 package backend.jvm.model
 
+import backend.jvm.model.company.CompanyEntity
+import backend.jvm.model.user.UserEntity
 import jakarta.persistence.*
 import java.io.Serializable
 
@@ -13,12 +15,12 @@ class UserCompany {
     @ManyToOne
     @MapsId("user")
     @JoinColumn(name = "user_id")
-    val user: UserDB?
+    val user: UserEntity?
 
     @ManyToOne
     @MapsId("company")
     @JoinColumn(name = "company_id")
-    val company: Company?
+    val company: CompanyEntity?
 
     val role: String
 
@@ -28,9 +30,9 @@ class UserCompany {
         this.role = ""
     }
 
-    constructor(user: UserDB, company: Company, role: String){
+    constructor(user: UserEntity, companyEntity: CompanyEntity, role: String){
         this.user = user
-        this.company = company
+        this.company = companyEntity
         this.role = role
     }
 

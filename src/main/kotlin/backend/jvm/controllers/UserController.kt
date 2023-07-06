@@ -1,5 +1,7 @@
 package backend.jvm.controllers
 
+import backend.jvm.model.appointment.AppointmentsUserInfo
+import backend.jvm.model.user.*
 import backend.jvm.services.EmailSenderService
 import backend.jvm.services.UserServices
 import backend.jvm.services.dto.*
@@ -38,20 +40,7 @@ class UserController {
     fun signup(@RequestBody user: UserInputDto, response: HttpServletResponse): ResponseEntity<CreatedUserOutput> {
         return try {
             val resp = userServices.addUser(user)
-            val token = resp.token
-            val cookieToken = ResponseCookie
-                .from("token", token.toString())
-                .maxAge(7 * 24 * 60 * 60 )
-                .path("/")
-                .httpOnly(true)
-                .secure(false)
-                .build()
-            response.addHeader(HttpHeaders.SET_COOKIE, cookieToken.toString())
-            emailSenderService.sendEmail(
-                user.email,
-                "Confirm your account!",
-                "Confirm account"
-            )
+            emailSenderService.sendValidationEmail(user.email)
             ResponseEntity
                     .status(201)
                     .body(resp)
@@ -113,7 +102,7 @@ class UserController {
     }
 
     @PostMapping("/login")
-    fun login(@RequestBody credentials: UserCredentials,response: HttpServletResponse): ResponseEntity<UUID> {
+    fun login(@RequestBody credentials: UserCredentials, response: HttpServletResponse): ResponseEntity<UUID> {
         return try {
             val user = userServices.getUsersByEmailAndPassword(credentials.email,credentials.password)
             val cookieToken = ResponseCookie
@@ -222,6 +211,18 @@ class UserController {
             ResponseEntity
                 .status(200)
                 .body("Upload done")
+        }catch(e: Exception){
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
+        }
+    }
+
+    @PutMapping("/validate")
+    fun validateAccount(@RequestParam email: String): ResponseEntity<String> {
+        return try {
+            userServices.validateAccount(email)
+            ResponseEntity
+                .status(200)
+                .body("Account has been validated")
         }catch(e: Exception){
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
         }

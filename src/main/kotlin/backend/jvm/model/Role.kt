@@ -1,5 +1,6 @@
 package backend.jvm.model
 
+import backend.jvm.model.user.UserEntity
 import jakarta.persistence.*
 
 @Entity
@@ -11,7 +12,7 @@ class Role {
     val name: String
 
     @ManyToMany(mappedBy = "roles")
-    private var users: List<UserDB?>?
+    private var users: List<UserEntity?>?
 
     constructor(){
         this.name = ""

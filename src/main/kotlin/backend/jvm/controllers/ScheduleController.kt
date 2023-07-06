@@ -1,10 +1,8 @@
 package backend.jvm.controllers
 
 import backend.jvm.services.ScheduleServices
-import backend.jvm.services.dto.DayOutputDto
-import backend.jvm.services.dto.ScheduleInputDto
-import backend.jvm.services.dto.ScheduleOutputDto
-import backend.jvm.services.dto.VacationOutputDto
+import backend.jvm.model.schedule.ScheduleInputDto
+import backend.jvm.model.schedule.ScheduleOutputDto
 import backend.jvm.utils.RoleManager
 import jakarta.persistence.EntityNotFoundException
 import org.springframework.beans.factory.annotation.Autowired
@@ -49,7 +47,7 @@ class ScheduleController {
 
     @RoleManager(["MANAGER"])
     @GetMapping("/{id}")
-    fun getSchedule(@PathVariable id:Int):ScheduleOutputDto?{
+    fun getSchedule(@PathVariable id:Int): ScheduleOutputDto?{
           return scheduleServices.getScheduleById(id)
     }
 

@@ -2,6 +2,18 @@ package backend.jvm.controllers
 
 import kotlinx.serialization.json.Json
 import backend.jvm.model.*
+import backend.jvm.model.appointment.AppointmentInfoEmployeeEnd
+import backend.jvm.model.appointment.AppointmentOutputDto
+import backend.jvm.model.company.CompanyInfo
+import backend.jvm.model.company.CompanyInputDto
+import backend.jvm.model.company.CompanyOutputDto
+import backend.jvm.model.day.DayOutputDto
+import backend.jvm.model.service.ServiceOutputDto
+import backend.jvm.model.user.CreatedUserOutput
+import backend.jvm.model.user.UserEmails
+import backend.jvm.model.user.UserInfo
+import backend.jvm.model.user.UserOutputDto
+import backend.jvm.model.vacation.VacationOutputDto
 import backend.jvm.services.CompanyServices
 import backend.jvm.services.UserServices
 import backend.jvm.services.dto.*
@@ -46,9 +58,7 @@ class CompanyController {
 
 
     @PostMapping
-    fun addCompany(
-        @RequestBody company: CompanyInputDto
-    ): ResponseEntity<CompanyOutputDto> {
+    fun addCompany(@RequestBody company: CompanyInputDto): ResponseEntity<CompanyOutputDto> {
         return try {
             val requestAttributes = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes
             val request = requestAttributes.request
@@ -162,13 +172,6 @@ class CompanyController {
                 else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Something went wrong", e)
             }
         }
-    }
-
-    @RoleManager(["MANAGER"])
-    @PutMapping("/{id}/description")
-    fun changeDescription(@PathVariable id: Int, @RequestBody address: String){
-       TODO()
-    //  return companyServices.changeAddress(id, address)
     }
 
     @RoleManager(["MANAGER","EMPLOYEE","CLIENT"])
@@ -300,10 +303,10 @@ class CompanyController {
     @GetMapping("/{cid}/employees")
     fun getEmployeesByCompany( @PathVariable cid: Int): ResponseEntity<List<UserOutputDto>> {
         return try {
-            val employee = companyServices.getEmployeesByCompany(cid)
+            val response = companyServices.getEmployeesByCompany(cid)
             ResponseEntity
                 .status(200)
-                .body(employee)
+                .body(response)
         }catch(e: Exception){
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
         }
@@ -313,7 +316,7 @@ class CompanyController {
     @DeleteMapping("/{cid}/employees")
     fun removeEmployee( @PathVariable cid: Int, @RequestParam id: Int): ResponseEntity<String>{
         return try {
-            val a = companyServices.removeEmployeeFromCompany(cid, id)
+            companyServices.removeEmployeeFromCompany(cid, id)
             ResponseEntity
                 .status(200)
                 .body("delete successful")

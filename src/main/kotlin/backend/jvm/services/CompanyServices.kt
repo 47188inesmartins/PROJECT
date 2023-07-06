@@ -1,7 +1,20 @@
 package backend.jvm.services
 
 import backend.jvm.model.*
-import backend.jvm.repository.*
+import backend.jvm.model.appointment.AppointmentInfoEmployeeEnd
+import backend.jvm.model.appointment.AppointmentOutputDto
+import backend.jvm.model.company.CompanyEntity
+import backend.jvm.model.company.CompanyInfo
+import backend.jvm.model.company.CompanyInputDto
+import backend.jvm.model.company.CompanyOutputDto
+import backend.jvm.model.day.DayOutputDto
+import backend.jvm.model.image.ImageEntity
+import backend.jvm.model.schedule.ScheduleEntity
+import backend.jvm.model.service.ServiceOutputDto
+import backend.jvm.model.user.UserInfo
+import backend.jvm.model.user.UserOutputDto
+import backend.jvm.model.vacation.VacationOutputDto
+import backend.jvm.dao.*
 import backend.jvm.services.dto.*
 import backend.jvm.services.interfaces.ICompanyServices
 import backend.jvm.utils.UserRoles
@@ -26,24 +39,24 @@ class CompanyServices : ICompanyServices {
     }
 
     @Autowired
-    lateinit var companyRepository: CompanyRepository
+    lateinit var companyDao: CompanyDao
     @Autowired
-    lateinit var scheduleRepository: ScheduleRepository
+    lateinit var scheduleDao: ScheduleDao
     @Autowired
-    lateinit var usersRepository: UserRepository
+    lateinit var usersRepository: UserDao
     @Autowired
-    lateinit var serviceRepository: ServiceRepository
+    lateinit var serviceDao: ServiceDao
     @Autowired
-    lateinit var appointmentRepository: AppointmentRepository
+    lateinit var appointmentDao: AppointmentDao
     @Autowired
-    lateinit var dayRepository: DayRepository
+    lateinit var dayDao: DayDao
     @Autowired
-    lateinit var vacationRepository: VacationRepository
+    lateinit var vacationDao: VacationDao
     @Autowired
-    lateinit var userCompanyRepository: UserCompanyRepository
+    lateinit var userCompanyDao: UserCompanyDao
 
     @Autowired
-    lateinit var imageRepository: ImageRepository
+    lateinit var imageDao: ImageDao
 
 
 
@@ -60,15 +73,15 @@ class CompanyServices : ICompanyServices {
         company.users?.add(managerUser.id)
 
         if(company.nif.length != NIF_NUMBERS ) throw InvalidNif()
-        if(companyRepository.findCompanyByNif(company.nif) != null) throw NifAlreadyExist()
+        if(companyDao.findCompanyByNif(company.nif) != null) throw NifAlreadyExist()
 
-        val services = company.service?.map { serviceRepository.getReferenceById(it) }
+        val services = company.service?.map { serviceDao.getReferenceById(it) }
         val companyDb = company.mapToCompanyDto(company, services, null)
-        val comp = companyRepository.save(companyDb)
+        val comp = companyDao.save(companyDb)
 
-        userCompanyRepository.save(UserCompany(managerUser, comp, UserRoles.MANAGER.name))
-        val schedule = Schedule(comp,null,null,null,null)
-        scheduleRepository.save(schedule)
+        userCompanyDao.save(UserCompany(managerUser, comp, UserRoles.MANAGER.name))
+        val schedule = ScheduleEntity(comp,null,null,null,null)
+        scheduleDao.save(schedule)
 
         return CompanyOutputDto(comp)
     }
@@ -80,7 +93,7 @@ class CompanyServices : ICompanyServices {
      * @exception IllegalArgumentException
      */
     override fun deleteCompany(id: Int): Boolean{
-        companyRepository.deleteById(id)
+        companyDao.deleteById(id)
         return true
     }
 
@@ -90,7 +103,7 @@ class CompanyServices : ICompanyServices {
      * @param CompanyOutputDto info of the company returned
      */
     override fun getCompanyById(id: Int): CompanyOutputDto {
-        val comp = companyRepository.getReferenceById(id)
+        val comp = companyDao.getReferenceById(id)
         return CompanyOutputDto(comp)
     }
 
@@ -100,57 +113,57 @@ class CompanyServices : ICompanyServices {
      * @param CompanyOutputDto info of the company returned
      */
     override fun getCompanyByNif(nif: String): CompanyOutputDto {
-       val c =   companyRepository.findCompanyByNif(nif) ?: throw CompanyNotFound()
+       val c =   companyDao.findCompanyByNif(nif) ?: throw CompanyNotFound()
         return CompanyOutputDto(c)
     }
 
     override fun getAllServicesByCompany(id: Int): List<ServiceOutputDto>{
-        return serviceRepository.getAllServicesFromACompany(id).map { ServiceOutputDto(it) }
+        return serviceDao.getAllServicesFromACompany(id).map { ServiceOutputDto(it) }
     }
 
     override fun getAllAppointmentsByCompany(id: Int):List<AppointmentOutputDto>{
-        companyRepository.findAllById(id) ?: throw CompanyNotFound()
-        return appointmentRepository.getAllOnGoingAppointments(id).map { AppointmentOutputDto(it) }
+        companyDao.findAllById(id) ?: throw CompanyNotFound()
+        return appointmentDao.getAllOnGoingAppointments(id).map { AppointmentOutputDto(it) }
     }
 
     override fun getAppointmentByCompanyAndDateAndHour(id: Int, date: String, hour: String): List<AppointmentOutputDto>{
         val d = Date.valueOf(date)
         val h = Time.valueOf(hour)
-        companyRepository.findAllById(id) ?: throw CompanyNotFound()
-        return companyRepository.getAppointmentsByDateAndHour(id, d, h).map { AppointmentOutputDto(it) }
+        companyDao.findAllById(id) ?: throw CompanyNotFound()
+        return companyDao.getAppointmentsByDateAndHour(id, d, h).map { AppointmentOutputDto(it) }
     }
 
     override fun getOpenDaysByCompany(id: Int): List<DayOutputDto>{
-        return dayRepository.getOpenDays(id).map { DayOutputDto(it) }
+        return dayDao.getOpenDays(id).map { DayOutputDto(it) }
     }
 
     override fun getVacationByCompany(id: Int): List<VacationOutputDto>{
-        val schedule = scheduleRepository.getScheduleByCompany_Id(id) ?: throw ScheduleNotFound()
-        return vacationRepository.getVacationsByScheduleId(schedule.id).map { VacationOutputDto(it) }
+        val schedule = scheduleDao.getScheduleByCompany_Id(id) ?: throw ScheduleNotFound()
+        return vacationDao.getVacationsByScheduleId(schedule.id).map { VacationOutputDto(it) }
     }
 
     override fun changeAddress(id: Int, address: String){
-        companyRepository.findAllById(id) ?: throw CompanyNotFound()
-        companyRepository.changeAddress(id, address)
+        companyDao.findAllById(id) ?: throw CompanyNotFound()
+        companyDao.changeAddress(id, address)
     }
 
-    override fun changeDescription(id: Int, description: String): Company{
-        return companyRepository.changeDescription(id, description)
+    override fun changeDescription(id: Int, description: String): CompanyEntity {
+        return companyDao.changeDescription(id, description)
     }
 
 
     override fun getAllCompanies(): List<CompanyOutputDto>{
-       val a = companyRepository.findAll().map{ CompanyOutputDto(it) }
+       val a = companyDao.findAll().map{ CompanyOutputDto(it) }
         return a
     }
 
     override fun getAllServices(id: Int): List<ServiceOutputDto>{
-        return serviceRepository.getAllServicesFromACompany(id).map { ServiceOutputDto(it) }
+        return serviceDao.getAllServicesFromACompany(id).map { ServiceOutputDto(it) }
     }
 
     fun getCompanyByUserAndRole(userId: String, role: String): List<CompanyInfo> {
         val user = usersRepository.getUserByToken(UUID.fromString(userId)) ?: throw InvalidCredentials()
-        val companyRepository = companyRepository.getCompanyByUserIdAndRole(user.id,role)
+        val companyRepository = companyDao.getCompanyByUserIdAndRole(user.id,role)
         return companyRepository.map {
             CompanyInfo(it.id,it.name)
         }
@@ -162,14 +175,14 @@ class CompanyServices : ICompanyServices {
         val earnedMoney = employees.map {
             Pair(
                 UserInfo(it.id,it.name),
-                serviceRepository.getEarnedMoneyByEmployee(it.id,cid,getDateForLastDays(),dateEnd)?:0.0
+                serviceDao.getEarnedMoneyByEmployee(it.id,cid,getDateForLastDays(),dateEnd)?:0.0
             )
         }
         return earnedMoney
     }
 
     fun getEarnedMoneyByEmployee(employee: Int, company: Int): Double {
-        return serviceRepository.getEarnedMoneyByEmployee(
+        return serviceDao.getEarnedMoneyByEmployee(
             employee,
             company,
             getDateForLastDays(),
@@ -189,13 +202,13 @@ class CompanyServices : ICompanyServices {
     }
 
     fun getAppointmentsByCompany(cid: Int): List<AppointmentInfoEmployeeEnd>{
-        val schedule =  scheduleRepository.getScheduleByCompany_Id(cid)?: throw InvalidSchedule()
-        val appointments = appointmentRepository.getAppointmentsBySchedule(schedule.id)
+        val schedule =  scheduleDao.getScheduleByCompany_Id(cid)?: throw InvalidSchedule()
+        val appointments = appointmentDao.getAppointmentsBySchedule(schedule.id)
         if(appointments.isEmpty()) return emptyList()
 
         return appointments.map {
-            val service = serviceRepository.getServiceDBByAppointment(it.id)
-            val employee  = it.usersDB?.firstOrNull { user ->
+            val service = serviceDao.getServiceDBByAppointment(it.id)
+            val employee  = it.user?.firstOrNull { user ->
                 val role = user?.id?.let { it1 -> usersRepository.getUserRoleByCompany(it1,cid) }
                 (role == UserRoles.EMPLOYEE.name ||role == UserRoles.MANAGER.name)
             } ?: throw UserNotFound()
@@ -216,14 +229,14 @@ class CompanyServices : ICompanyServices {
      * @param images array with the images received
      */
     fun uploadPhoto(cid: Int, images: Array<MultipartFile>){
-        val company = companyRepository.findAllById(cid) ?: throw CompanyNotFound()
+        val company = companyDao.findAllById(cid) ?: throw CompanyNotFound()
         images.forEach {image ->
             val fileName = image.originalFilename?.let { StringUtils.cleanPath(it) }
             if(fileName?.contains("..")!!){
                 println("not a valid file")
             }
             val encodedFile = image.bytes
-            imageRepository.save(Image(encodedFile,company))
+            imageDao.save(ImageEntity(encodedFile,company))
         }
     }
 
@@ -244,12 +257,12 @@ class CompanyServices : ICompanyServices {
      * @param employeeId users id
      */
     fun removeEmployeeFromCompany(cid: Int, employeeId: Int){
-        userCompanyRepository.deleteAllByCompanyAndUserAndRole(cid, employeeId)
-        appointmentRepository.deleteAppointmentByDateAndEmployee(employeeId,getCurrentTime(),getCurrentDate())
+        userCompanyDao.deleteAllByCompanyAndUserAndRole(cid, employeeId)
+        appointmentDao.deleteAppointmentByDateAndEmployee(employeeId,getCurrentTime(),getCurrentDate())
     }
 
     override fun getSearchedCompanies(search: String?): List<CompanyOutputDto>?{
         if(search == "null") return getAllCompanies()
-        return companyRepository.getCompanyBySearch("%${search}%")?.map { CompanyOutputDto(it) }
+        return companyDao.getCompanyBySearch("%${search}%")?.map { CompanyOutputDto(it) }
     }
 }

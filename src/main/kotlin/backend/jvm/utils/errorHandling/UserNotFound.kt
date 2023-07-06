@@ -37,3 +37,6 @@ class AlreadyCompanyManager: Exception("Already Company Manager")
 
 @ResponseStatus(code = HttpStatus.NOT_FOUND, reason = "No employee found")
 class EmployeeNotFound: Exception("No employee found")
+
+@ResponseStatus(code = HttpStatus.BAD_REQUEST, reason = "Invalid Invalid address")
+class InvalidAddress: Exception("Invalid Address")

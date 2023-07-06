@@ -1,8 +1,12 @@
 package backend.jvm.services.interfaces
 
-import backend.jvm.model.Company
-import backend.jvm.services.dto.*
-import java.util.*
+import backend.jvm.model.appointment.AppointmentOutputDto
+import backend.jvm.model.company.CompanyEntity
+import backend.jvm.model.company.CompanyInputDto
+import backend.jvm.model.company.CompanyOutputDto
+import backend.jvm.model.day.DayOutputDto
+import backend.jvm.model.service.ServiceOutputDto
+import backend.jvm.model.vacation.VacationOutputDto
 
 interface ICompanyServices {
 
@@ -28,7 +32,7 @@ interface ICompanyServices {
 
     fun changeAddress(id: Int, address: String)
 
-    fun changeDescription(id: Int, description: String): Company
+    fun changeDescription(id: Int, description: String): CompanyEntity
 
     fun getAllCompanies(): List<CompanyOutputDto>
 

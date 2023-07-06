@@ -1,10 +1,10 @@
 package backend.jvm.controllers
 
 import backend.jvm.services.AppointmentServices
-import backend.jvm.services.dto.AppointmentInputDto
-import backend.jvm.services.dto.AppointmentOutputDto
-import backend.jvm.services.dto.ServiceOutputDto
-import backend.jvm.services.dto.UserOutputDto
+import backend.jvm.model.appointment.AppointmentInputDto
+import backend.jvm.model.appointment.AppointmentOutputDto
+import backend.jvm.model.service.ServiceOutputDto
+import backend.jvm.model.user.UserOutputDto
 import backend.jvm.utils.RoleManager
 import backend.jvm.utils.errorHandling.*
 import org.springframework.beans.factory.annotation.Autowired

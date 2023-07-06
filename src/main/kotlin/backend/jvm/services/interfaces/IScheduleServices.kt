@@ -1,9 +1,7 @@
 package backend.jvm.services.interfaces
 
-import backend.jvm.services.dto.DayOutputDto
-import backend.jvm.services.dto.ScheduleInputDto
-import backend.jvm.services.dto.ScheduleOutputDto
-import backend.jvm.services.dto.VacationOutputDto
+import backend.jvm.model.schedule.ScheduleInputDto
+import backend.jvm.model.schedule.ScheduleOutputDto
 
 interface IScheduleServices {
     fun addSchedule(schedule: ScheduleInputDto): ScheduleOutputDto
