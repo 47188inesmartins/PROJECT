@@ -21,6 +21,7 @@ class EmailSenderService {
         val emailContent = EmailMessages.validateAccount(recipientEmail)
         helper.setTo(recipientEmail)
         helper.setSubject("Activate account")
+
         helper.setText(emailContent, true)
         javaMailSender.send(message)
     }

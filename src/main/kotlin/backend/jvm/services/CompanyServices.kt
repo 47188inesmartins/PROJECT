@@ -273,7 +273,7 @@ class CompanyServices : ICompanyServices {
         if(token == null) return  allCompanies?.map { CompanyOutputDto(it) }
         val user = userDao.getUserByToken(UUID.fromString(token))?: throw UserNotFound()
         val userLocation = Geolocation(user.latitude,user.longitude)
-        return getCompaniesByUserLocation(userLocation,allCompanies!!,false).map { CompanyOutputDto(it) }
+        return getCompaniesByUserLocation(userLocation,allCompanies!!,true).map { CompanyOutputDto(it) }
     }
 
     override fun getPersonalizedCompanies(token: String?): List<CompanyOutputDto>?{
@@ -285,7 +285,7 @@ class CompanyServices : ICompanyServices {
         val userLocation = Geolocation(user.latitude,user.longitude)
         val categoriesArray = user.interests.split(",").toTypedArray()
         val comps = companyDao.getCompaniesByCategory(categoriesArray)!!
-        return getCompaniesByUserLocation(userLocation,comps,true).map { CompanyOutputDto(it) }
+        return getCompaniesByUserLocation(userLocation,comps,false).map { CompanyOutputDto(it) }
     }
 
     /**
@@ -308,5 +308,43 @@ class CompanyServices : ICompanyServices {
             }
         }
         return nearCompanies
+    }
+
+    private fun mergeSort(list: List<Int>): List<Int> {
+        if (list.size <= 1) {
+            return list
+        }
+
+        val middle = list.size / 2
+        var left = list.subList(0,middle);
+        var right = list.subList(middle,list.size);
+
+        return merge(mergeSort(left), mergeSort(right))
+    }
+    private fun merge(left: List<Int>, right: List<Int>): List<Int>  {
+        var indexLeft = 0
+        var indexRight = 0
+        var newList : MutableList<Int> = mutableListOf()
+
+        while (indexLeft < left.count() && indexRight < right.count()) {
+            if (left[indexLeft] <= right[indexRight]) {
+                newList.add(left[indexLeft])
+                indexLeft++
+            } else {
+                newList.add(right[indexRight])
+                indexRight++
+            }
+        }
+
+        while (indexLeft < left.size) {
+            newList.add(left[indexLeft])
+            indexLeft++
+        }
+
+        while (indexRight < right.size) {
+            newList.add(right[indexRight])
+            indexRight++
+        }
+        return newList;
     }
 }

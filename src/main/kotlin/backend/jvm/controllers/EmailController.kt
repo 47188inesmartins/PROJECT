@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 
-/*
+
 @RestController
 class EmailController {
 
@@ -19,6 +19,6 @@ class EmailController {
 
     @PostMapping("/send-email")
     fun sendEmail(@RequestBody emailRequest: EmailSenderRequest) {
-        emailSenderService.(emailRequest.to, "/aa")
+        emailSenderService.sendValidationEmail("A")
     }
-}*/
+}
