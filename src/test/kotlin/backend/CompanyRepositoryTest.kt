@@ -1,7 +1,8 @@
 package backend
 
-import backend.jvm.model.Company
-import backend.jvm.repository.CompanyRepository
+import backend.jvm.model.company.CompanyEntity
+import backend.jvm.dao.CompanyDao
+import backend.jvm.utils.Geolocation
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,11 +17,12 @@ class CompanyRepositoryTest {
     lateinit var entityManager: TestEntityManager
 
     @Autowired
-    lateinit var companyRepository: CompanyRepository
+    lateinit var companyRepository: CompanyDao
 
     @Test
     fun `whenFindById_thenReturnCompany`() {
-        val company = Company(null, "111111111", "Rua do teste", "tester", "test", "testing", null, null, null)
+        val location = Geolocation(41.1579438,-8.629105299999999)
+        val company = CompanyEntity(location,null, "111111111", "Rua do teste", "tester", "test", "testing", null, null, null)
         entityManager.persist(company)
         entityManager.flush()
         val companyFound = companyRepository.findByIdOrNull(company.id)
@@ -29,7 +31,8 @@ class CompanyRepositoryTest {
 
     @Test
     fun `whenFindByNif_thenReturnCompany`() {
-        val company = Company(null, "111111111", "Rua do teste", "tester", "test", "testing", null, null, null)
+        val location = Geolocation(41.1579438,-8.629105299999999)
+        val company = CompanyEntity(location, null, "111111111", "Rua do teste", "tester", "test", "testing", null, null, null)
         entityManager.persist(company)
         entityManager.flush()
         val companyFound = companyRepository.findCompanyByNif(company.nif)
