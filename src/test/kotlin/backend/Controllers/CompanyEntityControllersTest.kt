@@ -1,75 +1,54 @@
 package backend.Controllers
 
+import backend.jvm.controllers.CompanyController
 import backend.jvm.services.CompanyServices
 import backend.jvm.model.company.CompanyOutputDto
-import io.mockk.every
+import backend.jvm.services.UserServices
+import backend.jvm.utils.pipeline.AuthenticationsInterceptor
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import org.junit.jupiter.api.Test
-/*
-@WebMvcTest
+import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.Mockito.`when`
+import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.springframework.test.web.servlet.ResultActions
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers
+
+
+@WebMvcTest(controllers = [CompanyController::class])
+@ExtendWith(SpringExtension::class)
 class CompanyEntityControllersTest(@Autowired val mockMvc: MockMvc) {
 
+    @Autowired
+    private lateinit var mock : MockMvc
 
     @MockBean
-  lateinit var companyServices: CompanyServices
+    lateinit var companyServices: CompanyServices
 
-  private val companyOutputDto = CompanyOutputDto(
-      id = 1,
-      nif = "123456789",
-      address = "rua teste",
-      name = "cabelos",
-      type = "cabeleireiro",
-      description = "Cabeleireiro",
-      null,
-      null,
-     null
-  )
-  @Test
-  fun getExistentCompanyWithoutAuth(){
-      every { companyServices.getCompanyById(1) } returns companyOutputDto
-      mockMvc.perform(get("/company/1"))
-          .andExpect(status().isOk)
-          .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-          //.andExpect(status().isUnauthorized)
-  }
+    // on purpose because we need to create a MockBean to all dependencies
+    @MockBean
+    lateinit var userServices: UserServices
 
-/*  @Test
-  fun `create a Company`(){
-      val managerUser = UserInputDto(
-              "managerTest@gmail.com",
-              "testpass@123",
-              "manager",
-              "2000-01-01",
-              null,
-              null,
-              null,
-              null,
-              null
-          )
-          val addUser = userServices.addUser(managerUser)
-          val company = CompanyInputDto(
-              "12345678",
-              "rua adelaide",
-              "corte e costura",
-              "cabeleireiro",
-              "cabeleireiro",
-              null,
-              null
-          )
-      val jsonObject = objectMapper.writeValueAsString(company)
-      mockMvc.perform(
-          MockMvcRequestBuilders.post("/company")
-              .contentType(MediaType.APPLICATION_JSON)
-              .content(jsonObject))
-              .andExpect(MockMvcResultMatchers.status().isUnauthorized)
-  }*/
+    @MockBean
+    lateinit var auth: AuthenticationsInterceptor
+
+    private val mapper = jacksonObjectMapper()
+
+      @Test
+      fun getExistentCompanyWithoutAuth(){
+          //given
+          val company = CompanyOutputDto(1,"123454081","Rua Actriz Palmira Bastos,Porto,Portugal","Cabelos","BEAUTY","Cabelos lindos e loiros e impecaveis",null,null,null,null)
+          //when
+          `when`(companyServices.getCompanyById(1)).thenReturn(company)
+          val result: ResultActions = mockMvc.perform(MockMvcRequestBuilders.get("/company/1"))
+          //then
+          result.andExpect(MockMvcResultMatchers.status().`is`(200))
+      }
 }
- */
+
 
 

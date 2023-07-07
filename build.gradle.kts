@@ -33,7 +33,6 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("org.springframework.security:spring-security-core:5.7.3")
 	implementation(group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version = "1.5.+")
-	implementation ("net.bytebuddy:byte-buddy:1.11.10")
 
 
 	// for JDBI
@@ -44,8 +43,7 @@ dependencies {
 	implementation("org.postgresql:postgresql:42.5.0")
 	implementation("javax.persistence:javax.persistence-api:2.2")
 	implementation ("org.springframework.boot:spring-boot-starter-validation")
-	testImplementation(kotlin("test"))
-	testImplementation ("com.h2database:h2:2.1.214")
+
 
 	// for Geocoder
 	implementation ("com.google.maps:google-maps-services:2.1.2")
@@ -65,9 +63,7 @@ dependencies {
 	implementation  ("commons-fileupload:commons-fileupload:1.4")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
-	testImplementation("org.junit.jupiter:junit-jupiter-engine")
-	testImplementation("org.junit.jupiter:junit-jupiter-api")
-	testImplementation("com.ninja-squad:springmockk:3.1.1")
+	testImplementation(kotlin("test"))
 }
 
 

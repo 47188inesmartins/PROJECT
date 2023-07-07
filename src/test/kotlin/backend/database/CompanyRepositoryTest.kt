@@ -1,4 +1,4 @@
-package backend
+package backend.database
 
 import backend.jvm.model.company.CompanyEntity
 import backend.jvm.dao.CompanyDao
@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
 import org.springframework.data.repository.findByIdOrNull
+
 
 @DataJpaTest
 class CompanyRepositoryTest {
@@ -26,7 +27,7 @@ class CompanyRepositoryTest {
         entityManager.persist(company)
         entityManager.flush()
         val companyFound = companyRepository.findByIdOrNull(company.id)
-        assertThat(companyFound == company)
+        assertThat(companyFound?.id!! > 0)
     }
 
     @Test

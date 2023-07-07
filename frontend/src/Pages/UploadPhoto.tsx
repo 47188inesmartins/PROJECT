@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Fetch } from '../Utils/useFetch';
+import { Fetch,HOST } from '../Utils/useFetch';
 import { useParams } from "react-router-dom";
+
 
 function UploadPhoto() {
     const [selectedFiles, setSelectedFiles] = useState([]);
@@ -23,7 +24,7 @@ function UploadPhoto() {
 
     const handleFileUpload = async () => {
         if (selectedFiles.length === 0) {
-            alert('Por favor, selecione pelo menos um arquivo.');
+            alert('please, select at least one file.');
             return;
         }
 
@@ -35,20 +36,19 @@ function UploadPhoto() {
             });
 
             console.log('FormData', formData);
-            const response = await fetch(`http://localhost:8000/api/company/${cid}/upload`, {
+            const response = await fetch(`${HOST}/company/${cid}/upload`, {
                 method: 'POST',
                 body: formData,
             });
 
             if (response.status === 200) {
-                alert('As imagens foram enviadas com sucesso');
+                alert('Images sent!');
                 window.location.href = '/';
-                console.log('Upload concluído', response);
             } else {
-                console.error('Erro durante o upload:', response.status);
+                console.error('Something went wrong', response.status);
             }
         } catch (error) {
-            console.error('Erro durante o upload:', error);
+            console.error('Something went wrong', error);
         }
     };
 
@@ -89,13 +89,13 @@ function UploadPhoto() {
                                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                             />
                         ) : (
-                            <span>Arraste e solte a imagem aqui ou selecione um arquivo</span>
+                            <span>Drag and drop an image here, or select a file.</span>
                         )}
                     </div>
                 ))}
             </div>
             <input type="file" accept="image/png, image/jpeg" onChange={handleFileSelect} multiple />
-            <button onClick={handleFileUpload}>Enviar</button>
+            <button onClick={handleFileUpload}>Send</button>
         </div>
     );
 }

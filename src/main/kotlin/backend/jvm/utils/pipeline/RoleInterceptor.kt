@@ -15,8 +15,7 @@ import org.springframework.web.servlet.ModelAndView
 
 @Component
 class RoleInterceptor (
-    val userServices: UserServices,
-    val userCompanyDao: UserCompanyDao
+    val userServices: UserServices
 ) : HandlerInterceptor {
 
     override fun postHandle(
