@@ -64,6 +64,7 @@ dependencies {
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation(kotlin("test"))
+	testImplementation ("com.h2database:h2:2.1.214")
 }
 
 

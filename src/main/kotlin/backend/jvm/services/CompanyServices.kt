@@ -87,10 +87,6 @@ class CompanyServices : ICompanyServices {
         return CompanyOutputDto(comp)
     }
 
-    private fun getCompanyCoordinates(street: String,city: String,country: String):Geolocation{
-        val getAddressInfo = AddressInformation(street,city,country)
-        return GeoCoder().getGeolocation(getAddressInfo) ?: throw InvalidAddress()
-    }
 
     /**
      * Deletes a company
@@ -289,25 +285,39 @@ class CompanyServices : ICompanyServices {
     }
 
     /**
-     * Gets the companies that has a distance of 5.5 kms of the user
-     * @param userLocation that containes the coordinates of the user address
+     * Gets the companies that has a distance of 6 kms of the user
+     * @param userLocation that contains the coordinates of the user address
      * @param companiesList the companies receive
-     * @param order true if we want to show all companies order by distance or only the companies nearby the user
+     * @param order true if we want to show all companies order by distance or false if only the companies nearby the user
      * @return nearby companies
      */
     private fun getCompaniesByUserLocation(userLocation: Geolocation, companiesList: List<CompanyEntity>,order:Boolean): List<CompanyEntity> {
-        val nearCompanies = mutableListOf<CompanyEntity>()
-        val distance = 5.5
+        val nearCompanies = mutableListOf<Pair<CompanyEntity,Double>>()
+        val distance = 6
         companiesList.forEach {company ->
             val companyLocation = Geolocation(company.latitude,company.longitude)
             val distanceUserComp = GeoCoder().calculateHaversineDistance(userLocation,companyLocation)
             if(distanceUserComp <= distance){
-                nearCompanies.add(0,company)
+                nearCompanies.add(0,Pair(company,distanceUserComp))
             }else{
-                if(order) nearCompanies.add(company)
+                if(order) nearCompanies.add(Pair(company,distanceUserComp))
             }
         }
-        return nearCompanies
+        nearCompanies.sortBy { it.second }
+        return nearCompanies.map { it.first }
+    }
+
+    /**
+     * With the address company its calculated  the coordinates
+     * @param street
+     * @param city
+     * @param country
+     * @return Geolocation returns an object with the latitude and longitude of the company
+     * @throws InvalidAddress if there's no coordinates for that address
+     */
+    private fun getCompanyCoordinates(street: String,city: String,country: String):Geolocation{
+        val getAddressInfo = AddressInformation(street,city,country)
+        return GeoCoder().getGeolocation(getAddressInfo) ?: throw InvalidAddress()
     }
 
     private fun mergeSort(list: List<Int>): List<Int> {
