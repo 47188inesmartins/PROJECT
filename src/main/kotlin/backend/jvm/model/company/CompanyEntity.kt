@@ -69,7 +69,9 @@ class CompanyEntity {
                 this.entities = listOf()
         }
 
-        constructor(coordinates: Geolocation,imageEntity:List<ImageEntity>?, nif: String, address: String, compName: String, compType: String, description: String, serviceEntity: List<ServiceEntity>?, schedule: ScheduleEntity?, usersDB: List<UserCompany>?){
+        constructor(
+            coordinates: Geolocation,
+            imageEntity:List<ImageEntity>?, nif: String, address: String, compName: String, compType: String, description: String, serviceEntity: List<ServiceEntity>?, schedule: ScheduleEntity?, usersDB: List<UserCompany>?){
                 this.nif = nif
                 this.address = address
                 this.name = compName

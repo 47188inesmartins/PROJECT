@@ -13,23 +13,47 @@ import { useEffect, useState } from "react";
 import { Navigate } from "react-router";
 import { LoggedInContextCookie } from "../Authentication/Authn";
 
+/*
+data class UserInputDto(
+        val email: String,
+        val password: String,
+        val name: String,
+        val birthday: String,
+        val availability: String?,
+        val street: String,
+        val city: String,
+        val country: String,
+        val companyId: Int?,
+        val services: List<Int>?,
+        val appointment: List<Int>?,
+        val unavailability: List<Int>?,
+        val interests: String,
+        val profilePic: ByteArray?
+){
+*/
+
+
 interface UserCredentials {
     name: string,
     birthday: string
     email: string,
     password: string,
     interests: string,
-    address: string
+    street: string,
+    city: string,
+    country: string,
 }
 
 export function Signup() {
     const [name, setName] = useState<string>("")
     const [birthday, setBirthday] = useState<string>("")
+    const [city, setCity] = useState<string>("")
+    const [country, setCountry] = useState<string>("")
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
     const categories = ['BEAUTY', 'LIFESTYLE', 'FITNESS', 'BUSINESS', 'EDUCATION', 'OTHERS'];
     const [interests, setInterests] = useState("");
-    const [address, SetAddress] = useState("");
+    const [street, setStreet] = useState("");
     const [data, setData] = useState(undefined);
     const [redirect, setRedirect] = useState(false);
     const [showPassword, setShowPassword] = useState(false); // Estado para controlar a exibição da senha
@@ -58,8 +82,12 @@ export function Signup() {
             email,
             password,
             interests,
-            address
+            street,
+            city,
+            country
         }
+
+        console.log("handle submit do sign up!")
 
         fetch(`/api/user`, {
             method: 'POST',
@@ -139,12 +167,36 @@ export function Signup() {
                                     id='formControlLg'
                                     type='email'
                                     size="lg"
-                                    value={address}
+                                    value={street}
                                     required={true}
                                     onChange={(e) => {
-                                        SetAddress(e.target.value)
+                                        setStreet(e.target.value)
                                         console.log(e.target.value)
                                     }}
+                                />
+
+                                <MDBInput
+                                    wrapperClass='mb-4 mx-5 w-100'
+                                    labelClass='text-white'
+                                    label='Country'
+                                    id='formControlLg'
+                                    type='text'
+                                    size="lg"
+                                    value={country}
+                                    required={true}
+                                    onChange={(e) => setCountry(e.target.value)}
+                                />
+
+                                <MDBInput
+                                    wrapperClass='mb-4 mx-5 w-100'
+                                    labelClass='text-white'
+                                    label='City'
+                                    id='formControlLg'
+                                    type='text'
+                                    size="lg"
+                                    value={city}
+                                    required={true}
+                                    onChange={(e) => setCity(e.target.value)}
                                 />
 
                                 <MDBInput

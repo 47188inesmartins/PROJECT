@@ -43,21 +43,6 @@ class CompanyController {
     @Autowired
     lateinit var userServices: UserServices
 
-    @GetMapping("/search")
-    fun searchForCompany(@RequestParam search: String?): ResponseEntity<List<CompanyOutputDto>> {
-        return try {
-            val requestAttributes = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes
-            val request = requestAttributes.request
-            val bearerToken = request.getHeader("Authorization")?.removePrefix("Bearer ")
-            val response = companyServices.getSearchedCompanies(search,bearerToken)
-            ResponseEntity
-                .status(HttpStatus.OK)
-                .header("Content-Type","application/json")
-                .body(response)
-        } catch (e: Exception) {
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Application error", e)
-        }
-    }
 
 
     @PostMapping
@@ -125,22 +110,6 @@ class CompanyController {
         } catch (e: Exception) {
             when(e){
                 is EntityNotFoundException ->  throw ResponseStatusException(HttpStatus.NOT_FOUND, "Company not found", e)
-                else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Something went wrong", e)
-            }
-        }
-    }
-
-    @RoleManager(["MANAGER","EMPLOYEE"])
-    @GetMapping("/nif")
-    fun findCompanyByNif(@RequestParam nif: String): ResponseEntity<CompanyOutputDto> {
-        return try {
-            val response = companyServices.getCompanyByNif(nif)
-            ResponseEntity
-                .status(200)
-                .body(response)
-        } catch (e: Exception) {
-            when(e) {
-                is CompanyNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "Company not found", e)
                 else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Something went wrong", e)
             }
         }
@@ -325,6 +294,22 @@ class CompanyController {
                 .body("delete successful")
         }catch(e: Exception){
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
+        }
+    }
+
+    @GetMapping("/search")
+    fun searchForCompany(@RequestParam search: String?): ResponseEntity<List<CompanyOutputDto>> {
+        return try {
+            val requestAttributes = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes
+            val request = requestAttributes.request
+            val bearerToken = request.getHeader("Authorization")?.removePrefix("Bearer ")
+            val response = companyServices.getSearchedCompanies(search,bearerToken)
+            ResponseEntity
+                .status(HttpStatus.OK)
+                .header("Content-Type","application/json")
+                .body(response)
+        } catch (e: Exception) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Application error", e)
         }
     }
 }
