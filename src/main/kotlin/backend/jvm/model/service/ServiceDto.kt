@@ -4,6 +4,7 @@ import backend.jvm.model.company.CompanyEntity
 import backend.jvm.model.user.UserEntity
 import java.sql.Time
 
+data class ServiceInputList(val services: List<ServiceInputDto>)
 data class ServiceInputDto(
     val serviceName: String,
     val duration: String,
@@ -25,6 +26,7 @@ data class ServiceInputDto(
     }
 }
 
+data class ServicesOutputList(val servicesCreated: List<String>)
 data class ServiceOutputDto(
     val id: Int,
     val serviceName: String,

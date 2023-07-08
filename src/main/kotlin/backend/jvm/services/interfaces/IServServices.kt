@@ -1,12 +1,10 @@
 package backend.jvm.services.interfaces
 
-import backend.jvm.model.service.ServiceEntity
-import backend.jvm.model.service.ServiceInputDto
-import backend.jvm.model.service.ServiceOutputDto
+import backend.jvm.model.service.*
 import java.time.Duration
 
 interface IServServices {
-    fun addService(service: ServiceInputDto, companyId: Int): ServiceOutputDto
+    fun addService(servicesInput: ServiceInputList, companyId: Int): ServicesOutputList
 
     fun getServiceById(id: Int): ServiceOutputDto
 

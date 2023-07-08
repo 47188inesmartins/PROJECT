@@ -1,10 +1,8 @@
 package backend.jvm.controllers
 
-import backend.jvm.model.service.ServiceEntity
 import backend.jvm.services.ServServices
 import backend.jvm.model.day.DayInputDto
-import backend.jvm.model.service.ServiceInputDto
-import backend.jvm.model.service.ServiceOutputDto
+import backend.jvm.model.service.*
 import backend.jvm.utils.RoleManager
 import jakarta.persistence.EntityNotFoundException
 import org.springframework.beans.factory.annotation.Autowired
@@ -23,9 +21,9 @@ class ServiceController {
     @Autowired
     lateinit var servServices: ServServices
 
-    @RoleManager(["MANAGER","EMPLOYEE"])
+    //@RoleManager(["MANAGER","EMPLOYEE"])
     @PostMapping("/company/{cid}")
-    fun addService(@RequestBody service: ServiceInputDto, @PathVariable cid: Int): ResponseEntity<ServiceOutputDto> {
+    fun addService(@RequestBody service: ServiceInputList, @PathVariable cid: Int): ResponseEntity<ServicesOutputList> {
         return try {
             val response = servServices.addService(service,cid)
             ResponseEntity.status(201)

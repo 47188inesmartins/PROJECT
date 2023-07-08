@@ -1,11 +1,9 @@
 package backend.jvm.services
 
-import backend.jvm.model.service.ServiceEntity
 import backend.jvm.model.ServiceDay
 import backend.jvm.dao.*
 import backend.jvm.model.day.DayInputDto
-import backend.jvm.model.service.ServiceInputDto
-import backend.jvm.model.service.ServiceOutputDto
+import backend.jvm.model.service.*
 import backend.jvm.services.interfaces.IServServices
 import backend.jvm.utils.errorHandling.InvalidUser
 import backend.jvm.utils.errorHandling.ScheduleNotFound
@@ -35,18 +33,23 @@ class ServServices : IServServices {
     lateinit var serviceDayDao : ServiceDayDao
 
 
-    override fun addService(service: ServiceInputDto, companyId: Int): ServiceOutputDto {
+    override fun addService(servicesInput: ServiceInputList, companyId: Int): ServicesOutputList {
+        val listService = servicesInput.services
         val schedule = scheduleDao.getScheduleByCompany_Id(companyId) ?: throw ScheduleNotFound()
         val days = dayDao.getDayByScheduleId(schedule.id)
         val company = companyDao.getReferenceById(companyId)
-        val users = service.users?.map{ userDao.getReferenceById(it) }
-        users?.forEach {
-            if(userCompanyDao.findByCompanyAndUser(company, it) == null) throw InvalidUser()
+
+        listService.forEach { service ->
+            val users = service.users?.map{ userDao.getReferenceById(it) }
+            users?.forEach {
+                if(userCompanyDao.findByCompanyAndUser(company, it) == null) throw InvalidUser()
+            }
+            val serv = service.mapToService(service,company,users)
+            val savedService = serviceDao.save(serv)
+            days.map { serviceDayDao.save(ServiceDay(it, savedService)) }
         }
-        val serv = service.mapToService(service,company,users)
-        val savedService = serviceDao.save(serv)
-        days.map { serviceDayDao.save(ServiceDay(it, savedService)) }
-        return ServiceOutputDto(savedService)
+        val listsServicesName = listService.map { it.serviceName }
+        return  ServicesOutputList(listsServicesName)
     }
 
     override fun getServiceById(id: Int): ServiceOutputDto {
