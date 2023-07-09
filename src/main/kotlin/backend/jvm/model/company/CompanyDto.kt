@@ -10,6 +10,7 @@ data class ServiceInfo(val id: Int, val name: String, val price: Double, val dur
 data class CompanyInputDto(
     val nif: String,
     val street: String,
+    val phone: String,
     val city: String,
     val country: String,
     val name: String,
@@ -20,6 +21,7 @@ data class CompanyInputDto(
 ){
     fun mapToCompanyDto(coordinates: Geolocation, dto: CompanyInputDto, service: List<ServiceEntity>?, users: List<UserCompany>?): CompanyEntity {
         return CompanyEntity(
+            dto.phone,
             coordinates,
             null,
             dto.nif,
@@ -38,6 +40,7 @@ data class CompanyOutputDto(
     val id: Int,
     val nif: String,
     val address: String,
+    val phone: String,
     val name: String,
     val type: String,
     val description: String,
@@ -49,6 +52,7 @@ data class CompanyOutputDto(
     constructor(companyEntity: CompanyEntity): this(
         id = companyEntity.id,
         nif = companyEntity.nif,
+        phone = companyEntity.phone,
         address = companyEntity.address,
         name = companyEntity.name,
         type = companyEntity.type,

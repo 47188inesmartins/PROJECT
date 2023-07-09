@@ -85,6 +85,9 @@ export function Home() {
                                                             <strong>{object.name}</strong>
                                                         </p>
                                                         <p>
+                                                            <u>Location: {object.address}</u>
+                                                        </p>
+                                                        <p>
                                                             <u>{object.description}</u>
                                                         </p>
                                                     </MDBCol>

@@ -53,13 +53,12 @@ export function CreatingCompany() {
     };
 
 
-    function FetchCreateCompany() {
-        const resp = Fetch("/company", "POST", companyData).response;
+    function fetchCreateCompany() {
+        const resp = SimpleFetch("/company", companyData,"POST");
 
         if (!resp) return <p>...loading...</p>;
 
         if (resp.status) {
-            setCreate(false);
             window.location.href = `/`;
             return <></>;
         }

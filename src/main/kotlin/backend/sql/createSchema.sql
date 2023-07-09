@@ -5,6 +5,7 @@ create schema if not exists public;
 create table if not exists COMPANY (
    id serial primary key,
    nif varchar(9) unique,
+   phone varchar(9),
    address varchar(40),
    latitude double precision,
    longitude double precision,

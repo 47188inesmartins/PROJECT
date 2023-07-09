@@ -37,6 +37,9 @@ class CompanyEntity {
         @Column(name = "name")
         val name: String
 
+        @Column(name = "phone")
+        val phone: String
+
         @Column(name = "type")
         val type : String
 
@@ -60,6 +63,7 @@ class CompanyEntity {
                 this.address = ""
                 this.name = ""
                 this.type = ""
+                this.phone = ""
                 this.description = ""
                 this.latitude = 0.0
                 this.longitude = 0.0
@@ -70,9 +74,11 @@ class CompanyEntity {
         }
 
         constructor(
+            phone: String,
             coordinates: Geolocation,
             imageEntity:List<ImageEntity>?, nif: String, address: String, compName: String, compType: String, description: String, serviceEntity: List<ServiceEntity>?, schedule: ScheduleEntity?, usersDB: List<UserCompany>?){
                 this.nif = nif
+                this.phone = phone
                 this.address = address
                 this.name = compName
                 this.type = compType

@@ -53,8 +53,9 @@ export function Fetch(url: string, method: string, requestBody: any = null): Fet
     return {response:content,error:error}
 }
 
-export function SimpleFetch(url:string , body = null, method:string = 'GET'){
+export function SimpleFetch(url:string , body: any = null, method:string = 'GET'){
     const token = React.useContext(LoggedInContextCookie).loggedInState.token;
+    const [response,setResponse] = useState(undefined)
     const authorization: { 'Content-Type': string; Authorization?: string; } = (token !== "")
         ? {'Content-Type': 'application/json', 'Authorization': `Bearer ${token} `}
         : {'Content-Type': 'application/json'};
@@ -65,9 +66,13 @@ export function SimpleFetch(url:string , body = null, method:string = 'GET'){
             body: JSON.stringify(body),
             headers: authorization
         })
-            .then(response => response.json())
+            .then(response =>{
+                const resp = response.json()
+                setResponse(resp)
+            })
             .catch(error => {
                 console.error('Ocorreu um erro:', error);
     });
 
+    return response
 }
