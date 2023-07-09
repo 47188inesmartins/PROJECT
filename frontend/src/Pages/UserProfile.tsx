@@ -70,19 +70,20 @@ export function ProfilePage() {
                                         }
                                     </MDBCardBody>
                                 </MDBCard>
-                                <MDBCard className="mb-4 mb-md-0">
-                                    <MDBCardBody>
-                                        {roleCheck?
-                                            <>
-                                                <MDBCardText className="mb-4">My wallet </MDBCardText>
-                                                <a href={`/company/profits`} className="mb-1"  style={{ fontSize: '1.2rem' }}>
-                                                    <MDBCardText> Check your profits </MDBCardText>
-                                                </a>
-                                            </> :
-                                            <></>
-                                        }
-                                    </MDBCardBody>
-                                </MDBCard>
+                                    {!roleCheck?
+                                        <>
+                                            <MDBCard className="mb-4 mb-md-0">
+                                                <MDBCardBody>
+                                                    <MDBCardText className="mb-4">My wallet </MDBCardText>
+                                                    <a href={`/company/profits`} className="mb-1"  style={{ fontSize: '1.2rem' }}>
+                                                        <MDBCardText> Check your profits </MDBCardText>
+                                                    </a>
+                                                </MDBCardBody>
+                                            </MDBCard>
+                                        </>
+                                        :
+                                        <></>
+                                    }
                             </MDBCol>
                             <MDBCol lg="8">
                                 <MDBCard className="mb-4">
@@ -119,7 +120,7 @@ export function ProfilePage() {
                                                 <MDBCardText>Address</MDBCardText>
                                             </MDBCol>
                                             <MDBCol sm="9">
-                                                <MDBCardText className="text-muted">{response.response.birthday}</MDBCardText>
+                                                <MDBCardText className="text-muted">{response.response.address}</MDBCardText>
                                             </MDBCol>
                                         </MDBRow>
                                     </MDBCardBody>

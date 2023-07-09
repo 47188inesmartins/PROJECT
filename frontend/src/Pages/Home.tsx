@@ -8,7 +8,8 @@ import {
     MDBRow,
 } from 'mdb-react-ui-kit';
 import { Fetch } from '../Utils/useFetch';
-import { Layout } from './Layout';
+import { Layout, LayoutRight } from './Layout';
+
 
 export function Home() {
     function getQueryParam(param) {
@@ -27,25 +28,17 @@ export function Home() {
 
     return (
         <div style={{ display: 'flex' }}>
-            <div
-                style={{
-                    position: 'fixed',
-                    top: 0,
-                    left: 0,
-                    bottom: 0,
-                    width: '200px',
-                    overflowY: 'auto',
-                }}
-            >
+
+            <div className="sidebar-left">
                 <Layout />
             </div>
 
             <div
                 className="list-container"
                 style={{
+                    flex: 1,
                     marginLeft: '200px',
                     marginRight: '200px',
-                    width: 'calc(100vw - 400px)',
                     overflowY: 'auto',
                 }}
             >
@@ -105,19 +98,7 @@ export function Home() {
                     </div>
                 )}
             </div>
-
-            <div
-                style={{
-                    position: 'fixed',
-                    top: 0,
-                    right: 0,
-                    bottom: 0,
-                    width: '200px',
-                    overflowY: 'auto',
-                }}
-            >
-                {/* Coloque aqui o conteúdo desejado */}
-            </div>
+            <LayoutRight />
         </div>
     );
 }

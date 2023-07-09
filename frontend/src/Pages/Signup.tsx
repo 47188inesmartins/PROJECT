@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-    MDBBtn,
     MDBContainer,
     MDBRow,
     MDBCol,
@@ -8,30 +7,10 @@ import {
     MDBCardBody,
     MDBInput,
     MDBIcon
-} from 'mdb-react-ui-kit';
+}from 'mdb-react-ui-kit';
 import { useEffect, useState } from "react";
-import { Navigate } from "react-router";
 import { LoggedInContextCookie } from "../Authentication/Authn";
-
-/*
-data class UserInputDto(
-        val email: String,
-        val password: String,
-        val name: String,
-        val birthday: String,
-        val availability: String?,
-        val street: String,
-        val city: String,
-        val country: String,
-        val companyId: Int?,
-        val services: List<Int>?,
-        val appointment: List<Int>?,
-        val unavailability: List<Int>?,
-        val interests: String,
-        val profilePic: ByteArray?
-){
-*/
-
+import {useParams} from "react-router-dom";
 
 interface UserCredentials {
     name: string,
@@ -57,6 +36,10 @@ export function Signup() {
     const [data, setData] = useState(undefined);
     const [redirect, setRedirect] = useState(false);
     const [showPassword, setShowPassword] = useState(false); // Estado para controlar a exibição da senha
+
+    const params = useParams()
+    const mode = params.mode
+
 
     const handleCategoryClick = (category) => {
         if (interests.includes(category)) {
@@ -87,8 +70,6 @@ export function Signup() {
             country
         }
 
-        console.log("handle submit do sign up!")
-
         fetch(`/api/user`, {
             method: 'POST',
             body: JSON.stringify(userCredentials),
@@ -116,10 +97,11 @@ export function Signup() {
 
     if (redirect) {
         const userId = data.id
-        console.log("datata", data)
-        console.log("userId", userId)
-        window.location.href = `user/${userId}/upload-pic`
-        return <></>;
+        if(mode === 'business') {
+            window.location.href = `user/${userId}/upload-pic`
+            return <></>;
+        }
+
     }
 
     return (
@@ -213,55 +195,59 @@ export function Signup() {
                                         console.log(e.target.value)
                                     }}
                                 />
-
-                                <div className='position-relative'>
-                                    <MDBInput
-                                        wrapperClass='mb-4 mx-5 w-100'
-                                        labelClass='text-white'
-                                        label='Password'
-                                        id='formControlLg'
-                                        type={showPassword ? 'text' : 'password'} // Alterna entre texto e senha
-                                        size="lg"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                    />
-                                    <MDBIcon
-                                        icon={showPassword ? 'eye-slash' : 'eye'} // Ícone do olho aberto ou fechado
-                                        className='position-absolute top-50 end-0 translate-middle-y pe-3'
-                                        style={{ cursor: 'pointer' }}
-                                        onClick={() => setShowPassword(!showPassword)} // Alterna a exibição da senha ao clicar no ícone
-                                    />
+                                <div className="mb-4">
+                                    <div className="position-relative">
+                                        <input
+                                            className="form-control form-control-lg"
+                                            type={showPassword ? "text" : "password"}
+                                            value={password}
+                                            onChange={(e) => setPassword(e.target.value)}
+                                        />
+                                        <MDBIcon
+                                            icon={showPassword ? "eye-slash" : "eye"}
+                                            className="position-absolute top-50 end-0 translate-middle-y pe-3 text-dark"
+                                            style={{ cursor: "pointer" }}
+                                            onClick={() => setShowPassword(!showPassword)}
+                                        />
+                                    </div>
+                                    <label className="text-white mt-2">Password</label>
                                 </div>
 
-                                <a>What are your interests?</a>
+                                <br />
 
                                 <div>
-                                    {categories.map((category) => (
-                                        <button
-                                            key={category}
-                                            onClick={() => handleCategoryClick(category)}
-                                            style={{
-                                                backgroundColor: interests.includes(category) ? "pink" : "white",
-                                                padding: "8px 16px",
-                                                border: "1px solid pink",
-                                                borderRadius: "4px",
-                                                marginRight: "8px",
-                                                marginBottom: "8px",
-                                                cursor: "pointer",
-                                            }}
-                                        >
-                                            {category}
-                                        </button>
-                                    ))}
+                                    <a>What are your interests?</a>
+
+                                    <div className="mb-3">
+                                        {categories.map((category) => (
+                                            <button
+                                                key={category}
+                                                onClick={() => handleCategoryClick(category)}
+                                                className="btn btn-outline-dark me-2 mb-2"
+                                                style={{
+                                                    backgroundColor: interests.includes(category) ? "pink" : "white",
+                                                }}
+                                            >
+                                                {category}
+                                            </button>
+                                        ))}
+                                    </div>
                                 </div>
+
+                                <div className="mt-4">
+                                    <button
+                                        className="btn btn-outline-light btn-lg px-5"
+                                        type="submit"
+                                        onClick={handleSubmit}
+                                    >
+                                        Signup
+                                    </button>
+                                </div>
+
                                 <br />
-                                <button className="btn btn-outline-light btn-lg px-5" type="submit"
-                                        onClick={handleSubmit}>Signup
-                                </button>
                                 <br />
                                 <div>
-                                    <p className="mb-0">Already have an account? <a href="/login"
-                                                                                    className="text-white-50 fw-bold">Login</a></p>
+                                    <p className="mb-0">Already have an account? <a href="/login" className="text-white-50 fw-bold">Login</a></p>
                                 </div>
                             </MDBCardBody>
                         </MDBCard>

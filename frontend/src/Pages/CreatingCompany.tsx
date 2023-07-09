@@ -1,8 +1,7 @@
-import * as React from "react";
-import { useState } from "react";
-import { Fetch } from "../Utils/useFetch";
+import React, { useState } from "react";
+import {Fetch, SimpleFetch} from "../Utils/useFetch";
+import { Dropdown, Button } from "react-bootstrap";
 import "../Style/CreatingCompany.css";
-import { Dropdown } from "react-bootstrap";
 
 interface CompanyInputDto {
     nif: string;
@@ -13,17 +12,36 @@ interface CompanyInputDto {
 }
 
 export function CreatingCompany() {
-    const [companyName, setCompanyName] = useState<string>("");
-    const [businessType, setBusinessType] = useState<string>("");
-    const [address, setAddress] = useState<string>("");
-    const [nif, setNif] = useState<string>("");
-    const [description, setDescription] = useState<string>("");
-    const [create, setCreate] = useState<boolean>(false);
+    const [companyName, setCompanyName] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState("");
+    const [address, setAddress] = useState("");
+    const [nif, setNif] = useState("");
+    const [city, setCity] = useState("");
+    const [country, setCountry] = useState("");
+    const [description, setDescription] = useState("");
     const categories = ["BEAUTY", "LIFESTYLE", "FITNESS", "BUSINESS", "OTHERS", "EDUCATION"];
     const [selectedCategory, setSelectedCategory] = useState("");
+    const [additionalDetails, setAdditionalDetails] = useState<string[]>([]);
+    const [create, setCreate] = useState<string[]>([]);
 
-    const handleCategorySelect = (category) => {
+    const handleCategorySelect = (category: string) => {
         setSelectedCategory(category);
+    };
+
+    const handleAddDetail = () => {
+        setAdditionalDetails([...additionalDetails, ""]);
+    };
+
+    const handleDetailChange = (index: number, value: string) => {
+        const updatedDetails = [...additionalDetails];
+        updatedDetails[index] = value;
+        setAdditionalDetails(updatedDetails);
+    };
+
+    const handleRemoveDetail = (index: number) => {
+        const updatedDetails = [...additionalDetails];
+        updatedDetails.splice(index, 1);
+        setAdditionalDetails(updatedDetails);
     };
 
     const companyData: CompanyInputDto = {
@@ -34,13 +52,6 @@ export function CreatingCompany() {
         description: description,
     };
 
-    const handleCancel = () => {
-        window.location.href = "/";
-    };
-
-    const handleCreate = () => {
-        setCreate(true);
-    };
 
     function FetchCreateCompany() {
         const resp = Fetch("/company", "POST", companyData).response;
@@ -70,124 +81,166 @@ export function CreatingCompany() {
         );
     };
 
+    const MAX_DESCRIPTION_LENGTH = 200;
+
     return (
-        <div style={{ backgroundColor: "#0e4378" }}>
-            {!create ? (
-                <section className="vh-100 gradient-custom">
-                    <div className="container py-5 h-100">
-                        <div className="row d-flex justify-content-center align-items-center h-100">
-                            <div className="col-12 col-md-8 col-lg-6 col-xl-5">
-                                <div className="card bg-pink text-dark" style={{ borderRadius: "1rem" }}>
-                                    <div className="card-body p-5 text-center">
-                                        <div className="mb-md-5 mt-md-4 pb-5">
-                                            <h2 className="fw-bold mb-2 text-uppercase">Register your company on our website!</h2>
-                                            <div className="form-outline form-white mb-4">
-                                                <input
-                                                    required={true}
-                                                    type="text"
-                                                    id="typeEmailX"
-                                                    className="form-control form-control-lg"
-                                                    value={companyName}
-                                                    onChange={(e) => setCompanyName(e.target.value)}
-                                                />
-                                                <label className="form-label" htmlFor="typeEmailX">
-                                                    Company name
-                                                </label>
-                                            </div>
-                                            <div className="form-outline form-white mb-4">
-                                                <Dropdown>
-                                                    <Dropdown.Toggle variant="secondary">
-                                                        {selectedCategory ? selectedCategory : "Select a category"}
-                                                    </Dropdown.Toggle>
-                                                    <Dropdown.Menu>
-                                                        {categories.map((category) => (
-                                                            <Dropdown.Item
-                                                                key={category}
-                                                                active={category === selectedCategory}
-                                                                onClick={() => handleCategorySelect(category)}
-                                                            >
-                                                                {category}
-                                                            </Dropdown.Item>
-                                                        ))}
-                                                    </Dropdown.Menu>
-                                                </Dropdown>
-                                                <label className="form-label" htmlFor="typePasswordX">
-                                                    Type of business
-                                                </label>
-                                            </div>
-                                            <div className="form-outline form-white mb-4">
-                                                <input
-                                                    required={true}
-                                                    type="text"
-                                                    id="typePasswordX"
-                                                    className="form-control form-control-lg"
-                                                    value={address}
-                                                    onChange={(e) => setAddress(e.target.value)}
-                                                />
-                                                <label className="form-label" htmlFor="typePasswordX">
-                                                    Address
-                                                </label>
-                                            </div>
-                                            <div className="form-outline form-white mb-4">
-                                                <input
-                                                    required={true}
-                                                    type="text"
-                                                    id="typePasswordX"
-                                                    className="form-control form-control-lg"
-                                                    value={nif}
-                                                    onChange={(e) => setNif(e.target.value)}
-                                                    pattern="[0-9]{0,9}"
-                                                    maxLength={9}
-                                                />
-                                                <label className="form-label" htmlFor="typePasswordX">
-                                                    NIF
-                                                </label>
-                                            </div>
-                                            <div className="form-outline form-white mb-4">
-                                                <input
-                                                    required={true}
-                                                    type="text"
-                                                    id="typePasswordX"
-                                                    className="form-control form-control-lg"
-                                                    value={description}
-                                                    onChange={(e) => setDescription(e.target.value)}
-                                                />
-                                                <label className="form-label" htmlFor="typePasswordX">
-                                                    Description
-                                                </label>
-                                            </div>
-
-                                            <button
-                                                className="btn btn-outline-light btn-lg px-5"
-                                                type="submit"
-                                                onClick={handleCreate}
-                                                style={{ backgroundColor: "black" }}
-                                                disabled={!isFormValid()}
-                                            >
-                                                Next
-                                            </button>
-                                            <br />
-                                            <br />
-                                            <br />
-
-                                            <button
-                                                className="btn btn-outline-light btn-lg px-5"
-                                                type="submit"
-                                                onClick={handleCancel}
-                                                style={{ backgroundColor: "black" }}
-                                            >
-                                                Cancel
-                                            </button>
-                                        </div>
+        <div className="container rounded bg-white mt-5 mb-5">
+            <div className="row">
+                <div className="col-md-5 border-right">
+                    <div className="p-3 py-5">
+                        <div className="d-flex justify-content-between align-items-center mb-3">
+                            <h4 className="text-right" style={{ color: "black" }}>
+                                Register your company
+                            </h4>
+                        </div>
+                        <div className="row mt-3">
+                            <div className="col-md-12">
+                                <label className="labels">Company Name</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    placeholder="Company Name"
+                                    value={companyName}
+                                    onChange={(e) => setCompanyName(e.target.value)}
+                                />
+                            </div>
+                            <div className="col-md-12">
+                                <label className="labels">Phone number</label>
+                                <input
+                                    type="number"
+                                    className="form-control"
+                                    placeholder="Phone number"
+                                    value={phoneNumber}
+                                    onChange={(e) => setPhoneNumber(e.target.value)}
+                                />
+                            </div>
+                            <div className="col-md-12">
+                                <label className="labels">NIF</label>
+                                <input
+                                    type="number"
+                                    className="form-control"
+                                    placeholder="NIF"
+                                    value={nif}
+                                    onChange={(e) => setNif(e.target.value)}
+                                />
+                            </div>
+                            <div className="col-md-12">
+                                <label className="labels">Country</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    placeholder="Country"
+                                    value={country}
+                                    onChange={(e) => setCountry(e.target.value)}
+                                />
+                            </div>
+                            <div className="col-md-12">
+                                <label className="labels">City</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    placeholder="City"
+                                    value={city}
+                                    onChange={(e) => setCity(e.target.value)}
+                                />
+                            </div>
+                            <div className="col-md-12">
+                                <label className="labels">Address</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    placeholder="Address"
+                                    value={address}
+                                    onChange={(e) => setAddress(e.target.value)}
+                                />
+                            </div>
+                            <div className="mb-3 dropdown-space"></div>
+                            <Dropdown>
+                                <Dropdown.Toggle
+                                    variant="primary"
+                                    id="category-dropdown"
+                                    className="form-control dropdown-toggle-text"
+                                >
+                                    {selectedCategory || "Select category"}
+                                </Dropdown.Toggle>
+                                <Dropdown.Menu>
+                                    {categories.map((category) => (
+                                        <Dropdown.Item
+                                            key={category}
+                                            onClick={() => handleCategorySelect(category)}
+                                        >
+                                            {category}
+                                        </Dropdown.Item>
+                                    ))}
+                                </Dropdown.Menu>
+                            </Dropdown>
+                            <div className="col-md-12">
+                                <label className="labels">Description</label>
+                                <textarea
+                                    className="form-control description-input"
+                                    placeholder="Description"
+                                    value={description}
+                                    onChange={(e) => setDescription(e.target.value)}
+                                    maxLength={MAX_DESCRIPTION_LENGTH}
+                                    rows={4}
+                                />
+                                <span className="text-muted">
+                                    {description.length}/{MAX_DESCRIPTION_LENGTH} characters
+                                </span>
+                            </div>
+                        </div>
+                        <div className="mt-5 text-center">
+                            <button
+                                className="btn btn-primary profile-button"
+                                type="button"
+                                disabled={!isFormValid()}
+                                onClick={fetchCreateCompany}
+                            >
+                                Create company
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div className="col-md-5">
+                    <div className="p-3 py-5">
+                        <div className="d-flex justify-content-between align-items-center experience">
+                            <span style={{ color: "black" }}>
+                                Add employees to your company
+                            </span>
+                            <button
+                                className="btn btn-outline-primary btn-sm"
+                                onClick={handleAddDetail}
+                            >
+                                <i className="fa fa-plus"></i>&nbsp; Employee
+                            </button>
+                        </div>
+                        <br />
+                        {additionalDetails.map((detail, index) => (
+                            <div className="col-md-12" key={index}>
+                                <label className="labels">Employee's emails</label>
+                                <div className="input-group">
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="Additional Detail"
+                                        value={detail}
+                                        onChange={(e) => handleDetailChange(index, e.target.value)}
+                                    />
+                                    <div className="input-group-append">
+                                        <button
+                                            className="btn btn-outline-danger"
+                                            type="button"
+                                            onClick={() => handleRemoveDetail(index)}
+                                        >
+                                            <i className="fa fa-trash"></i>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        ))}
                     </div>
-                </section>
-            ) : (
-                <FetchCreateCompany />
-            )}
+                </div>
+            </div>
         </div>
     );
 }

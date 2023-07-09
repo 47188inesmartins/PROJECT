@@ -60,7 +60,7 @@ function CompanyRole(props:{role:String,Text:String}) {
     }
     return(
         <>
-            e{!resp.response?
+            {!resp.response?
                 <div className="loading">
                     <div className="spinner-border" role="status">
                         <span className="sr-only">Loading...</span>

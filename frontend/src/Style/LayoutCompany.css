@@ -105,10 +105,7 @@ a {
    transition: all 0.1s ease 0s;
 } */
 
-.menu-item:hover {
-    background: #EEEEEE;
-    color: #3290B1;
-}
+
 
 .menu-item:nth-child(3) {
     -webkit-transition-duration: 180ms;

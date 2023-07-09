@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Fetch,HOST } from '../Utils/useFetch';
 import { useParams } from "react-router-dom";
+//import '../Style/UploadFile.css'
+import { Button } from "react-bootstrap";
 
 
 function UploadPhoto() {
@@ -56,14 +58,19 @@ function UploadPhoto() {
         event.preventDefault();
     };
 
-    return (
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    return(
+        <div className="image-uploader">
             <div
+                className="image-grid"
                 style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(2, 1fr)',
-                    gridGap: '10px',
-                    marginBottom: '20px',
+                    background: "#f8f9fa",
+                    border: "2px dashed #ced4da",
+                    borderRadius: "5px",
+                    padding: "20px",
+                    marginBottom: "20px",
+                    display: "flex",
+                    flexWrap: "wrap",
+                    justifyContent: "center",
                 }}
                 onDrop={handleFileDrop}
                 onDragOver={handleDragOver}
@@ -71,31 +78,49 @@ function UploadPhoto() {
                 {[...Array(4)].map((_, index) => (
                     <div
                         key={index}
+                        className="image-container"
                         style={{
-                            width: '150px',
-                            height: '150px',
-                            border: '2px dashed gray',
-                            borderRadius: '5px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            cursor: 'pointer',
+                            width: "200px",
+                            height: "200px",
+                            border: "2px dashed gray",
+                            borderRadius: "5px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            position: "relative",
+                            margin: "10px",
                         }}
                     >
+          <span className="file-icon" style={{ color: "gray", fontSize: "48px" }}>
+            <i className="far fa-file"></i>
+          </span>
                         {selectedFiles[index] ? (
                             <img
                                 src={URL.createObjectURL(selectedFiles[index])}
-                                alt={`Imagem ${index + 1}`}
-                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                alt={`Image ${index + 1}`}
+                                style={{ width: "100%", height: "100%", objectFit: "cover" }}
                             />
                         ) : (
-                            <span>Drag and drop an image here, or select a file.</span>
+                            <span
+                                className="drag-text"
+                                style={{
+                                    textAlign: "center",
+                                    fontSize: "16px",
+                                    fontWeight: "bold",
+                                }}
+                            >
+              Drop your file here
+            </span>
                         )}
                     </div>
                 ))}
             </div>
             <input type="file" accept="image/png, image/jpeg" onChange={handleFileSelect} multiple />
-            <button onClick={handleFileUpload}>Send</button>
+            <div className="button-container">
+                <Button variant="primary" size="lg" onClick={handleFileUpload}>
+                    Send
+                </Button>
+            </div>
         </div>
     );
 }

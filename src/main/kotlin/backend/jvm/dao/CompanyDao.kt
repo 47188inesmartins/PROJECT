@@ -35,7 +35,7 @@ interface CompanyDao : JpaRepository<CompanyEntity, Int>{
     fun changeDescription(@Param("id") id: Int, @Param("description") description: String): CompanyEntity
 
 
-    @Query(value = "select c.id,c.nif,c.address,c.name,c.type,c.description " +
+    @Query(value = "select c.id, c.nif, c.address, c.latitude, c.longitude, c.name, c.phone, c.type, c.description " +
             "from COMPANY C inner join USER_COMPANY UC on uc.company_id = c.id " +
             "and uc.user_id = :user_id and uc.role = :role",nativeQuery = true)
     fun getCompanyByUserIdAndRole(@Param("user_id") user: Int, @Param("role") role: String): List<CompanyEntity>

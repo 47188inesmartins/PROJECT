@@ -9,7 +9,6 @@ import {
 } from "mdb-react-ui-kit";
 import {Fetch} from "../Utils/useFetch";
 import {Layout} from "./Layout";
-import {LoggedInContextCookie} from "../Authentication/Authn";
 
 export function Search() {
 
@@ -18,9 +17,8 @@ export function Search() {
         return searchParams.get(param);
     }
 
-// Use o valor do parâmetro 'search' aqui
     const searchValue = getQueryParam('search');
-    console.log(searchValue); // Saída: "abcdefg"
+    console.log(searchValue);
     var response = null
     if (searchValue == null) {
         const response =  Fetch(`/company/search`, "GET");
@@ -104,7 +102,6 @@ function SearchBar() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        //  onSearch(searchTerm);
     };
 
     return (
