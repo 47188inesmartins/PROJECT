@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {Fetch, SimpleFetch} from "../Utils/useFetch";
+import { Fetch, SimpleFetch } from "../Utils/useFetch";
 import { Dropdown, Button } from "react-bootstrap";
 import "../Style/CreatingCompany.css";
 
@@ -22,7 +22,42 @@ export function CreatingCompany() {
     const categories = ["BEAUTY", "LIFESTYLE", "FITNESS", "BUSINESS", "OTHERS", "EDUCATION"];
     const [selectedCategory, setSelectedCategory] = useState("");
     const [additionalDetails, setAdditionalDetails] = useState<string[]>([]);
-    const [create, setCreate] = useState<string[]>([]);
+    const [startDay, setStartDay] = useState("");
+    const [endDay, setEndDay] = useState("");
+    const daysOfWeek = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+    const [schedule, setSchedule] = useState(
+        daysOfWeek.map(day => ({
+            weekDays: day,
+            beginHour: '',
+            endHour: ''
+        }))
+    );
+    const [lunchBreak, setLunchBreak] = useState({ beginHour: '', endHour: '' });
+
+    const handleOptionClick = (value) => {
+        setSelectedValue(
+            value
+            //  convertMinutesToHHMMSS(value)
+        );
+        setIsOpen(false);
+    };
+
+
+    const renderOptions = () => {
+        const options = [];
+        for (let i = 1; i <= 200; i++) {
+            options.push(
+                <div
+                    key={i}
+                    className="dropdown-option"
+                    onClick={() => handleOptionClick(i)}
+                >
+                    {i} minutes
+                </div>
+            );
+        }
+        return options;
+    };
 
     const handleCategorySelect = (category: string) => {
         setSelectedCategory(category);
@@ -52,9 +87,8 @@ export function CreatingCompany() {
         description: description,
     };
 
-
     function fetchCreateCompany() {
-        const resp = SimpleFetch("/company", companyData,"POST");
+        const resp = SimpleFetch("/company", companyData, "POST");
 
         if (!resp) return <p>...loading...</p>;
 
@@ -70,13 +104,31 @@ export function CreatingCompany() {
         }
     }
 
+    const handleTimeChange = (index, field, value) => {
+        setSchedule(prevSchedule => {
+            const updatedSchedule = [...prevSchedule];
+            updatedSchedule[index][field] = value;
+            return updatedSchedule;
+        });
+    };
+
+    const [isOpen, setIsOpen] = useState(false);
+    const [selectedValue, setSelectedValue] = useState(null);
+
+
+    const handleDropdownToggle = () => {
+        setIsOpen(!isOpen);
+    };
+
     const isFormValid = () => {
         return (
             companyName.length >= 3 &&
             selectedCategory.length >= 3 &&
             address.length >= 3 &&
             nif.length === 9 &&
-            description.length >= 3
+            description.length >= 3 &&
+            startDay.length >= 3 &&
+            endDay.length >= 3
         );
     };
 
@@ -85,7 +137,7 @@ export function CreatingCompany() {
     return (
         <div className="container rounded bg-white mt-5 mb-5">
             <div className="row">
-                <div className="col-md-5 border-right">
+                <div className="col-md-4 border-right">
                     <div className="p-3 py-5">
                         <div className="d-flex justify-content-between align-items-center mb-3">
                             <h4 className="text-right" style={{ color: "black" }}>
@@ -179,33 +231,33 @@ export function CreatingCompany() {
                                     className="form-control description-input"
                                     placeholder="Description"
                                     value={description}
-                                    onChange={(e) => setDescription(e.target.value)}
+                                    onChange={(e) =>setDescription(e.target.value)}
                                     maxLength={MAX_DESCRIPTION_LENGTH}
                                     rows={4}
                                 />
                                 <span className="text-muted">
-                                    {description.length}/{MAX_DESCRIPTION_LENGTH} characters
-                                </span>
+                  {description.length}/{MAX_DESCRIPTION_LENGTH} characters
+                </span>
                             </div>
                         </div>
-                        <div className="mt-5 text-center">
-                            <button
-                                className="btn btn-primary profile-button"
-                                type="button"
-                                disabled={!isFormValid()}
-                                onClick={fetchCreateCompany}
-                            >
-                                Create company
-                            </button>
-                        </div>
+                    </div>
+                    <div className="mt-5 text-center">
+                        <button
+                            className="btn btn-primary profile-button"
+                            type="button"
+                            disabled={!isFormValid()}
+                            onClick={fetchCreateCompany}
+                        >
+                            Create company
+                        </button>
                     </div>
                 </div>
-                <div className="col-md-5">
+                <div className="col-md-4">
                     <div className="p-3 py-5">
                         <div className="d-flex justify-content-between align-items-center experience">
-                            <span style={{ color: "black" }}>
-                                Add employees to your company
-                            </span>
+              <span style={{ color: "black" }}>
+                Add employees to your company
+              </span>
                             <button
                                 className="btn btn-outline-primary btn-sm"
                                 onClick={handleAddDetail}
@@ -237,6 +289,91 @@ export function CreatingCompany() {
                                 </div>
                             </div>
                         ))}
+                    </div>
+                </div>
+                <div className="col-md-4">
+                    <div className="p-3 py-5">
+                        <div className="d-flex justify-content-between align-items-center mb-3">
+                            <h4 className="text-right" style={{ color: "black" }}>
+                                Company Schedule
+                            </h4>
+                        </div>
+                        <div className="row mt-3">
+                            <div className="table-container">
+                                <div>
+                                    <table className="schedule-table">
+                                        <tbody>
+                                        {schedule.map((day, index) => (
+                                            <tr key={index}>
+                                                <th style={{ color: "black" }}>{day.weekDays}</th>
+                                                <td>
+                                                    <input
+                                                        type="time"
+                                                        value={day.beginHour}
+                                                        onChange={(e) =>
+                                                            handleTimeChange(index, "beginHour", e.target.value)
+                                                        }
+                                                        step="600"
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <input
+                                                        type="time"
+                                                        value={day.endHour}
+                                                        min={day.beginHour}
+                                                        onChange={(e) =>
+                                                            handleTimeChange(index, "endHour", e.target.value)
+                                                        }
+                                                        step="600"
+                                                    />
+                                                </td>
+                                            </tr>
+                                        ))}
+                                        <tr>
+                                            <th style={{ color: "black" }}>Lunch Break</th>
+                                            <td>
+                                                <input
+                                                    type="time"
+                                                    value={lunchBreak.beginHour}
+                                                    onChange={(e) =>
+                                                        setLunchBreak({ ...lunchBreak, beginHour: e.target.value })
+                                                    }
+                                                    step="600"
+                                                />
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="time"
+                                                    value={lunchBreak.endHour}
+                                                    min={lunchBreak.beginHour}
+                                                    onChange={(e) =>
+                                                        setLunchBreak({ ...lunchBreak, endHour: e.target.value })
+                                                    }
+                                                    step="600"
+                                                />
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <br />
+                                <br />
+                                <div className="btn-group" style={{ marginLeft: "10px" }}>
+                                    <div className="dropdown">
+                                        <label style = {{color: 'black'}}>Duration between each block (in minutes):</label>
+                                        <br />
+                                        <button className="dropdown-toggle" onClick={handleDropdownToggle}>
+                                            {selectedValue ? `${selectedValue} minutes` : "Select a number"}
+                                        </button>
+                                        {isOpen && (
+                                            <div className="dropdown-options-container">
+                                                <div className="dropdown-options">{renderOptions()}</div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

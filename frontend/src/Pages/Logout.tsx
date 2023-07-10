@@ -3,12 +3,12 @@ import {Fetch} from "../Utils/useFetch";
 import {LoggedInContextCookie} from "../Authentication/Authn";
 import {useEffect, useState} from "react";
 import {Navigate} from "react-router";
-
+import Cookies from 'js-cookie';
 
 export function Logout() {
     const [redirect, setRedirect] = useState(false);
-    const token = React.useContext(LoggedInContextCookie).loggedInState.token;
-
+    //const token = React.useContext(LoggedInContextCookie).loggedInState.token;
+    const token = Cookies.get('name');
     fetch("/api/user/logout", {
         method: 'POST',
         headers: {
@@ -17,6 +17,7 @@ export function Logout() {
         }
     })
         .then(data => {
+            Cookies.remove('name');
             setRedirect(true);
         })
         .catch(error => {

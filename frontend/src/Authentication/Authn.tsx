@@ -2,9 +2,10 @@ import * as React from 'react';
 import {
     useState,
     createContext,
-    useEffect, useContext,
+    useEffect,
 } from 'react';
 import {fetchGetSession} from "./cookieHandler";
+
 
 export const LoggedInContextCookie = createContext({
     loggedInState: { auth: false, token: '', role: Array<any>('guest') },

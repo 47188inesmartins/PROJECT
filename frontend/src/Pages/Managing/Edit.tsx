@@ -3,10 +3,6 @@ import React, { useState } from "react";
 export function Edit (){
     const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
-
-
-
-
     const [schedule, setSchedule] = useState(
         daysOfWeek.map((day) => ({
             day,

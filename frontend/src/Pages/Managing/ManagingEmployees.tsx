@@ -24,12 +24,7 @@ export function ManagingEmployees() {
     const response = Fetch(`company/${cid}/employees`, "GET");
     console.log("Employees", response);
 
-    const handleDelete = (employeeId) => {
-       /* simpleFetch(`/api/company/${cid}/employees?id=${employeeId}`,
-            null,
-            'DELETE')
-        setRedirect(true);*/
-         console.log("handledelete", employeeId)
+     const handleDelete = (employeeId) => {
          fetch(`/api/company/${cid}/employees?id=${employeeId}`,{
              method: 'DELETE',
              headers: {
@@ -37,12 +32,12 @@ export function ManagingEmployees() {
                  'Authorization': `Bearer ${token}`
              }
          })
-             .then(response => {
-                 setRedirect(true);
-             })
-             .catch(error => {
-                 console.error('Ocorreu um erro:', error);
-             });
+         .then(response => {
+             setRedirect(true);
+         })
+         .catch(error => {
+             console.error('Ocorreu um erro:', error);
+         });
      };
 
      useEffect(() => {

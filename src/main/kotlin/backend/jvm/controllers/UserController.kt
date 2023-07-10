@@ -127,10 +127,7 @@ class UserController {
     ): ResponseEntity<Pair<String?, List<CompanyRole>>> {
         try {
              val cookies = request.cookies.first()
-
-
              val roles = userServices.getRolesByToken(cookies.value)
-
              val body = if(cookies == null)
                  Pair(null, listOf(CompanyRole()))
              else if(roles.isEmpty())

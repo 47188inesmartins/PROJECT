@@ -9,16 +9,35 @@ import {
 } from 'mdb-react-ui-kit';
 import { Fetch } from '../Utils/useFetch';
 import { Layout, LayoutRight } from './Layout';
+import {useParams} from "react-router-dom";
+import {LoggedInContextCookie} from "../Authentication/Authn";
+import Cookies from 'js-cookie';
 
 
 export function Home() {
+
+    const context = React.useContext(LoggedInContextCookie).loggedInState
+    const auth = context.auth
+    const role = context.role
+
+    const hasManager = role.some((user) => user.role === "MANAGER");
+    const hasEmployee = role.some((user) => user.role === "EMPLOYEE");
+    console.log("role", role)
+    console.log("has employee", hasEmployee)
+    console.log("has manager", hasManager)
+
+    const valorDoCookie = Cookies.get('name');
+    const rolesss = Cookies.get('roles');
+
+    console.log("token", valorDoCookie)
+    console.log("roles", rolesss)
+
     function getQueryParam(param) {
         const searchParams = new URLSearchParams(window.location.search);
         return searchParams.get(param);
     }
 
     const searchValue = getQueryParam('search');
-    console.log(searchValue); // Saída: "abcdefg"
 
     var response;
 
@@ -101,7 +120,11 @@ export function Home() {
                     </div>
                 )}
             </div>
-            <LayoutRight />
+            {hasManager || hasEmployee?
+                <LayoutRight />
+                :
+                <></>
+            }
         </div>
     );
 }
