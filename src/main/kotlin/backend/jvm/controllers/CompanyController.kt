@@ -7,6 +7,7 @@ import backend.jvm.model.appointment.AppointmentOutputDto
 import backend.jvm.model.company.CompanyInfo
 import backend.jvm.model.company.CompanyInputDto
 import backend.jvm.model.company.CompanyOutputDto
+import backend.jvm.model.day.DayInputDto
 import backend.jvm.model.day.DayOutputDto
 import backend.jvm.model.service.ServiceOutputDto
 import backend.jvm.model.user.CreatedUserOutput
@@ -43,15 +44,16 @@ class CompanyController {
     @Autowired
     lateinit var userServices: UserServices
 
+    data class addCompanyBody(val company: CompanyInputDto, val emails: UserEmails?, val days: List<DayInputDto>)
 
 
     @PostMapping
-    fun addCompany(@RequestBody company: CompanyInputDto): ResponseEntity<CompanyOutputDto> {
+    fun addCompany(@RequestBody addCompanyBody: addCompanyBody, @RequestParam duration: String): ResponseEntity<CompanyOutputDto> {
         return try {
             val requestAttributes = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes
             val request = requestAttributes.request
             val bearerToken = request.getHeader("Authorization")?.removePrefix("Bearer ")
-            val response = bearerToken?.let { companyServices.addCompany(it,company) }
+            val response = bearerToken?.let { companyServices.addCompany(it, addCompanyBody.company, addCompanyBody.emails?.emails, addCompanyBody.days, duration) }
             ResponseEntity
                 .status(201)
                 .body(response)
@@ -303,7 +305,7 @@ class CompanyController {
             val requestAttributes = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes
             val request = requestAttributes.request
             val bearerToken = request.getHeader("Authorization")?.removePrefix("Bearer ")
-            val response = companyServices.getSearchedCompanies(search,bearerToken)
+            val response = companyServices.getSearchedCompanies(bearerToken, search)
             ResponseEntity
                 .status(HttpStatus.OK)
                 .header("Content-Type","application/json")

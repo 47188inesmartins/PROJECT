@@ -74,7 +74,8 @@ class DayServices : IDayServices {
         val intervalBetween = Time.valueOf(interval)
         scheduleDao.updateBetweenInterval(schedule.id, intervalBetween)
         val daysDb = day.map { it.mapToDayDb(it, schedule, null) }
-        daysDb.forEach { dayDao.save(it) }
+        val savedDays = dayDao.saveAll(daysDb)
+        if(daysDb.size != savedDays.size) throw Exception("error saving opening days")
     }
 
     override fun updateBeginHour(id:Int,hour: String): Time {

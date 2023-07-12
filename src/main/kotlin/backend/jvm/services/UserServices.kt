@@ -32,8 +32,8 @@ class UserServices : IUserInterface {
     lateinit var appointmentDao: AppointmentDao
     @Autowired
     lateinit var companyDao: CompanyDao
-    @Autowired
-    lateinit var roleDao: RoleDao
+   /* @Autowired
+    lateinit var roleDao: RoleDao*/
     @Autowired
     lateinit var userCompanyDao: UserCompanyDao
     @Autowired
@@ -52,23 +52,15 @@ class UserServices : IUserInterface {
         if(userDao.getUsersByEmail(user.email) != null) throw EmailAlreadyExists()
 
         val coordinates = getUserCoordinates(user.street,user.city,user.country)
-
-        val servicesList = mutableListOf<ServiceEntity>()
-        val appList =  mutableListOf<AppointmentEntity>()
-
-        if(user.services != null ) user.services.forEach { servicesList.add(servicesRepository.findById(it).get()) }
-        if(user.appointment != null ) user.appointment.forEach { appList.add(appointmentDao.findById(it).get()) }
-        val role = roleDao.getRoleByName(UserRoles.CLIENT.name)
-
         val encodePassword = passwordEncoder.encode(user.password)
 
         val returnUser = userDao.save(
             user.mapToUser(
                 user,
                 encodePassword,
-                servicesList,
-                appList, null,
-                listOf(role), null, user.interests, user.profilePic,coordinates)
+                user.interests,
+                null,
+                coordinates)
         )
         return CreatedUserOutput(returnUser.id, returnUser.token)
     }
@@ -121,21 +113,27 @@ class UserServices : IUserInterface {
         }
     }
 
-    override fun addEmployees(companyId: Int, emails: List<String>){
-        val user = emails.map {email ->
+    override fun addEmployees(companyId: Int, emails: List<String>) {
+        val users = emails.map { email ->
             userDao.getUsersByEmail(email) ?: throw UserNotFound()
         }
         val company = companyDao.findAllById(companyId) ?: throw CompanyNotFound()
 
-        val newEmployees = user.filter {
-            userCompanyDao.getRoleByCompanyAndUser(companyId, it.id) != UserRoles.MANAGER.name
-            &&  userCompanyDao.getRoleByCompanyAndUser(companyId, it.id) != UserRoles.EMPLOYEE.name
+        val newEmployees = users.filter { user ->
+            userCompanyDao.getRoleByCompanyAndUser(companyId, user.id) != UserRoles.MANAGER.name
+                    && userCompanyDao.getRoleByCompanyAndUser(companyId, user.id) != UserRoles.EMPLOYEE.name
         }
 
-        newEmployees.forEach {
-            userCompanyDao.save(UserCompany(it, company, UserRoles.EMPLOYEE.name))
+        val savedEmployees = newEmployees.map { user ->
+            UserCompany(user, company, UserRoles.EMPLOYEE.name)
+        }
+
+        val savedEntities = userCompanyDao.saveAll(savedEmployees)
+        if (savedEntities.size != newEmployees.size) {
+            throw Exception("Error saving new employees")
         }
     }
+
 
     override fun getAllAppointmentsByUser(token: String): AppointmentsUserInfo {
         val user = userDao.getUserByToken(UUID.fromString(token))?: throw UserNotFound()
@@ -145,7 +143,7 @@ class UserServices : IUserInterface {
         val currentDate = getCurrentDate()
         val currentTime = getCurrentTime()
 
-        val (latterApp,soonerApp) = listAppointment.partition {
+        val (latterApp, soonerApp) = listAppointment.partition {
             it.appDate.before(currentDate) && it.appHour < currentTime
         }
         return AppointmentsUserInfo(mapToAppointmentsInfo(soonerApp),mapToAppointmentsInfo(latterApp))

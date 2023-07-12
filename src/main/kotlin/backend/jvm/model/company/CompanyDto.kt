@@ -4,8 +4,10 @@ import backend.jvm.model.*
 import backend.jvm.model.service.ServiceEntity
 import backend.jvm.utils.AddressUtils
 import backend.jvm.utils.Geolocation
+import jakarta.validation.constraints.Pattern
 
 data class ServiceInfo(val id: Int, val name: String, val price: Double, val duration: String)
+
 
 data class CompanyInputDto(
     val nif: String,
@@ -16,10 +18,9 @@ data class CompanyInputDto(
     val name: String,
     val type: String,
     val description: String,
-    val service: List<Int>?,
     val users: MutableList<Int>?
 ){
-    fun mapToCompanyDto(coordinates: Geolocation, dto: CompanyInputDto, service: List<ServiceEntity>?, users: List<UserCompany>?): CompanyEntity {
+    fun mapToCompanyEntity(coordinates: Geolocation, dto: CompanyInputDto): CompanyEntity {
         return CompanyEntity(
             dto.phone,
             coordinates,
@@ -29,9 +30,9 @@ data class CompanyInputDto(
             dto.name,
             dto.type,
             dto.description,
-            service,
             null,
-            users
+            null,
+            null
         )
     }
 }

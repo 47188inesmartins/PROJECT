@@ -20,13 +20,24 @@ interface UserDao: JpaRepository<UserEntity, Int> {
 
      fun getUsersByEmail (email: String): UserEntity?
 
-     @Query(value = "select * from sch_user where id not in " +
-             "(select user_id from unavailability where (date_end is null and date_begin =:date" +
-             "                                        and ((hour_begin  >= :beginHour and hour_begin < :endHour)" +
-             "                                        or (hour_end > :beginHour and hour_end <= :endHour)))" +
-             "        or (:date <= date_begin and :date >= date_end))" +
-             "and id in (select user_id from user_service where service_id = :id)", nativeQuery = true)
-     fun getAvailableEmployeesByService(@Param("id") serviceId: Int, @Param("date") date: Date, @Param("beginHour") beginHour: Time, @Param("endHour") endHour: Time): List<UserEntity>
+     @Query(value = "SELECT * FROM sch_user u " +
+             "WHERE u.id IN (" +
+             "   SELECT us.user_id FROM user_service us " +
+             "   WHERE us.service_id = :serviceId " +
+             ") " +
+             "AND u.id NOT IN (" +
+             "   SELECT ua.user_id FROM unavailability ua " +
+             "   WHERE (ua.date_end IS NULL AND ua.date_begin = :date " +
+             "       AND ((ua.hour_begin >= :beginHour AND ua.hour_begin < :endHour) " +
+             "       OR (ua.hour_end > :beginHour AND ua.hour_end <= :endHour))) " +
+             "       OR (:date BETWEEN ua.date_begin AND ua.date_end)" +
+             ")", nativeQuery = true)
+     fun getAvailableEmployeesByService(
+          @Param("serviceId") serviceId: Int,
+          @Param("date") date: Date,
+          @Param("beginHour") beginHour: Time,
+          @Param("endHour") endHour: Time
+     ): List<UserEntity>
 
      @Query(value = "update SCH_USER set password = :pass where id = :id returning name", nativeQuery = true)
      fun changePassword (@Param("pass") pass: String, @Param("id") id: Int): String

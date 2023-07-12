@@ -12,7 +12,7 @@ interface ICompanyServices {
 
     fun getSearchedCompanies(token: String?,search: String?): List<CompanyOutputDto>?
 
-    fun addCompany(token: String, company: CompanyInputDto): CompanyOutputDto
+  //  fun addCompany(token: String, company: CompanyInputDto): CompanyOutputDto
 
     fun deleteCompany(id: Int): Boolean
 

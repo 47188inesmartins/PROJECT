@@ -1,5 +1,5 @@
 package backend.jvm.services.interfaces
-
+/*
 import backend.jvm.model.Role
 
 interface IRoleServices {
@@ -10,4 +10,4 @@ interface IRoleServices {
 
     fun getRoleByToken(token: String): String
 
-}
+}*/

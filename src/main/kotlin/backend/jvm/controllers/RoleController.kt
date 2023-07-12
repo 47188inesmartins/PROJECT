@@ -1,7 +1,5 @@
 package backend.jvm.controllers
 
-import backend.jvm.model.Role
-import backend.jvm.services.RoleServices
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -14,7 +12,7 @@ import org.springframework.web.context.request.RequestContextHolder
 import org.springframework.web.context.request.ServletRequestAttributes
 import org.springframework.web.server.ResponseStatusException
 
-
+/*
 @RestController
 @RequestMapping(("/role"))
 class RoleController {
@@ -41,4 +39,4 @@ class RoleController {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
         }
     }
-}
+}*/

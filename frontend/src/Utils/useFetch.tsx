@@ -4,8 +4,9 @@ import {
     useEffect
 } from 'react';
 import {LoggedInContextCookie} from "../Authentication/Authn";
-export const HOST = "http://localhost:8000/api"
+import Cookies from 'js-cookie';
 
+export const HOST = "http://localhost:8000/api"
 export type FetchResponse = {
     response:any,
     error:any
@@ -54,7 +55,7 @@ export function Fetch(url: string, method: string, requestBody: any = null): Fet
 }
 
 export function SimpleFetch(url:string , body: any = null, method:string = 'GET'){
-    const token = React.useContext(LoggedInContextCookie).loggedInState.token;
+    const token =  Cookies.get('name');
     const [response,setResponse] = useState(undefined)
     const authorization: { 'Content-Type': string; Authorization?: string; } = (token !== "")
         ? {'Content-Type': 'application/json', 'Authorization': `Bearer ${token} `}

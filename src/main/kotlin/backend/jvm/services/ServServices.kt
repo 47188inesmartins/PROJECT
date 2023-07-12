@@ -33,7 +33,7 @@ class ServServices : IServServices {
     lateinit var serviceDayDao : ServiceDayDao
 
 
-    override fun addService(servicesInput: ServiceInputList, companyId: Int): ServicesOutputList {
+  /*  override fun addService(servicesInput: ServiceInputList, companyId: Int): ServicesOutputList {
         val listService = servicesInput.services
         val schedule = scheduleDao.getScheduleByCompany_Id(companyId) ?: throw ScheduleNotFound()
         val days = dayDao.getDayByScheduleId(schedule.id)
@@ -50,7 +50,39 @@ class ServServices : IServServices {
         }
         val listsServicesName = listService.map { it.serviceName }
         return  ServicesOutputList(listsServicesName)
+    }*/
+
+    override fun addService(servicesInput: ServiceInputList, companyId: Int): ServicesOutputList {
+        val listService = servicesInput.services
+        val schedule = scheduleDao.getScheduleByCompany_Id(companyId) ?: throw ScheduleNotFound()
+        val days = dayDao.getDayByScheduleId(schedule.id)
+        val company = companyDao.getReferenceById(companyId)
+
+        val userIds = listService.flatMap { it.users.orEmpty() }
+        val existingUsers = userDao.findAllById(userIds)
+        val existingUserIds = existingUsers.map { it.id }
+
+        val invalidUserIds = userIds.filter { it !in existingUserIds }
+        if (invalidUserIds.isNotEmpty()) {
+            throw InvalidUser()
+        }
+
+        val services = listService.map { service ->
+            val usersForService = service.users?.mapNotNull { userId -> existingUsers.find { it.id == userId } }
+            service.mapToService(service, company, usersForService)
+        }
+
+        val savedServices = serviceDao.saveAll(services)
+
+        val serviceDays = days.flatMap { day ->
+            savedServices.map { service -> ServiceDay(day, service) }
+        }
+        serviceDayDao.saveAll(serviceDays)
+
+        val listsServicesName = listService.map { it.serviceName }
+        return ServicesOutputList(listsServicesName)
     }
+
 
     override fun getServiceById(id: Int): ServiceOutputDto {
         val serv = serviceDao.getServiceDBById(id)

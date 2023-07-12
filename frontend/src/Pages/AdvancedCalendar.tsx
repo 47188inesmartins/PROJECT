@@ -22,13 +22,12 @@ const MyCalendar: React.FC = () => {
     const id = useParams().id
 
     const mapDataToEvents = (data: any[]): Event[] => {
-        if(!data) return
+        if (!data) return
         return data.map((item) => {
             const appDateParts = item.appDate.split('-').map(Number);
             const appBeginHourParts = item.appBeginHour.split(':').map(Number);
             const appEndHourParts = item.appEndHour.split(':').map(Number);
 
-            // temos de subtrair 1 ao mes  pois os meses sao indexados de 0 a 11
             const start = new Date(
                 appDateParts[0],
                 appDateParts[1] - 1,
@@ -68,11 +67,11 @@ const MyCalendar: React.FC = () => {
         backgroundColor: '#e4dcd3',
     };
 
-    const EventComponent: React.FC<{ event: Event }> = ({ event }) => {
+    const EventComponent: React.FC<{ event: Event }> = ({event}) => {
         const isSelected = selectedEvent === event;
         return (
             <div
-                style={{ background: isSelected ? '#87c293' : 'transparent' }}
+                style={{background: isSelected ? '#87c293' : 'transparent'}}
                 onClick={() => handleEventClick(event)}
             >
                 <div>{event.title}</div>
@@ -96,22 +95,33 @@ const MyCalendar: React.FC = () => {
         </div>
     ) : null;
 
-    const response = Fetch(`company/${id}/appointments-list`,'GET')
+    const response = Fetch(`company/${id}/appointments-list`, 'GET')
+    const calendarStyle1 = {
+        height: 500,
+        backgroundColor: 'lightgrey',
+        margin: '20px', // Ajuste as margens conforme necessÃ¡rio
+    };
+
+    const buttonStyle = {
+        borderRadius: '10px', // Borda mais arredondada
+        backgroundColor: 'blue',
+        color: 'white',
+        padding: '10px',
+    };
 
     return (
-
-        <div>
-            {response.response?
-            <>
+        <div style={{margin: '20px'}}>
+            {response.response ? (
+                <>
                     <Calendar
                         localizer={localizer}
                         events={mapDataToEvents(response.response)}
                         startAccessor="start"
                         endAccessor="end"
-                        style={calendarStyle}
+                        style={calendarStyle1}
                         components={{
                             event: EventComponent,
-                        }}
+                        }}z
                     />
                     <Modal
                         isOpen={modalIsOpen}
@@ -119,19 +129,20 @@ const MyCalendar: React.FC = () => {
                         contentLabel="Appointment Details"
                     >
                         {selectedEventInfo}
-                        <button onClick={closeModal}>Close</button>
+                        <button style={buttonStyle} onClick={closeModal}>
+                            Close
+                        </button>
                     </Modal>
-            </>:
-                    <Calendar
+                </>
+            ) : (
+                <Calendar
                     localizer={localizer}
                     startAccessor="start"
                     endAccessor="end"
-                    style={calendarStyle}
-                    />
-            }
+                    style={calendarStyle1}
+                />
+            )}
         </div>
-
     );
-};
-
+}
 export default MyCalendar;

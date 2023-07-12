@@ -1,5 +1,5 @@
 package backend.jvm.services
-
+/*
 import backend.jvm.model.Role
 import backend.jvm.dao.RoleDao
 import backend.jvm.services.interfaces.IRoleServices
@@ -29,4 +29,4 @@ class RoleServices : IRoleServices {
         return roleDao.getRoleByToken(uuid)
     }
 
-}
+}*/

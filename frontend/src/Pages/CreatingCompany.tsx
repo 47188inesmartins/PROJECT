@@ -1,38 +1,62 @@
-import React, { useState } from "react";
-import { Fetch, SimpleFetch } from "../Utils/useFetch";
-import { Dropdown, Button } from "react-bootstrap";
+import React, {useEffect, useState} from "react";
+import {Dropdown} from "react-bootstrap";
 import "../Style/CreatingCompany.css";
+import Cookies from 'js-cookie';
+import {convertMinutesToHHMMSS} from "../Utils/formater";
+
 
 interface CompanyInputDto {
-    nif: string;
-    address: string;
-    name: string;
-    type: string;
-    description: string;
+    name: string,
+    street: string,
+    phone: string,
+    city: string,
+    country: string,
+    type: string,
+    nif: string,
+    description: string
 }
 
 export function CreatingCompany() {
-    const [companyName, setCompanyName] = useState("");
-    const [phoneNumber, setPhoneNumber] = useState("");
-    const [address, setAddress] = useState("");
+    const [redirect, setRedirect] = useState<boolean>(false)
+    const [name, setName] = useState("");
+    const [phone, setPhone] = useState("");
+    const [street, setStreet] = useState("");
     const [nif, setNif] = useState("");
     const [city, setCity] = useState("");
     const [country, setCountry] = useState("");
     const [description, setDescription] = useState("");
     const categories = ["BEAUTY", "LIFESTYLE", "FITNESS", "BUSINESS", "OTHERS", "EDUCATION"];
-    const [selectedCategory, setSelectedCategory] = useState("");
-    const [additionalDetails, setAdditionalDetails] = useState<string[]>([]);
+    const [type, setType] = useState("");
+    const [employeeEmails, setEmployeeEmails] = useState<string[]>([]);
     const [startDay, setStartDay] = useState("");
     const [endDay, setEndDay] = useState("");
     const daysOfWeek = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+
     const [schedule, setSchedule] = useState(
         daysOfWeek.map(day => ({
             weekDays: day,
             beginHour: '',
-            endHour: ''
+            endHour: '',
+            intervalBegin:'',
+            intervalEnd:''
         }))
     );
     const [lunchBreak, setLunchBreak] = useState({ beginHour: '', endHour: '' });
+    const token =  Cookies.get('name');
+
+    interface DayInputDto {
+        weekDays: string;
+        beginHour: string;
+        endHour: string;
+        intervalBegin: string;
+        intervalEnd: string;
+    }
+
+    interface AddCompanyRequest {
+        company: CompanyInputDto;
+        emails: string[] | null;
+        days: DayInputDto[];
+    }
 
     const handleOptionClick = (value) => {
         setSelectedValue(
@@ -60,57 +84,93 @@ export function CreatingCompany() {
     };
 
     const handleCategorySelect = (category: string) => {
-        setSelectedCategory(category);
+        setType(category);
     };
 
     const handleAddDetail = () => {
-        setAdditionalDetails([...additionalDetails, ""]);
+        setEmployeeEmails([...employeeEmails, ""]);
     };
 
     const handleDetailChange = (index: number, value: string) => {
-        const updatedDetails = [...additionalDetails];
+        const updatedDetails = [...employeeEmails];
         updatedDetails[index] = value;
-        setAdditionalDetails(updatedDetails);
+        setEmployeeEmails(updatedDetails);
+        console.log(employeeEmails)
     };
 
     const handleRemoveDetail = (index: number) => {
-        const updatedDetails = [...additionalDetails];
+        const updatedDetails = [...employeeEmails];
         updatedDetails.splice(index, 1);
-        setAdditionalDetails(updatedDetails);
+        setEmployeeEmails(updatedDetails);
     };
 
     const companyData: CompanyInputDto = {
+        name: name,
+        street: street,
+        phone: phone,
+        city: city,
+        country: country,
+        type: type,
         nif: nif,
-        address: address,
-        name: companyName,
-        type: selectedCategory,
-        description: description,
+        description: description
     };
 
+
+
     function fetchCreateCompany() {
-        const resp = SimpleFetch("/company", companyData, "POST");
 
-        if (!resp) return <p>...loading...</p>;
+        fetch(`/api/company?duration=${convertMinutesToHHMMSS(selectedValue)}`,{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token} `
+                },
+                body: JSON.stringify({
+                    company: companyData,
+                    emails : {
+                        emails: employeeEmails
+                    },
+                    days: schedule.filter(day =>
+                        Object.values(day).every(value => value !== '')
+                    )
+                })
+            }).then(response => response.json())
+            .then(data => {
+                setRedirect(true);
+            })
+            .catch(error => {
+                console.error('Ocorreu um erro:', error);
+            });
 
-        if (resp.status) {
-            window.location.href = `/`;
-            return <></>;
+    }
+
+    useEffect(() => {
+        if (redirect) {
+            setRedirect(false);
         }
+    }, [redirect]);
 
-        if (resp) {
-            const companyId = resp.id;
-            window.location.href = `/company/${companyId}/schedule`;
-            return <></>;
-        }
+    if (redirect) {
+        return(<></>)
     }
 
     const handleTimeChange = (index, field, value) => {
         setSchedule(prevSchedule => {
-            const updatedSchedule = [...prevSchedule];
-            updatedSchedule[index][field] = value;
-            return updatedSchedule;
+            if (index === null) {
+                const updatedSchedule = prevSchedule.map(day => ({
+                    ...day,
+                    [field]: value
+                }));
+                return updatedSchedule;
+            } else {
+                const updatedSchedule = [...prevSchedule];
+                updatedSchedule[index][field] = value;
+                return updatedSchedule;
+            }
         });
+        console.log(schedule)
     };
+
 
     const [isOpen, setIsOpen] = useState(false);
     const [selectedValue, setSelectedValue] = useState(null);
@@ -122,9 +182,9 @@ export function CreatingCompany() {
 
     const isFormValid = () => {
         return (
-            companyName.length >= 3 &&
-            selectedCategory.length >= 3 &&
-            address.length >= 3 &&
+            name.length >= 3 &&
+            type.length >= 3 &&
+            street.length >= 3 &&
             nif.length === 9 &&
             description.length >= 3 &&
             startDay.length >= 3 &&
@@ -151,8 +211,8 @@ export function CreatingCompany() {
                                     type="text"
                                     className="form-control"
                                     placeholder="Company Name"
-                                    value={companyName}
-                                    onChange={(e) => setCompanyName(e.target.value)}
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
                                 />
                             </div>
                             <div className="col-md-12">
@@ -161,8 +221,8 @@ export function CreatingCompany() {
                                     type="number"
                                     className="form-control"
                                     placeholder="Phone number"
-                                    value={phoneNumber}
-                                    onChange={(e) => setPhoneNumber(e.target.value)}
+                                    value={phone}
+                                    onChange={(e) => setPhone(e.target.value)}
                                 />
                             </div>
                             <div className="col-md-12">
@@ -201,8 +261,8 @@ export function CreatingCompany() {
                                     type="text"
                                     className="form-control"
                                     placeholder="Address"
-                                    value={address}
-                                    onChange={(e) => setAddress(e.target.value)}
+                                    value={street}
+                                    onChange={(e) => setStreet(e.target.value)}
                                 />
                             </div>
                             <div className="mb-3 dropdown-space"></div>
@@ -212,7 +272,7 @@ export function CreatingCompany() {
                                     id="category-dropdown"
                                     className="form-control dropdown-toggle-text"
                                 >
-                                    {selectedCategory || "Select category"}
+                                    {type || "Select category"}
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu>
                                     {categories.map((category) => (
@@ -242,13 +302,8 @@ export function CreatingCompany() {
                         </div>
                     </div>
                     <div className="mt-5 text-center">
-                        <button
-                            className="btn btn-primary profile-button"
-                            type="button"
-                            disabled={!isFormValid()}
-                            onClick={fetchCreateCompany}
-                        >
-                            Create company
+                        <button className="btn btn-outline-light btn-lg px-5" type="submit"
+                                onClick={fetchCreateCompany}>Login
                         </button>
                     </div>
                 </div>
@@ -266,7 +321,7 @@ export function CreatingCompany() {
                             </button>
                         </div>
                         <br />
-                        {additionalDetails.map((detail, index) => (
+                        {employeeEmails.map((detail, index) => (
                             <div className="col-md-12" key={index}>
                                 <label className="labels">Employee's emails</label>
                                 <div className="input-group">
@@ -334,9 +389,9 @@ export function CreatingCompany() {
                                             <td>
                                                 <input
                                                     type="time"
-                                                    value={lunchBreak.beginHour}
+                                                    value={schedule[0].intervalBegin}
                                                     onChange={(e) =>
-                                                        setLunchBreak({ ...lunchBreak, beginHour: e.target.value })
+                                                        handleTimeChange(null,"intervalBegin", e.target.value)
                                                     }
                                                     step="600"
                                                 />
@@ -344,10 +399,10 @@ export function CreatingCompany() {
                                             <td>
                                                 <input
                                                     type="time"
-                                                    value={lunchBreak.endHour}
+                                                    value={schedule[0].intervalEnd}
                                                     min={lunchBreak.beginHour}
                                                     onChange={(e) =>
-                                                        setLunchBreak({ ...lunchBreak, endHour: e.target.value })
+                                                        handleTimeChange(null,"intervalEnd", e.target.value)
                                                     }
                                                     step="600"
                                                 />
@@ -358,20 +413,21 @@ export function CreatingCompany() {
                                 </div>
                                 <br />
                                 <br />
-                                <div className="btn-group" style={{ marginLeft: "10px" }}>
+                                <div className="btn-group" style={{ marginLeft: "10px", display: "flex", flexDirection: "column" }}>
                                     <div className="dropdown">
-                                        <label style = {{color: 'black'}}>Duration between each block (in minutes):</label>
+                                        <label style={{ color: 'black' }}>Duration between each block (in minutes):</label>
                                         <br />
-                                        <button className="dropdown-toggle" onClick={handleDropdownToggle}>
-                                            {selectedValue ? `${selectedValue} minutes` : "Select a number"}
-                                        </button>
                                         {isOpen && (
                                             <div className="dropdown-options-container">
                                                 <div className="dropdown-options">{renderOptions()}</div>
                                             </div>
                                         )}
+                                        <button className="dropdown-toggle" onClick={handleDropdownToggle}>
+                                            {selectedValue ? `${selectedValue} minutes` : "Select a number"}
+                                        </button>
                                     </div>
                                 </div>
+
                             </div>
                         </div>
                     </div>

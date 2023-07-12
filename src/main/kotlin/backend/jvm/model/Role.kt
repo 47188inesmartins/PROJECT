@@ -2,7 +2,7 @@ package backend.jvm.model
 
 import backend.jvm.model.user.UserEntity
 import jakarta.persistence.*
-
+/*
 @Entity
 @Table(name = "u_role")
 class Role {
@@ -23,4 +23,4 @@ class Role {
         this.name = name
         this.users = null
     }
-}
+}*/

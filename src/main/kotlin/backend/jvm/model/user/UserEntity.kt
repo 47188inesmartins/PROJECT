@@ -1,6 +1,5 @@
 package backend.jvm.model.user
 
-import backend.jvm.model.Role
 import backend.jvm.model.unavailability.UnavailabilityEntity
 import backend.jvm.model.UserCompany
 import backend.jvm.model.appointment.AppointmentEntity
@@ -84,13 +83,13 @@ class UserEntity {
         @OneToMany(mappedBy = "user")
         val unavailability: List<UnavailabilityEntity>?
 
-        @ManyToMany
+     /*   @ManyToMany
         @JoinTable(
                 name = "user_role",
                 joinColumns = [JoinColumn(name = "user_id")],
                 inverseJoinColumns = [JoinColumn(name = "role_name")]
         )
-        val roles: List<Role>
+        val roles: List<Role>*/
 
         @ManyToMany
         @JoinTable(
@@ -115,7 +114,7 @@ class UserEntity {
                 this.services = null
                 this.address = " "
                 this.appointment = null
-                this.roles = listOf()
+              //  this.roles = listOf()
                 this.unavailability = listOf()
                 this.companies = listOf()
                 this.interests = ""
@@ -133,7 +132,7 @@ class UserEntity {
                 birth: Date,
                 serv: List<ServiceEntity>?,
                 appointmentEntities: List<AppointmentEntity>?,
-                roles: List<Role>,
+              //  roles: List<Role>,
                 unavailabilityEntity: List<UnavailabilityEntity>?,
                 companies: List<UserCompany>?,
                 interests: String,
@@ -149,7 +148,7 @@ class UserEntity {
                 this.services = serv
                 this.address = address
                 this.appointment = appointmentEntities
-                this.roles = roles
+             //   this.roles = roles
                 this.unavailability = unavailabilityEntity
                 this.companies = companies
                 this.interests = interests

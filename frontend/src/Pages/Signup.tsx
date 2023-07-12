@@ -12,15 +12,15 @@ import { useEffect, useState } from "react";
 import { LoggedInContextCookie } from "../Authentication/Authn";
 import {useParams} from "react-router-dom";
 
-interface UserCredentials {
-    name: string,
-    birthday: string
+interface UserInputDto {
     email: string,
+    name: string,
     password: string,
-    interests: string,
+    birthday: string
     street: string,
     city: string,
     country: string,
+    interests: string
 }
 
 export function Signup() {
@@ -59,7 +59,7 @@ export function Signup() {
     const token = React.useContext(LoggedInContextCookie).loggedInState.token;
 
     const handleSubmit = () => {
-        const userCredentials: UserCredentials = {
+        const userCredentials: UserInputDto = {
             name,
             birthday,
             email,
@@ -69,7 +69,6 @@ export function Signup() {
             city,
             country
         }
-
         fetch(`/api/user`, {
             method: 'POST',
             body: JSON.stringify(userCredentials),
@@ -101,7 +100,8 @@ export function Signup() {
             window.location.href = `user/${userId}/upload-pic`
             return <></>;
         }
-
+        window.location.href = '/'
+        return <></>;
     }
 
     return (

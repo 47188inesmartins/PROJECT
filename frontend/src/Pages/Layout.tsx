@@ -12,13 +12,14 @@ import {Fetch} from "../Utils/useFetch";
 import 'bootstrap/dist/css/bootstrap.css';
 import "../Style/LayoutCompany.css"
 import { Dropdown, DropdownButton } from 'react-bootstrap';
+import Cookies from 'js-cookie';
 
 
 export function Layout() {
 
     const context = React.useContext(LoggedInContextCookie).loggedInState
-    const auth = context.auth
-    const role = context.role
+    const auth = Cookies.get('name')
+    const role =  context.role;
 
 
     const hasManager = role.some((user) => user.role === "MANAGER");

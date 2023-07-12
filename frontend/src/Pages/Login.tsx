@@ -46,16 +46,17 @@ export function Login() {
             console.error('Ocorreu um erro:', error);
         });
 
-        useEffect(() => {
-            if (redirect) {
-                setRedirect(false);
-            }
-        }, [redirect]);
+    }
 
+    useEffect(() => {
         if (redirect) {
-            window.location.href = `/`;
-            return(<></>)
+            setRedirect(false);
         }
+    }, [redirect]);
+
+    if (redirect) {
+        window.location.href = `/`;
+        return(<></>)
     }
 
     return (

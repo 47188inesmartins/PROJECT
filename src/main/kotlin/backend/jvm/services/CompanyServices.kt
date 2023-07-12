@@ -15,6 +15,7 @@ import backend.jvm.model.user.UserInfo
 import backend.jvm.model.user.UserOutputDto
 import backend.jvm.model.vacation.VacationOutputDto
 import backend.jvm.dao.*
+import backend.jvm.model.day.DayInputDto
 import backend.jvm.services.dto.*
 import backend.jvm.services.interfaces.ICompanyServices
 import backend.jvm.utils.*
@@ -41,7 +42,7 @@ class CompanyServices : ICompanyServices {
     @Autowired
     lateinit var scheduleDao: ScheduleDao
     @Autowired
-    lateinit var usersRepository: UserDao
+    lateinit var userDao : UserDao
     @Autowired
     lateinit var serviceDao: ServiceDao
     @Autowired
@@ -52,12 +53,12 @@ class CompanyServices : ICompanyServices {
     lateinit var vacationDao: VacationDao
     @Autowired
     lateinit var userCompanyDao: UserCompanyDao
-
     @Autowired
     lateinit var imageDao: ImageDao
-
     @Autowired
-    lateinit var userDao: UserDao
+    lateinit var userServices: UserServices
+    @Autowired
+    lateinit var dayServices: DayServices
 
     /**
      * Creates a new company and associates a manager for the company created
@@ -66,26 +67,27 @@ class CompanyServices : ICompanyServices {
      * @return CompanyOutputDto info aof the saved company
      */
     @Transactional(rollbackOn = [Exception::class])
-    override fun addCompany(token: String, company: CompanyInputDto): CompanyOutputDto {
+    fun addCompany(token: String, company: CompanyInputDto, emails: List<String>?, days: List<DayInputDto>, duration: String): CompanyOutputDto {
 
-        val managerUser = usersRepository.getUserByToken(UUID.fromString(token))?: throw UserNotFound()
-        company.users?.add(managerUser.id)
+        val managerUser = userDao.getUserByToken(UUID.fromString(token)) ?: throw UserNotFound()
+        val coordinates = getCompanyCoordinates(company.street, company.city, company.country)
+        require(company.nif.length == NIF_NUMBERS) { throw InvalidNif() }
+        require(companyDao.findCompanyByNif(company.nif) == null) { throw NifAlreadyExist() }
 
-        val coordinates = getCompanyCoordinates(company.street,company.city,company.country)
-
-        if(company.nif.length != NIF_NUMBERS ) throw InvalidNif()
-        if(companyDao.findCompanyByNif(company.nif) != null) throw NifAlreadyExist()
-
-        val services = company.service?.map { serviceDao.getReferenceById(it) }
-        val companyDb = company.mapToCompanyDto(coordinates,company, services, null)
+        val companyDb = company.mapToCompanyEntity(coordinates, company)
         val comp = companyDao.save(companyDb)
 
+        emails?.let { userServices.addEmployees(comp.id, it) }
+
         userCompanyDao.save(UserCompany(managerUser, comp, UserRoles.MANAGER.name))
-        val schedule = ScheduleEntity(comp,null,null,null,null)
+        val schedule = ScheduleEntity(comp, null, null, null, null)
         scheduleDao.save(schedule)
+
+        dayServices.addOpenDays(days, comp.id, duration)
 
         return CompanyOutputDto(comp)
     }
+
 
 
     /**
@@ -154,9 +156,8 @@ class CompanyServices : ICompanyServices {
     }
 
 
-    override fun getAllCompanies(): List<CompanyOutputDto>{
-       val a = companyDao.findAll().map{ CompanyOutputDto(it) }
-        return a
+    override fun getAllCompanies(): List<CompanyOutputDto> {
+        return companyDao.findAll().map { CompanyOutputDto(it) }
     }
 
     override fun getAllServices(id: Int): List<ServiceOutputDto>{
@@ -164,7 +165,7 @@ class CompanyServices : ICompanyServices {
     }
 
     fun getCompanyByUserAndRole(userId: String, role: String): List<CompanyInfo> {
-        val user = usersRepository.getUserByToken(UUID.fromString(userId)) ?: throw InvalidCredentials()
+        val user = userDao.getUserByToken(UUID.fromString(userId)) ?: throw InvalidCredentials()
         val companyRepository = companyDao.getCompanyByUserIdAndRole(user.id,role)
         return companyRepository.map {
             CompanyInfo(it.id,it.name)
@@ -172,7 +173,7 @@ class CompanyServices : ICompanyServices {
     }
 
     fun getAllEmployeesByCompanyAndMoney(cid: Int): List<Pair<UserInfo,Double>>{
-        val employees = usersRepository.getUsersEmployeesByCompany(cid) ?: throw EmployeeNotFound()
+        val employees = userDao.getUsersEmployeesByCompany(cid) ?: throw EmployeeNotFound()
         val dateEnd = Date(System.currentTimeMillis())
         val earnedMoney = employees.map {
             Pair(
@@ -211,7 +212,7 @@ class CompanyServices : ICompanyServices {
         return appointments.map {
             val service = serviceDao.getServiceDBByAppointment(it.id)
             val employee  = it.user?.firstOrNull { user ->
-                val role = user?.id?.let { it1 -> usersRepository.getUserRoleByCompany(it1,cid) }
+                val role = user?.id?.let { it1 -> userDao.getUserRoleByCompany(it1,cid) }
                 (role == UserRoles.EMPLOYEE.name ||role == UserRoles.MANAGER.name)
             } ?: throw UserNotFound()
             val endHour = Time(it.appHour.time + service.duration.time)
@@ -248,7 +249,7 @@ class CompanyServices : ICompanyServices {
      * @return List<UserOutputDto> returns the list of employees of the company
      */
     fun getEmployeesByCompany(cid: Int): List<UserOutputDto>{
-        val employees = usersRepository.getUsersEmployeesByCompany(cid) ?: throw EmployeeNotFound()
+        val employees = userDao.getUsersEmployeesByCompany(cid) ?: throw EmployeeNotFound()
         return employees.map { UserOutputDto(it) }
     }
 

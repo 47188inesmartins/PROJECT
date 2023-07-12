@@ -20,6 +20,7 @@ data class UserCredentials(val email: String, val password: String)
 data class CreatedUserOutput(val id: Int, val token: UUID)
 
 data class UserInfo(val id: Int, val name: String)
+
 data class UserOutputDto(
         val id: Int,
         val token: UUID,
@@ -56,24 +57,14 @@ data class UserInputDto(
         val password: String,
         val name: String,
         val birthday: String,
-        val availability: String?,
         val street: String,
         val city: String,
         val country: String,
-        val companyId: Int?,
-        val services: List<Int>?,
-        val appointment: List<Int>?,
-        val unavailability: List<Int>?,
-        val interests: String,
-        val profilePic: ByteArray?
+        val interests: String
 ){
         fun mapToUser(dto: UserInputDto,
                       pass: String,
-                      services: List<ServiceEntity>?,
-                      appointmentEntity: List<AppointmentEntity>?,
-                      comp: List<UserCompany>?,
-                      roles: List<Role>,
-                      unavailabilityEntity : List<UnavailabilityEntity>?,
+                   //   roles: List<Role>,
                       interests: String,
                       profilePic: ByteArray?,
                       coordinates: Geolocation
@@ -84,12 +75,12 @@ data class UserInputDto(
                       password = pass,
                       clientName = dto.name,
                       birth = Date.valueOf(dto.birthday),
-                      serv = services,
+                      serv = null,
                       address = AddressUtils.addressInfo(street,city,country),
-                      companies = comp,
-                      appointmentEntities = appointmentEntity,
-                      roles = roles,
-                      unavailabilityEntity = unavailabilityEntity,
+                      companies = null,
+                      appointmentEntities = null,
+                   //   roles = roles,
+                      unavailabilityEntity = null,
                       interests = interests,
                       profilePic = profilePic,
                       status = "PENDING"
