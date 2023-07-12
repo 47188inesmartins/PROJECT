@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { Fetch,HOST } from '../Utils/useFetch';
 import { useParams } from "react-router-dom";
-//import '../Style/UploadFile.css'
 import { Button } from "react-bootstrap";
-
 
 function UploadPhoto() {
     const [selectedFiles, setSelectedFiles] = useState([]);
@@ -58,7 +56,7 @@ function UploadPhoto() {
         event.preventDefault();
     };
 
-    return(
+    return  (
         <div className="image-uploader">
             <div
                 className="image-grid"
@@ -68,9 +66,6 @@ function UploadPhoto() {
                     borderRadius: "5px",
                     padding: "20px",
                     marginBottom: "20px",
-                    display: "flex",
-                    flexWrap: "wrap",
-                    justifyContent: "center",
                 }}
                 onDrop={handleFileDrop}
                 onDragOver={handleDragOver}
@@ -88,12 +83,14 @@ function UploadPhoto() {
                             alignItems: "center",
                             justifyContent: "center",
                             position: "relative",
-                            margin: "10px",
                         }}
                     >
-          <span className="file-icon" style={{ color: "gray", fontSize: "48px" }}>
-            <i className="far fa-file"></i>
-          </span>
+            <span
+                className="file-icon"
+                style={{ color: "gray", fontSize: "48px" }}
+            >
+              <i className="far fa-file"></i>
+            </span>
                         {selectedFiles[index] ? (
                             <img
                                 src={URL.createObjectURL(selectedFiles[index])}
@@ -109,17 +106,15 @@ function UploadPhoto() {
                                     fontWeight: "bold",
                                 }}
                             >
-              Drop your file here
-            </span>
+                Drop your file here
+              </span>
                         )}
                     </div>
                 ))}
             </div>
             <input type="file" accept="image/png, image/jpeg" onChange={handleFileSelect} multiple />
             <div className="button-container">
-                <Button variant="primary" size="lg" onClick={handleFileUpload}>
-                    Send
-                </Button>
+                <Button variant="primary" size="lg" onClick={handleFileUpload}>Send</Button>
             </div>
         </div>
     );

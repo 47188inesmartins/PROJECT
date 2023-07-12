@@ -81,7 +81,6 @@ export function Home() {
                             <MDBContainer className="py-5">
                                 <MDBCard className="px-3 pt-3" style={{ maxWidth: '100%' }}>
                                     <div>
-
                                         {response.response.map((object: any) => (
                                             <a
                                                 key={object.id}
@@ -109,7 +108,7 @@ export function Home() {
                                                             <u>Location: {object.address}</u>
                                                         </p>
                                                         <p>
-                                                            <u>{object.description}</u>
+                                                            <u>Company description:{object.description}</u>
                                                         </p>
                                                     </MDBCol>
                                                 </MDBRow>
@@ -158,8 +157,8 @@ function SearchBar() {
                     </div>
                 ) : (
                     <form onSubmit={handleSubmit}>
-                        <div>
-                        <i className="fa fa-search"></i>
+                        <div className="input-group">
+                            <i className="fa fa-search"></i>
                             <input
                                 type="text"
                                 className="form-control"
@@ -167,6 +166,22 @@ function SearchBar() {
                                 value={searchTerm}
                                 onChange={handleChange}
                             />
+                            <div className="input-group-append">
+                                <button
+                                    type="button"
+                                    className="btn btn-secondary dropdown-toggle"
+                                    data-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                                >
+                                    Distance
+                                </button>
+                                <div className="dropdown-menu">
+                                    <a className="dropdown-item" href="#">6 KM</a>
+                                    <a className="dropdown-item" href="#">12 KM</a>
+                                    <a className="dropdown-item" href="#">18 KM</a>
+                                </div>
+                            </div>
                         </div>
                     </form>
                 )}

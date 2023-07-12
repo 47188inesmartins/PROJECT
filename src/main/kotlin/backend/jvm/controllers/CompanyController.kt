@@ -248,7 +248,7 @@ class CompanyController {
         }
     }
 
-    @RoleManager(["MANAGER","EMPLOYEE"])
+    //@RoleManager(["MANAGER","EMPLOYEE"])
     @GetMapping("{cid}/appointments-list")
     fun getAllAppointmentsByCompany(@PathVariable cid: Int): ResponseEntity<List<AppointmentInfoEmployeeEnd>>{
         return try {

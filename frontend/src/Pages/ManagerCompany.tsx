@@ -4,7 +4,6 @@ import {Fetch} from "../Utils/useFetch";
 import {useState} from "react";
 import MyCalendar from "./AdvancedCalendar";
 import "../Style/Test.css";
-import _default from "chart.js/dist/plugins/plugin.tooltip";
 
 export function MyCompany() {
     const a = useParams()

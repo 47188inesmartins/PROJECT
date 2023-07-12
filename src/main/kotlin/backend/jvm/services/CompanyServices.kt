@@ -16,6 +16,7 @@ import backend.jvm.model.user.UserOutputDto
 import backend.jvm.model.vacation.VacationOutputDto
 import backend.jvm.dao.*
 import backend.jvm.model.day.DayInputDto
+import backend.jvm.model.user.UserEntity
 import backend.jvm.services.dto.*
 import backend.jvm.services.interfaces.ICompanyServices
 import backend.jvm.utils.*
@@ -208,20 +209,20 @@ class CompanyServices : ICompanyServices {
         val schedule =  scheduleDao.getScheduleByCompany_Id(cid)?: throw InvalidSchedule()
         val appointments = appointmentDao.getAppointmentsBySchedule(schedule.id)
         if(appointments.isEmpty()) return emptyList()
-
         return appointments.map {
             val service = serviceDao.getServiceDBByAppointment(it.id)
             val employee  = it.user?.firstOrNull { user ->
                 val role = user?.id?.let { it1 -> userDao.getUserRoleByCompany(it1,cid) }
                 (role == UserRoles.EMPLOYEE.name ||role == UserRoles.MANAGER.name)
             } ?: throw UserNotFound()
+            val client = it.user.find { cli -> cli != employee }
             val endHour = Time(it.appHour.time + service.duration.time)
             AppointmentInfoEmployeeEnd(
                 it.id,
                 it.appHour.toString(),
                 endHour.toString(),
                 it.appDate,
-                employee.name
+                "employee: ${employee.name} client: ${client?.name}"
             )
         }
     }

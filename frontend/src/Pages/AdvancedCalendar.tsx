@@ -53,6 +53,29 @@ const MyCalendar: React.FC = () => {
         });
     };
 
+    const mapDataToEventsHolidays = (data: any[]): Event[] => {
+        if (!data) return []
+        return data.map((item) => {
+            const start = moment(item.dateBegin).toDate();
+            const end = moment(item.dateEnd).toDate();
+
+            const durationInDays = moment(end).diff(start, 'days') + 1; // +1 para incluir o último dia
+
+            // Gerar um array de datas entre o início e o fim das férias
+            const dates = Array.from({ length: durationInDays }, (_, index) =>
+                moment(start).add(index, 'days').toDate()
+            );
+
+            return {
+                title: "VACATION",
+                start,
+                end,
+                color: 'red',
+                dates
+            };
+        });
+    };
+
     const closeModal = () => {
         setModalIsOpen(false);
     };
@@ -60,11 +83,6 @@ const MyCalendar: React.FC = () => {
     const handleEventClick = (event: Event) => {
         setSelectedEvent(event);
         setModalIsOpen(true);
-    };
-
-    const calendarStyle = {
-        height: 500,
-        backgroundColor: '#e4dcd3',
     };
 
     const EventComponent: React.FC<{ event: Event }> = ({event}) => {
@@ -96,32 +114,65 @@ const MyCalendar: React.FC = () => {
     ) : null;
 
     const response = Fetch(`company/${id}/appointments-list`, 'GET')
+    const responseVacation = Fetch(`company/${id}/vacations`, 'GET')
+
     const calendarStyle1 = {
         height: 500,
-        backgroundColor: 'lightgrey',
-        margin: '20px', // Ajuste as margens conforme necessÃ¡rio
+        backgroundColor: '#BEDAE3',
+        margin: '20px',
+    };
+
+    const pageStyle = {
+        backgroundColor: '#BEDAE3', // Defina a cor de fundo da página aqui
+        margin: '20px',
     };
 
     const buttonStyle = {
-        borderRadius: '10px', // Borda mais arredondada
-        backgroundColor: 'blue',
+        borderRadius: '10px',
+        backgroundColor: '#D3D3D3',
         color: 'white',
         padding: '10px',
     };
+    const dayPropGetter = (date: Date) => {
+        const currentDate = moment(date);
+        const currentMonth = moment().startOf('month');
+        const isDifferentMonth = currentDate.isBefore(currentMonth) || currentDate.isAfter(currentMonth.endOf('month'));
 
+        if (isDifferentMonth) {
+            return {
+                className: 'other-month-day',
+                style: {
+                    backgroundColor: '#dcdcdc',
+                },
+            };
+        }
+
+        return {};
+    };
+
+    const toolbar = (toolbar: any) => {
+        const buttonStyle = {
+            borderRadius: '10px',
+            backgroundColor: '#C4E9DA', // Define a cor dos botões aqui
+            color: 'white',
+            padding: '10px',
+        };
+    }
     return (
         <div style={{margin: '20px'}}>
-            {response.response ? (
+            {response.response &&  responseVacation.response? (
                 <>
                     <Calendar
                         localizer={localizer}
-                        events={mapDataToEvents(response.response)}
+                        events={[...mapDataToEvents(response.response),...mapDataToEventsHolidays(responseVacation.response)]}
                         startAccessor="start"
                         endAccessor="end"
                         style={calendarStyle1}
                         components={{
                             event: EventComponent,
-                        }}z
+                        }}
+                        dayPropGetter={dayPropGetter} // Aplica a personalização dos dias de outro mês
+                        toolbar={toolbar} // Aplica a personalização da toolbar
                     />
                     <Modal
                         isOpen={modalIsOpen}
@@ -140,6 +191,8 @@ const MyCalendar: React.FC = () => {
                     startAccessor="start"
                     endAccessor="end"
                     style={calendarStyle1}
+                    dayPropGetter={dayPropGetter} // Aplica a personalização dos dias de outro mês
+                    toolbar={toolbar} // Aplica a personalização da toolbar
                 />
             )}
         </div>

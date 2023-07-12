@@ -20,8 +20,6 @@ export function Layout() {
     const context = React.useContext(LoggedInContextCookie).loggedInState
     const auth = Cookies.get('name')
     const role =  context.role;
-
-
     const hasManager = role.some((user) => user.role === "MANAGER");
     const hasEmployee = role.some((user) => user.role === "EMPLOYEE");
 
@@ -64,7 +62,7 @@ export function Layout() {
                             </CDBSidebarContent>
                             <div style={{ position: 'absolute', bottom: '0', width: '100%' }}>
                                 <CDBSidebarMenu>
-                                    <NavLink to="/signup?mode=business">
+                                    <NavLink to="/new/company">
                                         <CDBSidebarMenuItem>For business</CDBSidebarMenuItem>
                                     </NavLink>
                                     <NavLink to="/logout">

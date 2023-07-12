@@ -1,0 +1,8 @@
+# Define a imagem base do PostgreSQL
+FROM postgres:latest
+
+# Copia o arquivo SQL com os comandos de inicialização do banco de dados (se necessário)
+COPY ./kotlin/backend/sql/createSchema.sql /docker-entrypoint-initdb.d/
+
+# Expõe a porta em que o servidor do PostgreSQL irá executar (geralmente a porta 5432)
+EXPOSE 5432

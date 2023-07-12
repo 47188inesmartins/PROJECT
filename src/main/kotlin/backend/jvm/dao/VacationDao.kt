@@ -17,5 +17,4 @@ interface VacationDao: JpaRepository<VacationEntity, Int>{
 
     @Query(value ="select * from vacation v where v.schedule_id = :schedule", nativeQuery = true)
     fun getVacationsByScheduleId(@Param("schedule")schedule: Int):List<VacationEntity>
-
 }

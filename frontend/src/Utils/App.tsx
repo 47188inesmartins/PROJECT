@@ -25,6 +25,7 @@ import {CompanyProfileEmploying} from "../Pages/CompanyProfileEmploying";
 import {ManagingEmployees} from "../Pages/Managing/ManagingEmployees";
 import {ManagingVacations} from "../Pages/Managing/ManagingVacations";
 import {Edit} from "../Pages/Managing/Edit";
+import MyCalendar from "../Pages/AdvancedCalendar";
 
 
 const router = createBrowserRouter([{

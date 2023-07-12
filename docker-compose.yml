@@ -1,0 +1,21 @@
+version: "3"
+
+services:
+  frontend:
+    depends_on:
+    - backend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    expose:
+      - "8000"
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - JDBC_DATABASE_URL=jdbc:postgresql://localhost/postgres?user=postgres&password=inesmartins
+      - JDBC_USER = postgres
+      - JDBC_PASSWORD = inesmartins
+    expose:
+      - "8080"
