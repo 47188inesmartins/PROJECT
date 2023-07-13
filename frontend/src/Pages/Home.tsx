@@ -9,7 +9,7 @@ import {
 } from 'mdb-react-ui-kit';
 import { Fetch } from '../Utils/useFetch';
 import { Layout, LayoutRight } from './Layout';
-import { LoggedInContextCookie } from "../Authentication/Authn";
+import { LoggedInContextCookie } from "./Authentication/Authn";
 import Cookies from 'js-cookie';
 
 
@@ -28,11 +28,6 @@ export function Home() {
     const valorDoCookie = Cookies.get('name');
 
     console.log("valor do cookie", valorDoCookie)
-
-    const rolesss = Cookies.get('roles');
-
-    console.log("token", valorDoCookie)
-    console.log("roles", rolesss)
 
     function getQueryParam(param) {
         const searchParams = new URLSearchParams(window.location.search);

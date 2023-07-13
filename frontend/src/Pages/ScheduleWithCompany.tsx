@@ -8,7 +8,7 @@ import {Navigate} from "react-router";
 import {Button, Modal} from "react-bootstrap";
 import {MDBInput} from "mdb-react-ui-kit";
 import { format } from 'date-fns';
-import {LoggedInContextCookie} from "../Authentication/Authn";
+import {LoggedInContextCookie} from "./Authentication/Authn";
 import {Layout} from "./Layout";
 
 

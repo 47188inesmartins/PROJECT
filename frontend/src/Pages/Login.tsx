@@ -26,7 +26,6 @@ export function Login() {
             email,
             password
         }
-
         fetch(`/api/user/login`,{
             method: 'POST',
             headers: {
@@ -36,8 +35,9 @@ export function Login() {
         })
         .then(response => response.json())
         .then(data => {
-            Cookies.set('name', data, { expires: 7 });
-            Cookies.set('roles', {company: null,
+            Cookies.set('name', data.first, { expires: 7 });
+            Cookies.set('roles', {
+                company: null,
                 role: 'CLIENT'
             }, { expires: 7 });
             setRedirect(true);

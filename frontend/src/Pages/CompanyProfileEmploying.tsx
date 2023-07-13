@@ -12,7 +12,7 @@ import {
 } from 'mdb-react-ui-kit'
 import {Fetch} from "../Utils/useFetch";
 import {useContext} from "react";
-import {LoggedInContextCookie} from "../Authentication/Authn";
+import {LoggedInContextCookie} from "./Authentication/Authn";
 import {useParams} from "react-router-dom";
 
 

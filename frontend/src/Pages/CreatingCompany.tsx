@@ -301,11 +301,6 @@ export function CreatingCompany() {
                             </div>
                         </div>
                     </div>
-                    <div className="mt-5 text-center">
-                        <button className="btn btn-outline-light btn-lg px-5" type="submit"
-                                onClick={fetchCreateCompany}>Login
-                        </button>
-                    </div>
                 </div>
                 <div className="col-md-4">
                     <div className="p-3 py-5">
@@ -429,6 +424,11 @@ export function CreatingCompany() {
                                 </div>
 
                             </div>
+                        </div>
+                        <div className="mt-5 text-center">
+                            <button className="btn btn-outline-dark btn-lg px-5" type="submit"
+                                    onClick={fetchCreateCompany}>create company
+                            </button>
                         </div>
                     </div>
                 </div>

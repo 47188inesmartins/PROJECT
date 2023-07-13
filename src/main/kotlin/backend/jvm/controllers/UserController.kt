@@ -70,7 +70,7 @@ class UserController {
     }
 
     @GetMapping("/info")
-    fun getUserById(): ResponseEntity<UserOutputDto> {
+    fun getUser(): ResponseEntity<UserOutputDto> {
         return try {
             val requestAttributes = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes
             val request = requestAttributes.request

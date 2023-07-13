@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {createBrowserRouter, Outlet, RouterProvider} from "react-router-dom";
 import {Home} from "../Pages/Home";
-import {AuthnContainer} from "../Authentication/Authn";
+import {AuthnContainer} from "../Pages/Authentication/Authn";
 import {Login} from "../Pages/Login";
 import {Company} from "../Pages/Company";
 import {MyAppointments} from "../Pages/MyAppointments";
@@ -11,7 +11,6 @@ import {AddingEmployees} from "../Pages/Managing/AddingEmployees";
 import {ProfilePage} from "../Pages/UserProfile";
 import {AddingVacations} from "../Pages/Managing/AddingVacations";
 import {CreatingServices} from "../Pages/CreatingServices";
-import {CreatingSchedule} from "../Pages/CreatingSchedule";
 import {Signup} from "../Pages/Signup";
 import {ProfitCompany} from "../Pages/ProfitCompany";
 import UploadPhoto from "../Pages/UploadPhoto";
@@ -78,10 +77,6 @@ const router = createBrowserRouter([{
         {
             "path": "/company/:id/services",
             "element": <CreatingServices/>
-        },
-        {
-            "path": "/company/:id/schedule",
-            "element": <CreatingSchedule/>
         },
         {
             "path": "/signup",

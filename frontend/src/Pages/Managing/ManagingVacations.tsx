@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import { Link, useParams } from "react-router-dom";
 import { Fetch } from "../../Utils/useFetch";
 import "../../Style/ManagingEmployees.css";
-import {LoggedInContextCookie} from "../../Authentication/Authn";
+import {LoggedInContextCookie} from "../Authentication/Authn";
 import {Navigate} from "react-router";
 
 

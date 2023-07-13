@@ -7,7 +7,7 @@ import {
     CDBSidebarMenuItem
 }from "cdbreact";
 import { NavLink } from "react-router-dom";
-import {LoggedInContextCookie} from "../Authentication/Authn";
+import {LoggedInContextCookie} from "./Authentication/Authn";
 import {Fetch} from "../Utils/useFetch";
 import 'bootstrap/dist/css/bootstrap.css';
 import "../Style/LayoutCompany.css"
@@ -111,6 +111,9 @@ export function LayoutRight() {
 
     const managingCompanies = Fetch(`/company/info?role=MANAGER`, 'GET')
     const employingCompanies = Fetch(`/company/info?role=EMPLOYEE`, 'GET')
+
+
+    console.log("managing companyes = ", managingCompanies)
 
     const handleDropdownClick = (companyId) => {
         window.location.href = `/company/${companyId}/managing`;

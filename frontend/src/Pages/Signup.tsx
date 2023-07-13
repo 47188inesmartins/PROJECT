@@ -9,7 +9,7 @@ import {
     MDBIcon
 }from 'mdb-react-ui-kit';
 import { useEffect, useState } from "react";
-import { LoggedInContextCookie } from "../Authentication/Authn";
+import { LoggedInContextCookie } from "./Authentication/Authn";
 import {useParams} from "react-router-dom";
 
 interface UserInputDto {

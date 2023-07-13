@@ -86,6 +86,7 @@ data class UserInputDto(
 }
 
 
+@kotlinx.serialization.Serializable
 data class CompanyRole(val companyId: Int? = null, val role: String = UserRoles.GUEST.name)
 
 data class ReceiveMoney(val money: String)

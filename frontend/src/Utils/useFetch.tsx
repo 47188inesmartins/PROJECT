@@ -3,7 +3,7 @@ import {
     useState,
     useEffect
 } from 'react';
-import {LoggedInContextCookie} from "../Authentication/Authn";
+import {LoggedInContextCookie} from "../Pages/Authentication/Authn";
 import Cookies from 'js-cookie';
 
 export const HOST = "http://localhost:8000/api"
@@ -15,12 +15,13 @@ export type FetchResponse = {
 export function Fetch(url: string, method: string, requestBody: any = null): FetchResponse{
     const [content, setContent] = useState(undefined);
     const [error, setError] = useState<any>(undefined);
-    const token = React.useContext(LoggedInContextCookie).loggedInState.token;
-    const authorization: { 'Content-Type': string; Authorization?: string; } = (token !== "")
+    //const token = React.useContext(LoggedInContextCookie).loggedInState.token;
+    const token = Cookies.get('name')
+    const authorization: { 'Content-Type': string; Authorization?: string; } = (token !== undefined)
         ? {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`}
         : {'Content-Type': 'application/json'};
     const hostUrl = HOST + url
-
+console.log("auth ====", authorization)
     useEffect(() => {
         let cancelled = false
         async function doFetch() {

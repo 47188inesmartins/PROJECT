@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {LoggedInContextCookie} from "../Authentication/Authn";
+import {LoggedInContextCookie} from "../Pages/Authentication/Authn";
 
 const HOST = "http://localhost:8000/api"
 
