@@ -271,7 +271,7 @@ class CompanyServices : ICompanyServices {
         if(token == null) return  allCompanies?.map { CompanyOutputDto(it) }
         val user = userDao.getUserByToken(UUID.fromString(token))?: throw UserNotFound()
         val userLocation = Geolocation(user.latitude,user.longitude)
-        return getCompaniesByUserLocation(userLocation,allCompanies!!,true).map { CompanyOutputDto(it) }
+        return getCompaniesByUserLocation(5.5,userLocation,allCompanies!!,true).map { CompanyOutputDto(it) }
     }
 
     override fun getPersonalizedCompanies(token: String?): List<CompanyOutputDto>?{
@@ -283,7 +283,7 @@ class CompanyServices : ICompanyServices {
         val userLocation = Geolocation(user.latitude,user.longitude)
         val categoriesArray = user.interests.split(",").toTypedArray()
         val comps = companyDao.getCompaniesByCategory(categoriesArray)!!
-        return getCompaniesByUserLocation(userLocation,comps,false).map { CompanyOutputDto(it) }
+        return getCompaniesByUserLocation(5.5,userLocation,comps,false).map { CompanyOutputDto(it) }
     }
 
     /**
@@ -293,9 +293,8 @@ class CompanyServices : ICompanyServices {
      * @param order true if we want to show all companies order by distance or false if only the companies nearby the user
      * @return nearby companies
      */
-    private fun getCompaniesByUserLocation(userLocation: Geolocation, companiesList: List<CompanyEntity>,order:Boolean): List<CompanyEntity> {
+    fun getCompaniesByUserLocation(distance: Double,userLocation: Geolocation, companiesList: List<CompanyEntity>,order:Boolean): List<CompanyEntity> {
         val nearCompanies = mutableListOf<Pair<CompanyEntity,Double>>()
-        val distance = 6
         companiesList.forEach {company ->
             val companyLocation = Geolocation(company.latitude,company.longitude)
             val distanceUserComp = GeoCoder().calculateHaversineDistance(userLocation,companyLocation)

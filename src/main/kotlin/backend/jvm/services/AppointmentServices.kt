@@ -6,6 +6,7 @@ import backend.jvm.dao.*
 import backend.jvm.model.appointment.AppointmentInputDto
 import backend.jvm.model.appointment.AppointmentOutputDto
 import backend.jvm.model.service.ServiceOutputDto
+import backend.jvm.model.user.AppointmentEmployee
 import backend.jvm.model.user.UserOutputDto
 import backend.jvm.services.interfaces.IAppointmentServices
 import backend.jvm.utils.errorHandling.*
@@ -83,6 +84,21 @@ class AppointmentServices : IAppointmentServices {
         unavailabilityDao.save(unavailabilityEntity)
 
         return AppointmentOutputDto(savedAppointment)
+    }
+
+    fun addAppointmentByEmployee(appointmentEmployee: AppointmentEmployee, companyId: Int):Int{
+        //employee
+        val user = userDao.getUsersByEmail(appointmentEmployee.email)
+            ?: throw UserNotFound()
+        val service = servicesRepository.getServiceDBById(appointmentEmployee.service)
+            ?: throw ServiceNotFound()
+        val schedule = scheduleDao.getScheduleById(companyId)
+            ?: throw ScheduleNotFound()
+        val appointmentHour = Time.valueOf(appointmentEmployee.appHour.plus(":00"))?: throw Exception("invalid hour")
+        val appointmentDate = Date.valueOf(appointmentEmployee.appDate)?: throw Exception("invalid date")
+        val appointmentDb = AppointmentEntity(appointmentHour,appointmentDate,schedule, listOf(user,null),service)
+        val savedAppointment = appointmentDao.save(appointmentDb)
+        return savedAppointment.id
     }
 
     /**

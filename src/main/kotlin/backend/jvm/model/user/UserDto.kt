@@ -1,9 +1,6 @@
 package backend.jvm.model.user
 
-import backend.jvm.model.*
-import backend.jvm.model.appointment.AppointmentEntity
 import backend.jvm.model.service.ServiceEntity
-import backend.jvm.model.unavailability.UnavailabilityEntity
 import backend.jvm.utils.AddressUtils
 import backend.jvm.utils.Geolocation
 import backend.jvm.utils.UserRoles
@@ -92,3 +89,5 @@ data class UserInputDto(
 data class CompanyRole(val companyId: Int? = null, val role: String = UserRoles.GUEST.name)
 
 data class ReceiveMoney(val money: String)
+
+data class AppointmentEmployee( val appHour: String, val appDate: String, val email: String, val service: Int)

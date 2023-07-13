@@ -118,46 +118,27 @@ const MyCalendar: React.FC = () => {
 
     const calendarStyle1 = {
         height: 500,
-        backgroundColor: '#BEDAE3',
+        backgroundColor: '#D3C4BE',
         margin: '20px',
+        color: 'black', // Definir a cor preta para todos os elementos do calendário
+        '.rbc-calendar .rbc-month-view .rbc-date-cell:hover': {
+            backgroundColor: 'red', // Cor de fundo ao passar o mouse
+            color: 'white', // Cor do texto ao passar o mouse
+        },
     };
 
-    const pageStyle = {
-        backgroundColor: '#BEDAE3', // Defina a cor de fundo da página aqui
-        margin: '20px',
-    };
+    const getEventStyle = (event, start, end, isSelected) => {
+        const backgroundColor = event.backgroundColor; // Cor de fundo do evento
+        const color = event.description === 'VACATION' ? 'black' : 'black'; // Cor do texto do evento
 
-    const buttonStyle = {
-        borderRadius: '10px',
-        backgroundColor: '#FFFFFF',
-        color: 'white',
-        padding: '10px',
-    };
-    const dayPropGetter = (date: Date) => {
-        const currentDate = moment(date);
-        const currentMonth = moment().startOf('month');
-        const isDifferentMonth = currentDate.isBefore(currentMonth) || currentDate.isAfter(currentMonth.endOf('month'));
-
-        if (isDifferentMonth) {
-            return {
-                className: 'other-month-day',
-                style: {
-                    backgroundColor: '#dcdcdc',
-                },
-            };
-        }
-
-        return {};
-    };
-
-    const toolbar = (toolbar: any) => {
-        const buttonStyle = {
-            borderRadius: '10px',
-            backgroundColor: '#C4E9DA', // Define a cor dos botões aqui
-            color: 'white',
-            padding: '10px',
+        return {
+            style: {
+                backgroundColor,
+                color,
+            },
         };
-    }
+    };
+
     return (
         <div style={{margin: '20px'}}>
             {response.response &&  responseVacation.response? (
@@ -171,8 +152,7 @@ const MyCalendar: React.FC = () => {
                         components={{
                             event: EventComponent,
                         }}
-                        dayPropGetter={dayPropGetter} // Aplica a personalização dos dias de outro mês
-                        toolbar={toolbar} // Aplica a personalização da toolbar
+                        eventPropGetter={getEventStyle}
                     />
                     <Modal
                         isOpen={modalIsOpen}
@@ -180,7 +160,7 @@ const MyCalendar: React.FC = () => {
                         contentLabel="Appointment Details"
                     >
                         {selectedEventInfo}
-                        <button style={buttonStyle} onClick={closeModal}>
+                        <button onClick={closeModal}>
                             Close
                         </button>
                     </Modal>
@@ -191,8 +171,6 @@ const MyCalendar: React.FC = () => {
                     startAccessor="start"
                     endAccessor="end"
                     style={calendarStyle1}
-                    dayPropGetter={dayPropGetter} // Aplica a personalização dos dias de outro mês
-                    toolbar={toolbar} // Aplica a personalização da toolbar
                 />
             )}
         </div>

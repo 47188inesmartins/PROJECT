@@ -34,7 +34,7 @@ export function CompanyProfileManaging() {
 
     const contentStyle = {
         marginLeft: '200px',
-        backgroundColor: 'darkslategray',
+        backgroundColor: '#EFEEEE',
         padding: '20px',
     };
 
@@ -52,7 +52,7 @@ export function CompanyProfileManaging() {
                         </div>
                     </div>
                     :
-                    <section style={{ backgroundColor: 'darkslategray' }}>
+                    <section style={{ backgroundColor: '#EFEEEE' }}>
                         <MDBContainer className="py-5">
                             <MDBRow>
                                 <MDBCol>

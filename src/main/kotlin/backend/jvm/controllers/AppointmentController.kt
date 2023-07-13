@@ -4,6 +4,7 @@ import backend.jvm.services.AppointmentServices
 import backend.jvm.model.appointment.AppointmentInputDto
 import backend.jvm.model.appointment.AppointmentOutputDto
 import backend.jvm.model.service.ServiceOutputDto
+import backend.jvm.model.user.AppointmentEmployee
 import backend.jvm.model.user.UserOutputDto
 import backend.jvm.utils.RoleManager
 import backend.jvm.utils.errorHandling.*
@@ -24,7 +25,7 @@ class AppointmentController {
     lateinit var appointmentServices: AppointmentServices
 
     @RoleManager(["MANAGER", "CLIENT", "EMPLOYEE"])
-    @PostMapping("")
+    @PostMapping()
     fun addAppointment(@RequestBody appointment: AppointmentInputDto, @PathVariable cid: Int): ResponseEntity<AppointmentOutputDto> {
         return try {
             val requestAttributes = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes
@@ -36,6 +37,22 @@ class AppointmentController {
         }catch (e: Exception) {
             when(e) {
                 is ScheduleNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "Schedule not found", e)
+                is UserNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "User not found", e)
+                is ServiceNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "Service not found", e)
+                else ->  throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
+            }
+        }
+    }
+    @RoleManager(["MANAGER", "CLIENT", "EMPLOYEE"])
+    @PostMapping("/employees")
+    fun addAppointmentByManager(@RequestBody employee: AppointmentEmployee, @PathVariable cid: Int): ResponseEntity<Int> {
+        return try {
+            val response = appointmentServices.addAppointmentByEmployee(employee,cid)
+            ResponseEntity.status(201)
+                .body(response)
+        }catch (e: Exception) {
+            when(e) {
+                is ScheduleNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "Company not found", e)
                 is UserNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "User not found", e)
                 is ServiceNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "Service not found", e)
                 else ->  throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)

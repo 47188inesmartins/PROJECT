@@ -113,15 +113,15 @@ class UserController {
                 .httpOnly(true)
                 .secure(false)
                 .build()
-            val cookieRoles = ResponseCookie
+            /*val cookieRoles = ResponseCookie
                 .from("roles", user.second.toString())
                 .maxAge(7 * 24 * 60 * 60 )
                 .path("/")
                 .httpOnly(true)
                 .secure(false)
-                .build()
+                .build()*/
             response.addHeader(HttpHeaders.SET_COOKIE, cookieToken.toString())
-            response.addHeader(HttpHeaders.SET_COOKIE, cookieRoles.toString())
+            //response.addHeader(HttpHeaders.SET_COOKIE, cookieRoles.toString())
 
             ResponseEntity
                 .status(200)

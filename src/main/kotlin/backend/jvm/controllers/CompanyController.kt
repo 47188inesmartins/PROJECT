@@ -314,4 +314,20 @@ class CompanyController {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Application error", e)
         }
     }
+
+    //@GetMapping("/search")
+    /*fun getCompanyByDistance(@RequestParam distance:Double?): ResponseEntity<List<CompanyOutputDto>>{
+        return try {
+            val requestAttributes = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes
+            val request = requestAttributes.request
+            val bearerToken = request.getHeader("Authorization")?.removePrefix("Bearer ")
+            val response = companyServices.getCompaniesByUserLocation()
+            ResponseEntity
+                .status(HttpStatus.OK)
+                .header("Content-Type","application/json")
+                .body(response)
+        } catch (e: Exception) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Application error", e)
+        }
+    }*/
 }
