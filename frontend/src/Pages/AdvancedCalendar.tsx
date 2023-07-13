@@ -129,7 +129,7 @@ const MyCalendar: React.FC = () => {
 
     const buttonStyle = {
         borderRadius: '10px',
-        backgroundColor: '#D3D3D3',
+        backgroundColor: '#FFFFFF',
         color: 'white',
         padding: '10px',
     };

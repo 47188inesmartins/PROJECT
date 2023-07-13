@@ -15,6 +15,7 @@ import {useContext} from "react";
 import {LoggedInContextCookie} from "../Authentication/Authn";
 import {useParams} from "react-router-dom";
 import AdvancedCalendar from "./AdvancedCalendar";
+import {Layout} from "./Layout";
 
 
 export function CompanyProfileManaging() {
@@ -27,9 +28,22 @@ export function CompanyProfileManaging() {
 
     const check = false// (token !== "GUEST" && token !== "CLIENT")
     const response = Fetch(`/company/${id}`,'GET')
+    const containerStyle = {
+        display: 'flex',
+    };
+
+    const contentStyle = {
+        marginLeft: '200px',
+        backgroundColor: 'darkslategray',
+        padding: '20px',
+    };
 
     return (
-        <div>
+        <div  style = {contentStyle}>
+            <div className="sidebar-left" >
+                <Layout />
+            </div>
+            <div  >
             {
                 !response.response?
                     <div className="loading">
@@ -164,10 +178,13 @@ export function CompanyProfileManaging() {
                                 </MDBCol>
                             </MDBRow>
                         </MDBContainer>
+                        <div style={{ margin:'20px'}}>
+                        <AdvancedCalendar />
+                    </div>
                     </section>
             }
-            <AdvancedCalendar/>
-        </div>
+
+        </div></div>
     );
 }
 

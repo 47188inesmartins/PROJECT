@@ -8,6 +8,7 @@ import backend.jvm.services.dto.*
 import backend.jvm.utils.RoleManager
 import backend.jvm.utils.UserRoles
 import backend.jvm.utils.errorHandling.*
+import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import kotlinx.serialization.json.Json
@@ -102,20 +103,29 @@ class UserController {
     }
 
     @PostMapping("/login")
-    fun login(@RequestBody credentials: UserCredentials, response: HttpServletResponse): ResponseEntity<UUID> {
+    fun login(@RequestBody credentials: UserCredentials, response: HttpServletResponse): ResponseEntity<Pair<String?, List<CompanyRole>>> {
         return try {
             val user = userServices.getUsersByEmailAndPassword(credentials.email,credentials.password)
             val cookieToken = ResponseCookie
-                .from("token", user.token.toString())
+                .from("token", user.first)
+                .maxAge(7 * 24 * 60 * 60 )
+                .path("/")
+                .httpOnly(true)
+                .secure(false)
+                .build()
+            val cookieRoles = ResponseCookie
+                .from("roles", user.second.toString())
                 .maxAge(7 * 24 * 60 * 60 )
                 .path("/")
                 .httpOnly(true)
                 .secure(false)
                 .build()
             response.addHeader(HttpHeaders.SET_COOKIE, cookieToken.toString())
+            response.addHeader(HttpHeaders.SET_COOKIE, cookieRoles.toString())
+
             ResponseEntity
                 .status(200)
-                .body(user.token)
+                .body(user)
         }catch (e: Exception) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Email or password invalid", e)
         }

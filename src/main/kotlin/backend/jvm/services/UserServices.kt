@@ -92,11 +92,15 @@ class UserServices : IUserInterface {
         return userCompanyDao.getRoleByCompanyAndUser(compId,userId)
     }
 
-    override fun getUsersByEmailAndPassword (email: String, password: String): UserOutputDto {
+    override fun getUsersByEmailAndPassword (email: String, password: String): Pair<String, List<CompanyRole>> {
         val user = userDao.getUsersByEmail(email) ?: throw UserNotFound()
-        if(user.status == "PENDING") throw UserNotFound()
+        val token = user.token.toString()
+        //if(user.status == "PENDING") throw UserNotFound()
         val passwordEncode = passwordDecoder.getSavedPassword(user.password,password)
-        return if(passwordEncode)  UserOutputDto(user)
+        val usersRole = getRolesByToken(token)
+        return if(passwordEncode && usersRole.isEmpty())
+            Pair(token, listOf(CompanyRole(role = UserRoles.CLIENT.name)))
+        else if(passwordEncode) Pair(token, usersRole)
         else throw InvalidCredentials()
     }
 
@@ -108,6 +112,7 @@ class UserServices : IUserInterface {
     fun getRolesByToken(token: String): List<CompanyRole> {
         val user = userDao.getUserByToken(UUID.fromString(token))?.id ?: throw UserNotFound()
         val companyRoleRep = userCompanyDao.getUserCompanyByUserId(user)
+        if(companyRoleRep.isEmpty()) return emptyList()
         return companyRoleRep.map {
             CompanyRole(it.company!!.id,it.role)
         }

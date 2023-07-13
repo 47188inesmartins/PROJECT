@@ -1,13 +1,10 @@
 package backend.jvm.services.interfaces
 
 import backend.jvm.model.appointment.AppointmentEntity
-import backend.jvm.model.user.UserEntity
 import backend.jvm.model.appointment.AppointmentInfo
 import backend.jvm.model.appointment.AppointmentsUserInfo
 import backend.jvm.model.company.CompanyOutputDto
-import backend.jvm.model.user.CreatedUserOutput
-import backend.jvm.model.user.UserInputDto
-import backend.jvm.model.user.UserOutputDto
+import backend.jvm.model.user.*
 import org.springframework.web.multipart.MultipartFile
 
 interface IUserInterface {
@@ -25,7 +22,7 @@ interface IUserInterface {
 
     fun changePassword(password: String, id: Int): String
 
-    fun getUsersByEmailAndPassword (email: String, password: String): UserOutputDto
+    fun getUsersByEmailAndPassword (email: String, password: String): Pair<String, List<CompanyRole>>
 
     fun getRoleByUserIdAndCompany(company: Int, user_id: String): String?
 

@@ -9,6 +9,7 @@ import {Button, Modal} from "react-bootstrap";
 import {MDBInput} from "mdb-react-ui-kit";
 import { format } from 'date-fns';
 import {LoggedInContextCookie} from "../Authentication/Authn";
+import {Layout} from "./Layout";
 
 
 function TimePickerComponent (){
@@ -29,68 +30,62 @@ function TimePickerComponent (){
 
     const schedule = Fetch(`company/${id}/day/week-day?day=${startDate}`, "GET").response
 
-    if(schedule){
-        if(schedule.length === 0){
-            return (
-                <>
-                    <div className="card-header bg-dark">
-                        <div className="mx-0 mb-0 row justify-content-sm-center justify-content-start px-1">
-                            <DatePicker
-                                selected={startDate}
-                                onChange={(date) => handleDateChange(date)}
-                            />
-                        </div>
-                    </div>
-                    <a>Closed for the day</a>
-                </>
-            )
-        }
-    }
-
-    console.log("schedule = ",schedule)
-
     return (
         <>
+            <div className="sidebar-left">
+                <Layout />
+            </div>
             {!click?
                 <>
                     {!schedule?
                         <div> ..loading.. </div>
                         :
-                        <div className="container-fluid px-0 px-sm-4 mx-auto">
-                            <div className="row justify-content-center mx-0">
-                                <div className="col-lg-10">
-                                    <div className="card border-0">
-                                        <form autoComplete="off">
-                                            <div className="card-header bg-dark">
-                                                <div className="mx-0 mb-0 row justify-content-sm-center justify-content-start px-1">
-                                                    <MDBInput wrapperClass='mb-4 mx-5 w-100'
-                                                              labelClass='text-white'
-                                                              label=''
-                                                              id='formControlLg'
-                                                              type='date'
-                                                              size="lg"
-                                                              value={startDate}
-                                                              required={true}
-                                                              onChange={(e) => setStartDate(e.target.value)}
-                                                    />
-                                                </div>
-                                            </div>
-                                            <div className="card-body p-3 p-sm-5">
-                                                <div className="row text-center mx-0">
-                                                    {schedule.map((group, rowIndex) => (
-                                                        <div className="row text-center mx-0" key={rowIndex}>
-                                                            <div className="col-md-2 col-4 my-1 px-2" key={rowIndex}>
-                                                                <div className="cell py-1"
-                                                                     onClick={() => handleClick(group)}>{group}</div>
-                                                            </div>
+                        <div>
+                            {schedule.size !== 0 ?
+
+
+                                <div className="container-fluid px-0 px-sm-4 mx-auto">
+                                    <div className="row justify-content-center mx-0">
+                                        <div className="col-lg-10">
+                                            <div className="card border-0">
+                                                <form autoComplete="off">
+                                                    <div className="card-header bg-dark">
+                                                        <div
+                                                            className="mx-0 mb-0 row justify-content-sm-center justify-content-start px-1">
+                                                            <MDBInput wrapperClass='mb-4 mx-5 w-100'
+                                                                      labelClass='text-white'
+                                                                      label=''
+                                                                      id='formControlLg'
+                                                                      type='date'
+                                                                      size="lg"
+                                                                      value={startDate}
+                                                                      required={true}
+                                                                      onChange={(e) => setStartDate(e.target.value)}
+                                                            />
                                                         </div>
-                                                    ))}
-                                                </div>
+                                                    </div>
+                                                    <div className="card-body p-3 p-sm-5">
+                                                        <div className="row text-center mx-0">
+                                                            {schedule.map((group, rowIndex) => (
+                                                                <div className="row text-center mx-0" key={rowIndex}>
+                                                                    <div className="col-md-2 col-4 my-1 px-2"
+                                                                         key={rowIndex}>
+                                                                        <div className="cell py-1"
+                                                                             onClick={() => handleClick(group)}>{group}</div>
+                                                                    </div>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                </form>
                                             </div>
-                                        </form>
+                                        </div>
+
                                     </div>
                                 </div>
-                            </div>
+                                :
+                                <p>No available hours for this day</p>
+                            }
                         </div>
                     }
                 </>
@@ -231,7 +226,7 @@ function PopUpEmployee(props: {employees, startDate, appHour}){
             })
             .catch(error => {
                 console.error('Ocorreu um erro:', error);
-        });
+            });
     }
 
     useEffect(() => {
