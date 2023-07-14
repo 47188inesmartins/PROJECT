@@ -24,6 +24,7 @@ import jakarta.persistence.EntityNotFoundException
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -201,9 +202,10 @@ class CompanyController {
     }
 
     @GetMapping
-    fun getAllCompanies(): ResponseEntity<List<CompanyOutputDto>>{
+    fun getAllCompanies(  @RequestParam(defaultValue = "0") page: Int,
+                          @RequestParam(defaultValue = "10") size: Int): ResponseEntity<Page<CompanyOutputDto>>{
         return try{
-            val response = companyServices.getAllCompanies()
+            val response = companyServices.getAllCompanies(page, size)
             ResponseEntity.status(200).body(response)
         }catch(e: Exception){
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
@@ -300,12 +302,14 @@ class CompanyController {
     }
 
     @GetMapping("/search")
-    fun searchForCompany(@RequestParam search: String?): ResponseEntity<List<CompanyOutputDto>> {
+    fun searchForCompany(@RequestParam search: String?,
+                         @RequestParam(defaultValue = "0") page: Int,
+                         @RequestParam(defaultValue = "10") size: Int): ResponseEntity<Page<CompanyOutputDto>> {
         return try {
             val requestAttributes = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes
             val request = requestAttributes.request
             val bearerToken = request.getHeader("Authorization")?.removePrefix("Bearer ")
-            val response = companyServices.getSearchedCompanies(bearerToken, search)
+            val response = companyServices.getSearchedCompanies(bearerToken, search, page, size)
             ResponseEntity
                 .status(HttpStatus.OK)
                 .header("Content-Type","application/json")

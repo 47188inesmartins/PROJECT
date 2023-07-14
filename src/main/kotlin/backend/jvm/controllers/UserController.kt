@@ -8,7 +8,7 @@ import backend.jvm.services.dto.*
 import backend.jvm.utils.RoleManager
 import backend.jvm.utils.UserRoles
 import backend.jvm.utils.errorHandling.*
-import com.fasterxml.jackson.databind.ObjectMapper
+import com.google.gson.Gson
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import kotlinx.serialization.json.Json
@@ -24,6 +24,7 @@ import org.springframework.web.context.request.RequestContextHolder
 import org.springframework.web.context.request.ServletRequestAttributes
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.server.ResponseStatusException
+import java.net.URLEncoder
 import java.util.*
 
 
@@ -106,6 +107,9 @@ class UserController {
     fun login(@RequestBody credentials: UserCredentials, response: HttpServletResponse): ResponseEntity<Pair<String?, List<CompanyRole>>> {
         return try {
             val user = userServices.getUsersByEmailAndPassword(credentials.email,credentials.password)
+
+            val gson = Gson()
+            val rolesJson = gson.toJson(user.second)
             val cookieToken = ResponseCookie
                 .from("token", user.first)
                 .maxAge(7 * 24 * 60 * 60 )
@@ -113,13 +117,13 @@ class UserController {
                 .httpOnly(true)
                 .secure(false)
                 .build()
-            /*val cookieRoles = ResponseCookie
-                .from("roles", user.second.toString())
+            val cookieRoles = ResponseCookie
+                .from("roles", rolesJson)
                 .maxAge(7 * 24 * 60 * 60 )
                 .path("/")
                 .httpOnly(true)
                 .secure(false)
-                .build()*/
+                .build()
             response.addHeader(HttpHeaders.SET_COOKIE, cookieToken.toString())
             //response.addHeader(HttpHeaders.SET_COOKIE, cookieRoles.toString())
 

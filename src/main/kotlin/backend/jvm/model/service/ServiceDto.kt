@@ -8,7 +8,6 @@ data class ServiceInputList(val services: List<ServiceInputDto>)
 data class ServiceInputDto(
     val serviceName: String,
     val duration: String,
-    val numberMax: Int?,
     val price: Double,
     val users: List<Int>?
 
@@ -18,7 +17,6 @@ data class ServiceInputDto(
         return ServiceEntity(
             db.serviceName,
             d,
-            db.numberMax,
             db.price,
             companyEntity,
             users
@@ -31,7 +29,6 @@ data class ServiceOutputDto(
     val id: Int,
     val serviceName: String,
     val duration: Time,
-    val numberMax: Int?,
     val price: Double,
     val company: Int
 ){
@@ -39,7 +36,6 @@ data class ServiceOutputDto(
         id = service.id,
         serviceName = service.name,
         duration = service.duration,
-        numberMax = service.numberMax,
         price = service.price,
         company = service.company.id
     )

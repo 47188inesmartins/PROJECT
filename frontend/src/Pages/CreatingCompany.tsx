@@ -151,6 +151,7 @@ export function CreatingCompany() {
     }, [redirect]);
 
     if (redirect) {
+        window.location.href = '/'
         return(<></>)
     }
 

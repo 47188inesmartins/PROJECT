@@ -32,9 +32,6 @@ class ServiceEntity{
     @Column(name = "duration")
     val duration: Time
 
-    @Column(name = "number_max")
-    val numberMax: Int?
-
     @Column(name = "price")
     val price: Double
 
@@ -64,7 +61,6 @@ class ServiceEntity{
     constructor(){
         this.name = ""
         this.duration = Time.valueOf("00:00:00")
-        this.numberMax = 0
         this.price = 0.0
         this.company = CompanyEntity()
         this.user = listOf()
@@ -72,10 +68,9 @@ class ServiceEntity{
         this.day = listOf()
     }
 
-    constructor(name : String, duration: Time, numberMax: Int?, price: Double, companyEntity: CompanyEntity, users: List<UserEntity>?){
+    constructor(name : String, duration: Time, price: Double, companyEntity: CompanyEntity, users: List<UserEntity>?){
         this.name = name
         this.duration = duration
-        this.numberMax = numberMax
         this.price = price
         this.company = companyEntity
         this.user = users

@@ -16,15 +16,10 @@ import Cookies from 'js-cookie';
 export function Home() {
 
     const context = React.useContext(LoggedInContextCookie).loggedInState
-    const auth = context.auth
     const role = context.role
 
     const hasManager = role.some((user) => user.role === "MANAGER");
     const hasEmployee = role.some((user) => user.role === "EMPLOYEE");
-    console.log("role", role)
-    console.log("has employee", hasEmployee)
-    console.log("has manager", hasManager)
-
     const valorDoCookie = Cookies.get('name');
 
     console.log("valor do cookie", valorDoCookie)
@@ -35,16 +30,24 @@ export function Home() {
     }
 
     const searchValue = getQueryParam('search');
+    const page = parseInt(getQueryParam('page'));
+    const size = parseInt(getQueryParam('size'));
 
-    var response;
-
-    if (searchValue !== null) response = Fetch(`/company/search?search=${searchValue}`, 'GET');
-    else response = Fetch('/company', 'GET');
+    let response;
+    if (searchValue !== null) response = Fetch(`/company/search?search=${searchValue}&page=${page}&size=${size}`, 'GET');
+    else response = Fetch(`/company?page=${page}&size=${size}`, 'GET');
     console.log('response = ', response);
+
+    const goToNextPage = () => {
+        window.location.href = `?page=${page+1}&size=${size}`
+    };
+
+    const goToPreviousPage = () => {
+        window.location.href = `?page=${page-1}&size=${size}`
+    };
 
     return (
         <div style={{ display: 'flex' }}>
-
             <div className="sidebar-left">
                 <Layout />
             </div>
@@ -62,8 +65,8 @@ export function Home() {
                     <p>Loading...</p>
                 ) : (
                     <div>
-                        <SearchBar />
-                        {response.response.length === 0 ? (
+                        <SearchBar  page={page} size={size}/>
+                        {response.response.content.length === 0 ? (
                             <MDBContainer className="py-5">
                                 <MDBCard className="px-3 pt-3" style={{ maxWidth: '100%' }}>
                                     <div>
@@ -75,8 +78,24 @@ export function Home() {
                         ) : (
                             <MDBContainer className="py-5">
                                 <MDBCard className="px-3 pt-3" style={{ maxWidth: '100%' }}>
+                                    <div className="pagination-container">
+                                        <button
+                                            className="btn btn-primary"
+                                            onClick={goToPreviousPage}
+                                            disabled={page <= 0}
+                                        >
+                                            Previous
+                                        </button>
+                                        <button
+                                            className="btn btn-primary"
+                                            onClick={goToNextPage}
+                                            disabled={response.response.totalPages <= page+1}
+                                        >
+                                            Next
+                                        </button>
+                                    </div>
                                     <div>
-                                        {response.response.map((object: any) => (
+                                        {response.response.content.map((object: any) => (
                                             <a
                                                 key={object.id}
                                                 href={`/company/${object.id}`}
@@ -125,7 +144,7 @@ export function Home() {
     );
 }
 
-function SearchBar() {
+function SearchBar(props: {page: number, size: number}) {
     const [searchTerm, setSearchTerm] = useState('');
     const [submit, setSubmit] = useState(false);
 
@@ -139,7 +158,7 @@ function SearchBar() {
     };
 
     function FetchSearch() {
-        window.location.href = `/?search=${searchTerm}`;
+        window.location.href = `/?search=${searchTerm}&page=${props.page}&size=${props.size}`;
         return <></>;
     }
 

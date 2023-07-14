@@ -34,7 +34,7 @@ interface ICompanyServices {
 
     fun changeDescription(id: Int, description: String): CompanyEntity
 
-    fun getAllCompanies(): List<CompanyOutputDto>
+ //   fun getAllCompanies(): List<CompanyOutputDto>
 
     fun getAllServices(id: Int): List<ServiceOutputDto>
 

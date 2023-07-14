@@ -23,6 +23,10 @@ import backend.jvm.utils.*
 import backend.jvm.utils.errorHandling.*
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.util.StringUtils
 import org.springframework.web.multipart.MultipartFile
@@ -68,7 +72,7 @@ class CompanyServices : ICompanyServices {
      * @return CompanyOutputDto info aof the saved company
      */
     @Transactional(rollbackOn = [Exception::class])
-    fun addCompany(token: String, company: CompanyInputDto, emails: List<String>?, days: List<DayInputDto>, duration: String): CompanyOutputDto {
+    fun addCompany(token: String, company: CompanyInputDto, emails: List<String>?, days: List<DayInputDto>, duration: String): CompanyOutputDto{
 
         val managerUser = userDao.getUserByToken(UUID.fromString(token)) ?: throw UserNotFound()
         val coordinates = getCompanyCoordinates(company.street, company.city, company.country)
@@ -89,6 +93,9 @@ class CompanyServices : ICompanyServices {
         return CompanyOutputDto(comp)
     }
 
+    override fun getSearchedCompanies(token: String?, search: String?): List<CompanyOutputDto>? {
+        TODO("Not yet implemented")
+    }
 
 
     /**
@@ -157,12 +164,17 @@ class CompanyServices : ICompanyServices {
     }
 
 
-    override fun getAllCompanies(): List<CompanyOutputDto> {
-        return companyDao.findAll().map { CompanyOutputDto(it) }
+     fun getAllCompanies(page: Int, size: Int): Page<CompanyOutputDto> {
+        val pageable: Pageable = PageRequest.of(page, size)
+        return companyDao.findAll(pageable).map { CompanyOutputDto(it) }
     }
 
     override fun getAllServices(id: Int): List<ServiceOutputDto>{
         return serviceDao.getAllServicesFromACompany(id).map { ServiceOutputDto(it) }
+    }
+
+    override fun getPersonalizedCompanies(token: String?): List<CompanyOutputDto>? {
+        TODO("Not yet implemented")
     }
 
     fun getCompanyByUserAndRole(userId: String, role: String): List<CompanyInfo> {
@@ -265,25 +277,27 @@ class CompanyServices : ICompanyServices {
         appointmentDao.deleteAppointmentByDateAndEmployee(employeeId,getCurrentTime(),getCurrentDate())
     }
 
-    override fun getSearchedCompanies(token: String?,search: String?): List<CompanyOutputDto>?{
-        if(search == "null") return getAllCompanies()
-        val allCompanies = companyDao.getCompanyBySearch("%${search}%")
+     fun getSearchedCompanies(token: String?,search: String?, page: Int, size: Int): Page<CompanyOutputDto>?{
+        val pageable: Pageable = PageRequest.of(page, size)
+        if(search == "null") return getAllCompanies(page, size)
+        val allCompanies = companyDao.getCompanyBySearch("%${search}%", pageable)
         if(token == null) return  allCompanies?.map { CompanyOutputDto(it) }
         val user = userDao.getUserByToken(UUID.fromString(token))?: throw UserNotFound()
         val userLocation = Geolocation(user.latitude,user.longitude)
-        return getCompaniesByUserLocation(5.5,userLocation,allCompanies!!,true).map { CompanyOutputDto(it) }
+        return getCompaniesByUserLocation(5.5,userLocation,allCompanies!!,true, pageable).map { CompanyOutputDto(it) }
     }
 
-    override fun getPersonalizedCompanies(token: String?): List<CompanyOutputDto>?{
+     fun getPersonalizedCompanies(token: String?,  page: Int, size: Int): Page<CompanyOutputDto>?{
+        val pageable: Pageable = PageRequest.of(page, size)
         if(token == null) {
-            val companies = companyDao.findAll()
+            val companies = companyDao.findAll(pageable)
             return companies.map { CompanyOutputDto(it) }
         }
         val user = userDao.getUserByToken(UUID.fromString(token))?: throw UserNotFound()
         val userLocation = Geolocation(user.latitude,user.longitude)
         val categoriesArray = user.interests.split(",").toTypedArray()
-        val comps = companyDao.getCompaniesByCategory(categoriesArray)!!
-        return getCompaniesByUserLocation(5.5,userLocation,comps,false).map { CompanyOutputDto(it) }
+        val comps = companyDao.getCompaniesByCategory(categoriesArray, pageable)!!
+        return getCompaniesByUserLocation(5.5,userLocation,comps,false, pageable).map { CompanyOutputDto(it) }
     }
 
     /**
@@ -293,19 +307,31 @@ class CompanyServices : ICompanyServices {
      * @param order true if we want to show all companies order by distance or false if only the companies nearby the user
      * @return nearby companies
      */
-    fun getCompaniesByUserLocation(distance: Double,userLocation: Geolocation, companiesList: List<CompanyEntity>,order:Boolean): List<CompanyEntity> {
-        val nearCompanies = mutableListOf<Pair<CompanyEntity,Double>>()
-        companiesList.forEach {company ->
-            val companyLocation = Geolocation(company.latitude,company.longitude)
-            val distanceUserComp = GeoCoder().calculateHaversineDistance(userLocation,companyLocation)
-            if(distanceUserComp <= distance){
-                nearCompanies.add(0,Pair(company,distanceUserComp))
-            }else{
-                if(order) nearCompanies.add(Pair(company,distanceUserComp))
+
+    fun getCompaniesByUserLocation(
+        distance: Double,
+        userLocation: Geolocation,
+        companiesList: Page<CompanyEntity>,
+        order: Boolean,
+        pageable: Pageable
+    ): Page<CompanyEntity> {
+        val nearCompanies = mutableListOf<Pair<CompanyEntity, Double>>()
+        companiesList.forEach { company ->
+            val companyLocation = Geolocation(company.latitude, company.longitude)
+            val distanceUserComp = GeoCoder().calculateHaversineDistance(userLocation, companyLocation)
+            if (distanceUserComp <= distance) {
+                nearCompanies.add(0, Pair(company, distanceUserComp))
+            } else {
+                if (order) nearCompanies.add(Pair(company, distanceUserComp))
             }
         }
         nearCompanies.sortBy { it.second }
-        return nearCompanies.map { it.first }
+
+        val startIndex = pageable.pageNumber * pageable.pageSize
+        val endIndex = (startIndex + pageable.pageSize).coerceAtMost(nearCompanies.size)
+        val pagedCompanies = nearCompanies.subList(startIndex, endIndex).map { it.first }
+
+        return PageImpl(pagedCompanies, pageable, nearCompanies.size.toLong())
     }
 
     /**

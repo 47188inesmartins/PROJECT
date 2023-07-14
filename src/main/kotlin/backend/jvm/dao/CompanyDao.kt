@@ -3,6 +3,8 @@ package backend.jvm.dao
 import backend.jvm.model.*
 import backend.jvm.model.appointment.AppointmentEntity
 import backend.jvm.model.company.CompanyEntity
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
@@ -12,13 +14,13 @@ import java.util.*
 interface CompanyDao : JpaRepository<CompanyEntity, Int>{
 
     @Query(value = "SELECT * FROM COMPANY c WHERE type = ANY(:categories)", nativeQuery = true)
-    fun getCompaniesByCategory(@Param("categories") categories: Array<String>): List<CompanyEntity>?
+    fun getCompaniesByCategory(@Param("categories") categories: Array<String>, pageable: Pageable): Page<CompanyEntity>?
 
     @Query(name = "getCompanyById")
     fun findAllById(id: Int): CompanyEntity?
 
     @Query(value = "Select * from company c where c.name ilike :search or c.description ilike :search or c.type ilike :search", nativeQuery = true)
-    fun getCompanyBySearch(@Param("search") search: String):List<CompanyEntity>?
+    fun getCompanyBySearch(@Param("search") search: String, pageable: Pageable): Page<CompanyEntity>?
 
     fun findCompanyByNif(nif:String): CompanyEntity?
 

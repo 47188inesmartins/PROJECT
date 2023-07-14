@@ -29,7 +29,7 @@ class RoleInterceptor (
                 if (response.status == HttpStatus.CREATED.value()) {
                     val headerAuth =  request.getHeader("Authorization").substringAfter("Bearer ")
                     val user = userServices.getUserByToken(headerAuth) ?: throw InvalidUser()
-                    userServices.changeRole(user.id, UserRoles.MANAGER.name)
+                 //   userServices.changeRole(user.id, UserRoles.MANAGER.name)
                 }
             }
         }
