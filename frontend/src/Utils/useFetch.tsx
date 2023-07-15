@@ -3,7 +3,6 @@ import {
     useState,
     useEffect
 } from 'react';
-import {LoggedInContextCookie} from "../Pages/Authentication/Authn";
 import Cookies from 'js-cookie';
 
 export const HOST = "http://localhost:8000/api"
@@ -63,7 +62,7 @@ console.log("auth ====", authorization)
 export function SimpleFetch(url:string , body: any = null, method:string = 'GET'):Response{
     const token =  Cookies.get('name');
     const [response,setResponse] = useState(undefined)
-    const authorization: { 'Content-Type': string; Authorization?: string; } = (token !== "")
+    const authorization: { 'Content-Type': string; Authorization?: string; } = (token !== undefined)
         ? {'Content-Type': 'application/json', 'Authorization': `Bearer ${token} `}
         : {'Content-Type': 'application/json'};
     const hostUrl = HOST + url

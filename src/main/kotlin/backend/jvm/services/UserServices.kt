@@ -4,8 +4,6 @@ import backend.jvm.model.*
 import backend.jvm.model.appointment.AppointmentEntity
 import backend.jvm.model.appointment.AppointmentInfo
 import backend.jvm.model.appointment.AppointmentsUserInfo
-import backend.jvm.model.company.CompanyOutputDto
-import backend.jvm.model.service.ServiceEntity
 import backend.jvm.model.user.*
 import backend.jvm.dao.*
 import backend.jvm.services.interfaces.IUserInterface
@@ -92,10 +90,9 @@ class UserServices : IUserInterface {
         return userCompanyDao.getRoleByCompanyAndUser(compId,userId)
     }
 
-    override fun getUsersByEmailAndPassword (email: String, password: String): Pair<String, List<CompanyRole>> {
+    fun getUsersByEmailAndPassword (email: String, password: String): Pair<String, List<CompanyRole>> {
         val user = userDao.getUsersByEmail(email) ?: throw UserNotFound()
         val token = user.token.toString()
-        //if(user.status == "PENDING") throw UserNotFound()
         val passwordEncode = passwordDecoder.getSavedPassword(user.password,password)
         val usersRole = getRolesByToken(token)
         return if(passwordEncode && usersRole.isEmpty())
@@ -205,4 +202,34 @@ class UserServices : IUserInterface {
         val getAddressInfo = AddressInformation(street,city,country)
         return GeoCoder().getGeolocation(getAddressInfo) ?: throw InvalidAddress()
     }
+
+    fun rolesSerializer(companyRoles: List<CompanyRole>): String {
+        val stringBuilder = StringBuilder()
+        stringBuilder.append("[")
+        for ((index, role) in companyRoles.withIndex()) {
+            stringBuilder.append("{")
+            stringBuilder.append("companyId:${role.companyId}|")
+            stringBuilder.append("role:${role.role}")
+            stringBuilder.append("}")
+            if (index < companyRoles.size - 1) {
+                stringBuilder.append("|")
+            }
+        }
+        stringBuilder.append("]")
+        return stringBuilder.toString()
+    }
+
+    fun rolesDeserializer(serializedRoles: String): List<CompanyRole> {
+        val companyRoles = mutableListOf<CompanyRole>()
+        val rolesWithoutBrackets = serializedRoles.substring(1, serializedRoles.length - 1)
+        val roleStrings = rolesWithoutBrackets.split("|")
+        for (roleString in roleStrings) {
+            val roleWithoutBraces = roleString.substring(1, roleString.length - 1)
+            val (companyIdStr, role) = roleWithoutBraces.split(":")
+            val companyId = companyIdStr.substringAfter("companyId").toInt()
+            companyRoles.add(CompanyRole(companyId, role))
+        }
+        return companyRoles
+    }
+
 }

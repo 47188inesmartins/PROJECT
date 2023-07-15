@@ -3,7 +3,8 @@ import { Link, useParams } from "react-router-dom";
 import { Fetch } from "../../Utils/useFetch";
 import "../../Style/ManagingEmployees.css";
 import {LoggedInContextCookie} from "../Authentication/Authn";
-import {Navigate} from "react-router";
+import Cookies from 'js-cookie';
+
 
 
 /*
@@ -19,7 +20,7 @@ secalhar o manager devia aprovar as ferias de um eployee quando um employee tent
 
 export function ManagingVacations() {
     const cid = useParams().id;
-    const token =  React.useContext(LoggedInContextCookie).loggedInState.token
+    const token = Cookies.get('name');
     const [redirect, setRedirect] = useState(false)
     const response = Fetch(`company/${cid}/vacations`, "GET");
     console.log("Employees", response);

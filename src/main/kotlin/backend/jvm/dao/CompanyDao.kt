@@ -36,7 +36,6 @@ interface CompanyDao : JpaRepository<CompanyEntity, Int>{
     @Query(value = "update company c set c.description=:description where c.id = :id", nativeQuery = true)
     fun changeDescription(@Param("id") id: Int, @Param("description") description: String): CompanyEntity
 
-
     @Query(value = "select c.id, c.nif, c.address, c.latitude, c.longitude, c.name, c.phone, c.type, c.description " +
             "from COMPANY C inner join USER_COMPANY UC on uc.company_id = c.id " +
             "and uc.user_id = :user_id and uc.role = :role",nativeQuery = true)

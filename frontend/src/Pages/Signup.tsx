@@ -11,6 +11,8 @@ import {
 import { useEffect, useState } from "react";
 import { LoggedInContextCookie } from "./Authentication/Authn";
 import {useParams} from "react-router-dom";
+import Cookies from 'js-cookie';
+
 
 interface UserInputDto {
     email: string,
@@ -56,7 +58,7 @@ export function Signup() {
         }
     };
 
-    const token = React.useContext(LoggedInContextCookie).loggedInState.token;
+    const token = Cookies.get('name')
 
     const handleSubmit = () => {
         const userCredentials: UserInputDto = {

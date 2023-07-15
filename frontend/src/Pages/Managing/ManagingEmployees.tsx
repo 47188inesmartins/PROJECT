@@ -2,9 +2,8 @@ import React, {useEffect, useState} from "react";
 import { Link, useParams } from "react-router-dom";
 import { Fetch } from "../../Utils/useFetch";
 import "../../Style/ManagingEmployees.css";
-import {LoggedInContextCookie} from "../Authentication/Authn";
-import {Navigate} from "react-router";
-import {simpleFetch} from "../../Utils/fetchRedirect";
+import Cookies from 'js-cookie';
+
 
 
 
@@ -19,7 +18,7 @@ import {simpleFetch} from "../../Utils/fetchRedirect";
 
 export function ManagingEmployees() {
     const cid = useParams().id;
-    const token =  React.useContext(LoggedInContextCookie).loggedInState.token
+    const token =  Cookies.get('name')
     const [redirect, setRedirect] = useState(false)
     const response = Fetch(`company/${cid}/employees`, "GET");
     console.log("Employees", response);

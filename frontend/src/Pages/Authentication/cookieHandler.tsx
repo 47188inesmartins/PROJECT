@@ -1,13 +1,3 @@
-export type cookieParams = {
-    name : string ,
-    value: string ,
-    expire: string | undefined,
-    path: string | undefined,
-};
-
-const TOKEN_PARAM = "token"
-
-
 
 export async function fetchGetSession(onSuccess: (token: string, role: Array<any>) => void) {
     console.log("fetch get session")

@@ -17,11 +17,9 @@ import {Layout} from "./Layout";
 
 
 export function ProfilePage() {
+
     const role = useContext(LoggedInContextCookie).loggedInState.role
     const roleCheck = ((role.indexOf('manager') === -1) && (role.indexOf('employee') === -1))
-
-
-    const check = false //(token !== "GUEST" && token !== "CLIENT")
     const response = Fetch('/user/info','GET')
 
     return (
@@ -129,13 +127,6 @@ export function ProfilePage() {
                                         </MDBRow>
                                     </MDBCardBody>
                                 </MDBCard>
-                                    {check?
-                                        <MDBRow>
-                                            <CompanyRole role={"MANAGER"} Text={"My managing companies"}/>
-                                            <CompanyRole role={"EMPLOYEE"} Text={"Works for"}/>
-                                        </MDBRow>:
-                                        <></>
-                                    }
                             </MDBCol>
                         </MDBRow>
                     </MDBContainer>
@@ -145,7 +136,7 @@ export function ProfilePage() {
     );
 }
 
-function CompanyRole(props:{role:String,Text:String}) {
+function CompanyRole(props:{role:String,text:String}) {
     const resp = Fetch(`/company/info?role=${props.role}`, 'GET')
     console.log("companies",resp.response)
     if(resp.response){
@@ -165,7 +156,7 @@ function CompanyRole(props:{role:String,Text:String}) {
                 <MDBCol md="6">
                     <MDBCard className="mb-4 mb-md-0">
                         <MDBCardBody>
-                            <MDBCardText className="mb-4">{props.Text}</MDBCardText>
+                            <MDBCardText className="mb-4">{props.text}</MDBCardText>
                             { resp.response.map((object: any) => (
                                 <a href={`/company/${object.id}/profile`} className="mb-1"  style={{ fontSize: '1.2rem' }}>
                                     <MDBCardText>{object.name}</MDBCardText>

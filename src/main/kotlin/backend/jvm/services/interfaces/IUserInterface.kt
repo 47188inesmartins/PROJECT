@@ -22,7 +22,7 @@ interface IUserInterface {
 
     fun changePassword(password: String, id: Int): String
 
-    fun getUsersByEmailAndPassword (email: String, password: String): Pair<String, List<CompanyRole>>
+    //fun getUsersByEmailAndPassword (email: String, password: String): Pair<String, List<CompanyRole>>
 
     fun getRoleByUserIdAndCompany(company: Int, user_id: String): String?
 
@@ -33,8 +33,6 @@ interface IUserInterface {
     fun getAllAppointmentsByUser(token: String): AppointmentsUserInfo
 
     fun updateUserProfilePicture(id: Int, image: MultipartFile)
-
-
 
     fun mapToAppointmentsInfo(listAppointmentEntities: List<AppointmentEntity>):List<AppointmentInfo>
 

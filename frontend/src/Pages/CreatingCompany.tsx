@@ -158,11 +158,10 @@ export function CreatingCompany() {
     const handleTimeChange = (index, field, value) => {
         setSchedule(prevSchedule => {
             if (index === null) {
-                const updatedSchedule = prevSchedule.map(day => ({
+                return prevSchedule.map(day => ({
                     ...day,
                     [field]: value
                 }));
-                return updatedSchedule;
             } else {
                 const updatedSchedule = [...prevSchedule];
                 updatedSchedule[index][field] = value;

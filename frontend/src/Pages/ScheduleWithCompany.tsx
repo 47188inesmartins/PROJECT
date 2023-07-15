@@ -10,6 +10,7 @@ import {MDBInput} from "mdb-react-ui-kit";
 import { format } from 'date-fns';
 import {LoggedInContextCookie} from "./Authentication/Authn";
 import {Layout} from "./Layout";
+import Cookies from 'js-cookie';
 
 
 function TimePickerComponent (){
@@ -197,7 +198,7 @@ function PopUpEmployee(props: {employees, startDate, appHour}){
         setShow(false);
         window.location.href = `/company/${id}`;
     }
-    const token = React.useContext(LoggedInContextCookie).loggedInState.token;
+    const token = Cookies.get('name');
 
     function handleClick(value){
 

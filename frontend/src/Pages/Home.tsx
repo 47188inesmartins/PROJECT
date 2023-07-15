@@ -17,6 +17,7 @@ export function Home() {
 
     const context = React.useContext(LoggedInContextCookie).loggedInState
     const role = context.role
+    console.log("role = ", role)
 
     const hasManager = role.some((user) => user.role === "MANAGER");
     const hasEmployee = role.some((user) => user.role === "EMPLOYEE");
@@ -65,7 +66,7 @@ export function Home() {
                     <p>Loading...</p>
                 ) : (
                     <div>
-                        <SearchBar  page={page} size={size}/>
+                        <SearchBar page={page} size={size}/>
                         {response.response.content.length === 0 ? (
                             <MDBContainer className="py-5">
                                 <MDBCard className="px-3 pt-3" style={{ maxWidth: '100%' }}>
