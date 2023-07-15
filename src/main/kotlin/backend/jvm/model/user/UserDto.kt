@@ -86,9 +86,10 @@ data class UserInputDto(
 }
 
 
-@kotlinx.serialization.Serializable
 data class CompanyRole(val companyId: Int? = null, val role: String = UserRoles.GUEST.name)
 
 data class ReceiveMoney(val money: String)
 
-data class AppointmentEmployee( val appHour: String, val appDate: String, val email: String, val service: Int)
+data class AppointmentManager(val appHour: String, val appDate: String, val userId: Int, val service: Int)
+
+data class AppointmentEmployee( val appHour: String, val appDate: String, val service: Int)

@@ -13,6 +13,7 @@ import {useParams} from "react-router-dom";
 import {Button, Modal} from "react-bootstrap";
 import {Navigate} from "react-router";
 import {Fetch} from "../Utils/useFetch";
+import {Layout} from "./Layout";
 
 
 export function MyAppointments() {
@@ -28,6 +29,9 @@ export function MyAppointments() {
 
     return (
             <div>
+                <div className="sidebar-left">
+                    <Layout />
+                </div>
                 {!appointments?
                     <div className="loading">
                         <div className="spinner-border" role="status">

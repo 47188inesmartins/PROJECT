@@ -5,6 +5,7 @@ import backend.jvm.model.appointment.AppointmentInputDto
 import backend.jvm.model.appointment.AppointmentOutputDto
 import backend.jvm.model.service.ServiceOutputDto
 import backend.jvm.model.user.AppointmentEmployee
+import backend.jvm.model.user.AppointmentManager
 import backend.jvm.model.user.UserOutputDto
 import backend.jvm.utils.RoleManager
 import backend.jvm.utils.errorHandling.*
@@ -39,13 +40,14 @@ class AppointmentController {
                 is ScheduleNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "Schedule not found", e)
                 is UserNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "User not found", e)
                 is ServiceNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "Service not found", e)
+                is InvalidDate -> throw ResponseStatusException(HttpStatus.BAD_REQUEST,"Date is not valid",e)
                 else ->  throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
             }
         }
     }
     @RoleManager(["MANAGER", "CLIENT", "EMPLOYEE"])
     @PostMapping("/employees")
-    fun addAppointmentByManager(@RequestBody employee: AppointmentEmployee, @PathVariable cid: Int): ResponseEntity<Int> {
+    fun addAppointmentByManager(@RequestBody employee: AppointmentManager, @PathVariable cid: Int): ResponseEntity<Int> {
         return try {
             val response = appointmentServices.addAppointmentByEmployee(employee,cid)
             ResponseEntity.status(201)
@@ -55,10 +57,31 @@ class AppointmentController {
                 is ScheduleNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "Company not found", e)
                 is UserNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "User not found", e)
                 is ServiceNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "Service not found", e)
+                is InvalidDate -> throw ResponseStatusException(HttpStatus.BAD_REQUEST,"Date is not valid",e)
                 else ->  throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
             }
         }
     }
+
+    /*@PostMapping("/employees")
+    fun addOwnAppointmentEmployee(@RequestBody employee: AppointmentEmployee, @PathVariable cid: Int): ResponseEntity<Int> {
+        return try {
+            val requestAttributes = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes
+            val request = requestAttributes.request
+            val bearerToken = request.getHeader("Authorization")?.removePrefix("Bearer ")
+            val response = appointmentServices.addOwnAppointment(bearerToken,employee,cid)
+            ResponseEntity.status(201)
+                .body(response)
+        }catch (e: Exception) {
+            when(e) {
+                is ScheduleNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "Company not found", e)
+                is UserNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "User not found", e)
+                is ServiceNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "Service not found", e)
+                is InvalidDate -> throw ResponseStatusException(HttpStatus.BAD_REQUEST,"Date is not valid",e)
+                else ->  throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
+            }
+        }
+    }*/
 
 
     @RoleManager(["CLIENT","MANAGER","EMPLOYEE"])

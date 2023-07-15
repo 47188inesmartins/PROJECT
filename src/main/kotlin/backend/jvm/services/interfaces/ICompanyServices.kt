@@ -10,7 +10,7 @@ import backend.jvm.model.vacation.VacationOutputDto
 
 interface ICompanyServices {
 
-    fun getSearchedCompanies(token: String?,search: String?): List<CompanyOutputDto>?
+   // fun getSearchedCompanies(token: String?,search: String?,distance:Double?): List<CompanyOutputDto>?
 
   //  fun addCompany(token: String, company: CompanyInputDto): CompanyOutputDto
 
@@ -38,5 +38,5 @@ interface ICompanyServices {
 
     fun getAllServices(id: Int): List<ServiceOutputDto>
 
-    fun getPersonalizedCompanies(token: String?): List<CompanyOutputDto>?
+   // fun getPersonalizedCompanies(distance:Double,token: String?): List<CompanyOutputDto>?
 }

@@ -9,7 +9,6 @@ import java.sql.Time
 data class AppointmentInputDto(
     val appHour: String,
     val appDate: String,
-  //  val schedule: Int,
     val user: Int?,
     val service: Int
 ) {

@@ -13,6 +13,7 @@ import {
 import {Fetch} from "../Utils/useFetch";
 import {useContext} from "react";
 import {LoggedInContextCookie} from "./Authentication/Authn";
+import {Layout} from "./Layout";
 
 
 export function ProfilePage() {
@@ -25,6 +26,9 @@ export function ProfilePage() {
 
     return (
         <div>
+            <div className="sidebar-left">
+                <Layout />
+            </div>
             {!response.response?
                 <div className="loading">
                     <div className="spinner-border" role="status">

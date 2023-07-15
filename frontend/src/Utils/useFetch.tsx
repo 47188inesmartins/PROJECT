@@ -12,10 +12,14 @@ export type FetchResponse = {
     error:any
 }
 
+type Response = {
+    status:number,
+    body:string
+}
+
 export function Fetch(url: string, method: string, requestBody: any = null): FetchResponse{
     const [content, setContent] = useState(undefined);
     const [error, setError] = useState<any>(undefined);
-    //const token = React.useContext(LoggedInContextCookie).loggedInState.token;
     const token = Cookies.get('name')
     const authorization: { 'Content-Type': string; Authorization?: string; } = (token !== undefined)
         ? {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`}
@@ -38,6 +42,7 @@ console.log("auth ====", authorization)
                     return t
                 }
                 const body = await resp.json()
+                console.log("here",body)
                 if (!cancelled) {
                     console.log(body)
                     setContent(body)
@@ -55,7 +60,7 @@ console.log("auth ====", authorization)
     return {response:content,error:error}
 }
 
-export function SimpleFetch(url:string , body: any = null, method:string = 'GET'){
+export function SimpleFetch(url:string , body: any = null, method:string = 'GET'):Response{
     const token =  Cookies.get('name');
     const [response,setResponse] = useState(undefined)
     const authorization: { 'Content-Type': string; Authorization?: string; } = (token !== "")
@@ -70,6 +75,7 @@ export function SimpleFetch(url:string , body: any = null, method:string = 'GET'
         })
             .then(response =>{
                 const resp = response.json()
+                console.log("RESPOSTA", resp)
                 setResponse(resp)
             })
             .catch(error => {
@@ -77,4 +83,32 @@ export function SimpleFetch(url:string , body: any = null, method:string = 'GET'
     });
 
     return response
+}
+
+export async function SimpleFetch1(url:string , body: any = null, method:string = 'GET'){
+    const token =  Cookies.get('name');
+    const [r,setResponse] = useState(undefined)
+    const [status,setStatus] = useState<number|undefined>(undefined)
+    const authorization: { 'Content-Type': string; Authorization?: string; } = (token !== "")
+        ? {'Content-Type': 'application/json', 'Authorization': `Bearer ${token} `}
+        : {'Content-Type': 'application/json'};
+    const hostUrl = HOST + url
+
+    await fetch(hostUrl, {
+        method: method,
+        body: JSON.stringify(body),
+        headers: authorization
+    })
+        .then(response =>{
+            const resp = response.json()
+            console.log("RESPOSTA", resp)
+            setResponse(resp)
+            setStatus(response.status)
+        })
+        .catch(error => {
+            setResponse(error)
+            console.error('Ocorreu um erro:', error);
+        });
+
+    return {status:status,response:r}
 }

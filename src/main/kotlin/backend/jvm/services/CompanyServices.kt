@@ -93,9 +93,6 @@ class CompanyServices : ICompanyServices {
         return CompanyOutputDto(comp)
     }
 
-    override fun getSearchedCompanies(token: String?, search: String?): List<CompanyOutputDto>? {
-        TODO("Not yet implemented")
-    }
 
 
     /**
@@ -173,9 +170,7 @@ class CompanyServices : ICompanyServices {
         return serviceDao.getAllServicesFromACompany(id).map { ServiceOutputDto(it) }
     }
 
-    override fun getPersonalizedCompanies(token: String?): List<CompanyOutputDto>? {
-        TODO("Not yet implemented")
-    }
+
 
     fun getCompanyByUserAndRole(userId: String, role: String): List<CompanyInfo> {
         val user = userDao.getUserByToken(UUID.fromString(userId)) ?: throw InvalidCredentials()

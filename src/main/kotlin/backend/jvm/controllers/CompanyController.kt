@@ -49,18 +49,29 @@ class CompanyController {
 
 
     @PostMapping
-    fun addCompany(@RequestBody addCompanyBody: addCompanyBody, @RequestParam duration: String): ResponseEntity<CompanyOutputDto> {
+    fun addCompany(
+        @RequestBody addCompanyBody: addCompanyBody,
+        @RequestParam duration: String
+    ): ResponseEntity<CompanyOutputDto> {
         return try {
             val requestAttributes = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes
             val request = requestAttributes.request
             val bearerToken = request.getHeader("Authorization")?.removePrefix("Bearer ")
-            val response = bearerToken?.let { companyServices.addCompany(it, addCompanyBody.company, addCompanyBody.emails?.emails, addCompanyBody.days, duration) }
+            val response = bearerToken?.let {
+                companyServices.addCompany(
+                    it,
+                    addCompanyBody.company,
+                    addCompanyBody.emails?.emails,
+                    addCompanyBody.days,
+                    duration
+                )
+            }
             ResponseEntity
                 .status(201)
                 .body(response)
         } catch (e: Exception) {
             println("exception = $e")
-            when(e) {
+            when (e) {
                 is NifAlreadyExist -> throw ResponseStatusException(HttpStatus.CONFLICT, "Nif already exists", e)
                 is InvalidNif -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid nif", e)
                 is UserNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid User", e)
@@ -77,14 +88,19 @@ class CompanyController {
             ResponseEntity
                 .status(200)
                 .body(null)
-        }catch (e: Exception) {
+        } catch (e: Exception) {
             println(e)
-            when(e){
+            when (e) {
                 is UserNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "User not found", e)
                 is CompanyNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "Company not found", e)
                 is AlreadyEmployee -> throw ResponseStatusException(HttpStatus.CONFLICT, "Already Employee", e)
-                is AlreadyCompanyManager -> throw ResponseStatusException(HttpStatus.CONFLICT, "Already Company Manager", e)
-                else -> throw  ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid user",e)
+                is AlreadyCompanyManager -> throw ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Already Company Manager",
+                    e
+                )
+
+                else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid user", e)
             }
         }
     }
@@ -94,7 +110,7 @@ class CompanyController {
     @DeleteMapping("/{id}")
     fun deleteCompany(@PathVariable id: Int): ResponseEntity<Boolean> {
         return try {
-          val response = companyServices.deleteCompany(id)
+            val response = companyServices.deleteCompany(id)
             ResponseEntity
                 .status(201)
                 .body(response)
@@ -111,8 +127,13 @@ class CompanyController {
             ResponseEntity.status(200)
                 .body(response)
         } catch (e: Exception) {
-            when(e){
-                is EntityNotFoundException ->  throw ResponseStatusException(HttpStatus.NOT_FOUND, "Company not found", e)
+            when (e) {
+                is EntityNotFoundException -> throw ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Company not found",
+                    e
+                )
+
                 else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Something went wrong", e)
             }
         }
@@ -141,38 +162,42 @@ class CompanyController {
             ResponseEntity
                 .status(200)
                 .body("The address of the company was updated")
-        }catch (e: Exception) {
-            when(e) {
+        } catch (e: Exception) {
+            when (e) {
                 is CompanyNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "Company not found", e)
                 else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Something went wrong", e)
             }
         }
     }
 
-    @RoleManager(["MANAGER","EMPLOYEE","CLIENT"])
+    @RoleManager(["MANAGER", "EMPLOYEE", "CLIENT"])
     @GetMapping("/{id}/appointments")
-    fun getAllOnGoingAppointments(@PathVariable id: Int): ResponseEntity<List<AppointmentOutputDto>>{
+    fun getAllOnGoingAppointments(@PathVariable id: Int): ResponseEntity<List<AppointmentOutputDto>> {
         return try {
             val response = companyServices.getAllAppointmentsByCompany(id)
             ResponseEntity.status(200).body(response)
-        }catch (e: Exception){
-            when(e) {
+        } catch (e: Exception) {
+            when (e) {
                 is CompanyNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "Company not found", e)
                 else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Something went wrong", e)
             }
         }
     }
 
-    @RoleManager(["MANAGER","EMPLOYEE","CLIENT"])
+    @RoleManager(["MANAGER", "EMPLOYEE", "CLIENT"])
     @GetMapping("/{id}/appointment")
-    fun getAppointmentByDateAndHour(@PathVariable id: Int, @RequestParam date: String, hour: String): ResponseEntity<List<AppointmentOutputDto>> {
+    fun getAppointmentByDateAndHour(
+        @PathVariable id: Int,
+        @RequestParam date: String,
+        hour: String
+    ): ResponseEntity<List<AppointmentOutputDto>> {
         return try {
-            val response = companyServices.getAppointmentByCompanyAndDateAndHour(id,date,hour)
+            val response = companyServices.getAppointmentByCompanyAndDateAndHour(id, date, hour)
             ResponseEntity
                 .status(200)
                 .body(response)
-        }catch (e: Exception){
-            when(e) {
+        } catch (e: Exception) {
+            when (e) {
                 is CompanyNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "Company not found", e)
                 else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Something went wrong", e)
             }
@@ -180,85 +205,90 @@ class CompanyController {
     }
 
     @GetMapping("/{id}/days")
-    fun getOpenDays(@PathVariable id: Int): ResponseEntity<List<DayOutputDto>>{
+    fun getOpenDays(@PathVariable id: Int): ResponseEntity<List<DayOutputDto>> {
         return try {
             val response = companyServices.getOpenDaysByCompany(id)
             ResponseEntity
                 .status(200)
                 .body(response)
-        }catch (e: Exception){
+        } catch (e: Exception) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
         }
     }
 
     @GetMapping("/{id}/vacations")
-    fun getVacations(@PathVariable id: Int): ResponseEntity<List<VacationOutputDto>>{
-        return try{
+    fun getVacations(@PathVariable id: Int): ResponseEntity<List<VacationOutputDto>> {
+        return try {
             val response = companyServices.getVacationByCompany(id)
             ResponseEntity.status(200).body(response)
-        }catch(e: Exception){
+        } catch (e: Exception) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
         }
     }
 
     @GetMapping
-    fun getAllCompanies(  @RequestParam(defaultValue = "0") page: Int,
-                          @RequestParam(defaultValue = "10") size: Int): ResponseEntity<Page<CompanyOutputDto>>{
-        return try{
+    fun getAllCompanies(
+        @RequestParam(defaultValue = "0") page: Int,
+        @RequestParam(defaultValue = "10") size: Int
+    ): ResponseEntity<Page<CompanyOutputDto>> {
+        return try {
             val response = companyServices.getAllCompanies(page, size)
             ResponseEntity.status(200).body(response)
-        }catch(e: Exception){
+        } catch (e: Exception) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
         }
     }
 
     @GetMapping("/info")
-    fun getCompanyByManager(@RequestHeader("Authorization") token: String,@RequestParam role: String): ResponseEntity<List<CompanyInfo>>{
-        return try{
+    fun getCompanyByManager(
+        @RequestHeader("Authorization") token: String,
+        @RequestParam role: String
+    ): ResponseEntity<List<CompanyInfo>> {
+        return try {
             val response = companyServices.getCompanyByUserAndRole(token.split(" ")[1], role)
             ResponseEntity
                 .status(200)
                 .body(response)
-        }catch(e: Exception){
+        } catch (e: Exception) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
         }
     }
 
-    @RoleManager(["MANAGER","EMPLOYEE"])
+    @RoleManager(["MANAGER", "EMPLOYEE"])
     @GetMapping("{cid}/employees-profit")
-    fun getAllEmployeesByCompanyAndMoney(@PathVariable cid: Int): ResponseEntity<List<Pair<UserInfo,Double>>>{
+    fun getAllEmployeesByCompanyAndMoney(@PathVariable cid: Int): ResponseEntity<List<Pair<UserInfo, Double>>> {
         return try {
             val response = companyServices.getAllEmployeesByCompanyAndMoney(cid)
             ResponseEntity
                 .status(200)
                 .body(response)
-        }catch(e: Exception){
+        } catch (e: Exception) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
         }
     }
 
-    @RoleManager(["MANAGER","EMPLOYEE"])
+    @RoleManager(["MANAGER", "EMPLOYEE"])
     @GetMapping("{cid}/employee-profit/{id}")
-    fun getEmployeesByCompanyAndMoney(@PathVariable cid: Int, @PathVariable id: Int): ResponseEntity<Double>{
+    fun getEmployeesByCompanyAndMoney(@PathVariable cid: Int, @PathVariable id: Int): ResponseEntity<Double> {
         return try {
-            val response = companyServices.getEarnedMoneyByEmployee(id,cid)
+            val response = companyServices.getEarnedMoneyByEmployee(id, cid)
             ResponseEntity
                 .status(200)
                 .body(response)
-        }catch(e: Exception){
+        } catch (e: Exception) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
         }
     }
 
     //@RoleManager(["MANAGER","EMPLOYEE"])
     @GetMapping("{cid}/appointments-list")
-    fun getAllAppointmentsByCompany(@PathVariable cid: Int): ResponseEntity<List<AppointmentInfoEmployeeEnd>>{
+    fun getAllAppointmentsByCompany(@PathVariable cid: Int): ResponseEntity<List<AppointmentInfoEmployeeEnd>> {
         return try {
             val response = companyServices.getAppointmentsByCompany(cid)
             ResponseEntity
                 .status(200)
                 .body(response)
-        }catch(e: Exception){
+        } catch (e: Exception) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
         }
     }
@@ -267,44 +297,47 @@ class CompanyController {
     @PostMapping("/{cid}/upload")
     fun uploadImage(@PathVariable cid: Int, @RequestBody file: Array<MultipartFile>): ResponseEntity<String> {
         return try {
-            companyServices.uploadPhoto(cid,file)
+            companyServices.uploadPhoto(cid, file)
             ResponseEntity
                 .status(200)
                 .body("Upload done")
-        }catch(e: Exception){
+        } catch (e: Exception) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
         }
     }
-    @RoleManager(["MANAGER","EMPLOYEE","CLIENT"])
+
+    @RoleManager(["MANAGER", "EMPLOYEE", "CLIENT"])
     @GetMapping("/{cid}/employees")
-    fun getEmployeesByCompany( @PathVariable cid: Int): ResponseEntity<List<UserOutputDto>> {
+    fun getEmployeesByCompany(@PathVariable cid: Int): ResponseEntity<List<UserOutputDto>> {
         return try {
             val response = companyServices.getEmployeesByCompany(cid)
             ResponseEntity
                 .status(200)
                 .body(response)
-        }catch(e: Exception){
+        } catch (e: Exception) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
         }
     }
 
     @RoleManager(["MANAGER"])
     @DeleteMapping("/{cid}/employees")
-    fun removeEmployee( @PathVariable cid: Int, @RequestParam id: Int): ResponseEntity<String>{
+    fun removeEmployee(@PathVariable cid: Int, @RequestParam id: Int): ResponseEntity<String> {
         return try {
             companyServices.removeEmployeeFromCompany(cid, id)
             ResponseEntity
                 .status(200)
                 .body("delete successful")
-        }catch(e: Exception){
+        } catch (e: Exception) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
         }
     }
 
     @GetMapping("/search")
-    fun searchForCompany(@RequestParam search: String?,
-                         @RequestParam(defaultValue = "0") page: Int,
-                         @RequestParam(defaultValue = "10") size: Int): ResponseEntity<Page<CompanyOutputDto>> {
+    fun searchForCompany(
+        @RequestParam search: String?,
+        @RequestParam(defaultValue = "0") page: Int,
+        @RequestParam(defaultValue = "10") size: Int
+    ): ResponseEntity<Page<CompanyOutputDto>> {
         return try {
             val requestAttributes = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes
             val request = requestAttributes.request
@@ -312,20 +345,21 @@ class CompanyController {
             val response = companyServices.getSearchedCompanies(bearerToken, search, page, size)
             ResponseEntity
                 .status(HttpStatus.OK)
-                .header("Content-Type","application/json")
+                .header("Content-Type", "application/json")
                 .body(response)
         } catch (e: Exception) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Application error", e)
         }
     }
-
+}
+/*
     //@GetMapping("/search")
     /*fun getCompanyByDistance(@RequestParam distance:Double?): ResponseEntity<List<CompanyOutputDto>>{
         return try {
             val requestAttributes = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes
             val request = requestAttributes.request
             val bearerToken = request.getHeader("Authorization")?.removePrefix("Bearer ")
-            val response = companyServices.getCompaniesByUserLocation()
+            val response = companyServices.getSearchedCompanies(bearerToken, search,distance)
             ResponseEntity
                 .status(HttpStatus.OK)
                 .header("Content-Type","application/json")
@@ -333,5 +367,6 @@ class CompanyController {
         } catch (e: Exception) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Application error", e)
         }
-    }*/
+    }
 }
+*/

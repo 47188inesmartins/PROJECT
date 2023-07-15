@@ -18,3 +18,5 @@ class NoAvailableDays : Exception("No available days")
 
 @ResponseStatus(code = HttpStatus.NOT_FOUND, reason = "No available services")
 class NoAvailableServices(day: String) : Exception("No available services at: $day")
+@ResponseStatus(code = HttpStatus.BAD_REQUEST, reason = "Date is no available for appointments")
+class InvalidDate: Exception("Date is no available for appointments")

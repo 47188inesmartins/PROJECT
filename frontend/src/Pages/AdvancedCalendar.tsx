@@ -108,8 +108,8 @@ const MyCalendar: React.FC = () => {
         <div>
             <h3>Events details:</h3>
             <div>Title: {selectedEvent.title}</div>
-            <div>Begin hour: {selectedEvent.start.toLocaleTimeString()}</div>
-            <div>End hour: {selectedEvent.end.toLocaleTimeString()}</div>
+            <div>Begin hour: {selectedEvent.end.toLocaleTimeString()}</div>
+            <div>End hour: {selectedEvent.start.toLocaleTimeString()}</div>
         </div>
     ) : null;
 
@@ -128,8 +128,16 @@ const MyCalendar: React.FC = () => {
     };
 
     const getEventStyle = (event, start, end, isSelected) => {
-        const backgroundColor = event.backgroundColor; // Cor de fundo do evento
-        const color = event.description === 'VACATION' ? 'black' : 'black'; // Cor do texto do evento
+        let backgroundColor = '';
+        let color = '';
+
+        if (event.title === 'VACATION') {
+            backgroundColor = '#FF6961';
+            color = 'white';
+        } else {
+            backgroundColor = '#CBC4A4';
+            color = 'black';
+        }
 
         return {
             style: {

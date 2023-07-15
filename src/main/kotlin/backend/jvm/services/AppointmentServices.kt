@@ -7,6 +7,7 @@ import backend.jvm.model.appointment.AppointmentInputDto
 import backend.jvm.model.appointment.AppointmentOutputDto
 import backend.jvm.model.service.ServiceOutputDto
 import backend.jvm.model.user.AppointmentEmployee
+import backend.jvm.model.user.AppointmentManager
 import backend.jvm.model.user.UserOutputDto
 import backend.jvm.services.interfaces.IAppointmentServices
 import backend.jvm.utils.errorHandling.*
@@ -46,6 +47,9 @@ class AppointmentServices : IAppointmentServices {
     @Autowired
     lateinit var dayDao: DayDao
 
+    @Autowired
+    lateinit var vacationDao: VacationDao
+
     /**
      * Add an appointment.
      * @param appointment The appointment details.
@@ -82,23 +86,66 @@ class AppointmentServices : IAppointmentServices {
             employee
         )
         unavailabilityDao.save(unavailabilityEntity)
-
         return AppointmentOutputDto(savedAppointment)
     }
 
-    fun addAppointmentByEmployee(appointmentEmployee: AppointmentEmployee, companyId: Int):Int{
+    @Transactional
+    fun addAppointmentByEmployee(appointmentEmployee: AppointmentManager, companyId: Int):Int{
         //employee
-        val user = userDao.getUsersByEmail(appointmentEmployee.email)
+        val user = userDao.getUserById(appointmentEmployee.userId)
             ?: throw UserNotFound()
         val service = servicesRepository.getServiceDBById(appointmentEmployee.service)
             ?: throw ServiceNotFound()
         val schedule = scheduleDao.getScheduleById(companyId)
             ?: throw ScheduleNotFound()
-        val appointmentHour = Time.valueOf(appointmentEmployee.appHour.plus(":00"))?: throw Exception("invalid hour")
+
         val appointmentDate = Date.valueOf(appointmentEmployee.appDate)?: throw Exception("invalid date")
+        if(!isDateAfterCurrent(appointmentDate)) throw InvalidDate()
+        val appointmentHour = Time.valueOf(appointmentEmployee.appHour.plus(":00"))?: throw Exception("invalid hour")
+
+        val vacations = vacationDao.getVacationsByScheduleId(schedule.id)
+        if(vacations.isNotEmpty()){
+            vacations.forEach {
+                val dateB = it.dateBegin
+                val dateE = it.dateEnd
+                if(appointmentDate.after(dateB)&&appointmentDate.before(dateE)) throw InvalidDate()
+            }
+        }
         val appointmentDb = AppointmentEntity(appointmentHour,appointmentDate,schedule, listOf(user,null),service)
         val savedAppointment = appointmentDao.save(appointmentDb)
         return savedAppointment.id
+    }
+
+   /* @Transactional
+    fun addOwnAppointment(token:String?, appointmentEmployee: AppointmentEmployee, companyId: Int):Int{
+        if(token == null) throw UserNotFound()
+        val userId = userDao.getUserByToken(UUID.fromString(token))!!
+        //employee
+        val service = servicesRepository.getServiceDBById(appointmentEmployee.service)
+            ?: throw ServiceNotFound()
+        val schedule = scheduleDao.getScheduleById(companyId)
+            ?: throw ScheduleNotFound()
+
+        val appointmentDate = Date.valueOf(appointmentEmployee.appDate)?: throw Exception("invalid date")
+        if(!isDateAfterCurrent(appointmentDate)) throw InvalidDate()
+        val appointmentHour = Time.valueOf(appointmentEmployee.appHour.plus(":00"))?: throw Exception("invalid hour")
+
+        val vacations = vacationDao.getVacationsByScheduleId(schedule.id)
+        if(vacations.isNotEmpty()){
+            vacations.forEach {
+                val dateB = it.dateBegin
+                val dateE = it.dateEnd
+                if(appointmentDate.after(dateB)&&appointmentDate.before(dateE)) throw InvalidDate()
+            }
+        }
+        val appointmentDb = AppointmentEntity(appointmentHour,appointmentDate,schedule, listOf(user,null),service)
+        val savedAppointment = appointmentDao.save(appointmentDb)
+        return savedAppointment.id
+    }*/
+
+    private fun isDateAfterCurrent(date: Date): Boolean {
+        val currentDate = Date(System.currentTimeMillis())
+        return date.after(currentDate)
     }
 
     /**

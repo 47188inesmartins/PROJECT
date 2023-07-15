@@ -8,35 +8,210 @@ import {
     MDBCardBody,
     MDBCardImage,
     MDBBreadcrumb,
-    MDBBreadcrumbItem,
+    MDBBreadcrumbItem, MDBDropdown, MDBDropdownToggle, MDBDropdownMenu, MDBDropdownItem, MDBInput,
 } from 'mdb-react-ui-kit'
 import {Fetch} from "../Utils/useFetch";
-import {useContext} from "react";
+import {useContext, useState} from "react";
 import {LoggedInContextCookie} from "./Authentication/Authn";
 import {useParams} from "react-router-dom";
 import AdvancedCalendar from "./AdvancedCalendar";
 import {Layout} from "./Layout";
-
+import {Button, Dropdown, DropdownButton} from "react-bootstrap";
+import {Modal} from "react-bootstrap";
+import {Navigate} from "react-router";
+import {format} from "date-fns";
+import {Appointment} from "../Service/Appointment";
 
 export function CompanyProfileManaging() {
-
-    const token = useContext(LoggedInContextCookie).loggedInState.role
-
     const params = useParams()
     const id = params.id
+    const [click,SetClick] = useState(false)
+    const [show, setShow] = useState(true);
+    const handleCancel = () => {
+        setShow(false);
+        window.location.href = `/company/${id}/profile`;
+    }
 
+    function GetEmployees(){
+        const response  = Fetch(`/company/${id}/employees`,'GET')
+        const services  = Fetch(`/company/${id}/services`,'GET')
+        const [selectedDate, setSelectedDate] = useState("");
+        const [selectedTime, setSelectedTime] = useState("");
+        const [selectedEmployee, setSelectedEmployee] = useState("");
+        const [selectedService, setSelectedService] = useState("");
+        const [appointmentData, setAppointmentData] = useState({
+            appHour: "",
+            appDate: "",
+            userId: null,
+            service: null,
+        });
+        const [submmit,SetSubmmit] = useState(false)
 
+        console.log("APPOIT",appointmentData)
+        console.log("EMPLOYEE",selectedEmployee)
+
+        const handleDateSelect = (date) => {
+            const getDate = format(new Date(date.target.value), 'yyyy-MM-dd')
+            setSelectedDate(getDate)
+            setAppointmentData((prevData) => ({
+                ...prevData,
+                appDate:getDate ,
+            }));
+        };
+
+        const handleTimeSelect = (time) => {
+            const getTime = time.target.value
+            console.log("DATAAAA",getTime)
+            setSelectedTime(getTime)
+            setAppointmentData((prevData) => ({
+                ...prevData,
+                appHour: getTime,
+            }));
+        };
+
+        const handleEmployeeSelect = (employee) => {
+            setSelectedEmployee(employee.name)
+            setAppointmentData((prevData) => ({
+                ...prevData,
+                userId: employee.id,
+            }));
+        };
+
+        const handleServiceSelect = (service) => {
+            setSelectedService(service.serviceName)
+            setAppointmentData((prevData) => ({
+                ...prevData,
+                service: service.id,
+            }));
+        }
+
+        function handleAddAppointment(){
+            SetSubmmit(true)
+        }
+
+        return<div>{submmit?
+                <>
+                    <p style={{color:'black'}}><strong>Your appointment was added</strong></p>
+                    <FetchAppointment appointment={appointmentData}/>
+                </>:
+            <>
+            {response.response && services.response?
+            <Modal
+                show={show}
+                onHide={handleCancel}
+                backdrop="static"
+                keyboard={false}
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>Choose an employees</Modal.Title>
+                </Modal.Header>
+                <Modal.Body className="d-flex flex-column align-items-center text-center">
+                    <Dropdown>
+                        <Dropdown.Toggle
+                            variant="primary"
+                            id="category-dropdown"
+                            className="form-control dropdown-toggle-text"
+                        >
+                            {selectedEmployee ||"Select an employee"}
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                            {response.response.map((employee) => (
+                                <Dropdown.Item
+                                    key={employee.id}
+                                    onClick={() => handleEmployeeSelect(employee)}
+                                >
+                                    {employee.name}
+                                </Dropdown.Item>
+                            ))}
+                        </Dropdown.Menu>
+                    </Dropdown>
+                    <Dropdown>
+                        <Dropdown.Toggle
+                            variant="primary"
+                            id="category-dropdown"
+                            className="form-control dropdown-toggle-text"
+                        >
+                            {selectedService ||"Select a Service"}
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                            {services.response.length === 0 ?
+                                <p> No services available</p> :
+                                <>
+                                    {services.response.map((serv) => (
+                                            <Dropdown.Item
+                                                key={serv.id}
+                                                onClick={() => handleServiceSelect(serv)}
+                                            >
+                                                {serv.serviceName}
+                                            </Dropdown.Item>
+                                        ))
+                                    }
+                                </>
+                            }
+                        </Dropdown.Menu>
+                    </Dropdown>
+                    <MDBInput
+                        wrapperClass="mb-4 mx-5 w-100"
+                        labelClass="text-white"
+                        label="Date"
+                        id="dateInput"
+                        type="date"
+                        size="lg"
+                        value={selectedDate}
+                        onChange={handleDateSelect}
+                    />
+
+                    <MDBInput
+                        wrapperClass="mb-4 mx-5 w-100"
+                        labelClass="text-white"
+                        label="Time"
+                        id="timeInput"
+                        type="time"
+                        size="lg"
+                        value={selectedTime}
+                        onChange={handleTimeSelect}
+                    />
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="primary" onClick={handleAddAppointment}>Add appointment</Button>
+                    <Button variant="primary" onClick={handleCancel}>Cancel</Button>
+                </Modal.Footer>
+            </Modal>
+                : <p>Loading</p>
+            }</>
+        }</div>
+    }
+
+    const handleClick = () =>{
+        SetClick(true)
+    }
     const check = false// (token !== "GUEST" && token !== "CLIENT")
     const response = Fetch(`/company/${id}`,'GET')
-    const containerStyle = {
-        display: 'flex',
-    };
 
     const contentStyle = {
         marginLeft: '200px',
         backgroundColor: '#EFEEEE',
         padding: '20px',
     };
+
+    if(click) return <GetEmployees/>
+
+     function FetchAppointment(props:{appointment}){
+        const id = useParams().id
+        console.log("AQUI1",props.appointment)
+        const response = Fetch(`/company/${id}/appointment/employees`,'POST',props.appointment)
+        //const response = Appointment.addAppointmentWithManager(id,props.appointment,`/company/${id}/profile`)
+        console.log("APPOINTMENT",response.response)
+        SetClick(false)
+        return <>
+            {response.response?
+                <> <p> Appointment added </p>
+                <Navigate to = {`/company/${id}/profile`} />
+               </>:
+                <>Waiting ...</>
+            }
+        </>
+    }
 
     return (
         <div  style = {contentStyle}>
@@ -68,15 +243,16 @@ export function CompanyProfileManaging() {
                                     <MDBCard className="mb-4">
                                         <MDBCardBody className="text-center">
                                             <MDBCardImage
-                                                src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
+                                                src={`data:image/jpeg;base64,${response.response.path[0]}`}
                                                 alt="avatar"
-                                                className="rounded-circle"
-                                                style={{ width: '150px' }}
+                                                className="square"
+                                                style={{ width: '200px', height: '200px', objectFit: 'cover' }}
                                                 fluid />
                                         </MDBCardBody>
                                     </MDBCard>
                                     <MDBCard className="mb-4 mb-md-0">
                                         <MDBCardBody>
+                                            <p style={{ fontSize: '1.5rem', fontWeight: 'bold' }} ><strong> Managing your company </strong></p>
                                             <a href={`/company/${id}/managing/employees`} className="mb-1"  style={{ fontSize: '1.2rem' }}>
                                                 <MDBCardText> Manage employees </MDBCardText>
                                             </a>
@@ -89,6 +265,11 @@ export function CompanyProfileManaging() {
                                             <a href={`/company/${id}/services`} className="mb-1"  style={{ fontSize: '1.2rem' }}>
                                                 <MDBCardText> Add personal break </MDBCardText>
                                             </a>
+                                            <Button style={{ borderColor: '#999999' ,backgroundColor: '#999999', color: 'white' }}
+                                                    onClick={handleClick}
+                                            >
+                                                Add an appointment
+                                            </Button>
                                         </MDBCardBody>
                                     </MDBCard>
                                 </MDBCol>
@@ -183,8 +364,9 @@ export function CompanyProfileManaging() {
                     </div>
                     </section>
             }
-
-        </div></div>
+         </div>
+        </div>
     );
 }
+
 

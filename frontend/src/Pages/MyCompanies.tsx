@@ -6,9 +6,6 @@ import {
     MDBCard,
     MDBCardText,
     MDBCardBody,
-    MDBCardImage,
-    MDBBreadcrumb,
-    MDBBreadcrumbItem,
 } from 'mdb-react-ui-kit'
 import {Fetch} from "../Utils/useFetch";
 import {useContext} from "react";
@@ -74,11 +71,11 @@ function CompanyRole(props:{role:String,Text:String}) {
                             { resp.response.map((object: any) => (
                                 <>
                                     {props.role == 'MANAGER'?
-                                        <a href={`/company/${object.id}/managing`} className="mb-1"  style={{ fontSize: '1.2rem' }}>
+                                        <a href={`/company/${object.id}/profile`} className="mb-1"  style={{ fontSize: '1.2rem' }}>
                                             <MDBCardText>{object.name}</MDBCardText>
                                         </a>
                                         :
-                                        <a href={`/company/${object.id}/employing`} className="mb-1"  style={{ fontSize: '1.2rem' }}>
+                                        <a href={`/company/${object.id}/profile`} className="mb-1"  style={{ fontSize: '1.2rem' }}>
                                             <MDBCardText>{object.name}</MDBCardText>
                                         </a>
                                     }
