@@ -24,9 +24,7 @@ export function AddingVacations() {
             dateBegin: startDate.toISOString().substr(0, 10),
             dateEnd: endDate.toISOString().substr(0, 10)
         };
-
         console.log(vacationDate);
-
         const params = useParams();
         const cid = params.id;
         const resp = Fetch(`/company/${cid}/vacation`, "POST", vacationDate);

@@ -9,8 +9,7 @@ data class UnavailabilityInputDto(
     val dateBegin: String,
     val dateEnd: String?,
     val hourBegin: String?,
-    val hourEnd: String?,
-    val user: Int
+    val hourEnd: String?
 ){
     fun mapToUnavailable(dto: UnavailabilityInputDto, userEntity: UserEntity) : UnavailabilityEntity {
         val db = Date.valueOf(dto.dateBegin)

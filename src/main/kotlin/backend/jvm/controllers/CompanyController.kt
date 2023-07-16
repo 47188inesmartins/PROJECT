@@ -335,6 +335,7 @@ class CompanyController {
     @GetMapping("/search")
     fun searchForCompany(
         @RequestParam search: String?,
+        @RequestParam distance: Double?,
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam(defaultValue = "10") size: Int
     ): ResponseEntity<Page<CompanyOutputDto>> {
@@ -342,7 +343,7 @@ class CompanyController {
             val requestAttributes = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes
             val request = requestAttributes.request
             val bearerToken = request.getHeader("Authorization")?.removePrefix("Bearer ")
-            val response = companyServices.getSearchedCompanies(bearerToken, search, page, size)
+            val response = companyServices.getSearchedCompanies(distance,bearerToken, search, page, size)
             ResponseEntity
                 .status(HttpStatus.OK)
                 .header("Content-Type", "application/json")

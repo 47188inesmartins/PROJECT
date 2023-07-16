@@ -8,20 +8,25 @@ import org.apache.catalina.connector.Response
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.context.request.RequestContextHolder
+import org.springframework.web.context.request.ServletRequestAttributes
 
 
 @RestController
-@RequestMapping("/unavailability")
+@RequestMapping("unavailability")
 class UnavailabilityController {
 
     @Autowired
     lateinit var unavailabilityServices: UnavailabilityServices
 
     @RoleManager(["MANAGER","EMPLOYEE"])
-    @PostMapping
-    fun addUserUnavailability(@RequestBody unavailability: UnavailabilityInputDto): ResponseEntity<UnavailabilityOutputDto> {
+    @PostMapping("/company/{cid}")
+    fun addUserUnavailability(@RequestBody unavailability: UnavailabilityInputDto, @PathVariable cid: String): ResponseEntity<UnavailabilityOutputDto> {
         return try {
-            val response = unavailabilityServices.addUnavailability(unavailability)
+            val requestAttributes = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes
+            val request = requestAttributes.request
+            val bearerToken = request.getHeader("Authorization")?.removePrefix("Bearer ")
+            val response = unavailabilityServices.addUnavailability(bearerToken,unavailability)
             ResponseEntity
                 .status(201)
                 .body(response)

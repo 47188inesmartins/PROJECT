@@ -4,7 +4,7 @@ import backend.jvm.services.dto.UnavailabilityInputDto
 import backend.jvm.services.dto.UnavailabilityOutputDto
 
 interface IUnavailabilityServices {
-    fun addUnavailability(unavailability: UnavailabilityInputDto): UnavailabilityOutputDto
+    fun addUnavailability(token: String?,unavailability: UnavailabilityInputDto): UnavailabilityOutputDto
 
     fun getUnavailabilityByUser(user: Int): UnavailabilityOutputDto
 

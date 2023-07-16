@@ -40,6 +40,7 @@ class CompanyServices : ICompanyServices {
 
     companion object{
         const val NIF_NUMBERS = 9
+        const val DEFAULT_DISTANCE = 5.5
     }
 
     @Autowired
@@ -272,18 +273,20 @@ class CompanyServices : ICompanyServices {
         appointmentDao.deleteAppointmentByDateAndEmployee(employeeId,getCurrentTime(),getCurrentDate())
     }
 
-     fun getSearchedCompanies(token: String?,search: String?, page: Int, size: Int): Page<CompanyOutputDto>?{
+     fun getSearchedCompanies(distance: Double?,token: String?,search: String?, page: Int, size: Int): Page<CompanyOutputDto>?{
+        val getDistance = distance ?: DEFAULT_DISTANCE
         val pageable: Pageable = PageRequest.of(page, size)
         if(search == "null") return getAllCompanies(page, size)
         val allCompanies = companyDao.getCompanyBySearch("%${search}%", pageable)
         if(token == null) return  allCompanies?.map { CompanyOutputDto(it) }
         val user = userDao.getUserByToken(UUID.fromString(token))?: throw UserNotFound()
         val userLocation = Geolocation(user.latitude,user.longitude)
-        return getCompaniesByUserLocation(5.5,userLocation,allCompanies!!,true, pageable).map { CompanyOutputDto(it) }
+        return getCompaniesByUserLocation(getDistance,userLocation,allCompanies!!,true, pageable).map { CompanyOutputDto(it) }
     }
 
-     fun getPersonalizedCompanies(token: String?,  page: Int, size: Int): Page<CompanyOutputDto>?{
-        val pageable: Pageable = PageRequest.of(page, size)
+     fun getPersonalizedCompanies(distance: Double?,token: String?,  page: Int, size: Int): Page<CompanyOutputDto>?{
+         val getDistance = distance ?: DEFAULT_DISTANCE
+         val pageable: Pageable = PageRequest.of(page, size)
         if(token == null) {
             val companies = companyDao.findAll(pageable)
             return companies.map { CompanyOutputDto(it) }
@@ -292,7 +295,7 @@ class CompanyServices : ICompanyServices {
         val userLocation = Geolocation(user.latitude,user.longitude)
         val categoriesArray = user.interests.split(",").toTypedArray()
         val comps = companyDao.getCompaniesByCategory(categoriesArray, pageable)!!
-        return getCompaniesByUserLocation(5.5,userLocation,comps,false, pageable).map { CompanyOutputDto(it) }
+        return getCompaniesByUserLocation(getDistance,userLocation,comps,false, pageable).map { CompanyOutputDto(it) }
     }
 
     /**
