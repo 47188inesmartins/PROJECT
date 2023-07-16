@@ -6,7 +6,6 @@ import backend.jvm.dao.*
 import backend.jvm.model.appointment.AppointmentInputDto
 import backend.jvm.model.appointment.AppointmentOutputDto
 import backend.jvm.model.service.ServiceOutputDto
-import backend.jvm.model.user.AppointmentEmployee
 import backend.jvm.model.user.AppointmentManager
 import backend.jvm.model.user.UserOutputDto
 import backend.jvm.services.interfaces.IAppointmentServices

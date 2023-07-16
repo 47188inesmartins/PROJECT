@@ -11,6 +11,7 @@ import { Fetch } from '../Utils/useFetch';
 import { Layout, LayoutRight } from './Layout';
 import { LoggedInContextCookie } from "./Authentication/Authn";
 import Cookies from 'js-cookie';
+import {Dropdown, DropdownButton} from "react-bootstrap";
 
 
 export function Home() {
@@ -18,6 +19,8 @@ export function Home() {
     const context = React.useContext(LoggedInContextCookie).loggedInState
     const role = context.role
     console.log("role = ", role)
+
+    const [distance, setDistance] = useState<string|undefined>(undefined)
 
     const hasManager = role.some((user) => user.role === "MANAGER");
     const hasEmployee = role.some((user) => user.role === "EMPLOYEE");
@@ -34,18 +37,54 @@ export function Home() {
     const page = parseInt(getQueryParam('page'));
     const size = parseInt(getQueryParam('size'));
 
-    let response;
-    if (searchValue !== null) response = Fetch(`/company/search?search=${searchValue}&page=${page}&size=${size}`, 'GET');
-    else response = Fetch(`/company?page=${page}&size=${size}`, 'GET');
-    console.log('response = ', response);
+    let url;
+    if (searchValue !== null) {
+        url = `/company/search?search=${searchValue}&page=${page}&size=${size}`;
+    } else {
+        url = `/?page=${page}&size=${size}`;
+        if (distance !== undefined) {
+            url += `&distance=${distance}`;
+        }
+    }
+
+
+    const response = Fetch(url, 'GET');
+
+    console.log("response = ", response)
 
     const goToNextPage = () => {
-        window.location.href = `?page=${page+1}&size=${size}`
+        let nextPageUrl = `?page=${page+1}&size=${size}`
+        if (searchValue) nextPageUrl += `&search=${searchValue}`;
+        window.location.href = nextPageUrl
     };
 
     const goToPreviousPage = () => {
-        window.location.href = `?page=${page-1}&size=${size}`
+        let previousPageUrl = `?page=${page-1}&size=${size}`
+        if (searchValue) previousPageUrl += `&search=${searchValue}`;
+        window.location.href = previousPageUrl
     };
+
+
+    const [searchTerm, setSearchTerm] = useState('');
+    const [submit, setSubmit] = useState(false);
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        setSubmit(true);
+    };
+
+    const handleChange = (e) => {
+        setSearchTerm(e.target.value);
+    };
+
+    function FetchSearch() {
+        window.location.href = `/?search=${searchTerm}&page=${page}&size=${size}`;
+        return <></>;
+    }
+
+    function handleFetchDistance(value){
+        setDistance(value)
+    }
 
     return (
         <div style={{ display: 'flex' }}>
@@ -66,7 +105,35 @@ export function Home() {
                     <p>Loading...</p>
                 ) : (
                     <div>
-                        <SearchBar page={page} size={size}/>
+                        <div className="container">
+                            <div>
+                                {submit ? (
+                                    <div>
+                                        <FetchSearch />
+                                    </div>
+                                ) : (
+                                    <form onSubmit={handleSubmit}>
+                                        <div className="input-group">
+                                            <i className="fa fa-search"></i>
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                placeholder="Search..."
+                                                value={searchTerm}
+                                                onChange={handleChange}
+                                            />
+                                            <DropdownButton title="Distance" className="dropdown-button">
+                                                <Dropdown.Item onClick={() => handleFetchDistance(10.0)}>10 KM</Dropdown.Item>
+                                                <Dropdown.Item onClick={() => handleFetchDistance(20.0)}>20 KM</Dropdown.Item>
+                                                <Dropdown.Item onClick={() => handleFetchDistance(30.0)}>30 KM</Dropdown.Item>
+                                                <Dropdown.Item onClick={() => handleFetchDistance(40.0)}>40 KM</Dropdown.Item>
+                                                <Dropdown.Item onClick={() => handleFetchDistance(undefined)}>Any</Dropdown.Item>
+                                            </DropdownButton>
+                                        </div>
+                                    </form>
+                                )}
+                            </div>
+                        </div>
                         {response.response.content.length === 0 ? (
                             <MDBContainer className="py-5">
                                 <MDBCard className="px-3 pt-3" style={{ maxWidth: '100%' }}>
@@ -141,66 +208,6 @@ export function Home() {
                 :
                 <></>
             }
-        </div>
-    );
-}
-
-function SearchBar(props: {page: number, size: number}) {
-    const [searchTerm, setSearchTerm] = useState('');
-    const [submit, setSubmit] = useState(false);
-
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        setSubmit(true);
-    };
-
-    const handleChange = (e) => {
-        setSearchTerm(e.target.value);
-    };
-
-    function FetchSearch() {
-        window.location.href = `/?search=${searchTerm}&page=${props.page}&size=${props.size}`;
-        return <></>;
-    }
-
-    return (
-        <div className="container">
-            <div>
-                {submit ? (
-                    <div>
-                        <FetchSearch />
-                    </div>
-                ) : (
-                    <form onSubmit={handleSubmit}>
-                        <div className="input-group">
-                            <i className="fa fa-search"></i>
-                            <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Search..."
-                                value={searchTerm}
-                                onChange={handleChange}
-                            />
-                            <div className="input-group-append">
-                                <button
-                                    type="button"
-                                    className="btn btn-secondary dropdown-toggle"
-                                    data-toggle="dropdown"
-                                    aria-haspopup="true"
-                                    aria-expanded="false"
-                                >
-                                    Distance
-                                </button>
-                                <div className="dropdown-menu">
-                                    <a className="dropdown-item" href="#">6 KM</a>
-                                    <a className="dropdown-item" href="#">12 KM</a>
-                                    <a className="dropdown-item" href="#">18 KM</a>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                )}
-            </div>
         </div>
     );
 }

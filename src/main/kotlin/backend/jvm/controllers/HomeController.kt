@@ -25,12 +25,16 @@ class HomeController {
 
 
     @GetMapping
-    fun home(): ResponseEntity<Page<CompanyOutputDto>> {
+    fun home(
+        @RequestParam distance: Double?,
+        @RequestParam(defaultValue = "0") page: Int,
+        @RequestParam(defaultValue = "10") size: Int
+    ): ResponseEntity<Page<CompanyOutputDto>> {
         return try{
             val requestAttributes = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes
             val request = requestAttributes.request
             val bearerToken = request.getHeader("Authorization")?.removePrefix("Bearer ")
-            val response = companyServices.getPersonalizedCompanies(bearerToken,5,5)
+            val response = companyServices.getPersonalizedCompanies(distance,bearerToken,page,size)
             ResponseEntity
                 .status(HttpStatus.OK)
                 .header("Content-Type","application/json")

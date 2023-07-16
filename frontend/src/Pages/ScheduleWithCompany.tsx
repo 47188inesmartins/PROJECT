@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import '../Style/Schedule.css'
 import {Fetch, SimpleFetch} from "../Utils/useFetch";
@@ -8,7 +7,6 @@ import {Navigate} from "react-router";
 import {Button, Modal} from "react-bootstrap";
 import {MDBInput} from "mdb-react-ui-kit";
 import { format } from 'date-fns';
-import {LoggedInContextCookie} from "./Authentication/Authn";
 import {Layout} from "./Layout";
 import Cookies from 'js-cookie';
 
@@ -25,10 +23,6 @@ function TimePickerComponent (){
         setClick(value)
     }
 
-    function handleDateChange(date){
-        setStartDate(date)
-    }
-
     const schedule = Fetch(`company/${id}/day/week-day?day=${startDate}`, "GET").response
 
     return (
@@ -43,8 +37,6 @@ function TimePickerComponent (){
                         :
                         <div>
                             {schedule.size !== 0 ?
-
-
                                 <div className="container-fluid px-0 px-sm-4 mx-auto">
                                     <div className="row justify-content-center mx-0">
                                         <div className="col-lg-10">

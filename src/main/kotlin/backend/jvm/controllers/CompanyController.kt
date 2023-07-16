@@ -45,12 +45,12 @@ class CompanyController {
     @Autowired
     lateinit var userServices: UserServices
 
-    data class addCompanyBody(val company: CompanyInputDto, val emails: UserEmails?, val days: List<DayInputDto>)
+    data class AddCompanyBody(val company: CompanyInputDto, val emails: UserEmails?, val days: List<DayInputDto>)
 
 
     @PostMapping
     fun addCompany(
-        @RequestBody addCompanyBody: addCompanyBody,
+        @RequestBody addCompanyBody: AddCompanyBody,
         @RequestParam duration: String
     ): ResponseEntity<CompanyOutputDto> {
         return try {
@@ -353,21 +353,3 @@ class CompanyController {
         }
     }
 }
-/*
-    //@GetMapping("/search")
-    /*fun getCompanyByDistance(@RequestParam distance:Double?): ResponseEntity<List<CompanyOutputDto>>{
-        return try {
-            val requestAttributes = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes
-            val request = requestAttributes.request
-            val bearerToken = request.getHeader("Authorization")?.removePrefix("Bearer ")
-            val response = companyServices.getSearchedCompanies(bearerToken, search,distance)
-            ResponseEntity
-                .status(HttpStatus.OK)
-                .header("Content-Type","application/json")
-                .body(response)
-        } catch (e: Exception) {
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Application error", e)
-        }
-    }
-}
-*/

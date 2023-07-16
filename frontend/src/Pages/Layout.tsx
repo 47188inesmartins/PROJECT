@@ -34,7 +34,7 @@ export function Layout() {
                             minWidth={""} maxWidth={""}>
                     <CDBSidebarHeader prefix={<i className="fa fa-bars fa-large"></i>}>
                         <a
-                            href="/"
+                            href="/?page=0&size=3"
                             className="text-decoration-none"
                             style={{color: "inherit"}}
                         >

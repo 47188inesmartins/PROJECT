@@ -278,7 +278,7 @@ class CompanyServices : ICompanyServices {
         val pageable: Pageable = PageRequest.of(page, size)
         if(search == "null") return getAllCompanies(page, size)
         val allCompanies = companyDao.getCompanyBySearch("%${search}%", pageable)
-        if(token == null) return  allCompanies?.map { CompanyOutputDto(it) }
+        if(token == null) return allCompanies?.map { CompanyOutputDto(it) }
         val user = userDao.getUserByToken(UUID.fromString(token))?: throw UserNotFound()
         val userLocation = Geolocation(user.latitude,user.longitude)
         return getCompaniesByUserLocation(getDistance,userLocation,allCompanies!!,true, pageable).map { CompanyOutputDto(it) }
@@ -313,7 +313,9 @@ class CompanyServices : ICompanyServices {
         order: Boolean,
         pageable: Pageable
     ): Page<CompanyEntity> {
+
         val nearCompanies = mutableListOf<Pair<CompanyEntity, Double>>()
+
         companiesList.forEach { company ->
             val companyLocation = Geolocation(company.latitude, company.longitude)
             val distanceUserComp = GeoCoder().calculateHaversineDistance(userLocation, companyLocation)
@@ -323,13 +325,12 @@ class CompanyServices : ICompanyServices {
                 if (order) nearCompanies.add(Pair(company, distanceUserComp))
             }
         }
+
         nearCompanies.sortBy { it.second }
-
-        val startIndex = pageable.pageNumber * pageable.pageSize
-        val endIndex = (startIndex + pageable.pageSize).coerceAtMost(nearCompanies.size)
-        val pagedCompanies = nearCompanies.subList(startIndex, endIndex).map { it.first }
-
-        return PageImpl(pagedCompanies, pageable, nearCompanies.size.toLong())
+        println(companiesList)
+        val totalPages = companiesList.totalElements
+        val pagedCompanies = nearCompanies.map { it.first }
+        return PageImpl(pagedCompanies, pageable, totalPages)
     }
 
     /**

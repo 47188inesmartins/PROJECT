@@ -102,7 +102,7 @@ class UserController {
     }
 
     @PostMapping("/login")
-    fun login(@RequestBody credentials: UserCredentials, response: HttpServletResponse): ResponseEntity<Pair<String?, String>> {
+    fun login(@RequestBody credentials: UserCredentials, response: HttpServletResponse): ResponseEntity<Pair<String?, List<CompanyRole>>> {
         return try {
             val user = userServices.getUsersByEmailAndPassword(credentials.email,credentials.password)
             val cookieToken = ResponseCookie

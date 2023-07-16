@@ -7,10 +7,7 @@ import backend.jvm.utils.UserRoles
 import java.sql.Date
 import java.util.*
 
-
 data class UserEmails(val emails: List<String>)
-
-data class URoles(val token: Int, val role: String)
 
 data class UserCredentials(val email: String, val password: String)
 
@@ -61,7 +58,6 @@ data class UserInputDto(
 ){
         fun mapToUser(dto: UserInputDto,
                       pass: String,
-                   //   roles: List<Role>,
                       interests: String,
                       profilePic: ByteArray?,
                       coordinates: Geolocation
@@ -76,7 +72,6 @@ data class UserInputDto(
                       address = AddressUtils.addressInfo(street,city,country),
                       companies = null,
                       appointmentEntities = null,
-                   //   roles = roles,
                       unavailabilityEntity = null,
                       interests = interests,
                       profilePic = profilePic,
@@ -91,5 +86,3 @@ data class CompanyRole(val companyId: Int? = null, val role: String = UserRoles.
 data class ReceiveMoney(val money: String)
 
 data class AppointmentManager(val appHour: String, val appDate: String, val userId: Int, val service: Int)
-
-data class AppointmentEmployee( val appHour: String, val appDate: String, val service: Int)
