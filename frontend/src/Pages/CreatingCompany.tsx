@@ -3,6 +3,8 @@ import {Dropdown} from "react-bootstrap";
 import "../Style/CreatingCompany.css";
 import Cookies from 'js-cookie';
 import {convertMinutesToHHMMSS} from "../Utils/formater";
+import {AddLayouts} from "../Components/AddLayouts";
+import {CompanyServices} from "../Service/CompanyServices";
 
 
 interface CompanyInputDto {
@@ -118,41 +120,32 @@ export function CreatingCompany() {
 
 
     function fetchCreateCompany() {
-
-        fetch(`/api/company?duration=${convertMinutesToHHMMSS(selectedValue)}`,{
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token} `
+        CompanyServices.CreateCompany(selectedValue,companyData,employeeEmails,schedule)
+        /*fetch(`/api/company?duration=${convertMinutesToHHMMSS(selectedValue)}`,{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token} `
+            },
+            body: JSON.stringify({
+                company: companyData,
+                emails : {
+                    emails: employeeEmails
                 },
-                body: JSON.stringify({
-                    company: companyData,
-                    emails : {
-                        emails: employeeEmails
-                    },
-                    days: schedule.filter(day =>
-                        Object.values(day).every(value => value !== '')
-                    )
-                })
-            }).then(response => response.json())
+                days: schedule.filter(day =>
+                    Object.values(day).every(value => value !== '')
+                )
+            })
+        }).then(response =>{response.json()
+            console.log(response.json())}
+)
             .then(data => {
                 setRedirect(true);
             })
             .catch(error => {
                 console.error('Ocorreu um erro:', error);
-            });
+            });*/
 
-    }
-
-    useEffect(() => {
-        if (redirect) {
-            setRedirect(false);
-        }
-    }, [redirect]);
-
-    if (redirect) {
-        window.location.href = '/'
-        return(<></>)
     }
 
     const handleTimeChange = (index, field, value) => {
@@ -194,7 +187,7 @@ export function CreatingCompany() {
 
     const MAX_DESCRIPTION_LENGTH = 200;
 
-    return (
+    const divElem = (
         <div className="container rounded bg-white mt-5 mb-5">
             <div className="row">
                 <div className="col-md-4 border-right">
@@ -422,7 +415,6 @@ export function CreatingCompany() {
                                         </button>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                         <div className="mt-5 text-center">
@@ -435,4 +427,6 @@ export function CreatingCompany() {
             </div>
         </div>
     );
+
+    return <AddLayouts content={divElem}/>
 }

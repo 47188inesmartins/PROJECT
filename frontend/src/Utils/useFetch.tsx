@@ -84,7 +84,7 @@ export function SimpleFetch(url:string , body: any = null, method:string = 'GET'
     return response
 }
 
-export async function SimpleFetch1(url:string , body: any = null, method:string = 'GET'){
+export function SimpleFetch1(url:string , method:string = 'GET',bodyReq: any = null ){
     const token =  Cookies.get('name');
     const [r,setResponse] = useState(undefined)
     const [status,setStatus] = useState<number|undefined>(undefined)
@@ -93,21 +93,24 @@ export async function SimpleFetch1(url:string , body: any = null, method:string 
         : {'Content-Type': 'application/json'};
     const hostUrl = HOST + url
 
-    await fetch(hostUrl, {
-        method: method,
-        body: JSON.stringify(body),
-        headers: authorization
-    })
-        .then(response =>{
-            const resp = response.json()
-            console.log("RESPOSTA", resp)
-            setResponse(resp)
-            setStatus(response.status)
-        })
-        .catch(error => {
-            setResponse(error)
-            console.error('Ocorreu um erro:', error);
-        });
-
+    useEffect(() => {
+    async function doFetch() {
+        try{
+                const resp = await fetch(hostUrl,{
+                    method : method,
+                    body : bodyReq? JSON.stringify(bodyReq) : null,
+                    headers : authorization
+                })
+                const body = await resp.json()
+                console.log("here",body)
+                setStatus(resp.status)
+                setResponse(body)
+            }catch (error){
+                console.log("check error",error)
+            }
+        }
+        doFetch()
+    }, [])
     return {status:status,response:r}
 }
+

@@ -39,11 +39,10 @@ class UnavailabilityController {
     }
 
     @RoleManager(["MANAGER","EMPLOYEE"])
-    @GetMapping("/{id}/user")
-    fun getUnavailabilityByUser(@PathVariable id: Int): ResponseEntity<UnavailabilityOutputDto> {
+    @GetMapping("/company/{cid}/user/{id}")
+    fun getUnavailabilityByUser(@PathVariable cid: Int,@PathVariable id: Int): ResponseEntity<UnavailabilityOutputDto> {
         return try {
             val response = unavailabilityServices.getUnavailabilityByUser(id)
-
             ResponseEntity
                 .status(201)
                 .body(response)

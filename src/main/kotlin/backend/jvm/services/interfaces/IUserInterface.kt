@@ -14,7 +14,7 @@ interface IUserInterface {
 
     fun getUserById(token: String): UserOutputDto
 
-    fun getEarnedMoneyEmployee(userId: String, dateBegin: String, dateEnd: String,company: Int): Double
+    fun getEarnedMoneyEmployee(userId: Int,  dateBegin: String?, dateEnd: String?,company: Int): Double
 
     fun changeRole(id: Int, name: String): String
 

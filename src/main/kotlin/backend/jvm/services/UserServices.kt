@@ -1,11 +1,11 @@
 package backend.jvm.services
 
+import backend.jvm.dao.*
 import backend.jvm.model.*
 import backend.jvm.model.appointment.AppointmentEntity
 import backend.jvm.model.appointment.AppointmentInfo
 import backend.jvm.model.appointment.AppointmentsUserInfo
 import backend.jvm.model.user.*
-import backend.jvm.dao.*
 import backend.jvm.services.interfaces.IUserInterface
 import backend.jvm.utils.*
 import backend.jvm.utils.errorHandling.*
@@ -15,9 +15,9 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.util.StringUtils
 import org.springframework.web.multipart.MultipartFile
-import kotlin.collections.List
 import java.sql.Date
 import java.util.*
+
 
 @Service
 class UserServices : IUserInterface {
@@ -148,6 +148,8 @@ class UserServices : IUserInterface {
         val (latterApp, soonerApp) = listAppointment.partition {
             it.appDate.before(currentDate) && it.appHour < currentTime
         }
+        val a = soonerApp
+        val b = latterApp
         return AppointmentsUserInfo(mapToAppointmentsInfo(soonerApp),mapToAppointmentsInfo(latterApp))
     }
 
@@ -155,7 +157,6 @@ class UserServices : IUserInterface {
         if(listAppointmentEntities.isEmpty()) return emptyList()
         return listAppointmentEntities.map {
             val getCompany = companyDao.getCompanyBySchedule(it.schedule.id)?:throw CompanyNotFound()
-
             if(it.user == null) throw InvalidAppointment()
             val employee = it.user.firstOrNull { user ->
                 user?.let { it1 -> userDao.getUserDBByIdAndRole(UserRoles.EMPLOYEE.name, it1.id) } != null ||
@@ -178,10 +179,10 @@ class UserServices : IUserInterface {
         else userCompanyDao.getRoleByCompanyAndUser(company, token.id)
     }
 
-    override fun getEarnedMoneyEmployee(userId: String, dateBegin: String, dateEnd: String,company: Int): Double {
-        val user = userDao.getUserByToken(UUID.fromString(userId)) ?: throw UserNotFound()
-        val getBeginDate = Date.valueOf(dateBegin)
-        val getEndDate = Date.valueOf(dateEnd)
+    override fun getEarnedMoneyEmployee(userId: Int, dateBegin: String?, dateEnd: String?,company: Int): Double {
+        val user = userDao.getUserById(userId)?: throw UserNotFound()
+        val getBeginDate = if(dateBegin == null) getCurrentDate() else Date.valueOf(dateBegin)
+        val getEndDate = if(dateEnd == null) getLastDateIn30Days(getBeginDate) else  Date.valueOf(dateEnd)
         return servicesRepository.getEarnedMoneyByEmployee(user.id,company, getBeginDate, getEndDate) ?: 0.0
     }
 

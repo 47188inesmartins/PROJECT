@@ -7,6 +7,7 @@ import backend.jvm.model.appointment.AppointmentInputDto
 import backend.jvm.model.appointment.AppointmentOutputDto
 import backend.jvm.model.service.ServiceOutputDto
 import backend.jvm.model.user.AppointmentManager
+import backend.jvm.model.user.UserEntity
 import backend.jvm.model.user.UserOutputDto
 import backend.jvm.services.interfaces.IAppointmentServices
 import backend.jvm.utils.errorHandling.*
@@ -70,24 +71,28 @@ class AppointmentServices : IAppointmentServices {
 
         val schedule = scheduleDao.getScheduleById(cid)
             ?: throw ScheduleNotFound()
+        val appointmentDate = Date.valueOf(appointment.appDate)?: throw Exception("invalid date")
 
-        val appointmentDb = appointment.mapToAppointmentDb(appointment, schedule, listOf(userClient, employee), service)
+        if(!isDateAfterCurrent(appointmentDate)) throw InvalidDate()
+        if(!verifyVacations(schedule.id,appointmentDate)) throw InvalidDate()
+
+        val appointmentDb = appointment.mapToAppointmentDb(appointmentDate,appointment, schedule, listOf(userClient, employee), service)
         val savedAppointment = appointmentDao.save(appointmentDb)
 
         val endTime = savedAppointment.appHour.time + service.duration.time
         val time = Time(endTime)
 
-        val unavailabilityEntity = UnavailabilityEntity(
-            Date.valueOf(appointment.appDate),
-            null,
-            savedAppointment.appHour,
-            time,
-            employee
-        )
-        unavailabilityDao.save(unavailabilityEntity)
+        addUnavailabilityToEmployee(appointment.appDate,savedAppointment.appHour,time,employee)
+
         return AppointmentOutputDto(savedAppointment)
     }
 
+    /**
+     * Add an appointment as an employee or manager
+     * @param appointmentEmployee The appointment details.
+     * @param companyId The company ID.
+     * @return The id of the created appointment.
+     */
     @Transactional
     fun addAppointmentByEmployee(appointmentEmployee: AppointmentManager, companyId: Int):Int{
         //employee
@@ -100,51 +105,12 @@ class AppointmentServices : IAppointmentServices {
 
         val appointmentDate = Date.valueOf(appointmentEmployee.appDate)?: throw Exception("invalid date")
         if(!isDateAfterCurrent(appointmentDate)) throw InvalidDate()
+        if(!verifyVacations(schedule.id,appointmentDate)) throw InvalidDate()
         val appointmentHour = Time.valueOf(appointmentEmployee.appHour.plus(":00"))?: throw Exception("invalid hour")
 
-        val vacations = vacationDao.getVacationsByScheduleId(schedule.id)
-        if(vacations.isNotEmpty()){
-            vacations.forEach {
-                val dateB = it.dateBegin
-                val dateE = it.dateEnd
-                if(appointmentDate.after(dateB)&&appointmentDate.before(dateE)) throw InvalidDate()
-            }
-        }
         val appointmentDb = AppointmentEntity(appointmentHour,appointmentDate,schedule, listOf(user,null),service)
         val savedAppointment = appointmentDao.save(appointmentDb)
         return savedAppointment.id
-    }
-
-   /* @Transactional
-    fun addOwnAppointment(token:String?, appointmentEmployee: AppointmentEmployee, companyId: Int):Int{
-        if(token == null) throw UserNotFound()
-        val userId = userDao.getUserByToken(UUID.fromString(token))!!
-        //employee
-        val service = servicesRepository.getServiceDBById(appointmentEmployee.service)
-            ?: throw ServiceNotFound()
-        val schedule = scheduleDao.getScheduleById(companyId)
-            ?: throw ScheduleNotFound()
-
-        val appointmentDate = Date.valueOf(appointmentEmployee.appDate)?: throw Exception("invalid date")
-        if(!isDateAfterCurrent(appointmentDate)) throw InvalidDate()
-        val appointmentHour = Time.valueOf(appointmentEmployee.appHour.plus(":00"))?: throw Exception("invalid hour")
-
-        val vacations = vacationDao.getVacationsByScheduleId(schedule.id)
-        if(vacations.isNotEmpty()){
-            vacations.forEach {
-                val dateB = it.dateBegin
-                val dateE = it.dateEnd
-                if(appointmentDate.after(dateB)&&appointmentDate.before(dateE)) throw InvalidDate()
-            }
-        }
-        val appointmentDb = AppointmentEntity(appointmentHour,appointmentDate,schedule, listOf(user,null),service)
-        val savedAppointment = appointmentDao.save(appointmentDb)
-        return savedAppointment.id
-    }*/
-
-    private fun isDateAfterCurrent(date: Date): Boolean {
-        val currentDate = Date(System.currentTimeMillis())
-        return date.after(currentDate)
     }
 
     /**
@@ -197,7 +163,6 @@ class AppointmentServices : IAppointmentServices {
      * @return The list of available services and their corresponding employees.
      * @throws ScheduleNotFound if the schedule is not found.
      */
-
     override fun getAvailableServicesByAppointment(beginHour: String, date: String, companyId: Int): List<Pair<ServiceOutputDto, List<UserOutputDto>>> {
         val bh = Time.valueOf(beginHour.plus(":00"))
         val d = Date.valueOf(date)
@@ -213,5 +178,51 @@ class AppointmentServices : IAppointmentServices {
                 ((day.beginHour < addTimes(bh, it.first.duration) && addTimes(bh, it.first.duration) < day.intervalBegin) ||
                         (day.intervalEnd!! <= addTimes(bh, it.first.duration) && addTimes(bh, it.first.duration) <= day.endHour)))
         }
+    }
+
+    /**
+     * Add an unvailability to the employee for the appointment added
+     * @param date is the appointment date
+     * @param hour is the appointment hour begin
+     * @param endHour is the appointment hour end
+     * @param employee designated for the appointment
+     */
+    private fun addUnavailabilityToEmployee(date:String,hour: Time,endHour: Time,employee: UserEntity){
+        val unavailabilityEntity = UnavailabilityEntity(
+            Date.valueOf(date),
+            null,
+            hour,
+            endHour,
+            employee
+        )
+        unavailabilityDao.save(unavailabilityEntity)
+    }
+
+    /**
+     * Verifies if the appointment date is between vacations dates
+     * @param scId Schedule associated with the company
+     * @param appDate Date to verify
+     * @return true if the date is not between vacations or false otherwise
+     */
+    private fun verifyVacations(scId: Int, appDate: Date):Boolean{
+        val vacations = vacationDao.getVacationsByScheduleId(scId)
+        if(vacations.isNotEmpty()){
+            vacations.forEach {
+                val dateB = it.dateBegin
+                val dateE = it.dateEnd
+                if(appDate.after(dateB)&&appDate.before(dateE)) return false
+            }
+        }
+        return true
+    }
+
+    /**
+    * Verifies if the date is after the current date
+     * @param date to check if is after the current date
+     * @return true if the date is after or false otherwise
+     */
+    private fun isDateAfterCurrent(date: Date): Boolean {
+        val currentDate = Date(System.currentTimeMillis())
+        return date.after(currentDate)
     }
 }

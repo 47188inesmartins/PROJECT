@@ -13,8 +13,7 @@ import {
 import {Fetch} from "../Utils/useFetch";
 import {useContext} from "react";
 import {LoggedInContextCookie} from "./Authentication/Authn";
-import {Layout} from "./Layout";
-
+import {Layout, LayoutRight} from "./Layout";
 
 export function ProfilePage() {
 
@@ -49,6 +48,7 @@ export function ProfilePage() {
                             <MDBCol lg="4">
                                 <MDBCard className="mb-4">
                                     <MDBCardBody className="text-center">
+
                                         {response.response.profilePic?
                                             <>
                                                 <MDBCardImage
@@ -71,6 +71,9 @@ export function ProfilePage() {
                                             </>
                                         }
                                     </MDBCardBody>
+                                    <a href="/user/1/upload-pic" className="edit-profile-link">
+                                        <p>Update your profile pic</p>
+                                    </a>
                                 </MDBCard>
                                     {!roleCheck?
                                         <>
@@ -132,6 +135,7 @@ export function ProfilePage() {
                     </MDBContainer>
                 </section>
             }
+            <LayoutRight/>
         </div>
     );
 }

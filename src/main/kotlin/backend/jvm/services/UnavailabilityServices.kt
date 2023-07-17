@@ -6,8 +6,10 @@ import backend.jvm.services.dto.UnavailabilityInputDto
 import backend.jvm.services.dto.UnavailabilityOutputDto
 import backend.jvm.services.interfaces.IUnavailabilityServices
 import backend.jvm.utils.errorHandling.UserNotFound
+import backend.jvm.utils.getCurrentDate
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.sql.Date
 import java.util.*
 
 

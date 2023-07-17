@@ -23,7 +23,7 @@ class CompanyRepositoryTest {
     @Test
     fun `whenFindById_thenReturnCompany`() {
         val location = Geolocation(41.1579438,-8.629105299999999)
-        val company = CompanyEntity(location,null, "111111111", "Rua do teste", "tester", "test", "testing", null, null, null)
+        val company = CompanyEntity("966123456",location,null, "111111111", "Rua do teste", "tester", "test", "testing", null, null, null)
         entityManager.persist(company)
         entityManager.flush()
         val companyFound = companyRepository.findByIdOrNull(company.id)
@@ -33,7 +33,7 @@ class CompanyRepositoryTest {
     @Test
     fun `whenFindByNif_thenReturnCompany`() {
         val location = Geolocation(41.1579438,-8.629105299999999)
-        val company = CompanyEntity(location, null, "111111111", "Rua do teste", "tester", "test", "testing", null, null, null)
+        val company = CompanyEntity("966123456",location, null, "111111111", "Rua do teste", "tester", "test", "testing", null, null, null)
         entityManager.persist(company)
         entityManager.flush()
         val companyFound = companyRepository.findCompanyByNif(company.nif)

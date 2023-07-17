@@ -27,8 +27,8 @@ class HomeController {
     @GetMapping
     fun home(
         @RequestParam distance: Double?,
-        @RequestParam(defaultValue = "0") page: Int,
-        @RequestParam(defaultValue = "10") size: Int
+        @RequestParam page: String?,
+        @RequestParam size: String?
     ): ResponseEntity<Page<CompanyOutputDto>> {
         return try{
             val requestAttributes = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes

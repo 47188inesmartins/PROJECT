@@ -12,12 +12,11 @@ data class AppointmentInputDto(
     val user: Int?,
     val service: Int
 ) {
-    fun mapToAppointmentDb(dto: AppointmentInputDto, schedule: ScheduleEntity, user: List<UserEntity?>, service: ServiceEntity): AppointmentEntity {
+    fun mapToAppointmentDb(date:Date,dto: AppointmentInputDto, schedule: ScheduleEntity, user: List<UserEntity?>, service: ServiceEntity): AppointmentEntity {
         val ah = Time.valueOf(dto.appHour.plus(":00"))?: throw Exception("invalid hour")
-        val ad = Date.valueOf(dto.appDate)?: throw Exception("invalid date")
         return AppointmentEntity(
             ah,
-            ad,
+            date,
             schedule,
             user,
             service

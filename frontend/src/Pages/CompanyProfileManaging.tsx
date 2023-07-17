@@ -15,7 +15,7 @@ import {useContext, useState} from "react";
 import {LoggedInContextCookie} from "./Authentication/Authn";
 import {useParams} from "react-router-dom";
 import AdvancedCalendar from "./AdvancedCalendar";
-import {Layout} from "./Layout";
+import {Layout, LayoutRight} from "./Layout";
 import {Button, Dropdown, DropdownButton} from "react-bootstrap";
 import {Modal} from "react-bootstrap";
 import {Navigate} from "react-router";
@@ -25,6 +25,10 @@ import {Appointment} from "../Service/Appointment";
 export function CompanyProfileManaging() {
     const params = useParams()
     const id = params.id
+    const role = useContext(LoggedInContextCookie).loggedInState.role
+    console.log("ROLEE",role)
+    const roleCheckManager = role.some(r => (r.companyId === parseInt(id) && r.role === 'MANAGER'))
+    console.log('Check',roleCheckManager)
     const [click,SetClick] = useState(false)
     const [show, setShow] = useState(true);
     const handleCancel = () => {
@@ -35,6 +39,7 @@ export function CompanyProfileManaging() {
     function GetEmployees(){
         const response  = Fetch(`/company/${id}/employees`,'GET')
         const services  = Fetch(`/company/${id}/services`,'GET')
+        const userInfo = Fetch('user/info','GET')
         const [selectedDate, setSelectedDate] = useState("");
         const [selectedTime, setSelectedTime] = useState("");
         const [selectedEmployee, setSelectedEmployee] = useState("");
@@ -114,16 +119,26 @@ export function CompanyProfileManaging() {
                         >
                             {selectedEmployee ||"Select an employee"}
                         </Dropdown.Toggle>
-                        <Dropdown.Menu>
-                            {response.response.map((employee) => (
-                                <Dropdown.Item
-                                    key={employee.id}
-                                    onClick={() => handleEmployeeSelect(employee)}
-                                >
-                                    {employee.name}
-                                </Dropdown.Item>
-                            ))}
-                        </Dropdown.Menu>
+                        {roleCheckManager ?
+                            <Dropdown.Menu>
+                                {response.response.map((employee) => (
+                                    <Dropdown.Item
+                                        key={employee.id}
+                                        onClick={() => handleEmployeeSelect(employee)}
+                                    >
+                                        {employee.name}
+                                    </Dropdown.Item>
+                                ))}
+                            </Dropdown.Menu> :
+                            <Dropdown.Menu>
+                                    <Dropdown.Item
+                                        key={userInfo.response.id}
+                                        onClick={() => handleEmployeeSelect(userInfo.response)}
+                                    >
+                                        {userInfo.response.name}
+                                    </Dropdown.Item>
+                            </Dropdown.Menu>
+                        }
                     </Dropdown>
                     <Dropdown>
                         <Dropdown.Toggle
@@ -251,6 +266,7 @@ export function CompanyProfileManaging() {
                                         </MDBCardBody>
                                     </MDBCard>
                                     <MDBCard className="mb-4 mb-md-0">
+                                        {roleCheckManager?
                                         <MDBCardBody>
                                             <p style={{ fontSize: '1.5rem', fontWeight: 'bold' }} ><strong> Managing your company </strong></p>
                                             <a href={`/company/${id}/managing/employees`} className="mb-1"  style={{ fontSize: '1.2rem' }}>
@@ -262,7 +278,7 @@ export function CompanyProfileManaging() {
                                             <a href={`/company/${id}/services`} className="mb-1"  style={{ fontSize: '1.2rem' }}>
                                                 <MDBCardText> Manage company's services </MDBCardText>
                                             </a>
-                                            <a href={`/company/${id}/services`} className="mb-1"  style={{ fontSize: '1.2rem' }}>
+                                            <a href={`/company/${id}/managing/unavailability`} className="mb-1"  style={{ fontSize: '1.2rem' }}>
                                                 <MDBCardText> Add personal break </MDBCardText>
                                             </a>
                                             <Button style={{ borderColor: '#999999' ,backgroundColor: '#999999', color: 'white' }}
@@ -270,7 +286,22 @@ export function CompanyProfileManaging() {
                                             >
                                                 Add an appointment
                                             </Button>
-                                        </MDBCardBody>
+                                        </MDBCardBody>:
+                                            <MDBCardBody>
+                                                <p style={{ fontSize: '1.5rem', fontWeight: 'bold' }} ><strong> Managing your company </strong></p>
+                                                <a href={`/company/${id}/services`} className="mb-1"  style={{ fontSize: '1.2rem' }}>
+                                                    <MDBCardText> Manage company's services </MDBCardText>
+                                                </a>
+                                                <a href={`/company/${id}/managing/unavailability`} className="mb-1"  style={{ fontSize: '1.2rem' }}>
+                                                    <MDBCardText> Add personal break </MDBCardText>
+                                                </a>
+                                                <Button style={{ borderColor: '#999999' ,backgroundColor: '#999999', color: 'white' }}
+                                                        onClick={handleClick}
+                                                >
+                                                    Add an appointment
+                                                </Button>
+                                            </MDBCardBody>
+                                        }
                                     </MDBCard>
                                 </MDBCol>
                                 <MDBCol lg="8">
@@ -359,12 +390,13 @@ export function CompanyProfileManaging() {
                                 </MDBCol>
                             </MDBRow>
                         </MDBContainer>
-                        <div style={{ margin:'20px'}}>
+                        <div style={{ margin:'20px', marginRight: '200px' }}>
                         <AdvancedCalendar />
                     </div>
                     </section>
             }
          </div>
+            <LayoutRight/>
         </div>
     );
 }

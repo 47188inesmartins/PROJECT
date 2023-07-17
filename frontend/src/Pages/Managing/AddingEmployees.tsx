@@ -2,6 +2,9 @@ import * as React from 'react';
 import { useState } from 'react';
 import {Fetch} from "../../Utils/useFetch";
 import {useParams} from "react-router-dom";
+import {UsersService} from "../../Service/UsersService";
+import {Layout, LayoutRight} from "../Layout";
+import {AccessDenied} from "../../Components/AcessDenied";
 
 export function AddingEmployees() {
 
@@ -29,13 +32,13 @@ export function AddingEmployees() {
 
 
     function FetchAddEmployees(){
-
         const params = useParams()
         const id = params.id
         const body = {emails:textBoxes}
-        const resp = Fetch(`/company/${id}/employee`, 'POST', body)
+        const resp = UsersService.addEmployees(id,body)
+        /*const resp = Fetch(`/company/${id}/employee`, 'POST', body)
         if(resp.response)
-            window.location.href = "/"
+            window.location.href = "/"*/
         return(
             <>
                 {resp.response?
@@ -44,8 +47,7 @@ export function AddingEmployees() {
                 }
             </>);
     }
-
-    return (
+    const divElem = (
         <div>
             {!create ?
                 <section className="vh-100 gradient-custom">
@@ -87,7 +89,8 @@ export function AddingEmployees() {
                                             <br/>
                                             <br/>
                                             <button className="btn btn-outline-light btn-lg px-5" type="submit"
-                                                    onClick={handleLater}>Configure later
+                                                    onClick={handleLater} >Configure later
+
                                             </button>
 
                                         </div>
@@ -102,4 +105,12 @@ export function AddingEmployees() {
             }
         </div>
     );
+    return (<div>
+            <div className="sidebar-left">
+                <Layout />
+            </div>
+            <AccessDenied  company={id} content={divElem} role={['MANAGER']}/>
+            <LayoutRight/>
+        </div>
+    )
 }

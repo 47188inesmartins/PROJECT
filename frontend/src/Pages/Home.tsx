@@ -39,9 +39,12 @@ export function Home() {
 
     let url;
     if (searchValue !== null) {
+
         url = `/company/search?search=${searchValue}&page=${page}&size=${size}`;
     } else {
-        url = `/?page=${page}&size=${size}`;
+        const getPage: number | undefined = Number.isNaN(parseInt(String(page))) ? undefined : parseInt(String(page));
+        const getSize: number | undefined = Number.isNaN(parseInt(String(size))) ? undefined : parseInt(String(size));
+        url = `/?page=${getPage}&size=${getSize}`;
         if (distance !== undefined) {
             url += `&distance=${distance}`;
         }
@@ -78,7 +81,9 @@ export function Home() {
     };
 
     function FetchSearch() {
-        window.location.href = `/?search=${searchTerm}&page=${page}&size=${size}`;
+        const getPage: number | undefined = Number.isNaN(parseInt(String(page))) ? undefined : parseInt(String(page));
+        const getSize: number | undefined = Number.isNaN(parseInt(String(size))) ? undefined : parseInt(String(size));
+        window.location.href = `/?search=${searchTerm}&page=${getPage}&size=${getSize}`;
         return <></>;
     }
 
@@ -134,6 +139,8 @@ export function Home() {
                                 )}
                             </div>
                         </div>
+                        {response.response?
+                            <>
                         {response.response.content.length === 0 ? (
                             <MDBContainer className="py-5">
                                 <MDBCard className="px-3 pt-3" style={{ maxWidth: '100%' }}>
@@ -163,43 +170,46 @@ export function Home() {
                                         </button>
                                     </div>
                                     <div>
-                                        {response.response.content.map((object: any) => (
-                                            <a
-                                                key={object.id}
-                                                href={`/company/${object.id}`}
-                                                className="text-dark"
-                                            >
-                                                <MDBRow className="mb-4 border-bottom pb-2">
-                                                    <MDBCol size="3">
-                                                        <img
-                                                            src={`data:image/jpeg;base64,${object.path[0]}`}
-                                                            className="img-fluid shadow-1-strong rounded"
-                                                            alt="Hollywood Sign on The Hill"
-                                                            style={{
-                                                                width: '100%',
-                                                                height: '150px',
-                                                                objectFit: 'cover',
-                                                            }}
-                                                        />
-                                                    </MDBCol>
-                                                    <MDBCol size="9">
-                                                        <p className="mb-2">
-                                                            <strong>{object.name}</strong>
-                                                        </p>
-                                                        <p>
-                                                            <u>Location: {object.address}</u>
-                                                        </p>
-                                                        <p>
-                                                            <u>Company description:{object.description}</u>
-                                                        </p>
-                                                    </MDBCol>
-                                                </MDBRow>
-                                            </a>
-                                        ))}
-                                    </div>
+                                        {response.response ?
+                                            <>
+                                                {response.response.content.map((object: any) => (
+                                                    <a
+                                                        key={object.id}
+                                                        href={`/company/${object.id}`}
+                                                        className="text-dark"
+                                                    >
+                                                        <MDBRow className="mb-4 border-bottom pb-2">
+                                                            <MDBCol size="3">
+                                                                <img
+                                                                    src={`data:image/jpeg;base64,${object.path[0]}`}
+                                                                    className="img-fluid shadow-1-strong rounded"
+                                                                    alt="Hollywood Sign on The Hill"
+                                                                    style={{
+                                                                        width: '100%',
+                                                                        height: '150px',
+                                                                        objectFit: 'cover',
+                                                                    }}
+                                                                />
+                                                            </MDBCol>
+                                                            <MDBCol size="9">
+                                                                <p className="mb-2">
+                                                                    <strong>{object.name}</strong>
+                                                                </p>
+                                                                <p>
+                                                                    <u>Location: {object.address}</u>
+                                                                </p>
+                                                                <p>
+                                                                    <u>Company description:{object.description}</u>
+                                                                </p>
+                                                            </MDBCol>
+                                                        </MDBRow>
+                                                    </a>
+                                                ))}</> : <></>
+                                        }</div>
                                 </MDBCard>
                             </MDBContainer>
-                        )}
+                        )}</>: <></>
+                        }
                     </div>
                 )}
             </div>

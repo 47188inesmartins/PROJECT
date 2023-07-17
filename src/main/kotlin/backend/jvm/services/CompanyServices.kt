@@ -41,6 +41,8 @@ class CompanyServices : ICompanyServices {
     companion object{
         const val NIF_NUMBERS = 9
         const val DEFAULT_DISTANCE = 5.5
+        const val DEFAUTL_PAGE = 0
+        const val DEFAULT_SIZE = 10
     }
 
     @Autowired
@@ -223,14 +225,15 @@ class CompanyServices : ICompanyServices {
                 val role = user?.id?.let { it1 -> userDao.getUserRoleByCompany(it1,cid) }
                 (role == UserRoles.EMPLOYEE.name ||role == UserRoles.MANAGER.name)
             } ?: throw UserNotFound()
-            val client = it.user.find { cli -> cli != employee }
+            val clientFind = it.user.find { cli -> cli != employee }
+            val client = clientFind?.name ?: "Scheduled by employee"
             val endHour = Time(it.appHour.time + service.duration.time)
             AppointmentInfoEmployeeEnd(
                 it.id,
                 it.appHour.toString(),
                 endHour.toString(),
                 it.appDate,
-                "employee: ${employee.name} client: ${client?.name}"
+                "employee: ${employee.name} client: $client"
             )
         }
     }
@@ -284,9 +287,11 @@ class CompanyServices : ICompanyServices {
         return getCompaniesByUserLocation(getDistance,userLocation,allCompanies!!,true, pageable).map { CompanyOutputDto(it) }
     }
 
-     fun getPersonalizedCompanies(distance: Double?,token: String?,  page: Int, size: Int): Page<CompanyOutputDto>?{
+     fun getPersonalizedCompanies(distance: Double?,token: String?,  page: String?, size: String?): Page<CompanyOutputDto>?{
+         val getPag = page?.toIntOrNull() ?: DEFAUTL_PAGE
+         val getSize = size?.toIntOrNull() ?: DEFAULT_SIZE
          val getDistance = distance ?: DEFAULT_DISTANCE
-         val pageable: Pageable = PageRequest.of(page, size)
+         val pageable: Pageable = PageRequest.of(getPag, getSize)
         if(token == null) {
             val companies = companyDao.findAll(pageable)
             return companies.map { CompanyOutputDto(it) }

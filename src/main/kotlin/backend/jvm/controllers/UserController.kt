@@ -26,8 +26,9 @@ import org.springframework.web.server.ResponseStatusException
 import java.util.*
 
 
-@RestController
+
 @RequestMapping("/user")
+@RestController
 class UserController {
 
     @Autowired
@@ -180,16 +181,13 @@ class UserController {
     }
 
     @RoleManager(["MANAGER","EMPLOYEE"])
-    @GetMapping("company/{cid}/receive-money")
-    fun getEmployeeEarnedMoney(@RequestParam dateBegin: String, @RequestParam dateEnd: String,
-                               @PathVariable cid: Int
+    @GetMapping("company/{cid}/receive-money/{id}")
+    fun getEmployeeEarnedMoney(@RequestParam dateBegin: String?, @RequestParam dateEnd: String?,
+                               @PathVariable cid: Int, @PathVariable id: Int
     ): ResponseEntity<ReceiveMoney>{
         return try {
-            val requestAttributes = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes
-            val request = requestAttributes.request
-            val bearerToken = request.getHeader("Authorization")?.removePrefix("Bearer ")
-            val res = bearerToken?.let { userServices.getEarnedMoneyEmployee(it,dateBegin,dateEnd,cid) }
-            val response = ReceiveMoney("$res €")
+            val res = userServices.getEarnedMoneyEmployee(id,dateBegin,dateEnd,cid)
+            val response = ReceiveMoney("$res")
             ResponseEntity
                 .status(200)
                 .body(response)
@@ -197,6 +195,8 @@ class UserController {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Not appointment", e)
         }
     }
+
+
 
   //  @RoleManager(["MANAGER","EMPLOYEE","CLIENT"])
     @PostMapping("{id}/profile-pic")

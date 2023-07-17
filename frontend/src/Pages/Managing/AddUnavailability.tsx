@@ -1,9 +1,12 @@
 import React, {useState} from "react";
 import {useParams} from "react-router-dom";
-import {Fetch} from "../../Utils/useFetch";
+import {Fetch, SimpleFetch1} from "../../Utils/useFetch";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import {MDBInput} from "mdb-react-ui-kit";
+import {Navigate} from "react-router";
+import {Layout, LayoutRight} from "../Layout";
+import {AccessDenied} from "../../Components/AcessDenied";
 
 interface Unavailability {
     dateBegin: Date;
@@ -15,11 +18,11 @@ interface Unavailability {
 export function AddingUnavailability() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const today = new Date();
-    const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(new Date());
-    const [selectedTimeEnd, setSelectedTime] = useState("");
-    const [selectedTimeStart, setSelectedStart] = useState("");
-
+    const [startDate, setStartDate] = useState(undefined);
+    const [endDate, setEndDate] = useState(undefined);
+    const [selectedTimeEnd, setSelectedTime] = useState(undefined);
+    const [selectedTimeStart, setSelectedStart] = useState(undefined);
+    const cid = useParams().id
     const handleTimeSelectStart = (time) => {
         const getTime = time.target.value
         setSelectedStart(getTime)
@@ -28,6 +31,16 @@ export function AddingUnavailability() {
     const handleTimeSelectEnd = (time) => {
         const getTime = time.target.value
         setSelectedTime(getTime)
+    };
+
+    const handleDateBeginSelectEnd = (date) => {
+        const getDate = date.target.value
+        setStartDate(getDate)
+    };
+
+    const handleDateEndSelectEnd = (date) => {
+        const getDate = date.target.value
+        setEndDate(getDate)
     };
 
     function handleSubmit() {
@@ -41,14 +54,17 @@ export function AddingUnavailability() {
             hourBegin: selectedTimeStart,
             hourEnd: selectedTimeEnd
         };
-        const cid = useParams().id
 
-        const response = Fetch(`/unavailability/company/${cid}`,'POST',unavail)
-        window.location.href = `/company/${cid}/profile`;
-        return <></>
+
+        const response = SimpleFetch1(`/unavailability/company/${cid}`,'POST',unavail)
+        if(response.status == 201) window.location.href = `/company/${cid}/profile`;
+        return <>
+            <p>Can´t add unavailability</p>
+            <Navigate to = {`/company/${cid}/managing/unavailability`}/>
+        </>
     }
 
-    return(
+    const divElem = (
         <div
             style={{
                 display: "flex",
@@ -58,80 +74,122 @@ export function AddingUnavailability() {
                 backgroundColor: "#0e4378"
             }}
         >
-            {!isSubmitting ? (
-                <section className="gradient-custom">
-                    <div className="container">
+            <div
+                style={{
+                    position: "relative",
+                    width: "80%", // Ajuste o valor do width conforme necessário
+                    backgroundColor: "#0e4378",
+                    borderRadius: "1rem",
+                    padding: "2rem",
+                }}
+            >
+                {!isSubmitting ? (
+                    <section className="gradient-custom">
                         <div className="row d-flex justify-content-center align-items-center">
                             <div className="col-12 col-md-8 col-lg-6 col-xl-5">
-                                <div className="card bg-white text-dark" style={{ borderRadius: "1rem" }}>
-                                    <div className="card-body p-5 text-center">
-                                        <div className="mb-md-5 mt-md-4 pb-5">
-                                            <h2 className="fw-bold mb-2 text-uppercase">Unavailability long period:</h2>
-                                            <br />
-                                            <br />
-                                            <div className="center">
-                                                <div className="center">
-                                                    <DatePicker
-                                                        selected={startDate}
-                                                        minDate={today}
-                                                        onChange={(date) => setStartDate(date)}
-                                                    />
-                                                </div>
-                                                <label className="form-label" htmlFor="typePasswordX">Vacation's start date</label>
-                                            </div>
-                                            <br />
-                                            <div className="center">
-                                                <div className="center">
-                                                    <DatePicker
-                                                        selected={endDate}
-                                                        minDate={startDate}
-                                                        onChange={(date) => setEndDate(date)}
-                                                    />
-                                                </div>
-                                                <label className="form-label" htmlFor="typePasswordX">Vacation's end date</label>
-                                            </div>
-                                            <br />
-                                            <p><strong> Add a period unavailability for today </strong></p>
+                                <div
+                                    className="card bg-white text-dark"
+                                    style={{
+                                        borderRadius: "1rem",
+                                        padding: "2rem",
+                                        boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
+                                        margin: "1rem" // Ajuste o valor do margin conforme necessário
+                                    }}
+                                >
+                                    <h2 className="fw-bold mb-2 text-uppercase">
+                                        Unavailability long period:
+                                    </h2>
+                                    <br />
+                                    <br />
+                                    <div className="center">
+                                        <div className="center">
+                                            <label className="form-label" htmlFor="typePasswordX">Start date unavailable</label>
                                             <MDBInput
-                                                wrapperClass="mb-4 mx-5 w-100"
+                                                wrapperClass="mb-4 mx-2 w-100"
                                                 labelClass="text-white"
-                                                label="Time"
-                                                id="timeInput"
-                                                type="time"
+                                                label="Date"
+                                                id="dateInput"
+                                                type="date"
                                                 size="lg"
-                                                value={selectedTimeStart}
-                                                onChange={handleTimeSelectStart}
+                                                value={startDate}
+                                                onChange={handleDateBeginSelectEnd}
+                                                disabled={selectedTimeStart !== undefined || selectedTimeEnd !== undefined}
                                             />
-                                            <br />
-                                            <MDBInput
-                                                wrapperClass="mb-4 mx-5 w-100"
-                                                labelClass="text-white"
-                                                label="Time"
-                                                id="timeInput"
-                                                type="time"
-                                                size="lg"
-                                                value={selectedTimeEnd}
-                                                onChange={handleTimeSelectEnd}
-                                            />
-                                            <button
-                                                className="btn btn-outline-light btn-lg px-5"
-                                                type="submit"
-                                                onClick={handleSubmit}
-                                                style={{ backgroundColor: "black" }}
-                                            >
-                                                Create
-                                            </button>
                                         </div>
                                     </div>
+                                    <br />
+                                    <div className="center">
+                                        <div className="center">
+                                            <label className="form-label" htmlFor="typePasswordX">End date unavailable</label>
+                                            <MDBInput
+                                                wrapperClass="mb-4 mx-2 w-100"
+                                                labelClass="text-white"
+                                                label="Date"
+                                                id="dateInput"
+                                                type="date"
+                                                size="lg"
+                                                value={endDate}
+                                                onChange={handleDateEndSelectEnd}
+                                                disabled={selectedTimeStart !== undefined || selectedTimeEnd !== undefined}
+                                            />
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <p><strong> Add a period unavailability for today </strong></p>
+                                    <br />
+                                    <p>Begin Hour</p>
+                                    <MDBInput
+                                        wrapperClass="mb-4 mx-2 w-100"
+                                        labelClass="text-white"
+                                        label="Time"
+                                        id="timeInput"
+                                        type="time"
+                                        size="lg"
+                                        value={selectedTimeStart}
+                                        onChange={handleTimeSelectStart}
+                                        disabled={startDate !== undefined || endDate !== undefined}
+                                    />
+                                    <br />
+                                    <p>End Hour</p>
+                                    <MDBInput
+                                        wrapperClass="mb-4 mx-2 w-100"
+                                        labelClass="text-white"
+                                        label="Time"
+                                        id="timeInput"
+                                        type="time"
+                                        size="lg"
+                                        value={selectedTimeEnd}
+                                        onChange={handleTimeSelectEnd}
+                                        disabled={startDate !== undefined || endDate !== undefined}
+                                    />
+                                    <button
+                                        className="btn btn-outline-light btn-lg px-5"
+                                        type="submit"
+                                        onClick={handleSubmit}
+                                        style={{ backgroundColor: "black" }}
+                                        disabled={!selectedTimeStart && !selectedTimeEnd && !startDate && !endDate}
+                                    >
+                                        Create
+                                    </button>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </section>
-            ) : (
-                <FetchAddUnavailability />
-            )}
+                    </section>
+                ) : (
+                    <FetchAddUnavailability />
+                )}
+            </div>
         </div>
     );
 
+    return(
+        (<div>
+                <div className="sidebar-left">
+                    <Layout />
+                </div>
+                <AccessDenied  company={cid} content={divElem} role={['MANAGER','EMPLOYEE']}/>
+                <LayoutRight/>
+            </div>
+        )
+    );
 }

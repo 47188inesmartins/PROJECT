@@ -3,6 +3,8 @@ import {useState} from "react";
 import {Fetch} from "../Utils/useFetch";
 import "../Style/CreatingCompany.css"
 import {useParams} from "react-router-dom";
+import {Layout, LayoutRight} from "./Layout";
+import {AccessDenied} from "../Components/AcessDenied";
 
 export function CreatingServices(){
     const [create, setCreate] = useState<Boolean>(false)
@@ -114,7 +116,7 @@ export function CreatingServices(){
         );
     }
 
-    return (
+    const divElem = (
         <div>
             {!create ? (
                 <section className="vh-100 gradient-custom">
@@ -203,4 +205,13 @@ export function CreatingServices(){
             )}
         </div>
     );
+
+    return (<div>
+            <div className="sidebar-left">
+                <Layout />
+            </div>
+            <AccessDenied  company={id} content={divElem} role={['MANAGER','EMPLOYEE']}/>
+            <LayoutRight/>
+        </div>
+    )
 }

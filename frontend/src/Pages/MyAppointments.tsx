@@ -13,13 +13,14 @@ import {useParams} from "react-router-dom";
 import {Button, Modal} from "react-bootstrap";
 import {Navigate} from "react-router";
 import {Fetch} from "../Utils/useFetch";
-import {Layout} from "./Layout";
+import {Layout, LayoutRight} from "./Layout";
+import {Appointment} from "../Service/Appointment";
 
 
 export function MyAppointments() {
     const [cancel, setCancel] = useState(false);
     const [idAppointment,setIdAppointment] = useState<undefined|Number>(undefined)
-    const appointments = Fetch('/user/appointments',"GET").response
+    const appointments = Appointment.getUserAppointments()
     console.log(appointments)
 
     const handleCancel = (idApp:Number) =>{
@@ -118,6 +119,7 @@ export function MyAppointments() {
                         </section>
                     )
                 }
+                <LayoutRight/>
             </div>
     );
 }

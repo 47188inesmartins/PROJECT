@@ -34,4 +34,14 @@ export namespace Appointment{
         }
     }
 
+    export function getUserAppointments(){
+        const appointments = SimpleFetch1('/user/appointments')
+        if(appointments.response === 400) {
+            window.alert(appointments.response)
+        } else if(appointments.response === 403) {
+            window.alert("Access denied! You can't access this page!")
+        } else {
+            return appointments.response
+        }
+    }
 }

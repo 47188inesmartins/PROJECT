@@ -1,6 +1,7 @@
 import {useParams} from "react-router-dom";
 import * as React from "react"
 import {useState} from "react";
+import {UsersService} from "../Service/UsersService";
 
 export function UploadProfilePicture() {
     const [selectedFile, setSelectedFile] = useState(null);
@@ -12,7 +13,7 @@ export function UploadProfilePicture() {
         if (file && (file.type === 'image/png' || file.type === 'image/jpeg')) {
             setSelectedFile(file);
         } else {
-            alert('Por favor, selecione um arquivo PNG ou JPEG válido.');
+            alert('Please, select an PNG or JPEG valid file');
         }
     };
 
@@ -25,8 +26,8 @@ export function UploadProfilePicture() {
         try {
             const formData = new FormData();
             formData.append('file', selectedFile);
-
-            const response = await fetch(`http://localhost:8000/api/user/${params}/profile-pic`, {
+            UsersService.profilePicture(params,formData)
+            /*const response = await fetch(`http://localhost:8000/api/user/${params}/profile-pic`, {
                 method: 'POST',
                 body: formData
             });
@@ -37,7 +38,7 @@ export function UploadProfilePicture() {
                 console.log('Upload concluído', response);
             } else {
                 console.error('Erro durante o upload:', response.status);
-            }
+            }*/
         } catch (error) {
             console.error('Erro durante o upload:', error);
         }
@@ -52,7 +53,7 @@ export function UploadProfilePicture() {
         if (file && (file.type === 'image/png' || file.type === 'image/jpeg')) {
             setSelectedFile(file);
         } else {
-            alert('Por favor, selecione um arquivo válido.');
+            alert('Please, select a valid file');
         }
     };
 
@@ -86,11 +87,11 @@ export function UploadProfilePicture() {
                         }}
                     />
                 ) : (
-                    <span>Arraste e solte a imagem aqui ou selecione um arquivo</span>
+                    <span>Drop an image here or select a file</span>
                 )}
             </div>
             <input type="file" accept="image/png, image/jpeg" onChange={handleFileSelect} />
-            <button onClick={handleFileUpload}>Enviar</button>
+            <button onClick={handleFileUpload}>Send</button>
         </div>
     );
 }

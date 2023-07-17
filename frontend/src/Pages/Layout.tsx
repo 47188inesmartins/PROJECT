@@ -13,6 +13,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import "../Style/LayoutCompany.css"
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import Cookies from 'js-cookie';
+import {useContext} from "react";
 
 
 export function Layout() {
@@ -48,13 +49,6 @@ export function Layout() {
                                     <NavLink to="/user/appointments">
                                         <CDBSidebarMenuItem icon="columns">Appointments</CDBSidebarMenuItem>
                                     </NavLink>
-                                    {hasManager || hasEmployee?
-                                        <NavLink to="/my/companies">
-                                            <CDBSidebarMenuItem icon="table">My Companies</CDBSidebarMenuItem>
-                                        </NavLink>
-                                        :
-                                        <></>
-                                    }
                                     <NavLink to="/user/profile">
                                         <CDBSidebarMenuItem icon="user">Profile</CDBSidebarMenuItem>
                                     </NavLink>
@@ -104,10 +98,8 @@ export function Layout() {
 
 export function LayoutRight() {
 
-    const context = React.useContext(LoggedInContextCookie).loggedInState
-    const role = context.role
-    const hasManager = role.some((user) => user.role === "MANAGER");
-    const hasEmployee = role.some((user) => user.role === "EMPLOYEE");
+    const role = useContext(LoggedInContextCookie).loggedInState.role
+    const roleCheck = role.some(r => (r.role === 'MANAGER'|| r.role === 'EMPLOYEE'))
 
     const managingCompanies = Fetch(`/company/info?role=MANAGER`, 'GET')
     const employingCompanies = Fetch(`/company/info?role=EMPLOYEE`, 'GET')
@@ -119,52 +111,63 @@ export function LayoutRight() {
         window.location.href = `/company/${companyId}/managing`;
     };
 
-    return (
-        <div className="sidebar-right">
-            <CDBSidebar textColor="#fff" backgroundColor="black" className={""} breakpoint={0} toggled={false} minWidth={""} maxWidth={""}>
-                <div>
-                    <CDBSidebarContent className="sidebar-content">
-                        {managingCompanies.response?
-                            <CDBSidebarMenu>
-                                <div className="dropdown-container">
-                                    <DropdownButton style={{backgroundColor: "black"}} title="Owned companies"
-                                                    className="dropdown-button">
-                                        {managingCompanies.response.map((object: any) => (
-                                            <Dropdown.Item key={object.id} onClick={() => handleDropdownClick(object.id)}>
-                                                {object.name}
-                                            </Dropdown.Item>
-                                        ))}
-                                    </DropdownButton>
-                                </div>
-                            </CDBSidebarMenu>
-                            :
-                            <></>
-                        }
-                        {employingCompanies.response?
-                            <>
-                                {employingCompanies.response.length !== 0?
-                                    <CDBSidebarMenu>
-                                        <div className="dropdown-container">
-                                            <DropdownButton style={{backgroundColor: "black"}} title="Owned companies"
-                                                            className="dropdown-button">
-                                                {employingCompanies.response.map((object: any) => (
-                                                    <Dropdown.Item key={object.id} onClick={() => handleDropdownClick(object.id)}>
-                                                        {object.name}
-                                                    </Dropdown.Item>
-                                                ))}
-                                            </DropdownButton>
-                                        </div>
-                                    </CDBSidebarMenu>
+    return (<div>
+            {roleCheck ?
+                <div className="sidebar-right">
+                    <CDBSidebar textColor="#fff" backgroundColor="black" className={""} breakpoint={0} toggled={false}
+                                minWidth={""} maxWidth={""}>
+                        <div>
+                            <CDBSidebarContent className="sidebar-content">
+                                {managingCompanies.response ?
+                                    <>
+                                        {managingCompanies.response.length !== 0 ?
+                                            <div>
+                                                <CDBSidebarMenu>
+                                                    <div className="dropdown-container">
+                                                        <DropdownButton style={{backgroundColor: "black"}}
+                                                                        title="Owned companies"
+                                                                        className="dropdown-button">
+                                                            {managingCompanies.response.map((object: any) => (
+                                                                <Dropdown.Item key={object.id}
+                                                                               onClick={() => handleDropdownClick(object.id)}>
+                                                                    {object.name}
+                                                                </Dropdown.Item>
+                                                            ))}
+                                                        </DropdownButton>
+                                                    </div>
+                                                </CDBSidebarMenu>
+                                            </div>
+                                            : <></>
+                                        }
+                                    </> : <></>
+                                }
+                                {employingCompanies.response ?
+                                    <>
+                                        {employingCompanies.response.length !== 0 ?
+                                            <CDBSidebarMenu>
+                                                <div className="dropdown-container">
+                                                    <DropdownButton style={{backgroundColor: "black"}} title="Works For"
+                                                                    className="dropdown-button">
+                                                        {employingCompanies.response.map((object: any) => (
+                                                            <Dropdown.Item key={object.id}
+                                                                           onClick={() => handleDropdownClick(object.id)}>
+                                                                {object.name}
+                                                            </Dropdown.Item>
+                                                        ))}
+                                                    </DropdownButton>
+                                                </div>
+                                            </CDBSidebarMenu>
+                                            :
+                                            <></>
+                                        }
+                                    </>
                                     :
                                     <></>
-                            }
-                            </>
-                            :
-                            <></>
-                        }
-                    </CDBSidebarContent>
-                </div>
-            </CDBSidebar>
-        </div>
+                                }
+                            </CDBSidebarContent>
+                        </div>
+                    </CDBSidebar>
+                </div>:<></>
+            } </div>
     );
 }

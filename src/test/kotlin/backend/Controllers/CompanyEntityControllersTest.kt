@@ -41,7 +41,7 @@ class CompanyEntityControllersTest(@Autowired val mockMvc: MockMvc) {
       @Test
       fun getExistentCompanyWithoutAuth(){
           //given
-          val company = CompanyOutputDto(1,"123454081","Rua Actriz Palmira Bastos,Porto,Portugal","Cabelos","BEAUTY","Cabelos lindos e loiros e impecaveis",null,null,null,null)
+          val company = CompanyOutputDto(1,"123454081","Rua Actriz Palmira Bastos,Porto,Portugal","123456789","BEAUTY","Cabelos lindos e loiros e impecaveis","cablo",null,null,null,null)
           //when
           `when`(companyServices.getCompanyById(1)).thenReturn(company)
           val result: ResultActions = mockMvc.perform(MockMvcRequestBuilders.get("/company/1"))
