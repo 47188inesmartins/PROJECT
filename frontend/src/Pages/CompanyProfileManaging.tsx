@@ -233,7 +233,7 @@ export function CompanyProfileManaging() {
             <div className="sidebar-left" >
                 <Layout />
             </div>
-            <div  >
+            <div   style={{ margin:'20px', marginRight: '200px' }}>
             {
                 !response.response?
                     <div className="loading">
@@ -280,6 +280,9 @@ export function CompanyProfileManaging() {
                                             </a>
                                             <a href={`/company/${id}/managing/unavailability`} className="mb-1"  style={{ fontSize: '1.2rem' }}>
                                                 <MDBCardText> Add personal break </MDBCardText>
+                                            </a>
+                                            <a href={`/company/profits`} className="mb-1"  style={{ fontSize: '1.2rem' }}>
+                                                <MDBCardText> Check your team profit </MDBCardText>
                                             </a>
                                             <Button style={{ borderColor: '#999999' ,backgroundColor: '#999999', color: 'white' }}
                                                     onClick={handleClick}
@@ -390,7 +393,7 @@ export function CompanyProfileManaging() {
                                 </MDBCol>
                             </MDBRow>
                         </MDBContainer>
-                        <div style={{ margin:'20px', marginRight: '200px' }}>
+                        <div >
                         <AdvancedCalendar />
                     </div>
                     </section>

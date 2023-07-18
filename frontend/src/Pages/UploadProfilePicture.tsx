@@ -2,6 +2,9 @@ import {useParams} from "react-router-dom";
 import * as React from "react"
 import {useState} from "react";
 import {UsersService} from "../Service/UsersService";
+import {Layout, LayoutRight} from "./Layout";
+import {AccessDenied} from "../Components/AcessDenied";
+import {AddLayouts} from "../Components/AddLayouts";
 
 export function UploadProfilePicture() {
     const [selectedFile, setSelectedFile] = useState(null);
@@ -26,8 +29,8 @@ export function UploadProfilePicture() {
         try {
             const formData = new FormData();
             formData.append('file', selectedFile);
-            UsersService.profilePicture(params,formData)
-            /*const response = await fetch(`http://localhost:8000/api/user/${params}/profile-pic`, {
+            //UsersService.profilePicture(params,formData)
+            const response = await fetch(`http://localhost:8000/api/user/${params}/profile-pic`, {
                 method: 'POST',
                 body: formData
             });
@@ -38,7 +41,7 @@ export function UploadProfilePicture() {
                 console.log('Upload concluído', response);
             } else {
                 console.error('Erro durante o upload:', response.status);
-            }*/
+            }
         } catch (error) {
             console.error('Erro durante o upload:', error);
         }
@@ -57,7 +60,7 @@ export function UploadProfilePicture() {
         }
     };
 
-    return (
+    const divElem = (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <div
                 style={{
@@ -94,4 +97,8 @@ export function UploadProfilePicture() {
             <button onClick={handleFileUpload}>Send</button>
         </div>
     );
+    return (
+            <AddLayouts content={divElem}/>
+    )
+
 }

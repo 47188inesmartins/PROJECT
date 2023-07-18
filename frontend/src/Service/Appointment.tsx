@@ -35,7 +35,7 @@ export namespace Appointment{
     }
 
     export function getUserAppointments(){
-        const appointments = SimpleFetch1('/user/appointments')
+        const appointments = Fetch('/user/appointments','GET')
         if(appointments.response === 400) {
             window.alert(appointments.response)
         } else if(appointments.response === 403) {

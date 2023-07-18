@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { Fetch } from "../../Utils/useFetch";
 import { useParams } from "react-router-dom";
 import {Layout, LayoutRight} from "../Layout";
 import {AccessDenied} from "../../Components/AcessDenied";
+import {VacationService} from "../../Service/VacationServices";
 
 interface VacationDates {
     dateBegin: string;
@@ -29,9 +29,9 @@ export function AddingVacations() {
             dateEnd: endDate.toISOString().substr(0, 10)
         };
         console.log(vacationDate);
-
-        const resp = Fetch(`/company/${cid}/vacation`, "POST", vacationDate);
-        window.location.href = `/company/${cid}/managing/vacations`;
+        VacationService.addVacation(cid,vacationDate)
+       /* const resp = Fetch(`/company/${cid}/vacation`, "POST", vacationDate);
+        window.location.href = `/company/${cid}/managing/vacations`;*/
         return null;
     }
 

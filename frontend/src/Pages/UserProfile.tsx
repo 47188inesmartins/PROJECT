@@ -20,7 +20,7 @@ export function ProfilePage() {
     const role = useContext(LoggedInContextCookie).loggedInState.role
     const roleCheck = ((role.indexOf('manager') === -1) && (role.indexOf('employee') === -1))
     const response = Fetch('/user/info','GET')
-
+    console.log("piccc",response.response)
     return (
         <div>
             <div className="sidebar-left">

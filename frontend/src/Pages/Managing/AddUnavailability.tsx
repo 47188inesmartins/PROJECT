@@ -7,6 +7,7 @@ import {MDBInput} from "mdb-react-ui-kit";
 import {Navigate} from "react-router";
 import {Layout, LayoutRight} from "../Layout";
 import {AccessDenied} from "../../Components/AcessDenied";
+import {UnavailabilityServices} from "../../Service/UnavailabilityServices";
 
 interface Unavailability {
     dateBegin: Date;
@@ -55,9 +56,8 @@ export function AddingUnavailability() {
             hourEnd: selectedTimeEnd
         };
 
-
-        const response = SimpleFetch1(`/unavailability/company/${cid}`,'POST',unavail)
-        if(response.status == 201) window.location.href = `/company/${cid}/profile`;
+        UnavailabilityServices.createUnavailability(cid,unavail)
+        setIsSubmitting(false);
         return <>
             <p>Can´t add unavailability</p>
             <Navigate to = {`/company/${cid}/managing/unavailability`}/>

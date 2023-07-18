@@ -1,5 +1,6 @@
 import {convertMinutesToHHMMSS} from "../Utils/formater";
 import Cookies from 'js-cookie';
+import {Fetch} from "../Utils/useFetch";
 
 export namespace CompanyServices{
 
@@ -27,8 +28,27 @@ export namespace CompanyServices{
                                         window.alert("Company created!")
                                         window.location.href = '/'
                                 }
-
                         }
                 )
+        }
+
+        export function GetCompanyProfit(id){
+            const data = Fetch(`company/${id}/employees-profit`, 'GET');
+            console.log("dadadadada",data)
+            if(data.response){
+                if(data.response.status === 400){
+                    alert("Something went wrong")
+                    return null
+                }
+                if(data.response.status === 401){
+                    alert("Unauthorized")
+                    return null
+                }
+                if(data.response.status === 403){
+                    alert("You can't acess this resource")
+                    return null
+                }
+            }
+                return data
         }
 }

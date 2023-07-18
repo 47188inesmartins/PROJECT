@@ -33,7 +33,7 @@ export namespace UsersService{
 
     export function profitEmployee(cid:string,employeeId:number){
         const token =  Cookies.get('name')
-        fetch(`/company/${cid}/receive-money/${employeeId}`,{
+        fetch(`/company/${cid}/employee-profit/${employeeId}`,{
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

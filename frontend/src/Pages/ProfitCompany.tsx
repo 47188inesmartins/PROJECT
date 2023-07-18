@@ -3,7 +3,8 @@ import {MDBCard, MDBCardBody, MDBCardText, MDBCol, MDBContainer} from "mdb-react
 import {BarChart, Bar, CartesianGrid, XAxis, YAxis, Rectangle, LabelList, Label} from 'recharts';
 import {Fetch} from "../Utils/useFetch";
 import {useState} from "react";
-import {Link} from "react-router-dom";
+import {AddLayouts} from "../Components/AddLayouts";
+import {CompanyServices} from "../Service/CompanyServices";
 
 export function ProfitCompany() {
     const resp = Fetch(`/company/info?role=MANAGER`, 'GET');
@@ -20,11 +21,11 @@ export function ProfitCompany() {
     }
 
     function FetchProfit(props: { id: number }) {
-        const data = Fetch(`company/${props.id}/employees-profit`, 'GET');
-        console.log(data);
+        const data = CompanyServices.GetCompanyProfit(props.id)
+        console.log("DATAAA",data);
         return (
             <>
-                {!data.response ? (
+                {!data.response? (
                     <div className="loading">
                         <div className="spinner-border" role="status">
                             <span className="sr-only">Loading...</span>
@@ -37,7 +38,7 @@ export function ProfitCompany() {
         );
     }
 
-    return (
+    const divElem =  (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <MDBCol md="6">
                 <MDBCard className="mb-4 mb-md-0">
@@ -62,17 +63,11 @@ export function ProfitCompany() {
                     </MDBCardBody>
                 </MDBCard>
             </MDBCol>
-            <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'center' }}>
-                <Link to="/user/profile">
-                    <button className="btn btn-primary" style={{
-                        backgroundColor: '#165d53',
-                        borderColor: '#165d53',
-                        color: '#ffffff',
-                    }}>Back to my profile</button>
-                </Link>
-            </div>
+
         </div>
-    );
+    )
+
+    return <AddLayouts content={divElem}/>
 }
 
 export function Chart({ data }) {
