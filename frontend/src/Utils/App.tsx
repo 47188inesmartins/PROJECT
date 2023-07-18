@@ -26,6 +26,7 @@ import {ManagingVacations} from "../Pages/Managing/ManagingVacations";
 import {Edit} from "../Pages/Managing/Edit";
 import MyCalendar from "../Pages/AdvancedCalendar";
 import {AddingUnavailability} from "../Pages/Managing/AddUnavailability";
+import {CreatingServicess} from "../Pages/CreatingServicess";
 
 
 const router = createBrowserRouter([{
@@ -130,6 +131,10 @@ const router = createBrowserRouter([{
         {
             "path": "/edit",
             "element": <Edit/>
+        },
+        {
+            "path": "/:id/creatingservices",
+            "element": <CreatingServicess/>
         }
     ]
 }])

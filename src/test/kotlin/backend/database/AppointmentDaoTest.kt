@@ -3,14 +3,10 @@ package backend.database
 import backend.jvm.dao.AppointmentDao
 import backend.jvm.dao.ScheduleDao
 import backend.jvm.dao.ServiceDao
-import backend.jvm.dao.UserDao
 import backend.jvm.model.appointment.AppointmentEntity
 import backend.jvm.model.company.CompanyEntity
-import backend.jvm.model.day.DayEntity
 import backend.jvm.model.schedule.ScheduleEntity
 import backend.jvm.model.service.ServiceEntity
-import backend.jvm.model.user.UserEntity
-import backend.jvm.model.vacation.VacationEntity
 import backend.jvm.utils.Geolocation
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
