@@ -174,11 +174,20 @@ class AppointmentServices : IAppointmentServices {
         return services.map {
             val employees = userDao.getAvailableEmployeesByService(it.id, d, bh, addTimes(bh, it.duration))
             Pair(ServiceOutputDto(it), employees.map { user -> UserOutputDto(user) })
-        }.filter{ (it.second.isNotEmpty() &&
-                ((day.beginHour < addTimes(bh, it.first.duration) && addTimes(bh, it.first.duration) < day.intervalBegin) ||
-                        (day.intervalEnd!! <= addTimes(bh, it.first.duration) && addTimes(bh, it.first.duration) <= day.endHour)))
+        }.filter {
+            ((it.second.isNotEmpty() &&
+                (((day.beginHour) < addTimes(bh, it.first.duration) && addTimes(
+                    bh,
+                    it.first.duration
+                ) < (day.intervalBegin ?: Time.valueOf("23:59:59"))) ||
+                        ((day.intervalEnd ?: Time.valueOf("23:59:59")) <= addTimes(
+                            bh,
+                            it.first.duration
+                        ) && addTimes(bh, it.first.duration) <= (day.endHour)))
+            ))
         }
     }
+
 
     /**
      * Add an unvailability to the employee for the appointment added

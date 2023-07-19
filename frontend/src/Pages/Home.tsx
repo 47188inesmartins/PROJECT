@@ -10,28 +10,26 @@ import {
 import { Fetch } from '../Utils/useFetch';
 import { Layout, LayoutRight } from './Layout';
 import { LoggedInContextCookie } from "../views/Authentication/Authn";
-import Cookies from 'js-cookie';
 import {Dropdown, DropdownButton} from "react-bootstrap";
+import Cookies from 'js-cookie';
 
 
 export function Home() {
 
     const context = React.useContext(LoggedInContextCookie).loggedInState
     const role = context.role
-    console.log("role = ", role)
 
     const [distance, setDistance] = useState<string|undefined>(undefined)
 
     const hasManager = role.some((user) => user.role === "MANAGER");
     const hasEmployee = role.some((user) => user.role === "EMPLOYEE");
-    const valorDoCookie = Cookies.get('name');
-
-    console.log("valor do cookie", valorDoCookie)
 
     function getQueryParam(param) {
         const searchParams = new URLSearchParams(window.location.search);
         return searchParams.get(param);
     }
+
+    const [selectedDistance, setSelectedDistance] = useState(10);
 
     const searchValue = getQueryParam('search');
     const page = parseInt(getQueryParam('page'));
@@ -39,22 +37,19 @@ export function Home() {
 
     let url;
     if (searchValue !== null) {
-
         url = `/company/search?search=${searchValue}&page=${page}&size=${size}`;
     } else {
-        const getPage: number | undefined = Number.isNaN(parseInt(String(page))) ? undefined : parseInt(String(page));
-        const getSize: number | undefined = Number.isNaN(parseInt(String(size))) ? undefined : parseInt(String(size));
+        const getPage: number | undefined = Number.isNaN(parseInt(String(page))) ? 0 : parseInt(String(page));
+        const getSize: number | undefined = Number.isNaN(parseInt(String(size))) ? 3 : parseInt(String(size));
         url = `/?page=${getPage}&size=${getSize}`;
-        if (distance !== undefined) {
-            url += `&distance=${distance}`;
+        if (selectedDistance !== 0) {
+            url += `&distance=${selectedDistance}`;
         }
     }
 
     console.log("url", url)
 
     const response = Fetch(url, 'GET');
-
-    console.log("response = ", response)
 
     const goToNextPage = () => {
         let nextPageUrl = `?page=${page+1}&size=${size}`
@@ -82,22 +77,22 @@ export function Home() {
     };
 
     function FetchSearch() {
-        const getPage: number | undefined = Number.isNaN(parseInt(String(page))) ? undefined : parseInt(String(page));
-        const getSize: number | undefined = Number.isNaN(parseInt(String(size))) ? undefined : parseInt(String(size));
+        const getPage: number | undefined = Number.isNaN(parseInt(String(page))) ? 0 : parseInt(String(page));
+        const getSize: number | undefined = Number.isNaN(parseInt(String(size))) ? 3 : parseInt(String(size));
         window.location.href = `/?search=${searchTerm}&page=${getPage}&size=${getSize}`;
         return <></>;
     }
 
-    function handleFetchDistance(value){
-        setDistance(value)
-    }
+    const handleFetchDistance = (distance) => {
+        setSelectedDistance(distance === undefined ? 0 : distance);
+    };
+
 
     return (
         <div style={{ display: 'flex' }}>
             <div className="sidebar-left">
                 <Layout />
             </div>
-
             <div
                 className="list-container"
                 style={{
@@ -120,7 +115,6 @@ export function Home() {
                                 ) : (
                                     <form onSubmit={handleSubmit}>
                                         <div className="input-group">
-                                            <i className="fa fa-search"></i>
                                             <input
                                                 type="text"
                                                 className="form-control"
@@ -128,12 +122,11 @@ export function Home() {
                                                 value={searchTerm}
                                                 onChange={handleChange}
                                             />
-                                            <DropdownButton title="Distance" className="dropdown-button">
+                                            <DropdownButton title={ `Distance: ${selectedDistance}`} className="dropdown-button">
                                                 <Dropdown.Item onClick={() => handleFetchDistance(10.0)}>10 KM</Dropdown.Item>
                                                 <Dropdown.Item onClick={() => handleFetchDistance(20.0)}>20 KM</Dropdown.Item>
                                                 <Dropdown.Item onClick={() => handleFetchDistance(30.0)}>30 KM</Dropdown.Item>
                                                 <Dropdown.Item onClick={() => handleFetchDistance(40.0)}>40 KM</Dropdown.Item>
-                                                <Dropdown.Item onClick={() => handleFetchDistance(undefined)}>Any</Dropdown.Item>
                                             </DropdownButton>
                                         </div>
                                     </form>
@@ -154,22 +147,6 @@ export function Home() {
                         ) : (
                             <MDBContainer className="py-5">
                                 <MDBCard className="px-3 pt-3" style={{ maxWidth: '100%' }}>
-                                    <div className="pagination-container">
-                                        <button
-                                            className="btn btn-primary"
-                                            onClick={goToPreviousPage}
-                                            disabled={page <= 0}
-                                        >
-                                            Previous
-                                        </button>
-                                        <button
-                                            className="btn btn-primary"
-                                            onClick={goToNextPage}
-                                            disabled={response.response.totalPages <= page+1}
-                                        >
-                                            Next
-                                        </button>
-                                    </div>
                                     <div>
                                         {response.response ?
                                             <>
@@ -205,7 +182,7 @@ export function Home() {
                                                             </MDBCol>
                                                             <MDBCol size="9">
                                                                 <p className="mb-2">
-                                                                    <strong>{object.name}</strong>
+                                                                    <strong className="company-name">{object.name}</strong>
                                                                 </p>
                                                                 <p>
                                                                     <u>Location: {object.address}</u>
@@ -218,6 +195,22 @@ export function Home() {
                                                     </a>
                                                 ))}</> : <></>
                                         }</div>
+                                    <div className="pagination-buttons-container">
+                                        <button
+                                            className="btn btn-primary"
+                                            onClick={goToPreviousPage}
+                                            disabled={page <= 0}
+                                        >
+                                            Previous
+                                        </button>
+                                        <button
+                                            className="btn btn-primary"
+                                            onClick={goToNextPage}
+                                            disabled={response.response.totalPages <= page+1}
+                                        >
+                                            Next
+                                        </button>
+                                    </div>
                                 </MDBCard>
                             </MDBContainer>
                         )}</>: <></>

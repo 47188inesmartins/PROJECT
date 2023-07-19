@@ -14,7 +14,6 @@ import {ProfilePage} from "../views/client/UserProfile";
 import {CreatingServices} from "../Pages/CreatingServices";
 import {Signup} from "../Pages/Signup";
 import {EditServiceSchedule} from "../Pages/EditServiceSchedule";
-import {Search} from "../Pages/Search";
 import {ProfitCompany} from "../Pages/ProfitCompany";
 import UploadPhoto from "../Pages/UploadPhoto";
 import {UploadProfilePicture} from "../Pages/UploadProfilePicture";
@@ -71,16 +70,8 @@ const router = createBrowserRouter([{
             "element": <ProfilePage/>
         },
         {
-            "path": "/company/:id/services",
-            "element": <CreatingServices/>
-        },
-        {
             "path": "/signup",
             "element": <Signup/>
-        },
-        {
-            "path": "/search",
-            "element": <Search/>
         },
         {
             "path": "/company/:id/profile",
@@ -123,7 +114,7 @@ const router = createBrowserRouter([{
             "element": <AddingUnavailability/>
         },
         {
-            "path": "/:id/creatingservices",
+            "path": "/company/:id/services",
             "element": <CreatingServicess/>
         }
     ]

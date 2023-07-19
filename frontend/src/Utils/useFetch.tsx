@@ -20,11 +20,12 @@ export function Fetch(url: string, method: string, requestBody: any = null): Fet
     const [content, setContent] = useState(undefined);
     const [error, setError] = useState<any>(undefined);
     const token = Cookies.get('name')
+    console.log("token=",token)
     const authorization: { 'Content-Type': string; Authorization?: string; } = (token !== undefined)
         ? {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`}
         : {'Content-Type': 'application/json'};
     const hostUrl = HOST + url
-console.log("auth ====", authorization)
+    console.log("auth ====", authorization)
     useEffect(() => {
         let cancelled = false
         async function doFetch() {

@@ -62,27 +62,6 @@ class AppointmentController {
         }
     }
 
-    /*@PostMapping("/employees")
-    fun addOwnAppointmentEmployee(@RequestBody employee: AppointmentEmployee, @PathVariable cid: Int): ResponseEntity<Int> {
-        return try {
-            val requestAttributes = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes
-            val request = requestAttributes.request
-            val bearerToken = request.getHeader("Authorization")?.removePrefix("Bearer ")
-            val response = appointmentServices.addOwnAppointment(bearerToken,employee,cid)
-            ResponseEntity.status(201)
-                .body(response)
-        }catch (e: Exception) {
-            when(e) {
-                is ScheduleNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "Company not found", e)
-                is UserNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "User not found", e)
-                is ServiceNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "Service not found", e)
-                is InvalidDate -> throw ResponseStatusException(HttpStatus.BAD_REQUEST,"Date is not valid",e)
-                else ->  throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
-            }
-        }
-    }*/
-
-
     @RoleManager(["CLIENT","MANAGER","EMPLOYEE"])
     @DeleteMapping("/{id}")
     fun deleteAppointment(@PathVariable id: Int, @PathVariable cid: Int): ResponseEntity<String> {
@@ -96,23 +75,6 @@ class AppointmentController {
                 is AppointmentNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "Appointment not foun", e)
                 is InvalidAppointment -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid appointment!", e)
                 is EmployeeNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "No employee found", e)
-                else ->  throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
-            }
-        }
-    }
-
-
-    @RoleManager(["MANAGER", "EMPLOYEE", "CLIENT"])
-    @GetMapping("/{id}")
-    fun getAppointment(@PathVariable id: Int, @PathVariable cid: String): ResponseEntity<AppointmentOutputDto>{
-        return try {
-           TODO()
-            // val response = appointmentServices.getAppointment(id)
-           // ResponseEntity.status(200)                .body(response)
-
-        }catch (e: Exception) {
-            when(e) {
-                is AppointmentNotFound -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "Appointment not found!", e)
                 else ->  throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
             }
         }

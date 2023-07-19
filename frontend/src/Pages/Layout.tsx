@@ -11,6 +11,7 @@ import {LoggedInContextCookie} from "../views/Authentication/Authn";
 import {Fetch} from "../Utils/useFetch";
 import 'bootstrap/dist/css/bootstrap.css';
 import "../Style/LayoutCompany.css"
+import "../Style/SearchBar.css"
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import Cookies from 'js-cookie';
 import {useContext} from "react";
@@ -147,7 +148,6 @@ export function LayoutRight() {
                                             <CDBSidebarMenu>
                                                 <div className="dropdown-container">
                                                     <DropdownButton
-                                                        style={{ backgroundColor: "black" }}
                                                         title="Works For"
                                                         className="dropdown-button"
                                                     >
@@ -155,7 +155,7 @@ export function LayoutRight() {
                                                             <Dropdown.Item
                                                                 key={object.id}
                                                                 onClick={() => handleDropdownClick(object.id)}
-                                                                style={{ color: "black" }} // Definindo a cor do texto para preto
+                                                                style={{ backgroundColor : "black" }}
                                                             >
                                                                 {object.name}
                                                             </Dropdown.Item>

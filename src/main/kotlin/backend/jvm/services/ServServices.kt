@@ -32,7 +32,7 @@ class ServServices : IServServices {
     @Autowired
     lateinit var dayService : DayServices
 
-
+    @Transactional
     override fun addService(servicesInput: ServiceInputList, companyId: Int): ServicesOutputList {
 
         val listService = servicesInput.services
@@ -49,7 +49,7 @@ class ServServices : IServServices {
             throw InvalidUser()
         }
 
-        val services = listService.filter { it.second == null }.map { service ->
+        val services = listService.filter { it.second!!.isEmpty() }.map { service ->
             val usersForService = service.first.users?.mapNotNull { userId -> existingUsers.find { it.id == userId } }
             service.first.mapToService(service.first, company, usersForService)
         }
@@ -59,7 +59,7 @@ class ServServices : IServServices {
         serviceDayDao.saveAll(serviceDays)
 
 
-        val specialScheduleServices = listService.filter { it.second != null }.map { service ->
+        val specialScheduleServices = listService.filter { it.second!!.isNotEmpty() }.map { service ->
             val usersForService = service.first.users?.mapNotNull { userId -> existingUsers.find { it.id == userId } }
             service.first.mapToService(service.first, company, usersForService)
             val savedDays = dayService.addOpenDays(service.second!!, companyId, null)

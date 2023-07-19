@@ -1,9 +1,12 @@
 package backend.jvm.services
 
 import backend.jvm.dao.*
+import backend.jvm.model.company.CompanyEntity
 import backend.jvm.model.day.DayEntity
 import backend.jvm.model.day.DayInputDto
 import backend.jvm.model.day.DayOutputDto
+import backend.jvm.model.schedule.ScheduleEntity
+import backend.jvm.model.service.ServiceEntity
 import backend.jvm.services.interfaces.IDayServices
 import backend.jvm.utils.errorHandling.*
 import backend.jvm.utils.time.addTimes
@@ -77,6 +80,13 @@ class DayServices : IDayServices {
             scheduleDao.updateBetweenInterval(schedule.id, intervalBetween)
         }
         val daysDb = day.map { it.mapToDayDb(it, schedule, null) }
+        val savedDays = dayDao.saveAll(daysDb)
+        if(daysDb.size != savedDays.size) throw Exception("error saving opening days")
+        return savedDays
+    }
+
+    fun addSpecialDays(day: List<DayInputDto>, schedule: ScheduleEntity, service: List<ServiceEntity>): List<DayEntity> {
+        val daysDb = day.map { it.mapToDayDb(it, schedule, service) }
         val savedDays = dayDao.saveAll(daysDb)
         if(daysDb.size != savedDays.size) throw Exception("error saving opening days")
         return savedDays

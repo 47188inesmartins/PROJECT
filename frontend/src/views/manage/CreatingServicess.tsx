@@ -3,6 +3,8 @@ import "../../Style/CreatingCompany.css";
 import { useParams } from "react-router-dom";
 import { Fetch } from "../../Utils/useFetch";
 import "react-datepicker/dist/react-datepicker.css";
+import {ServiceServices} from "../../Service/ServiceServices";
+import {convertMinutesToHHMMSS} from "../../Utils/formater";
 
 export function CreatingServicess() {
     const [isOpen, setIsOpen] = useState(false);
@@ -13,7 +15,7 @@ export function CreatingServicess() {
     const response = Fetch(`/company/${cid}/employees`, "GET");
 
     const [services, setServices] = useState([
-        { serviceName: "", duration: "", price: "", selectedUsers: [], schedule: [] },
+        { serviceName: "", duration: "", price: 0, users: [] },
     ]);
 
     const daysOfWeek = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
@@ -58,14 +60,14 @@ export function CreatingServicess() {
         const handleFeatureChange = (employeeId) => {
             setServices((prevServices) => {
                 const updatedServices = [...prevServices];
-                const selectedUsers = updatedServices[index].selectedUsers;
+                const selectedUsers = updatedServices[index].users;
 
                 if (selectedUsers.includes(employeeId)) {
-                    updatedServices[index].selectedUsers = selectedUsers.filter(
+                    updatedServices[index].users = selectedUsers.filter(
                         (id) => id !== employeeId
                     );
                 } else {
-                    updatedServices[index].selectedUsers = [...selectedUsers, employeeId];
+                    updatedServices[index].users = [...selectedUsers, employeeId];
                 }
 
                 return updatedServices;
@@ -84,7 +86,7 @@ export function CreatingServicess() {
                                     id={employee.id}
                                     name={employee.id}
                                     value={employee.id}
-                                    checked={services[index].selectedUsers.includes(employee.id)}
+                                    checked={services[index].users.includes(employee.id)}
                                     onChange={() => handleFeatureChange(employee.id)}
                                 />
                                 <label htmlFor={employee.id}>{employee.name}</label>
@@ -120,7 +122,7 @@ export function CreatingServicess() {
 
     const handleOptionClick = (index, value) => {
         const updatedServices = [...services];
-        updatedServices[index].duration = value;
+        updatedServices[index].duration = convertMinutesToHHMMSS(value);
         setServices(updatedServices);
         setIsOpen(false);
     };
@@ -131,11 +133,11 @@ export function CreatingServicess() {
             {
                 serviceName: "",
                 duration: "",
-                price: "",
-                selectedUsers: [],
-                schedule: [],
+                price: 0,
+                users: []
             },
         ]);
+
         setSchedules((prevSchedules) => [
             ...prevSchedules,
             daysOfWeek.map((day) => ({
@@ -150,22 +152,29 @@ export function CreatingServicess() {
     };
 
     const handleServiceChange = (index, field, value) => {
+        console.log(field)
         const updatedServices = [...services];
+        if (field === "price"){
+            updatedServices[index].price = parseFloat(value)
+        }
         if (field === "duration") {
-            updatedServices[index].duration = value; // <-- Atualize a duração apenas para o serviço atual
+            updatedServices[index].duration = convertMinutesToHHMMSS(value);
         } else {
             updatedServices[index][field] = value;
         }
+        console.log(updatedServices)
         setServices(updatedServices);
     };
 
     function fetchCreateServices() {
         const pairs = services.map((service, index) => ({
             first: service,
-            second: schedules[index],
+            second: schedules[index].filter(it => it.beginHour !== '' && it.endHour !== ''),
         }));
-
         console.log(pairs);
+        const requestData = {services: pairs}
+        ServiceServices.addServices(cid, requestData)
+
     }
 
     return (

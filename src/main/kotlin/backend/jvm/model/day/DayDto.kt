@@ -15,8 +15,8 @@ data class DayInputDto(
     fun mapToDayDb(dto: DayInputDto, schedule: ScheduleEntity?, service: List<ServiceEntity>?): DayEntity {
         val begin = Time.valueOf(dto.beginHour.plus(":00"))?: throw Exception("invalid hour")
         val end = Time.valueOf(dto.endHour.plus(":00")) ?: throw Exception("invalid hour")
-        val intervalEnd = if(dto.intervalEnd != null) Time.valueOf(dto.intervalEnd.plus(":00")) else null
-        val intervalBegin = if(dto.intervalBegin != null) Time.valueOf(dto.intervalBegin.plus(":00")) else null
+        val intervalEnd = if(dto.intervalEnd != null && dto.intervalEnd != "") Time.valueOf(dto.intervalEnd.plus(":00")) else null
+        val intervalBegin = if(dto.intervalBegin != null && dto.intervalBegin != "") Time.valueOf(dto.intervalBegin.plus(":00")) else null
 
         if(intervalEnd != null && intervalBegin != null ) {
             if (begin.after(intervalBegin)) throw Exception("invalid hours")

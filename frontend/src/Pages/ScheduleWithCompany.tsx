@@ -193,8 +193,6 @@ function PopUpEmployee(props: {employees, startDate, appHour}){
     const token = Cookies.get('name');
 
     function handleClick(value){
-
-
         const obj = {
             appHour: props.appHour,
             appDate: props.startDate,
