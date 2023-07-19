@@ -4,7 +4,7 @@ import {Fetch} from "../Utils/useFetch";
 import "../Style/CreatingCompany.css"
 import {useParams} from "react-router-dom";
 import {Layout, LayoutRight} from "./Layout";
-import {AccessDenied} from "../Components/AcessDenied";
+import {AccessDenied} from "../Components/AccessDenied";
 
 export function CreatingServices(){
     const [create, setCreate] = useState<Boolean>(false)

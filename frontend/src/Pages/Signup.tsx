@@ -58,7 +58,7 @@ export function Signup() {
         }
     };
 
-    const token = Cookies.get('name')
+  //  const token = Cookies.get('name')
 
     const handleSubmit = () => {
         const userCredentials: UserInputDto = {
@@ -76,7 +76,7 @@ export function Signup() {
             body: JSON.stringify(userCredentials),
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+            //    'Authorization': `Bearer ${token}`
             }
         })
             .then(response => response.json())

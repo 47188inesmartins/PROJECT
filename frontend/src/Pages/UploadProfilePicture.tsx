@@ -3,7 +3,7 @@ import * as React from "react"
 import {useState} from "react";
 import {UsersService} from "../Service/UsersService";
 import {Layout, LayoutRight} from "./Layout";
-import {AccessDenied} from "../Components/AcessDenied";
+import {AccessDenied} from "../Components/AccessDenied";
 import {AddLayouts} from "../Components/AddLayouts";
 
 export function UploadProfilePicture() {

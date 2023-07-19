@@ -2,7 +2,6 @@ import React, {useEffect, useState} from "react";
 import {Dropdown} from "react-bootstrap";
 import "../Style/CreatingCompany.css";
 import Cookies from 'js-cookie';
-import {AddLayouts} from "../Components/AddLayouts";
 import {CompanyServices} from "../Service/CompanyServices";
 
 
@@ -146,7 +145,7 @@ export function CreatingCompany() {
 
     const MAX_DESCRIPTION_LENGTH = 200;
 
-    const divElem = (
+    return (
         <div className="container rounded bg-white mt-5 mb-5">
             <div className="row">
                 <div className="col-md-4 border-right">
@@ -386,6 +385,4 @@ export function CreatingCompany() {
             </div>
         </div>
     );
-
-    return <AddLayouts content={divElem}/>
 }

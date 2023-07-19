@@ -2,28 +2,32 @@ import React, { useState } from "react";
 import "../Style/CreatingCompany.css";
 import { useParams } from "react-router-dom";
 import { Fetch } from "../Utils/useFetch";
-import {useRtl} from "@progress/kendo-react-common";
+import "react-datepicker/dist/react-datepicker.css";
 
 export function CreatingServicess() {
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedValue, setSelectedValue] = useState(null);
     const [serviceCount, setServiceCount] = useState(1);
-    const [showSchedule, setShowSchedule] = useState(-1); // Inicia com -1 para não mostrar nenhum
-    const [lunchBreak, setLunchBreak] = useState({ beginHour: '', endHour: '' });
+    const [showSchedule, setShowSchedule] = useState(-1);
+    const [lunchBreak, setLunchBreak] = useState({ beginHour: "", endHour: "" });
     const cid = useParams().id;
     const response = Fetch(`/company/${cid}/employees`, "GET");
 
-    const daysOfWeek = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+    const [services, setServices] = useState([
+        { serviceName: "", duration: "", price: "", selectedUsers: [], schedule: [] },
+    ]);
 
-    // Initialize schedule state with null values for beginHour and endHour
-    const [schedule, setSchedule] = useState(
-        daysOfWeek.map(day => ({
-            weekDays: day,
-            beginHour: null,
-            endHour: null,
-            intervalBegin: '',
-            intervalEnd: ''
-        }))
+    const daysOfWeek = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
+
+    const [schedules, setSchedules] = useState(
+        Array.from({ length: serviceCount }, () =>
+            daysOfWeek.map((day) => ({
+                weekDays: day,
+                beginHour: "",
+                endHour: "",
+                intervalBegin: "",
+                intervalEnd: "",
+            }))
+        )
     );
 
     const toggleSchedule = (index) => {
@@ -34,15 +38,11 @@ export function CreatingServicess() {
         }
     };
 
-    const [services, setServices] = useState([
-        { serviceName: "", duration: "", price: "", selectedUsers: [] },
-    ]);
-
-    const handleTimeChange = (index, field, value) => {
-        setSchedule(prevSchedule => {
-            const updatedSchedule = [...prevSchedule];
-            updatedSchedule[index][field] = value;
-            return updatedSchedule;
+    const handleTimeChange = (serviceIndex, dayIndex, field, value) => {
+        setSchedules((prevSchedules) => {
+            const updatedSchedules = [...prevSchedules];
+            updatedSchedules[serviceIndex][dayIndex][field] = value;
+            return updatedSchedules;
         });
     };
 
@@ -61,7 +61,9 @@ export function CreatingServicess() {
                 const selectedUsers = updatedServices[index].selectedUsers;
 
                 if (selectedUsers.includes(employeeId)) {
-                    updatedServices[index].selectedUsers = selectedUsers.filter(id => id !== employeeId);
+                    updatedServices[index].selectedUsers = selectedUsers.filter(
+                        (id) => id !== employeeId
+                    );
                 } else {
                     updatedServices[index].selectedUsers = [...selectedUsers, employeeId];
                 }
@@ -96,16 +98,16 @@ export function CreatingServicess() {
         );
     }
 
-    const renderOptions = () => {
+    const renderOptions = (index) => {
         const options = [];
         for (let i = 1; i <= 200; i++) {
             options.push(
                 <div
                     key={i}
                     className="dropdown-option"
-                    onClick={() => handleOptionClick(i)}
+                    onClick={() => handleOptionClick(index, i + 1)}
                 >
-                    {i} minutes
+                    {i + 1} minutes
                 </div>
             );
         }
@@ -116,8 +118,10 @@ export function CreatingServicess() {
         setIsOpen(!isOpen);
     };
 
-    const handleOptionClick = (value) => {
-        setSelectedValue(value);
+    const handleOptionClick = (index, value) => {
+        const updatedServices = [...services];
+        updatedServices[index].duration = value;
+        setServices(updatedServices);
         setIsOpen(false);
     };
 
@@ -129,29 +133,39 @@ export function CreatingServicess() {
                 duration: "",
                 price: "",
                 selectedUsers: [],
+                schedule: [],
             },
+        ]);
+        setSchedules((prevSchedules) => [
+            ...prevSchedules,
+            daysOfWeek.map((day) => ({
+                weekDays: day,
+                beginHour: "",
+                endHour: "",
+                intervalBegin: "",
+                intervalEnd: "",
+            })),
         ]);
         setServiceCount((prevServiceCount) => prevServiceCount + 1);
     };
 
     const handleServiceChange = (index, field, value) => {
         const updatedServices = [...services];
-        updatedServices[index][field] = value;
+        if (field === "duration") {
+            updatedServices[index].duration = value; // <-- Atualize a duração apenas para o serviço atual
+        } else {
+            updatedServices[index][field] = value;
+        }
         setServices(updatedServices);
     };
 
     function fetchCreateServices() {
         const pairs = services.map((service, index) => ({
             first: service,
-            second: schedule[index],
+            second: schedules[index],
         }));
 
         console.log(pairs);
-
-        const requestData = {
-            service: pairs,
-        };
-
     }
 
     return (
@@ -191,9 +205,7 @@ export function CreatingServicess() {
                                             </button>
                                             {isOpen && (
                                                 <div className="dropdown-options-container">
-                                                    <div className="dropdown-options">
-                                                        {renderOptions()}
-                                                    </div>
+                                                    <div className="dropdown-options">{renderOptions(index)}</div>
                                                 </div>
                                             )}
                                         </div>
@@ -224,33 +236,29 @@ export function CreatingServicess() {
                                         <div className="col-md-12 mt-3">
                                             <div className="d-flex justify-content-center">
                                                 <table className="schedule-table">
-                                                    {schedule.map((day, dayIndex) => (
+                                                    {schedules[index].map((day, dayIndex) => (
                                                         <tr key={dayIndex}>
                                                             <th style={{ color: "black" }}>{day.weekDays}</th>
                                                             <td>
-                                                                {day.beginHour !== null && (
-                                                                    <input
-                                                                        type="time"
-                                                                        value={day.beginHour}
-                                                                        onChange={(e) =>
-                                                                            handleTimeChange(dayIndex, "beginHour", e.target.value)
-                                                                        }
-                                                                        step="600"
-                                                                    />
-                                                                )}
+                                                                <input
+                                                                    type="time"
+                                                                    value={day.beginHour}
+                                                                    onChange={(e) =>
+                                                                        handleTimeChange(index, dayIndex, "beginHour", e.target.value)
+                                                                    }
+                                                                    step="600"
+                                                                />
                                                             </td>
                                                             <td>
-                                                                {day.endHour !== null && (
-                                                                    <input
-                                                                        type="time"
-                                                                        value={day.endHour}
-                                                                        min={day.beginHour}
-                                                                        onChange={(e) =>
-                                                                            handleTimeChange(dayIndex, "endHour", e.target.value)
-                                                                        }
-                                                                        step="600"
-                                                                    />
-                                                                )}
+                                                                <input
+                                                                    type="time"
+                                                                    value={day.endHour}
+                                                                    min={day.beginHour}
+                                                                    onChange={(e) =>
+                                                                        handleTimeChange(index, dayIndex, "endHour", e.target.value)
+                                                                    }
+                                                                    step="600"
+                                                                />
                                                             </td>
                                                         </tr>
                                                     ))}
@@ -259,9 +267,9 @@ export function CreatingServicess() {
                                                         <td>
                                                             <input
                                                                 type="time"
-                                                                value={schedule[0].intervalBegin}
+                                                                value={schedules[index][0].intervalBegin}
                                                                 onChange={(e) =>
-                                                                    handleTimeChange(null, "intervalBegin", e.target.value)
+                                                                    handleTimeChange(index, 0, "intervalBegin", e.target.value)
                                                                 }
                                                                 step="600"
                                                             />
@@ -269,10 +277,10 @@ export function CreatingServicess() {
                                                         <td>
                                                             <input
                                                                 type="time"
-                                                                value={schedule[0].intervalEnd}
+                                                                value={schedules[index][0].intervalEnd}
                                                                 min={lunchBreak.beginHour}
                                                                 onChange={(e) =>
-                                                                    handleTimeChange(null, "intervalEnd", e.target.value)
+                                                                    handleTimeChange(index, 0, "intervalEnd", e.target.value)
                                                                 }
                                                                 step="600"
                                                             />

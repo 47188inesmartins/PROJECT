@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { Fetch } from "../../Utils/useFetch";
 import "../../Style/ManagingEmployees.css";
 import Cookies from 'js-cookie';
-import {AccessDenied} from "../../Components/AcessDenied";
+import {AccessDenied} from "../../Components/AccessDenied";
 import {Layout, LayoutRight} from "../Layout";
 import {UsersService} from "../../Service/UsersService";
 
@@ -28,12 +28,17 @@ export function ManagingEmployees() {
      const handleProfit = (employeeId) => {
          UsersService.profitEmployee(cid,employeeId)
     };
+
+     function handleAddClick(){
+         window.location.href = `/company/${cid}/employees`
+     }
+
     const divElement = <div className="d-flex justify-content-center align-items-start" style={{ minHeight: '100vh' }}>
         <div className="row">
             <div className="col-md-8 offset-md-2">
                 <div className="managing-employees-container justify-content-center mt-5 border-left border-right">
                     <div className="d-flex justify-content-center pt-3 pb-2">
-                        <button type="button" className="btn btn-secondary addtxt" style={{color:'black',fontSize: '20px', fontFamily: 'Arial' }}>
+                        <button onClick={() => handleAddClick()} type="button" className="btn btn-secondary addtxt" style={{color:'black',fontSize: '20px', fontFamily: 'Arial' }}>
                             + Add employees
                         </button>
                     </div>

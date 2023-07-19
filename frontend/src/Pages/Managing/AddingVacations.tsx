@@ -3,7 +3,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useParams } from "react-router-dom";
 import {Layout, LayoutRight} from "../Layout";
-import {AccessDenied} from "../../Components/AcessDenied";
+import {AccessDenied} from "../../Components/AccessDenied";
 import {VacationService} from "../../Service/VacationServices";
 
 interface VacationDates {
@@ -30,12 +30,16 @@ export function AddingVacations() {
         };
         console.log(vacationDate);
         VacationService.addVacation(cid,vacationDate)
-       /* const resp = Fetch(`/company/${cid}/vacation`, "POST", vacationDate);
-        window.location.href = `/company/${cid}/managing/vacations`;*/
-        return null;
+        //setIsSubmitting(false);
+
+        //const resp = Fetch(`/company/${cid}/vacation`, "POST", vacationDate);
+        //console.log("response",resp.response)
+        setIsSubmitting(false);
+        //window.location.href = `/company/${cid}/managing/vacations`;
+        return null
     }
 
-    const divElem = <div
+    const divElem = <div className="w-100 d-flex justify-content-center"
         style={{
             display: "flex",
             alignItems: "center",
@@ -100,13 +104,17 @@ export function AddingVacations() {
         )}
     </div>
 
-    return (<div>
+    return (
+        <div>
             <div className="sidebar-left">
                 <Layout />
             </div>
-            <AccessDenied  company={cid} content={divElem} role={['MANAGER']}/>
-            <LayoutRight/>
+            <div className="d-flex justify-content-center"> {/* Adicione esta div para centralizar horizontalmente */}
+                <AccessDenied company={cid} content={divElem} role={['MANAGER']} />
+            </div>
+            <LayoutRight />
         </div>
-    )
+    );
+
 
 }

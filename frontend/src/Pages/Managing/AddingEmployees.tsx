@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { useState } from 'react';
-import {Fetch} from "../../Utils/useFetch";
 import {useParams} from "react-router-dom";
 import {UsersService} from "../../Service/UsersService";
 import {Layout, LayoutRight} from "../Layout";
-import {AccessDenied} from "../../Components/AcessDenied";
+import {AccessDenied} from "../../Components/AccessDenied";
 
 export function AddingEmployees() {
 
@@ -36,13 +35,10 @@ export function AddingEmployees() {
         const id = params.id
         const body = {emails:textBoxes}
         const resp = UsersService.addEmployees(id,body)
-        /*const resp = Fetch(`/company/${id}/employee`, 'POST', body)
-        if(resp.response)
-            window.location.href = "/"*/
         return(
             <>
                 {resp.response?
-                    <a>loading...</a>:
+                    <a>...loading...</a>:
                     <a></a>
                 }
             </>);
@@ -83,16 +79,14 @@ export function AddingEmployees() {
                                             <br/>
                                             <button className="btn btn-outline-light btn-lg px-5" type="submit"
                                                     onClick={handleCreate}>
-                                                Create
+                                                Add employees
                                             </button>
                                             <br/>
                                             <br/>
                                             <br/>
                                             <button className="btn btn-outline-light btn-lg px-5" type="submit"
-                                                    onClick={handleLater} >Configure later
-
+                                                    onClick={handleLater} >Cancel
                                             </button>
-
                                         </div>
                                     </div>
                                 </div>
@@ -105,7 +99,8 @@ export function AddingEmployees() {
             }
         </div>
     );
-    return (<div>
+    return (
+        <div>
             <div className="sidebar-left">
                 <Layout />
             </div>
