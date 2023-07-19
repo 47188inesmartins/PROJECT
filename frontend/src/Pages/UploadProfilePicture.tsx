@@ -25,26 +25,9 @@ export function UploadProfilePicture() {
             alert('Por favor, selecione um arquivo.');
             return;
         }
-
-        try {
             const formData = new FormData();
             formData.append('file', selectedFile);
-            //UsersService.profilePicture(params,formData)
-            const response = await fetch(`http://localhost:8000/api/user/profile-pic`, {
-                method: 'POST',
-                body: formData
-            });
-
-            if (response.status === 200) {
-                alert("Your mensage was sent");
-                window.location.href = '/';
-                console.log('Your image is save', response);
-            } else {
-                console.error('Something went wrong:', response.status);
-            }
-        } catch (error) {
-            console.error('Something went wrong:', error);
-        }
+            UsersService.profilePicture(params,formData)
     };
 
     const handleDragOver = (event) => {

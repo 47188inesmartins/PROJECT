@@ -69,17 +69,19 @@ export namespace UsersService{
     }
 
     export function profilePicture(id:String,formData:FormData){
-        fetch(`/user/${id}/profile-pic`, {
-            method: 'POST',
-            body: formData
-        }).then(response =>{
-            if (response.status === 200) {
-                alert("Your image is saved");
-                window.location.href = '/';
-                console.log('Upload success', response);
-            } else {
-                console.error('Error during upload:', response.status);
-            }
-        })
+            fetch(`/user/profile-pic`, {
+                method: 'POST',
+                body: formData
+            }).then(async response =>{
+                if (response.status === 200) {
+                    alert("Your image is saved");
+                    window.location.href = '/user/profile';
+                    console.log('Upload success', response);
+                } else {
+                    console.error('Something went wrong:', response.status);
+                }
+            })
+
+
     }
 }
