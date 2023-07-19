@@ -6,10 +6,8 @@ import backend.jvm.services.dto.UnavailabilityInputDto
 import backend.jvm.services.dto.UnavailabilityOutputDto
 import backend.jvm.services.interfaces.IUnavailabilityServices
 import backend.jvm.utils.errorHandling.UserNotFound
-import backend.jvm.utils.getCurrentDate
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.sql.Date
 import java.util.*
 
 
@@ -36,15 +34,25 @@ class UnavailabilityServices : IUnavailabilityServices {
         return UnavailabilityOutputDto(addUnavailability)
     }
 
-    override fun getUnavailabilityByUser(user: Int): UnavailabilityOutputDto{
+    override fun getUnavailabilityByUser(user: Int): List<UnavailabilityOutputDto>{
         val getUser = userDao.findById(user).get()
-        return UnavailabilityOutputDto(
-            unavailabilityDao.getUnavailabilityEntitiesByUser(getUser)
-        )
+        val ret = unavailabilityDao.getUnavailabilityEntitiesByUser(getUser)
+        return ret?.map{  UnavailabilityOutputDto(it) } ?: emptyList()
+
     }
 
     override fun deleteUnavailability(id: Int){
         unavailabilityDao.deleteById(id)
     }
 
+    fun getEmployeesUnavailability(cid: Int):List<UnavailabilityOutputDto>{
+        val employees = userDao.getUsersEmployeesByCompany(cid) ?: throw UserNotFound()
+        val unUser = mutableListOf<UnavailabilityOutputDto>()
+        employees.forEach {
+            unavailabilityDao.getUnavailabilityEntitiesByUser(it)?.forEach { unavailability ->
+                unUser.add(UnavailabilityOutputDto(unavailability))
+            }
+        }
+        return unUser
+    }
 }

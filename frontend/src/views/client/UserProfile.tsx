@@ -78,7 +78,7 @@ export function ProfilePage() {
                                             </>
                                         }
                                     </MDBCardBody>
-                                    <a href="/user/1/upload-pic" className="edit-profile-link">
+                                    <a href="/user/upload-pic" className="edit-profile-link">
                                         <p>Update your profile pic</p>
                                     </a>
                                 </MDBCard>

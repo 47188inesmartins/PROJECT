@@ -6,10 +6,12 @@ import backend.jvm.services.dto.UnavailabilityOutputDto
 import backend.jvm.utils.RoleManager
 import org.apache.catalina.connector.Response
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.context.request.RequestContextHolder
 import org.springframework.web.context.request.ServletRequestAttributes
+import org.springframework.web.server.ResponseStatusException
 
 
 @RestController
@@ -40,7 +42,7 @@ class UnavailabilityController {
 
     @RoleManager(["MANAGER","EMPLOYEE"])
     @GetMapping("/company/{cid}/user/{id}")
-    fun getUnavailabilityByUser(@PathVariable cid: Int,@PathVariable id: Int): ResponseEntity<UnavailabilityOutputDto> {
+    fun getUnavailabilityByUser(@PathVariable cid: Int,@PathVariable id: Int): ResponseEntity<List<UnavailabilityOutputDto>> {
         return try {
             val response = unavailabilityServices.getUnavailabilityByUser(id)
             ResponseEntity
@@ -65,6 +67,19 @@ class UnavailabilityController {
             ResponseEntity
                 .status(400)
                 .body("Error:${e}")
+        }
+    }
+
+    @RoleManager(["MANAGER","EMPLOYEE"])
+    @GetMapping("company/{cid}")
+    fun getEmployeesUnavailability(@PathVariable cid: Int): ResponseEntity<List<UnavailabilityOutputDto>> {
+        return try {
+            val r = unavailabilityServices.getEmployeesUnavailability(cid)
+            ResponseEntity
+                .status(200)
+                .body(r)
+        } catch (e: Exception) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
         }
     }
 }

@@ -32,7 +32,7 @@ interface IUserInterface {
 
     fun getAllAppointmentsByUser(token: String): AppointmentsUserInfo
 
-    fun updateUserProfilePicture(id: Int, image: MultipartFile)
+    fun updateUserProfilePicture(token: String?, image: MultipartFile)
 
     fun mapToAppointmentsInfo(listAppointmentEntities: List<AppointmentEntity>):List<AppointmentInfo>
 

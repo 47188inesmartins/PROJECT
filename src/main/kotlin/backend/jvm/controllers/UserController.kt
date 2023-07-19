@@ -199,12 +199,14 @@ class UserController {
 
 
   //  @RoleManager(["MANAGER","EMPLOYEE","CLIENT"])
-    @PostMapping("{id}/profile-pic")
-    fun uploadProfilePic(@PathVariable id: Int,
-                          @RequestBody file: MultipartFile
+    @PostMapping("/profile-pic")
+    fun uploadProfilePic(@RequestBody file: MultipartFile
     ): ResponseEntity<String> {
         return try {
-            userServices.updateUserProfilePicture(id,file)
+            val requestAttributes = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes
+            val request = requestAttributes.request
+            val bearerToken = request.getHeader("Authorization")?.removePrefix("Bearer ")
+            userServices.updateUserProfilePicture(bearerToken,file)
             ResponseEntity
                 .status(200)
                 .body("Upload done")

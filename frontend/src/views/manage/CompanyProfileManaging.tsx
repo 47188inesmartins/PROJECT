@@ -263,6 +263,9 @@ export function CompanyProfileManaging() {
                                                 className="square"
                                                 style={{ width: '200px', height: '200px', objectFit: 'cover' }}
                                                 fluid />
+                                            <a href={`/company/${id}/managing/employees`} className="mb-1"  style={{ fontSize: '1.2rem' }}>
+                                                <MDBCardText> upload your profile picture </MDBCardText>
+                                            </a>
                                         </MDBCardBody>
                                     </MDBCard>
                                     <MDBCard className="mb-4 mb-md-0">

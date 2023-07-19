@@ -217,8 +217,8 @@ class AppointmentServices : IAppointmentServices {
         val vacations = vacationDao.getVacationsByScheduleId(scId)
         if(vacations.isNotEmpty()){
             vacations.forEach {
-                val dateB = it.date_begin
-                val dateE = it.date_end
+                val dateB = it.dateBegin
+                val dateE = it.dateEnd
                 if(appDate.after(dateB)&&appDate.before(dateE)) return false
             }
         }

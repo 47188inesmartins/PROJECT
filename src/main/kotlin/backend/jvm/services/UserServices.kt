@@ -52,6 +52,7 @@ class UserServices : IUserInterface {
         val coordinates = getUserCoordinates(user.street,user.city,user.country)
         val encodePassword = passwordEncoder.encode(user.password)
 
+
         val returnUser = userDao.save(
             user.mapToUser(
                 user,
@@ -186,13 +187,17 @@ class UserServices : IUserInterface {
         return servicesRepository.getEarnedMoneyByEmployee(user.id,company, getBeginDate, getEndDate) ?: 0.0
     }
 
-    override fun updateUserProfilePicture(id: Int, image: MultipartFile){
+    override fun updateUserProfilePicture(token: String?, image: MultipartFile){
+        if(token == null){
+            throw Unauthorized()
+        }
+        val getUser = userDao.getUserByToken(UUID.fromString(token)) ?: throw UserNotFound()
         val fileName = image.originalFilename?.let { StringUtils.cleanPath(it) }
         if(fileName?.contains("..")!!){
             println("not a valid file")
         }
         val encodedFile = image.bytes
-        userDao.updateUserPicture(id,encodedFile)
+        userDao.updateUserPicture(getUser.id,encodedFile)
     }
 
     fun validateAccount(email: String){
@@ -232,5 +237,6 @@ class UserServices : IUserInterface {
         }
         return companyRoles
     }
+
 
 }

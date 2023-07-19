@@ -30,20 +30,20 @@ export function UploadProfilePicture() {
             const formData = new FormData();
             formData.append('file', selectedFile);
             //UsersService.profilePicture(params,formData)
-            const response = await fetch(`http://localhost:8000/api/user/${params}/profile-pic`, {
+            const response = await fetch(`http://localhost:8000/api/user/profile-pic`, {
                 method: 'POST',
                 body: formData
             });
 
             if (response.status === 200) {
-                alert("Sua imagem foi enviada.");
+                alert("Your mensage was sent");
                 window.location.href = '/';
-                console.log('Upload concluído', response);
+                console.log('Your image is save', response);
             } else {
-                console.error('Erro durante o upload:', response.status);
+                console.error('Something went wrong:', response.status);
             }
         } catch (error) {
-            console.error('Erro durante o upload:', error);
+            console.error('Something went wrong:', error);
         }
     };
 
@@ -80,7 +80,7 @@ export function UploadProfilePicture() {
                 {selectedFile ? (
                     <img
                         src={URL.createObjectURL(selectedFile)}
-                        alt="Imagem selecionada"
+                        alt="Image"
                         style={{
                             width: '100%',
                             height: '100%',

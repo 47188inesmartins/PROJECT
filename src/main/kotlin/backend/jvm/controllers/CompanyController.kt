@@ -293,7 +293,7 @@ class CompanyController {
         }
     }
 
-    //@RoleManager(["MANAGER","EMPLOYEE"])
+    @RoleManager(["MANAGER","EMPLOYEE"])
     @PostMapping("/{cid}/upload")
     fun uploadImage(@PathVariable cid: Int, @RequestBody file: Array<MultipartFile>): ResponseEntity<String> {
         return try {

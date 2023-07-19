@@ -90,10 +90,10 @@ class CompanyServices : ICompanyServices {
 
         userCompanyDao.save(UserCompany(managerUser, comp, UserRoles.MANAGER.name))
         val schedule = ScheduleEntity(comp, null, null, null, null)
+
+        defaultImages(companyDb)
         scheduleDao.save(schedule)
-
         dayServices.addOpenDays(days, comp.id, duration)
-
         return CompanyOutputDto(comp)
     }
 
@@ -352,9 +352,14 @@ class CompanyServices : ICompanyServices {
         return GeoCoder().getGeolocation(getAddressInfo) ?: throw InvalidAddress()
     }
 
+    /**
+     * When user does not add pictures appers default pictures
+     * @param company to save the default images
+     */
     private fun defaultImages(company: CompanyEntity): List<ImageEntity> {
-        val file = File("backend/jvm/utils/File/images.png")
+        val file = File("src/main/kotlin/backend/jvm/utils/File/company-17.png")
         val image = ImageEntity(file.readBytes(),company)
+        imageDao.save(image)
         return listOf(image,image,image,image)
     }
 }

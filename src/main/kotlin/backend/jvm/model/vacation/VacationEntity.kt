@@ -29,11 +29,11 @@ class VacationEntity {
 
     @Temporal(TemporalType.DATE)
     @Column(name = "date_begin")
-    val date_begin: Date
+    val dateBegin: Date
 
     @Temporal(TemporalType.DATE)
     @Column(name = "date_end")
-    val date_end: Date
+    val dateEnd: Date
 
     @ManyToOne
     @JoinColumn(name = "schedule_id")
@@ -41,14 +41,14 @@ class VacationEntity {
 
 
     constructor(){
-        this.date_begin = Date.valueOf("2001-01-1")
-        this.date_end =  Date.valueOf("2001-01-1")
+        this.dateBegin = Date.valueOf("2001-01-1")
+        this.dateEnd =  Date.valueOf("2001-01-1")
         this.schedule = ScheduleEntity()
     }
 
     constructor(dateBegin: Date, dateEnd: Date, schedule: ScheduleEntity){
-        this.date_begin = dateBegin
-        this.date_end = dateEnd
+        this.dateBegin = dateBegin
+        this.dateEnd = dateEnd
         this.schedule = schedule
     }
 

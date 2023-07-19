@@ -39,7 +39,7 @@ data class UnavailabilityOutputDto(
     val dateEnd: String,
     val hourBegin: String,
     val hourEnd: String,
-    val user: Int
+    val user: String
 ){
     constructor(unavailability: UnavailabilityEntity): this(
         id = unavailability.id,
@@ -47,7 +47,7 @@ data class UnavailabilityOutputDto(
         dateEnd = unavailability.dateEnd.toString(),
         hourBegin = unavailability.hourBegin.toString(),
         hourEnd = unavailability.hourEnd.toString(),
-        user = unavailability.user.id
+        user = unavailability.user.email
     )
 }
 

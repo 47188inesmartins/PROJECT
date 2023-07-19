@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface UnavailabilityDao:JpaRepository<UnavailabilityEntity,Int> {
 
-    fun getUnavailabilityEntitiesByUser(userEntityId: UserEntity): UnavailabilityEntity
+    fun getUnavailabilityEntitiesByUser(userEntityId: UserEntity): List<UnavailabilityEntity>?
+
 
 }
