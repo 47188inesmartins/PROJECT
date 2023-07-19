@@ -118,7 +118,7 @@ const MyCalendar: React.FC = () => {
 
     const calendarStyle1 = {
         height: 500,
-        backgroundColor: '#D3C4BE',
+        backgroundColor: '#8faacf',
         margin: '20px',
         color: 'black', // Definir a cor preta para todos os elementos do calendário
         '.rbc-calendar .rbc-month-view .rbc-date-cell:hover': {

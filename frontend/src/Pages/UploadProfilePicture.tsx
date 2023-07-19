@@ -5,11 +5,13 @@ import {UsersService} from "../Service/UsersService";
 import {Layout, LayoutRight} from "./Layout";
 import {AccessDenied} from "../Components/AccessDenied";
 import {AddLayouts} from "../Components/AddLayouts";
+import Cookies from 'js-cookie';
+
 
 export function UploadProfilePicture() {
     const [selectedFile, setSelectedFile] = useState(null);
     const params = useParams().id;
-
+    const token =  Cookies.get('name')
     const handleFileDrop = (event) => {
         event.preventDefault();
         const file = event.dataTransfer.files[0];
@@ -25,9 +27,30 @@ export function UploadProfilePicture() {
             alert('Por favor, selecione um arquivo.');
             return;
         }
+
+        try {
             const formData = new FormData();
+
             formData.append('file', selectedFile);
-            UsersService.profilePicture(params,formData)
+            console.log("form",token)
+            const response = await fetch(`/api/user/profile-pic`, {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+                },
+                body: formData
+            });
+            if (response.status === 200) {
+                alert("Sua imagem foi enviada.");
+                window.location.href = '/';
+                console.log('Upload concluído', response);
+            } else {
+                console.error('Erro durante o upload:', response);
+            }
+        } catch (error) {
+            console.error('Erro durante o upload:', error);
+        }
     };
 
     const handleDragOver = (event) => {
@@ -63,7 +86,7 @@ export function UploadProfilePicture() {
                 {selectedFile ? (
                     <img
                         src={URL.createObjectURL(selectedFile)}
-                        alt="Image"
+                        alt="Imagem selecionada"
                         style={{
                             width: '100%',
                             height: '100%',
@@ -81,7 +104,7 @@ export function UploadProfilePicture() {
         </div>
     );
     return (
-            <AddLayouts content={divElem}/>
+        <AddLayouts content={divElem}/>
     )
 
 }

@@ -69,19 +69,23 @@ export namespace UsersService{
     }
 
     export function profilePicture(id:String,formData:FormData){
+        const token =  Cookies.get('name')
             fetch(`/user/profile-pic`, {
                 method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
                 body: formData
-            }).then(async response =>{
-                if (response.status === 200) {
-                    alert("Your image is saved");
-                    window.location.href = '/user/profile';
-                    console.log('Upload success', response);
-                } else {
-                    console.error('Something went wrong:', response.status);
+            }).then( response =>{
+                    if (response.status === 200) {
+                        alert("Your menssage was sent");
+                        window.location.href = '/';
+                        console.log('Your image is save', response);
+                    } else {
+                        console.error('Something went wrong:', response.status);
+                    }
                 }
-            })
-
-
+            )
     }
 }

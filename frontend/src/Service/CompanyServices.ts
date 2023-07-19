@@ -32,7 +32,7 @@ export namespace CompanyServices{
         })
     }
 
-        export function GetCompanyProfit(id){
+    export function GetCompanyProfit(id){
             const data = Fetch(`company/${id}/employees-profit`, 'GET');
             console.log("dadadadada",data)
             if(data.response){
@@ -50,5 +50,26 @@ export namespace CompanyServices{
                 }
             }
                 return data
-        }
+    }
+
+    export function GetCompany(id){
+        const token =  Cookies.get('name');
+        fetch(`/api/company/${id}`,{
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token} `
+            }
+        }).then(async response =>{
+            if(response.status === 400){
+                window.alert("Something went wrong")
+                return undefined
+            }else if(response.status === 200){
+                const resp = await response.json()
+                console.log("DEBUG",resp)
+                return resp
+            }
+        })
+        return undefined
+    }
 }

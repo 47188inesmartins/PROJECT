@@ -15,6 +15,7 @@ import {
 import {useParams} from "react-router-dom";
 import {Fetch} from "../Utils/useFetch";
 import ScheduleWithCompany from "./ScheduleWithCompany";
+import {Layout, LayoutRight} from "./Layout";
 
 export function Company() {
 
@@ -23,9 +24,17 @@ export function Company() {
 
     const company = Fetch(`/company/${id}`, "GET");
     console.log(company)
-
+    const contentStyle = {
+        marginLeft: '200px',
+        backgroundColor: '#EFEEEE',
+        padding: '20px',
+    };
     return (
-        <div className="gradient-custom-2" style={{ backgroundColor: '#0e4378' }}>
+        <div  style = {contentStyle}>
+            <div className="sidebar-left" >
+                <Layout />
+            </div>
+        <div className="gradient-custom-2" style={{ backgroundColor: '#EFEEEE',margin:'20px', marginRight: '200px' }}>
             {!company.response?
                 <a>Loading...</a>:
                 <MDBContainer className="py-5 h-100">
@@ -108,6 +117,8 @@ export function Company() {
                     </MDBRow>
                 </MDBContainer>
             }
+        </div>
+            <LayoutRight/>
         </div>
     );
 }
