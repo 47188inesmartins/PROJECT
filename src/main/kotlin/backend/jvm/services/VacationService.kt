@@ -23,7 +23,8 @@ class VacationService : IVacationServices {
         val schedule = scheduleDao.getScheduleByCompany_Id(company)?: throw CompanyNotFound()
         val db = vacation.mapToVacationDb(vacation,schedule)
         if(!db.dateBegin.before(db.dateEnd)) throw Exception("Invalid dates")
-        return VacationOutputDto(vacationDao.save(db))
+        val vt = vacationDao.save(db)
+        return VacationOutputDto(vt)
     }
 
     override fun getVacation(id: Int): VacationOutputDto {

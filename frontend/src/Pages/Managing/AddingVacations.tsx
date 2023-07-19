@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import {Layout, LayoutRight} from "../Layout";
 import {AccessDenied} from "../../Components/AcessDenied";
 import {VacationService} from "../../Service/VacationServices";
+import {Fetch} from "../../Utils/useFetch";
 
 interface VacationDates {
     dateBegin: string;
@@ -29,10 +30,14 @@ export function AddingVacations() {
             dateEnd: endDate.toISOString().substr(0, 10)
         };
         console.log(vacationDate);
-        VacationService.addVacation(cid,vacationDate)
-       /* const resp = Fetch(`/company/${cid}/vacation`, "POST", vacationDate);
-        window.location.href = `/company/${cid}/managing/vacations`;*/
-        return null;
+        //VacationService.addVacation(cid,vacationDate)
+        //setIsSubmitting(false);
+
+        const resp = Fetch(`/company/${cid}/vacation`, "POST", vacationDate);
+        console.log("response",resp.response)
+        setIsSubmitting(false);
+        //window.location.href = `/company/${cid}/managing/vacations`;
+        return null
     }
 
     const divElem = <div
