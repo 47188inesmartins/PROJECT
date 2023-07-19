@@ -21,9 +21,16 @@ export function ProfilePage() {
     const roleCheck = ((role.indexOf('manager') === -1) && (role.indexOf('employee') === -1))
     const response = Fetch('/user/info','GET')
     console.log("piccc",response.response)
+
+    const contentStyle = {
+        marginLeft: '200px',
+        backgroundColor: '#EFEEEE',
+        padding: '20px',
+    };
+
     return (
-        <div>
-            <div className="sidebar-left">
+        <div style = {contentStyle}>
+            <div className="sidebar-left" >
                 <Layout />
             </div>
             {!response.response?
@@ -33,7 +40,7 @@ export function ProfilePage() {
                     </div>
                 </div>
                 :
-                <section style={{ backgroundColor: '#eee' }}>
+                <section style={{  margin: '20px', marginLeft: '0', marginRight: '200px' ,backgroundColor: '#eee' }}>
                     <MDBContainer className="py-5">
                         <MDBRow>
                             <MDBCol>

@@ -27,9 +27,14 @@ export function MyAppointments() {
         setCancel(true);
         setIdAppointment(idApp);
     }
+    const contentStyle = {
+        marginLeft: '200px',
+        backgroundColor: '#EFEEEE',
+        padding: '20px',
+    };
 
     return (
-            <div>
+            <div style = {contentStyle}>
                 <div className="sidebar-left">
                     <Layout />
                 </div>
@@ -41,7 +46,7 @@ export function MyAppointments() {
                     </div>
                     :
                     (
-                        <section className="vh-100" style={{ backgroundColor: '#f7d8ba' }}>
+                        <section className="vh-100"style={{  margin: '20px', marginLeft: '0', marginRight: '200px' ,backgroundColor: '#eee' }}>
                             {cancel?
                                 <PopUpMessage id={idAppointment}/>
                                 :

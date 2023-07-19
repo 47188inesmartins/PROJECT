@@ -22,7 +22,7 @@ class VacationService : IVacationServices {
     override fun addVacation(vacation: VacationInputDto, company: Int): VacationOutputDto {
         val schedule = scheduleDao.getScheduleByCompany_Id(company)?: throw CompanyNotFound()
         val db = vacation.mapToVacationDb(vacation,schedule)
-        if(!db.dateBegin.before(db.dateEnd)) throw Exception("Invalid dates")
+        if(!db.date_begin.before(db.date_end)) throw Exception("Invalid dates")
         val vt = vacationDao.save(db)
         return VacationOutputDto(vt)
     }
@@ -40,14 +40,14 @@ class VacationService : IVacationServices {
     override fun changeBeginDate(id:Int, date: String): Date {
         val getVacation = vacationDao.getReferenceById(id)
         val newDate = Date.valueOf(date)?: throw Exception("Invalid new begin date")
-        if(!getVacation.dateBegin.after(newDate)) throw Exception("Invalid new begin date")
+        if(!getVacation.date_begin.after(newDate)) throw Exception("Invalid new begin date")
         return vacationDao.changeBeginDate(id, newDate)
     }
 
     override fun changeEndDate(id:Int,date: String): Date {
         val getVacation = vacationDao.getReferenceById(id)
         val newDate = Date.valueOf(date) ?: throw Exception("Invalid new end date")
-        if(!getVacation.dateBegin.before(newDate)) throw Exception("Invalid new end date")
+        if(!getVacation.date_begin.before(newDate)) throw Exception("Invalid new end date")
         return vacationDao.changeEndDate(id, newDate)
     }
 

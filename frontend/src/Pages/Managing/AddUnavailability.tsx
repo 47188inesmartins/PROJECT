@@ -45,7 +45,20 @@ export function AddingUnavailability() {
     };
 
     function handleSubmit() {
-        setIsSubmitting(true);
+        const unavail: Unavailability = {
+            dateBegin: startDate,
+            dateEnd: endDate,
+            hourBegin: selectedTimeStart,
+            hourEnd: selectedTimeEnd
+        };
+
+        UnavailabilityServices.createUnavailability(cid,unavail)
+        setIsSubmitting(false);
+        return <>
+            <p>Can´t add unavailability</p>
+            <Navigate to = {`/company/${cid}/managing/unavailability`}/>
+        </>
+        //setIsSubmitting(true);
     }
 
     function FetchAddUnavailability(){
@@ -83,7 +96,6 @@ export function AddingUnavailability() {
                     padding: "2rem",
                 }}
             >
-                {!isSubmitting ? (
                     <section className="gradient-custom">
                         <div className="row d-flex justify-content-center align-items-center">
                             <div className="col-12 col-md-8 col-lg-6 col-xl-5">
@@ -175,9 +187,7 @@ export function AddingUnavailability() {
                             </div>
                         </div>
                     </section>
-                ) : (
-                    <FetchAddUnavailability />
-                )}
+                )
             </div>
         </div>
     );

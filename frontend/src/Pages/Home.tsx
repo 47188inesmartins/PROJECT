@@ -181,6 +181,7 @@ export function Home() {
                                                     >
                                                         <MDBRow className="mb-4 border-bottom pb-2">
                                                             <MDBCol size="3">
+                                                                {object.path[0]?
                                                                 <img
                                                                     src={`data:image/jpeg;base64,${object.path[0]}`}
                                                                     className="img-fluid shadow-1-strong rounded"
@@ -190,7 +191,17 @@ export function Home() {
                                                                         height: '150px',
                                                                         objectFit: 'cover',
                                                                     }}
-                                                                />
+                                                                />:<img
+                                                                        src={"frontend/public/images.png"}
+                                                                        className="lol"
+                                                                        alt="Hollywood Sign on The Hill"
+                                                                        style={{
+                                                                            width: '100%',
+                                                                            height: '150px',
+                                                                            objectFit: 'cover',
+                                                                        }}
+                                                                    />
+                                                                }
                                                             </MDBCol>
                                                             <MDBCol size="9">
                                                                 <p className="mb-2">

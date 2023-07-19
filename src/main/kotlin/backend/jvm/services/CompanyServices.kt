@@ -30,6 +30,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.util.StringUtils
 import org.springframework.web.multipart.MultipartFile
+import java.io.File
 import java.sql.Date
 import java.sql.Time
 import java.util.*
@@ -349,5 +350,11 @@ class CompanyServices : ICompanyServices {
     private fun getCompanyCoordinates(street: String,city: String,country: String):Geolocation{
         val getAddressInfo = AddressInformation(street,city,country)
         return GeoCoder().getGeolocation(getAddressInfo) ?: throw InvalidAddress()
+    }
+
+    private fun defaultImages(company: CompanyEntity): List<ImageEntity> {
+        val file = File("backend/jvm/utils/File/images.png")
+        val image = ImageEntity(file.readBytes(),company)
+        return listOf(image,image,image,image)
     }
 }

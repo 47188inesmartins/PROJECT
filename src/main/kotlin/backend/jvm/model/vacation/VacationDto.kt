@@ -27,8 +27,8 @@ data class VacationOutputDto(
 ){
     constructor(dto: VacationEntity):this(
         dto.id,
-        dto.dateBegin.toString(),
-        dto.dateEnd.toString(),
+        dto.date_begin.toString(),
+        dto.date_end.toString(),
         dto.schedule.id
     )
 }
