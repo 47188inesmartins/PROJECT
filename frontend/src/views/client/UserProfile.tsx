@@ -10,10 +10,10 @@ import {
     MDBBreadcrumb,
     MDBBreadcrumbItem,
 } from 'mdb-react-ui-kit'
-import {Fetch} from "../Utils/useFetch";
+import {Fetch} from "../../Utils/useFetch";
 import {useContext} from "react";
-import {LoggedInContextCookie} from "./Authentication/Authn";
-import {Layout, LayoutRight} from "./Layout";
+import {Layout, LayoutRight} from "../../Pages/Layout";
+import {LoggedInContextCookie} from "../Authentication/Authn";
 
 export function ProfilePage() {
 

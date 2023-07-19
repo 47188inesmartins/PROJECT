@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useState } from 'react';
 import {useParams} from "react-router-dom";
 import {UsersService} from "../../Service/UsersService";
-import {Layout, LayoutRight} from "../Layout";
+import {Layout, LayoutRight} from "../../Pages/Layout";
 import {AccessDenied} from "../../Components/AccessDenied";
 
 export function AddingEmployees() {

@@ -7,7 +7,7 @@ import {
     CDBSidebarMenuItem
 }from "cdbreact";
 import { NavLink } from "react-router-dom";
-import {LoggedInContextCookie} from "./Authentication/Authn";
+import {LoggedInContextCookie} from "../views/Authentication/Authn";
 import {Fetch} from "../Utils/useFetch";
 import 'bootstrap/dist/css/bootstrap.css';
 import "../Style/LayoutCompany.css"
@@ -146,11 +146,17 @@ export function LayoutRight() {
                                         {employingCompanies.response.length !== 0 ?
                                             <CDBSidebarMenu>
                                                 <div className="dropdown-container">
-                                                    <DropdownButton style={{backgroundColor: "black"}} title="Works For"
-                                                                    className="dropdown-button">
+                                                    <DropdownButton
+                                                        style={{ backgroundColor: "black" }}
+                                                        title="Works For"
+                                                        className="dropdown-button"
+                                                    >
                                                         {employingCompanies.response.map((object: any) => (
-                                                            <Dropdown.Item key={object.id}
-                                                                           onClick={() => handleDropdownClick(object.id)}>
+                                                            <Dropdown.Item
+                                                                key={object.id}
+                                                                onClick={() => handleDropdownClick(object.id)}
+                                                                style={{ color: "black" }} // Definindo a cor do texto para preto
+                                                            >
                                                                 {object.name}
                                                             </Dropdown.Item>
                                                         ))}

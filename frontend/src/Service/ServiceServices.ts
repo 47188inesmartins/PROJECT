@@ -3,17 +3,10 @@ import Cookies from 'js-cookie';
 
 export namespace ServiceServices{
 
-    function addServices(services,schedule,cid){
+    export function addServices(cid,requestData){
         const token =  Cookies.get('name');
-        const pairs = services.map((service, index) => ({
-            first: service,
-            second: schedule[index],
-        }));
-
-        const requestData = {
-            service:pairs
-        }
-        fetch(`/api/unavailability/company/${cid}`,{
+        console.log(requestData)
+        fetch(`/api/service/company/${cid}`,{
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -23,7 +16,7 @@ export namespace ServiceServices{
         }).then(response => {
                 if(response.status == 400){
                     window.alert("An error as occurred!")
-                    window.location.href =`/`
+                    //window.location.href =`/company/${cid}/services`;
                 }else if(response.status == 201) {
                     window.alert("You added an service")
                     window.location.href = `/company/${cid}/profile`;
@@ -33,5 +26,4 @@ export namespace ServiceServices{
             }
         )
     }
-
 }

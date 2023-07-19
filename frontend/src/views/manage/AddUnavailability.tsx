@@ -5,7 +5,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import {MDBInput} from "mdb-react-ui-kit";
 import {Navigate} from "react-router";
-import {Layout, LayoutRight} from "../Layout";
+import {Layout, LayoutRight} from "../../Pages/Layout";
 import {AccessDenied} from "../../Components/AccessDenied";
 import {UnavailabilityServices} from "../../Service/UnavailabilityServices";
 

@@ -12,9 +12,9 @@ import {
 import {useParams} from "react-router-dom";
 import {Button, Modal} from "react-bootstrap";
 import {Navigate} from "react-router";
-import {Fetch} from "../Utils/useFetch";
-import {Layout, LayoutRight} from "./Layout";
-import {Appointment} from "../Service/Appointment";
+import {Fetch} from "../../Utils/useFetch";
+import {Layout, LayoutRight} from "../../Pages/Layout";
+import {Appointment} from "../../Service/Appointment";
 
 
 export function MyAppointments() {

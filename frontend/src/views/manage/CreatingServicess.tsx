@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import "../Style/CreatingCompany.css";
+import "../../Style/CreatingCompany.css";
 import { useParams } from "react-router-dom";
-import { Fetch } from "../Utils/useFetch";
+import { Fetch } from "../../Utils/useFetch";
 import "react-datepicker/dist/react-datepicker.css";
 
 export function CreatingServicess() {

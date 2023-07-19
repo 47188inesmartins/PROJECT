@@ -1,6 +1,6 @@
 import * as React from "react";
 import {useContext} from "react";
-import {LoggedInContextCookie} from "../Pages/Authentication/Authn";
+import {LoggedInContextCookie} from "../views/Authentication/Authn";
 import {Layout, LayoutRight} from "../Pages/Layout";
 
 

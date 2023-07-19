@@ -1,32 +1,30 @@
 import * as React from 'react';
 import {createBrowserRouter, Outlet, RouterProvider} from "react-router-dom";
+import {AuthnContainer} from "../views/Authentication/Authn";
 import {Home} from "../Pages/Home";
-import {AuthnContainer} from "../Pages/Authentication/Authn";
 import {Login} from "../Pages/Login";
 import {Company} from "../Pages/Company";
-import {MyAppointments} from "../Pages/MyAppointments";
+import {MyAppointments} from "../views/client/MyAppointments";
 import {CreatingCompany} from "../Pages/CreatingCompany";
 import {Layout} from "../Pages/Layout";
-import {AddingEmployees} from "../Pages/Managing/AddingEmployees";
-import {ProfilePage} from "../Pages/UserProfile";
-import {AddingVacations} from "../Pages/Managing/AddingVacations";
+import {AddingEmployees} from "../views/manage/AddingEmployees";
+import {CompanyProfileManaging} from "../views/manage/CompanyProfileManaging";
+import {AddingVacations} from "../views/manage/AddingVacations";
+import {ProfilePage} from "../views/client/UserProfile";
 import {CreatingServices} from "../Pages/CreatingServices";
 import {Signup} from "../Pages/Signup";
+import {EditServiceSchedule} from "../Pages/EditServiceSchedule";
+import {Search} from "../Pages/Search";
 import {ProfitCompany} from "../Pages/ProfitCompany";
 import UploadPhoto from "../Pages/UploadPhoto";
-import {Search} from "../Pages/Search";
-import {CompanyProfileManaging} from "../Pages/CompanyProfileManaging";
-import {EditServiceSchedule} from "../Pages/EditServiceSchedule";
 import {UploadProfilePicture} from "../Pages/UploadProfilePicture";
 import {Logout} from "../Pages/Logout";
-import {MyCompanies} from "../Pages/MyCompanies";
-import {CompanyProfileEmploying} from "../Pages/CompanyProfileEmploying";
-import {ManagingEmployees} from "../Pages/Managing/ManagingEmployees";
-import {ManagingVacations} from "../Pages/Managing/ManagingVacations";
-import {Edit} from "../Pages/Managing/Edit";
-import MyCalendar from "../Pages/AdvancedCalendar";
-import {AddingUnavailability} from "../Pages/Managing/AddUnavailability";
-import {CreatingServicess} from "../Pages/CreatingServicess";
+import {MyCompanies} from "../views/manage/MyCompanies";
+import {ManagingEmployees} from "../views/manage/ManagingEmployees";
+import {ManagingVacations} from "../views/manage/ManagingVacations";
+import {AddingUnavailability} from "../views/manage/AddUnavailability";
+import {CreatingServicess} from "../views/manage/CreatingServicess";
+
 
 
 const router = createBrowserRouter([{
@@ -63,10 +61,6 @@ const router = createBrowserRouter([{
         {
             "path": "/company/:id/managing",
             "element": <CompanyProfileManaging />
-        },
-        {
-            "path": "/company/:id/employing",
-            "element": <CompanyProfileEmploying />
         },
         {
             "path": "/company/:id/vacation",
@@ -127,10 +121,6 @@ const router = createBrowserRouter([{
         {
             "path": "/company/:id/managing/unavailability",
             "element": <AddingUnavailability/>
-        },
-        {
-            "path": "/edit",
-            "element": <Edit/>
         },
         {
             "path": "/:id/creatingservices",

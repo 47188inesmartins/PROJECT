@@ -10,17 +10,17 @@ import {
     MDBBreadcrumb,
     MDBBreadcrumbItem, MDBDropdown, MDBDropdownToggle, MDBDropdownMenu, MDBDropdownItem, MDBInput,
 } from 'mdb-react-ui-kit'
-import {Fetch} from "../Utils/useFetch";
+import {Fetch} from "../../Utils/useFetch";
 import {useContext, useState} from "react";
-import {LoggedInContextCookie} from "./Authentication/Authn";
+import {LoggedInContextCookie} from "../Authentication/Authn";
 import {useParams} from "react-router-dom";
-import AdvancedCalendar from "./AdvancedCalendar";
-import {Layout, LayoutRight} from "./Layout";
+import AdvancedCalendar from "../../Pages/AdvancedCalendar";
+import {Layout, LayoutRight} from "../../Pages/Layout";
 import {Button, Dropdown, DropdownButton} from "react-bootstrap";
 import {Modal} from "react-bootstrap";
 import {Navigate} from "react-router";
 import {format} from "date-fns";
-import {Appointment} from "../Service/Appointment";
+import {Appointment} from "../../Service/Appointment";
 
 export function CompanyProfileManaging() {
     const params = useParams()

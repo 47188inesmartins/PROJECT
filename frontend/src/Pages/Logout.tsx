@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {Fetch} from "../Utils/useFetch";
-import {LoggedInContextCookie} from "./Authentication/Authn";
+import {LoggedInContextCookie} from "../views/Authentication/Authn";
 import {useEffect, useState} from "react";
 import {Navigate} from "react-router";
 import Cookies from 'js-cookie';

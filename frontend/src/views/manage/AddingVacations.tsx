@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useParams } from "react-router-dom";
-import {Layout, LayoutRight} from "../Layout";
+import {Layout, LayoutRight} from "../../Pages/Layout";
 import {AccessDenied} from "../../Components/AccessDenied";
 import {VacationService} from "../../Service/VacationServices";
 

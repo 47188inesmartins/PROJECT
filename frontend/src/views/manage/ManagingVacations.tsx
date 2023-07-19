@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { Fetch } from "../../Utils/useFetch";
 import "../../Style/ManagingEmployees.css";
 import Cookies from 'js-cookie';
-import {Layout, LayoutRight} from "../Layout";
+import {Layout, LayoutRight} from "../../Pages/Layout";
 import {AccessDenied} from "../../Components/AccessDenied";
 
 

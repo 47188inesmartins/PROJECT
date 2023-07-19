@@ -6,7 +6,6 @@ import {
 } from 'react';
 import {fetchGetSession} from "./cookieHandler";
 
-
 export const LoggedInContextCookie = createContext({
     loggedInState: { role: Array<any>('guest') },
 });

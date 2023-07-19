@@ -4,7 +4,7 @@ import { Fetch } from "../../Utils/useFetch";
 import "../../Style/ManagingEmployees.css";
 import Cookies from 'js-cookie';
 import {AccessDenied} from "../../Components/AccessDenied";
-import {Layout, LayoutRight} from "../Layout";
+import {Layout, LayoutRight} from "../../Pages/Layout";
 import {UsersService} from "../../Service/UsersService";
 
 

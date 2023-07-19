@@ -9,7 +9,7 @@ import {
 } from 'mdb-react-ui-kit';
 import { Fetch } from '../Utils/useFetch';
 import { Layout, LayoutRight } from './Layout';
-import { LoggedInContextCookie } from "./Authentication/Authn";
+import { LoggedInContextCookie } from "../views/Authentication/Authn";
 import Cookies from 'js-cookie';
 import {Dropdown, DropdownButton} from "react-bootstrap";
 
