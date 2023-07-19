@@ -1,6 +1,7 @@
 package backend.jvm.services
 
 import backend.jvm.dao.*
+import backend.jvm.model.day.DayEntity
 import backend.jvm.model.day.DayInputDto
 import backend.jvm.model.day.DayOutputDto
 import backend.jvm.services.interfaces.IDayServices
@@ -68,14 +69,17 @@ class DayServices : IDayServices {
         return hoursList
     }
 
-    override fun addOpenDays(day: List<DayInputDto>, companyId: Int, interval: String) {
+    override fun addOpenDays(day: List<DayInputDto>, companyId: Int, interval: String?): List<DayEntity> {
         companyDao.findAllById(companyId) ?: throw InvalidSchedule()
         val schedule = scheduleDao.getScheduleByCompany_Id(companyId) ?: throw InvalidSchedule()
-        val intervalBetween = Time.valueOf(interval)
-        scheduleDao.updateBetweenInterval(schedule.id, intervalBetween)
+        if(interval != null){
+            val intervalBetween = Time.valueOf(interval)
+            scheduleDao.updateBetweenInterval(schedule.id, intervalBetween)
+        }
         val daysDb = day.map { it.mapToDayDb(it, schedule, null) }
         val savedDays = dayDao.saveAll(daysDb)
         if(daysDb.size != savedDays.size) throw Exception("error saving opening days")
+        return savedDays
     }
 
     override fun updateBeginHour(id:Int,hour: String): Time {

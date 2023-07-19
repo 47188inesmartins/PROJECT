@@ -50,6 +50,7 @@ export function Home() {
         }
     }
 
+    console.log("url", url)
 
     const response = Fetch(url, 'GET');
 

@@ -2,8 +2,6 @@ import React, {useEffect, useState} from "react";
 import {Dropdown} from "react-bootstrap";
 import "../Style/CreatingCompany.css";
 import Cookies from 'js-cookie';
-import {convertMinutesToHHMMSS} from "../Utils/formater";
-import {AddLayouts} from "../Components/AddLayouts";
 import {CompanyServices} from "../Service/CompanyServices";
 
 
@@ -19,7 +17,6 @@ interface CompanyInputDto {
 }
 
 export function CreatingCompany() {
-    const [redirect, setRedirect] = useState<boolean>(false)
     const [name, setName] = useState("");
     const [phone, setPhone] = useState("");
     const [street, setStreet] = useState("");
@@ -30,8 +27,6 @@ export function CreatingCompany() {
     const categories = ["BEAUTY", "LIFESTYLE", "FITNESS", "BUSINESS", "OTHERS", "EDUCATION"];
     const [type, setType] = useState("");
     const [employeeEmails, setEmployeeEmails] = useState<string[]>([]);
-    const [startDay, setStartDay] = useState("");
-    const [endDay, setEndDay] = useState("");
     const daysOfWeek = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
 
     const [schedule, setSchedule] = useState(
@@ -121,31 +116,6 @@ export function CreatingCompany() {
 
     function fetchCreateCompany() {
         CompanyServices.CreateCompany(selectedValue,companyData,employeeEmails,schedule)
-        /*fetch(`/api/company?duration=${convertMinutesToHHMMSS(selectedValue)}`,{
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token} `
-            },
-            body: JSON.stringify({
-                company: companyData,
-                emails : {
-                    emails: employeeEmails
-                },
-                days: schedule.filter(day =>
-                    Object.values(day).every(value => value !== '')
-                )
-            })
-        }).then(response =>{response.json()
-            console.log(response.json())}
-)
-            .then(data => {
-                setRedirect(true);
-            })
-            .catch(error => {
-                console.error('Ocorreu um erro:', error);
-            });*/
-
     }
 
     const handleTimeChange = (index, field, value) => {
@@ -173,21 +143,9 @@ export function CreatingCompany() {
         setIsOpen(!isOpen);
     };
 
-    const isFormValid = () => {
-        return (
-            name.length >= 3 &&
-            type.length >= 3 &&
-            street.length >= 3 &&
-            nif.length === 9 &&
-            description.length >= 3 &&
-            startDay.length >= 3 &&
-            endDay.length >= 3
-        );
-    };
-
     const MAX_DESCRIPTION_LENGTH = 200;
 
-    const divElem = (
+    return (
         <div className="container rounded bg-white mt-5 mb-5">
             <div className="row">
                 <div className="col-md-4 border-right">
@@ -427,6 +385,4 @@ export function CreatingCompany() {
             </div>
         </div>
     );
-
-    return <AddLayouts content={divElem}/>
 }

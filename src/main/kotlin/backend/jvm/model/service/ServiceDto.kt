@@ -1,16 +1,18 @@
 package backend.jvm.model.service
 
 import backend.jvm.model.company.CompanyEntity
+import backend.jvm.model.day.DayEntity
+import backend.jvm.model.day.DayInputDto
 import backend.jvm.model.user.UserEntity
 import java.sql.Time
 
-data class ServiceInputList(val services: List<ServiceInputDto>)
+data class ServiceInputList(val services: List<Pair<ServiceInputDto, List<DayInputDto>?>>)
+
 data class ServiceInputDto(
     val serviceName: String,
     val duration: String,
     val price: Double,
     val users: List<Int>?
-
 ){
     fun mapToService(db: ServiceInputDto, companyEntity: CompanyEntity, users: List<UserEntity>?) : ServiceEntity {
         val d = Time.valueOf(duration) ?: throw Exception("invalid time")

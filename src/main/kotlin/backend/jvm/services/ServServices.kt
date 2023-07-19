@@ -24,41 +24,23 @@ class ServServices : IServServices {
     @Autowired
     lateinit var userDao : UserDao
     @Autowired
-    lateinit var userCompanyDao : UserCompanyDao
-    @Autowired
     lateinit var scheduleDao : ScheduleDao
     @Autowired
     lateinit var dayDao : DayDao
     @Autowired
     lateinit var serviceDayDao : ServiceDayDao
+    @Autowired
+    lateinit var dayService : DayServices
 
-
-  /*  override fun addService(servicesInput: ServiceInputList, companyId: Int): ServicesOutputList {
-        val listService = servicesInput.services
-        val schedule = scheduleDao.getScheduleByCompany_Id(companyId) ?: throw ScheduleNotFound()
-        val days = dayDao.getDayByScheduleId(schedule.id)
-        val company = companyDao.getReferenceById(companyId)
-
-        listService.forEach { service ->
-            val users = service.users?.map{ userDao.getReferenceById(it) }
-            users?.forEach {
-                if(userCompanyDao.findByCompanyAndUser(company, it) == null) throw InvalidUser()
-            }
-            val serv = service.mapToService(service,company,users)
-            val savedService = serviceDao.save(serv)
-            days.map { serviceDayDao.save(ServiceDay(it, savedService)) }
-        }
-        val listsServicesName = listService.map { it.serviceName }
-        return  ServicesOutputList(listsServicesName)
-    }*/
 
     override fun addService(servicesInput: ServiceInputList, companyId: Int): ServicesOutputList {
+
         val listService = servicesInput.services
         val schedule = scheduleDao.getScheduleByCompany_Id(companyId) ?: throw ScheduleNotFound()
         val days = dayDao.getDayByScheduleId(schedule.id)
         val company = companyDao.getReferenceById(companyId)
 
-        val userIds = listService.flatMap { it.users.orEmpty() }
+        val userIds = listService.map { it.first }.flatMap { it.users.orEmpty() }
         val existingUsers = userDao.findAllById(userIds)
         val existingUserIds = existingUsers.map { it.id }
 
@@ -67,19 +49,27 @@ class ServServices : IServServices {
             throw InvalidUser()
         }
 
-        val services = listService.map { service ->
-            val usersForService = service.users?.mapNotNull { userId -> existingUsers.find { it.id == userId } }
-            service.mapToService(service, company, usersForService)
+        val services = listService.filter { it.second == null }.map { service ->
+            val usersForService = service.first.users?.mapNotNull { userId -> existingUsers.find { it.id == userId } }
+            service.first.mapToService(service.first, company, usersForService)
         }
 
         val savedServices = serviceDao.saveAll(services)
-
-        val serviceDays = days.flatMap { day ->
-            savedServices.map { service -> ServiceDay(day, service) }
-        }
+        val serviceDays = days.flatMap { day -> savedServices.map { service -> ServiceDay(day, service) }}
         serviceDayDao.saveAll(serviceDays)
 
-        val listsServicesName = listService.map { it.serviceName }
+
+        val specialScheduleServices = listService.filter { it.second != null }.map { service ->
+            val usersForService = service.first.users?.mapNotNull { userId -> existingUsers.find { it.id == userId } }
+            service.first.mapToService(service.first, company, usersForService)
+            val savedDays = dayService.addOpenDays(service.second!!, companyId, null)
+            val savedService = serviceDao.save(service.first.mapToService(service.first, company, usersForService))
+            val serviceDays = savedDays.map { day -> ServiceDay(day, savedService) }
+            serviceDayDao.saveAll(serviceDays)
+        }
+
+
+        val listsServicesName = listService.map { it.first.serviceName }
         return ServicesOutputList(listsServicesName)
     }
 

@@ -1,7 +1,6 @@
 package backend.database
 
 import backend.jvm.dao.CompanyDao
-import backend.jvm.dao.UserDao
 import backend.jvm.dao.VacationDao
 import backend.jvm.model.company.CompanyEntity
 import backend.jvm.model.schedule.ScheduleEntity
@@ -13,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
 import java.sql.Date
-
 
 @DataJpaTest
 class VacationDaoTest {
@@ -36,8 +34,7 @@ class VacationDaoTest {
         val sch = ScheduleEntity(company,null,null,null,null)
         entityManager.persist(sch)
         entityManager.flush()
-        val vacation = VacationEntity( Date.valueOf("2001-01-1") ,Date.valueOf("2001-01-20"),
-            sch)
+        val vacation = VacationEntity(Date.valueOf("2024-01-1"), Date.valueOf("2024-01-20"), sch)
         entityManager.persist(vacation)
         entityManager.flush()
 

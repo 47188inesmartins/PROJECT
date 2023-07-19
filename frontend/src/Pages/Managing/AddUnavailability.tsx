@@ -6,7 +6,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import {MDBInput} from "mdb-react-ui-kit";
 import {Navigate} from "react-router";
 import {Layout, LayoutRight} from "../Layout";
-import {AccessDenied} from "../../Components/AcessDenied";
+import {AccessDenied} from "../../Components/AccessDenied";
 import {UnavailabilityServices} from "../../Service/UnavailabilityServices";
 
 interface Unavailability {
