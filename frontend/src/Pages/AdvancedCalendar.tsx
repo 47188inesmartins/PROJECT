@@ -24,6 +24,7 @@ const MyCalendar: React.FC = () => {
     const mapDataToEvents = (data: any[]): Event[] => {
         if (!data) return
         return data.map((item) => {
+            console.log(data)
             const appDateParts = item.appDate.split('-').map(Number);
             const appBeginHourParts = item.appBeginHour.split(':').map(Number);
             const appEndHourParts = item.appEndHour.split(':').map(Number);

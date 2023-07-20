@@ -56,7 +56,6 @@ class AppointmentEntity {
         joinColumns = [JoinColumn(name = "appointment_id")],
         inverseJoinColumns = [JoinColumn(name = "user_id")]
     )
-
     val user : List<UserEntity?>?
 
 

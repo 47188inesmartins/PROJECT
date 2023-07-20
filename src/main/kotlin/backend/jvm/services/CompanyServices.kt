@@ -20,6 +20,7 @@ import backend.jvm.services.dto.*
 import backend.jvm.services.interfaces.ICompanyServices
 import backend.jvm.utils.*
 import backend.jvm.utils.errorHandling.*
+import backend.jvm.utils.time.addTimes
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
@@ -227,7 +228,7 @@ class CompanyServices : ICompanyServices {
             } ?: throw UserNotFound()
             val clientFind = it.user.find { cli -> cli != employee }
             val client = clientFind?.name ?: "Scheduled by employee"
-            val endHour = Time(it.appHour.time + service.duration.time)
+            val endHour =   addTimes(it.appHour,service.duration)
             AppointmentInfoEmployeeEnd(
                 it.id,
                 it.appHour.toString(),
@@ -274,6 +275,7 @@ class CompanyServices : ICompanyServices {
     fun removeEmployeeFromCompany(cid: Int, employeeId: Int){
         userCompanyDao.deleteAllByCompanyAndUserAndRole(cid, employeeId)
         appointmentDao.deleteAppointmentByDateAndEmployee(employeeId,getCurrentTime(),getCurrentDate())
+        userDao.deleteUserServices(employeeId, cid)
     }
 
      fun getSearchedCompanies(distance: Double?,token: String?,search: String?, page: Int, size: Int): Page<CompanyOutputDto>?{

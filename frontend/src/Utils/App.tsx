@@ -11,7 +11,6 @@ import {AddingEmployees} from "../views/manage/AddingEmployees";
 import {CompanyProfileManaging} from "../views/manage/CompanyProfileManaging";
 import {AddingVacations} from "../views/manage/AddingVacations";
 import {ProfilePage} from "../views/client/UserProfile";
-import {CreatingServices} from "../Pages/CreatingServices";
 import {Signup} from "../Pages/Signup";
 import {EditServiceSchedule} from "../Pages/EditServiceSchedule";
 import {ProfitCompany} from "../Pages/ProfitCompany";

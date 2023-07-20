@@ -12,6 +12,7 @@ import backend.jvm.model.user.AppointmentManager
 import backend.jvm.model.user.UserEntity
 import backend.jvm.model.user.UserOutputDto
 import backend.jvm.services.interfaces.IAppointmentServices
+import backend.jvm.utils.UserRoles
 import backend.jvm.utils.errorHandling.*
 import backend.jvm.utils.time.getDayOfWeek
 import backend.jvm.utils.time.addTimes
@@ -47,10 +48,10 @@ class AppointmentServices : IAppointmentServices {
     lateinit var unavailabilityDao: UnavailabilityDao
 
     @Autowired
-    lateinit var dayDao: DayDao
+    lateinit var vacationDao: VacationDao
 
     @Autowired
-    lateinit var vacationDao: VacationDao
+    lateinit var companyDao: CompanyDao
 
     /**
      * Add an appointment.
@@ -81,10 +82,9 @@ class AppointmentServices : IAppointmentServices {
         val appointmentDb = appointment.mapToAppointmentDb(appointmentDate,appointment, schedule, listOf(userClient, employee), service)
         val savedAppointment = appointmentDao.save(appointmentDb)
 
-        val endTime = savedAppointment.appHour.time + service.duration.time
-        val time = Time(endTime)
+        val endTime = addTimes(savedAppointment.appHour,service.duration)
 
-        addUnavailabilityToEmployee(appointment.appDate,savedAppointment.appHour,time,employee)
+        addUnavailabilityToEmployee(appointment.appDate,savedAppointment.appHour,endTime,employee)
 
         return AppointmentOutputDto(savedAppointment)
     }
@@ -97,7 +97,6 @@ class AppointmentServices : IAppointmentServices {
      */
     @Transactional
     fun addAppointmentByEmployee(appointmentEmployee: AppointmentManager, companyId: Int):Int{
-        //employee
         val user = userDao.getUserById(appointmentEmployee.userId)
             ?: throw UserNotFound()
         val service = servicesRepository.getServiceDBById(appointmentEmployee.service)
@@ -110,7 +109,7 @@ class AppointmentServices : IAppointmentServices {
         if(!verifyVacations(schedule.id,appointmentDate)) throw InvalidDate()
         val appointmentHour = Time.valueOf(appointmentEmployee.appHour.plus(":00"))?: throw Exception("invalid hour")
 
-        val appointmentDb = AppointmentEntity(appointmentHour,appointmentDate,schedule, listOf(user,null),service)
+        val appointmentDb = AppointmentEntity(appointmentHour, appointmentDate, schedule, listOf(user,null), service)
         val savedAppointment = appointmentDao.save(appointmentDb)
         return savedAppointment.id
     }
@@ -122,10 +121,16 @@ class AppointmentServices : IAppointmentServices {
      */
     override fun deleteAppointment(id: Int) {
         val getAppointment = appointmentDao.findById(id).get()
+        val company = companyDao.getCompanyBySchedule(getAppointment.schedule.id) ?: throw ScheduleNotFound()
         if (getAppointment.equals(Optional.empty<AppointmentEntity>())) throw AppointmentNotFound()
         if (getCurrentDate().after(getAppointment.appDate) && getCurrentHour() > getAppointment.appHour)
             return appointmentDao.deleteById(id)
+        val employee = getAppointment.user!!.firstOrNull { user ->
+            user?.let { it1 -> userDao.getUserDBByIdAndRole(UserRoles.EMPLOYEE.name, company, user.id) } != null ||
+                    user?.let { it1 -> userDao.getUserDBByIdAndRole(UserRoles.MANAGER.name, it1.id, user.id) } != null
+        }?: throw UserNotFound()
         appointmentDao.deleteById(id)
+        unavailabilityDao.deleteByDateBeginAndHourBeginAndUser(getAppointment.appDate,getAppointment.appHour,employee)
     }
 
     /**

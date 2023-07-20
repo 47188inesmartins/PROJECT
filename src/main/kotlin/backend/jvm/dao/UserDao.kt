@@ -66,4 +66,9 @@ interface UserDao: JpaRepository<UserEntity, Int> {
      @Query(value = "update sch_user set status = 'VALIDATED' where email = :email", nativeQuery = true)
      @Transactional
      fun changeStatusByEmail(@Param("email") email: String)
+
+     @Modifying
+     @Query(value = "delete * from user_service where user_id = :user_id and service_id in (select s.id from service s where company_id = :company_id)", nativeQuery = true)
+     @Transactional
+     fun deleteUserServices(@Param("user_id") user_id: Int, @Param("company_id") company_id: Int)
 }
