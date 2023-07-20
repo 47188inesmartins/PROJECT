@@ -1,7 +1,9 @@
 services:
-  - name: frontend
-    buildCommand: "docker build ./frontend -f Dockerfile"
-    startCommand: "docker run -p 80:8000 frontend"
+  - type: web
+    name: frontend
+    plan: free
+    buildCommand: docker build ./frontend -f Dockerfile
+    startCommand: docker run -p 80:8000 frontend
     env:
       - key: SPRING_DATASOURCE_URL
         value: "jdbc:postgresql://db:5432/postgres"
@@ -13,8 +15,8 @@ services:
         value: "update"
 
   - name: backend
-    buildCommand: "docker build . -f Dockerfile"
-    startCommand: "docker run -p 8081:8080 backend"
+    buildCommand: docker build . -f Dockerfile
+    startCommand: docker run -p 8081:8080 backend
     env:
       - key: SPRING_DATASOURCE_URL
         value: "jdbc:postgresql://db:5432/postgres"
