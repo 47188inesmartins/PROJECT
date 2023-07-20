@@ -1,0 +1,36 @@
+services:
+  - name: frontend
+    buildCommand: "docker build ./frontend -f Dockerfile"
+    startCommand: "docker run -p 80:8000 frontend"
+    env:
+      - key: SPRING_DATASOURCE_URL
+        value: "jdbc:postgresql://db:5432/postgres"
+      - key: SPRING_DATASOURCE_USERNAME
+        value: "postgres"
+      - key: SPRING_DATASOURCE_PASSWORD
+        value: "inesmartins"
+      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+        value: "update"
+
+  - name: backend
+    buildCommand: "docker build . -f Dockerfile"
+    startCommand: "docker run -p 8081:8080 backend"
+    env:
+      - key: SPRING_DATASOURCE_URL
+        value: "jdbc:postgresql://db:5432/postgres"
+      - key: SPRING_DATASOURCE_USERNAME
+        value: "postgres"
+      - key: SPRING_DATASOURCE_PASSWORD
+        value: "inesmartins"
+      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+        value: "update"
+    dependsOn:
+      - name: db
+
+  - name: db
+    image: "postgres:13.1-alpine"
+    env:
+      - key: POSTGRES_USER
+        value: "postgres"
+      - key: POSTGRES_PASSWORD
+        value: "inesmartins"

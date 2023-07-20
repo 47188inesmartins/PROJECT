@@ -193,7 +193,6 @@ class UserController {
     @PostMapping("/{id}/profile-pic")
     fun uploadProfilePic(@PathVariable id:Int, @RequestBody file: MultipartFile): ResponseEntity<String> {
         return try {
-
             userServices.updateUserProfilePicture(id,file)
             ResponseEntity
                 .status(200)
