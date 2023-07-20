@@ -190,13 +190,11 @@ class UserController {
         }
     }
 
-    @PostMapping("/profile-pic")
-    fun uploadProfilePic(@RequestBody file: MultipartFile): ResponseEntity<String> {
+    @PostMapping("/{id}/profile-pic")
+    fun uploadProfilePic(@PathVariable id:Int, @RequestBody file: MultipartFile): ResponseEntity<String> {
         return try {
-            val requestAttributes = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes
-            val request = requestAttributes.request
-            val bearerToken = request.getHeader("Authorization")?.removePrefix("Bearer ")
-            userServices.updateUserProfilePicture(bearerToken,file)
+
+            userServices.updateUserProfilePicture(id,file)
             ResponseEntity
                 .status(200)
                 .body("Upload done")
@@ -212,6 +210,21 @@ class UserController {
             ResponseEntity
                 .status(200)
                 .body("Account has been validated")
+        }catch(e: Exception){
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
+        }
+    }
+
+    @GetMapping("/id-info")
+    fun userById(): ResponseEntity<Int> {
+        return try {
+            val requestAttributes = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes
+            val request = requestAttributes.request
+            val bearerToken = request.getHeader("Authorization")?.removePrefix("Bearer ")
+            val response = userServices.getUserByToken(bearerToken)?.id
+            ResponseEntity
+                .status(200)
+                .body(response)
         }catch(e: Exception){
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
         }

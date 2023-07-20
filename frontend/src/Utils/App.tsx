@@ -91,7 +91,7 @@ const router = createBrowserRouter([{
             "element": <UploadPhoto/>
         },
         {
-            "path": "/user/upload-pic",
+            "path": "/user/:id/upload-pic",
             "element": <UploadProfilePicture/>
         },
         {

@@ -40,56 +40,40 @@ export function Company() {
                         <MDBCol lg="9" xl="7">
                             <MDBCard>
                                 <MDBRow>
-                                    <MDBCol className="mb-2">
-                                        <img
-                                            src={`data:image/jpeg;base64,${company.response.path[0]}`}
-                                            className="img-fluid shadow-1-strong rounded"
-                                            alt="Hollywood Sign on The Hill"
-                                            style={{
-                                                width: '100%',
-                                                height: '200px',
-                                                objectFit: 'cover',
-                                            }}
-                                        />
-                                    </MDBCol>
-                                    <MDBCol className="mb-2">
-                                        <img
-                                            src={`data:image/jpeg;base64,${company.response.path[1]}`}
-                                            className="img-fluid shadow-1-strong rounded"
-                                            alt="Hollywood Sign on The Hill"
-                                            style={{
-                                                width: '100%',
-                                                height: '200px',
-                                                objectFit: 'cover',
-                                            }}
-                                        />
-                                    </MDBCol>
-                                </MDBRow>
-                                <MDBRow className="g-2">
-                                    <MDBCol className="mb-2">
-                                        <img
-                                            src={`data:image/jpeg;base64,${company.response.path[2]}`}
-                                            className="img-fluid shadow-1-strong rounded"
-                                            alt="Hollywood Sign on The Hill"
-                                            style={{
-                                                width: '100%',
-                                                height: '200px',
-                                                objectFit: 'cover',
-                                            }}
-                                        />
-                                    </MDBCol>
-                                    <MDBCol className="mb-2">
-                                        <img
-                                            src={`data:image/jpeg;base64,${company.response.path[3]}`}
-                                            className="img-fluid shadow-1-strong rounded"
-                                            alt="Hollywood Sign on The Hill"
-                                            style={{
-                                                width: '100%',
-                                                height: '200px',
-                                                objectFit: 'cover',
-                                            }}
-                                        />
-                                    </MDBCol>
+                                    <div>
+                                        <MDBRow className="g-2">
+                                            <MDBCol md="6">
+                                                {company.response.path.slice(0, 2).map((path, index) => (
+                                                    <img
+                                                        key={index}
+                                                        src={`data:image/jpeg;base64,${path}`}
+                                                        className="img-fluid shadow-1-strong rounded mb-2"
+                                                        alt={`Image ${index + 1}`}
+                                                        style={{
+                                                            width: '100%',
+                                                            height: '200px',
+                                                            objectFit: 'cover',
+                                                        }}
+                                                    />
+                                                ))}
+                                            </MDBCol>
+                                            <MDBCol md="6">
+                                                {company.response.path.slice(2, 4).map((path, index) => (
+                                                    <img
+                                                        key={index}
+                                                        src={`data:image/jpeg;base64,${path}`}
+                                                        className="img-fluid shadow-1-strong rounded mb-2"
+                                                        alt={`Image ${index + 3}`}
+                                                        style={{
+                                                            width: '100%',
+                                                            height: '200px',
+                                                            objectFit: 'cover',
+                                                        }}
+                                                    />
+                                                ))}
+                                            </MDBCol>
+                                        </MDBRow>
+                                    </div>
                                 </MDBRow>
                                 <div>
                                     <MDBTypography tag="h5">{company.response.name}</MDBTypography>

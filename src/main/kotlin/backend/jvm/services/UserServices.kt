@@ -102,7 +102,8 @@ class UserServices : IUserInterface {
         else throw InvalidCredentials()
     }
 
-    override fun getUserByToken(token: String): UserEntity?{
+    override fun getUserByToken(token: String?): UserEntity?{
+        if(token == null) Unauthorized()
         val t = UUID.fromString(token)
         return userDao.getUserByToken(t) ?: throw InvalidToken()
     }
@@ -187,11 +188,8 @@ class UserServices : IUserInterface {
         return servicesRepository.getEarnedMoneyByEmployee(user.id,company, getBeginDate, getEndDate) ?: 0.0
     }
 
-    override fun updateUserProfilePicture(token: String?, image: MultipartFile){
-        if(token == null){
-            throw Unauthorized()
-        }
-        val getUser = userDao.getUserByToken(UUID.fromString(token)) ?: throw UserNotFound()
+    fun updateUserProfilePicture(id: Int, image: MultipartFile){
+        val getUser = userDao.getUserById(id) ?: throw UserNotFound()
         val fileName = image.originalFilename?.let { StringUtils.cleanPath(it) }
         if(fileName?.contains("..")!!){
             println("not a valid file")

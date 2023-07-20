@@ -86,20 +86,41 @@ export namespace UsersService{
         )
     }
 
-    export function profilePicture(id:String,formData:FormData){
+    export function profilePicture(id:String,selectedFile){
+        try {
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            //UsersService.profilePicture(params,formData)
+            const response = fetch(`http://localhost:8000/api/user/${id}/profile-pic`, {
+                method: 'POST',
+                body: formData
+            }).then(response =>{
+                    if (response.status === 200) {
+                        alert("Your image was receive");
+                        window.location.href = '/';
+                        console.log('Upload concluído', response);
+                    } else {
+                        console.error('Error during the upload,try again:', response.status);
+                    }
+                }
+            )
+        } catch (error) {
+            console.error('Erro durante o upload:', error);
+        }
+    }
+
+    export function getUser(){
         const token =  Cookies.get('name')
-        fetch(`/api/user/profile-pic`, {
-            method: 'POST',
+        fetch(`/api/user/id-info`, {
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            body: formData
-        }).then( response =>{
+        }).then(async response =>{
                 if (response.status === 200) {
-                    alert("Your menssage was sent");
-                    window.location.href = '/';
-                    console.log('Your image is save', response);
+                    const resp = await response.json()
+                    window.location.href = `/user/${resp}/upload-pic`;
                 } else {
                     console.error('Something went wrong:', response.status);
                 }

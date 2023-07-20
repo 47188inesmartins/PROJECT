@@ -59,17 +59,7 @@ export function MyAppointments() {
                                                 <MDBCardBody className="p-4">
                                                     <h4 className="text-center my-3 pb-3">My Appointments</h4>
                                                     <MDBRow className="row-cols-lg-auto g-3 justify-content-center align-items-center mb-4 pb-2">
-                                                        <MDBCol size="12">
-                                                            <MDBInput
-                                                                id="form1"
-                                                                type="text"
-                                                                placeholder="Search for a company"
-                                                            />
-                                                        </MDBCol>
-                                                        <MDBCol size="12">
-                                                            <button style={{ backgroundColor: '#f7d8ba' }} className="btn btn-outline-light btn-lg px-2" type="button" onClick={()=>{}}>Search</button>
-                                                        </MDBCol>
-                                                    </MDBRow>
+                                                        </MDBRow>
                                                             {appointments.futureAppointments.length === 0 && appointments.passedAppointments.length === 0?
                                                                 <>
                                                                     <br/>

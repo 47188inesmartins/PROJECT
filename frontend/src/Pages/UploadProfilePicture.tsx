@@ -3,15 +3,12 @@ import * as React from "react"
 import {useState} from "react";
 import {UsersService} from "../Service/UsersService";
 import {Layout, LayoutRight} from "./Layout";
-import {AccessDenied} from "../Components/AccessDenied";
 import {AddLayouts} from "../Components/AddLayouts";
-import Cookies from 'js-cookie';
-
 
 export function UploadProfilePicture() {
     const [selectedFile, setSelectedFile] = useState(null);
     const params = useParams().id;
-    const token =  Cookies.get('name')
+
     const handleFileDrop = (event) => {
         event.preventDefault();
         const file = event.dataTransfer.files[0];
@@ -24,33 +21,10 @@ export function UploadProfilePicture() {
 
     const handleFileUpload = async () => {
         if (!selectedFile) {
-            alert('Por favor, selecione um arquivo.');
+            alert('Please, select a file!');
             return;
         }
-
-        try {
-            const formData = new FormData();
-
-            formData.append('file', selectedFile);
-            console.log("form",token)
-            const response = await fetch(`/api/user/profile-pic`, {
-                method: 'POST',
-                headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-                },
-                body: formData
-            });
-            if (response.status === 200) {
-                alert("Sua imagem foi enviada.");
-                window.location.href = '/';
-                console.log('Upload concluído', response);
-            } else {
-                console.error('Erro durante o upload:', response);
-            }
-        } catch (error) {
-            console.error('Erro durante o upload:', error);
-        }
+        UsersService.profilePicture(params,selectedFile)
     };
 
     const handleDragOver = (event) => {

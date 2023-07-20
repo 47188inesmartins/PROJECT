@@ -14,6 +14,7 @@ import {Fetch} from "../../Utils/useFetch";
 import {useContext} from "react";
 import {Layout, LayoutRight} from "../../Pages/Layout";
 import {LoggedInContextCookie} from "../Authentication/Authn";
+import {UsersService} from "../../Service/UsersService";
 
 export function ProfilePage() {
 
@@ -21,6 +22,10 @@ export function ProfilePage() {
     const roleCheck = ((role.indexOf('manager') === -1) && (role.indexOf('employee') === -1))
     const response = Fetch('/user/info','GET')
     console.log("piccc",response.response)
+
+    const handleClickUpload = () =>{
+        UsersService.getUser()
+    }
 
     const contentStyle = {
         marginLeft: '200px',
@@ -59,11 +64,11 @@ export function ProfilePage() {
                                         {response.response.profilePic?
                                             <>
                                                 <MDBCardImage
-                                                src= {`data:image/jpeg;base64,${response.response.profilePic}`}
-                                                alt="avatar"
-                                                className="rounded-circle"
-                                                style={{ width: '150px' }}
-                                                fluid />
+                                                    src= {`data:image/jpeg;base64,${response.response.profilePic}`}
+                                                    alt="avatar"
+                                                    className="rounded-circle"
+                                                    style={{ width: '150px' }}
+                                                    fluid />
                                                 <p className="text-muted mb-1">{response.response.name}</p>
                                             </>
                                             :  <>
@@ -78,24 +83,24 @@ export function ProfilePage() {
                                             </>
                                         }
                                     </MDBCardBody>
-                                    <a href="/user/upload-pic" className="edit-profile-link">
+                                    <button onClick={handleClickUpload}>
                                         <p>Update your profile pic</p>
-                                    </a>
+                                    </button>
                                 </MDBCard>
-                                    {!roleCheck?
-                                        <>
-                                            <MDBCard className="mb-4 mb-md-0">
-                                                <MDBCardBody>
-                                                    <MDBCardText className="mb-4">My wallet </MDBCardText>
-                                                    <a href={`/company/profits`} className="mb-1"  style={{ fontSize: '1.2rem' }}>
-                                                        <MDBCardText> Check your profits </MDBCardText>
-                                                    </a>
-                                                </MDBCardBody>
-                                            </MDBCard>
-                                        </>
-                                        :
-                                        <></>
-                                    }
+                                {!roleCheck?
+                                    <>
+                                        <MDBCard className="mb-4 mb-md-0">
+                                            <MDBCardBody>
+                                                <MDBCardText className="mb-4">My wallet </MDBCardText>
+                                                <a href={`/company/profits`} className="mb-1"  style={{ fontSize: '1.2rem' }}>
+                                                    <MDBCardText> Check your profits </MDBCardText>
+                                                </a>
+                                            </MDBCardBody>
+                                        </MDBCard>
+                                    </>
+                                    :
+                                    <></>
+                                }
                             </MDBCol>
                             <MDBCol lg="8">
                                 <MDBCard className="mb-4">
@@ -180,4 +185,3 @@ function CompanyRole(props:{role:String,text:String}) {
         </>
     );
 }
-

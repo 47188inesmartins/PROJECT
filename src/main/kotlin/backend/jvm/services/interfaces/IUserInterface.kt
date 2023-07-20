@@ -26,13 +26,13 @@ interface IUserInterface {
 
     fun getRoleByUserIdAndCompany(company: Int, user_id: String): String?
 
-    fun getUserByToken(token: String): UserEntity?
+    fun getUserByToken(token: String?): UserEntity?
 
     fun addEmployees(companyId: Int, emails: List<String>)
 
     fun getAllAppointmentsByUser(token: String): AppointmentsUserInfo
 
-    fun updateUserProfilePicture(token: String?, image: MultipartFile)
+   // fun updateUserProfilePicture(token: String?, image: MultipartFile)
 
     fun mapToAppointmentsInfo(listAppointmentEntities: List<AppointmentEntity>):List<AppointmentInfo>
 
