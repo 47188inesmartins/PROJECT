@@ -9,6 +9,7 @@ import {
 }from 'mdb-react-ui-kit';
 import {useEffect, useState} from "react";
 import Cookies from 'js-cookie';
+import {UsersService} from "../Service/UsersService";
 
 interface UserCredentials{
     email: string,
@@ -19,44 +20,13 @@ export function Login() {
 
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
-    const [redirect, setRedirect] = useState<boolean>(false)
 
-    function fetchLogin(){
+    function fetchLogin() {
         const userCredentials: UserCredentials = {
             email,
             password
         }
-        fetch(`/api/user/login`,{
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(userCredentials),
-        })
-        .then(response => response.json())
-        .then(data => {
-            Cookies.set('name', data.first, { expires: 7 });
-            Cookies.set('roles', {
-                company: null,
-                role: 'CLIENT'
-            }, { expires: 7 });
-            setRedirect(true);
-        })
-        .catch(error => {
-            console.error('Ocorreu um erro:', error);
-        });
-
-    }
-
-    useEffect(() => {
-        if (redirect) {
-            setRedirect(false);
-        }
-    }, [redirect]);
-
-    if (redirect) {
-        window.location.href = `/`;
-        return(<></>)
+        UsersService.login(userCredentials)
     }
 
     return (

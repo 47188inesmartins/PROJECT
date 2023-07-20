@@ -9,10 +9,8 @@ import {
     MDBIcon
 }from 'mdb-react-ui-kit';
 import { useEffect, useState } from "react";
-import { LoggedInContextCookie } from "../views/Authentication/Authn";
 import {useParams} from "react-router-dom";
-import Cookies from 'js-cookie';
-
+import {UsersService} from "../Service/UsersService";
 
 interface UserInputDto {
     email: string,
@@ -58,9 +56,7 @@ export function Signup() {
         }
     };
 
-  //  const token = Cookies.get('name')
-
-    const handleSubmit = () => {
+    function handleSubmit(){
         const userCredentials: UserInputDto = {
             name,
             birthday,
@@ -71,39 +67,7 @@ export function Signup() {
             city,
             country
         }
-        fetch(`/api/user`, {
-            method: 'POST',
-            body: JSON.stringify(userCredentials),
-            headers: {
-                'Content-Type': 'application/json',
-            //    'Authorization': `Bearer ${token}`
-            }
-        })
-            .then(response => response.json())
-            .then(data => {
-                setData(data);
-                setRedirect(true);
-            })
-            .catch(error => {
-                window.alert(error)
-                console.error('An error has occurred:', error);
-            });
-    }
-
-    useEffect(() => {
-        if (redirect) {
-            setRedirect(false);
-        }
-    }, [redirect]);
-
-    if (redirect) {
-        const userId = data.id
-        if(mode === 'business') {
-            window.location.href = `user/${userId}/upload-pic`
-            return <></>;
-        }
-        window.location.href = '/'
-        return <></>;
+        UsersService.signup(userCredentials)
     }
 
     return (

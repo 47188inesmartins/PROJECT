@@ -11,10 +11,11 @@ import { Fetch } from '../Utils/useFetch';
 import { Layout, LayoutRight } from './Layout';
 import { LoggedInContextCookie } from "../views/Authentication/Authn";
 import {Dropdown, DropdownButton} from "react-bootstrap";
+import Cookies from 'js-cookie';
 
 
 export function Home() {
-
+   // Cookies.remove('name')
     const context = React.useContext(LoggedInContextCookie).loggedInState
     const role = context.role
 
