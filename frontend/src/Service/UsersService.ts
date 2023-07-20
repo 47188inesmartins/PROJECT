@@ -127,4 +127,53 @@ export namespace UsersService{
             }
         )
     }
+
+
+    export function login(userCredentials) {
+        fetch(`/api/user/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userCredentials),
+        })
+        .then(async response => {
+            const resp = await response.json()
+            if (resp.status === 200) {
+                Cookies.set('name', resp.first, {expires: 7});
+                window.location.href = '/'
+            } else if (resp.status === 400) {
+                alert("Try again")
+            }
+        })
+        .catch(error => {
+            console.error('Ocorreu um erro:', error);
+        });
+    }
+
+
+    export function signup(userCredentials) {
+        fetch(`/api/user`, {
+            method: 'POST',
+            body: JSON.stringify(userCredentials),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+            .then(async response => {
+                const resp = await response.json()
+                if(resp.status === 201){
+                    alert("verify your account")
+                    window.location.href = '/'
+                } else if (resp.status === 400) {
+                    alert("Try again")
+                }
+            })
+            .catch(error => {
+                window.alert(error)
+                console.error('An error has occurred:', error);
+            });
+    }
+
+
 }

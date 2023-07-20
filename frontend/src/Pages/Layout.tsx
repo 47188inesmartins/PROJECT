@@ -130,7 +130,8 @@ export function LayoutRight() {
                                                                         className="dropdown-button">
                                                             {managingCompanies.response.map((object: any) => (
                                                                 <Dropdown.Item key={object.id}
-                                                                               onClick={() => handleDropdownClick(object.id)}>
+                                                                               onClick={() => handleDropdownClick(object.id)}
+                                                                               style={{ backgroundColor : "black" }}>
                                                                     {object.name}
                                                                 </Dropdown.Item>
                                                             ))}

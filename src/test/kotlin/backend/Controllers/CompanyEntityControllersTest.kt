@@ -29,7 +29,6 @@ class CompanyEntityControllersTest(@Autowired val mockMvc: MockMvc) {
     @MockBean
     lateinit var companyServices: CompanyServices
 
-    // on purpose because we need to create a MockBean to all dependencies
     @MockBean
     lateinit var userServices: UserServices
 
