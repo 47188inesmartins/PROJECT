@@ -1,5 +1,4 @@
 import * as React from "react";
-import {useState} from "react";
 
 import {
     MDBCard,
@@ -8,7 +7,6 @@ import {
     MDBRow,
     MDBCardText,
     MDBCardBody,
-    MDBCardImage,
     MDBTypography
 } from "mdb-react-ui-kit";
 
@@ -43,23 +41,54 @@ export function Company() {
                             <MDBCard>
                                 <MDBRow>
                                     <MDBCol className="mb-2">
-                                        <MDBCardImage
-                                                      src={`data:image/jpeg;base64,${company.response.path[0]}`}
-                                                      alt={company.response.path} className="w-100 rounded-3" />
+                                        <img
+                                            src={`data:image/jpeg;base64,${company.response.path[0]}`}
+                                            className="img-fluid shadow-1-strong rounded"
+                                            alt="Hollywood Sign on The Hill"
+                                            style={{
+                                                width: '100%',
+                                                height: '200px',
+                                                objectFit: 'cover',
+                                            }}
+                                        />
                                     </MDBCol>
                                     <MDBCol className="mb-2">
-                                        <MDBCardImage src={`data:image/jpeg;base64,${company.response.path[1]}`}
-                                                      alt="image 1" className="w-100 rounded-3" />
+                                        <img
+                                            src={`data:image/jpeg;base64,${company.response.path[1]}`}
+                                            className="img-fluid shadow-1-strong rounded"
+                                            alt="Hollywood Sign on The Hill"
+                                            style={{
+                                                width: '100%',
+                                                height: '200px',
+                                                objectFit: 'cover',
+                                            }}
+                                        />
                                     </MDBCol>
                                 </MDBRow>
                                 <MDBRow className="g-2">
                                     <MDBCol className="mb-2">
-                                        <MDBCardImage src={`data:image/jpeg;base64,${company.response.path[2]}`}
-                                                      alt="image 1" className="w-100 rounded-3" />
+                                        <img
+                                            src={`data:image/jpeg;base64,${company.response.path[2]}`}
+                                            className="img-fluid shadow-1-strong rounded"
+                                            alt="Hollywood Sign on The Hill"
+                                            style={{
+                                                width: '100%',
+                                                height: '200px',
+                                                objectFit: 'cover',
+                                            }}
+                                        />
                                     </MDBCol>
                                     <MDBCol className="mb-2">
-                                        <MDBCardImage src={`data:image/jpeg;base64,${company.response.path[3]}`}
-                                                      alt="image 1" className="w-100 rounded-3" />
+                                        <img
+                                            src={`data:image/jpeg;base64,${company.response.path[3]}`}
+                                            className="img-fluid shadow-1-strong rounded"
+                                            alt="Hollywood Sign on The Hill"
+                                            style={{
+                                                width: '100%',
+                                                height: '200px',
+                                                objectFit: 'cover',
+                                            }}
+                                        />
                                     </MDBCol>
                                 </MDBRow>
                                 <div>

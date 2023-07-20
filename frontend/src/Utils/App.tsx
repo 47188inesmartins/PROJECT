@@ -23,6 +23,8 @@ import {ManagingEmployees} from "../views/manage/ManagingEmployees";
 import {ManagingVacations} from "../views/manage/ManagingVacations";
 import {AddingUnavailability} from "../views/manage/AddUnavailability";
 import {CreatingServicess} from "../views/manage/CreatingServicess";
+import {ManagingUnavailabilities} from "../views/manage/ManageUnavailabilities";
+import {Validate} from "./Validate";
 
 
 
@@ -116,7 +118,15 @@ const router = createBrowserRouter([{
         {
             "path": "/company/:id/services",
             "element": <CreatingServicess/>
-        }
+        },
+        {
+            "path": "/company/:id/managing/unavailabilities",
+            "element": <ManagingUnavailabilities/>
+        },
+        {
+            "path": "/validate",
+            "element": <Validate/>
+        },
     ]
 }])
 

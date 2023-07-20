@@ -33,6 +33,8 @@ export function MyAppointments() {
         padding: '20px',
     };
 
+    console.log("appointments", appointments)
+
     return (
             <div style = {contentStyle}>
                 <div className="sidebar-left">

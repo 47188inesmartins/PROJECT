@@ -3,6 +3,7 @@ package backend.jvm.controllers
 import backend.jvm.services.AppointmentServices
 import backend.jvm.model.appointment.AppointmentInputDto
 import backend.jvm.model.appointment.AppointmentOutputDto
+import backend.jvm.model.service.ServiceEntity
 import backend.jvm.model.service.ServiceOutputDto
 import backend.jvm.model.user.AppointmentManager
 import backend.jvm.model.user.UserOutputDto
@@ -107,7 +108,7 @@ class AppointmentController {
     ) :ResponseEntity<List<Pair<ServiceOutputDto, List<UserOutputDto>>>>{
         return try{
            val response = appointmentServices.getAvailableServicesByAppointment(hourBegin, date, cid)
-            ResponseEntity.status(200) .body(response)
+            ResponseEntity.status(200).body(response)
         }catch (e: Exception){
             when(e) {
                 is EmptyAppointments -> throw ResponseStatusException(HttpStatus.NOT_FOUND, "No appointments found", e)

@@ -11,15 +11,12 @@ import { Fetch } from '../Utils/useFetch';
 import { Layout, LayoutRight } from './Layout';
 import { LoggedInContextCookie } from "../views/Authentication/Authn";
 import {Dropdown, DropdownButton} from "react-bootstrap";
-import Cookies from 'js-cookie';
 
 
 export function Home() {
 
     const context = React.useContext(LoggedInContextCookie).loggedInState
     const role = context.role
-
-    const [distance, setDistance] = useState<string|undefined>(undefined)
 
     const hasManager = role.some((user) => user.role === "MANAGER");
     const hasEmployee = role.some((user) => user.role === "EMPLOYEE");
@@ -29,18 +26,19 @@ export function Home() {
         return searchParams.get(param);
     }
 
-    const [selectedDistance, setSelectedDistance] = useState(10);
-
     const searchValue = getQueryParam('search');
-    const page = parseInt(getQueryParam('page'));
-    const size = parseInt(getQueryParam('size'));
+    const page = Number.isNaN(parseInt(getQueryParam('page'))) ? 0 : parseInt(getQueryParam('page'))
+    const size = Number.isNaN(parseInt(getQueryParam('size'))) ? 3 : parseInt(getQueryParam('size'))
+    const distance = Number.isNaN(parseInt(getQueryParam('distance'))) ? 10 : parseInt(getQueryParam('distance'))
+
+    const [selectedDistance, setSelectedDistance] = useState(distance);
 
     let url;
     if (searchValue !== null) {
-        url = `/company/search?search=${searchValue}&page=${page}&size=${size}`;
+        url = `/company/search?search=${searchValue}`;
     } else {
-        const getPage: number | undefined = Number.isNaN(parseInt(String(page))) ? 0 : parseInt(String(page));
-        const getSize: number | undefined = Number.isNaN(parseInt(String(size))) ? 3 : parseInt(String(size));
+        const getPage: number = Number.isNaN(parseInt(String(page))) ? 0 : parseInt(String(page));
+        const getSize: number = Number.isNaN(parseInt(String(size))) ? 3 : parseInt(String(size));
         url = `/?page=${getPage}&size=${getSize}`;
         if (selectedDistance !== 0) {
             url += `&distance=${selectedDistance}`;
@@ -52,15 +50,20 @@ export function Home() {
     const response = Fetch(url, 'GET');
 
     const goToNextPage = () => {
-        let nextPageUrl = `?page=${page+1}&size=${size}`
-        if (searchValue) nextPageUrl += `&search=${searchValue}`;
-        window.location.href = nextPageUrl
+        const currentURL = new URL(window.location.href);
+        const searchParams = currentURL.searchParams;
+        searchParams.set("page", `${page+1}`);
+        const newURL = `${currentURL.pathname}?${searchParams.toString()}`;
+        window.location.href = newURL
     };
 
+
     const goToPreviousPage = () => {
-        let previousPageUrl = `?page=${page-1}&size=${size}`
-        if (searchValue) previousPageUrl += `&search=${searchValue}`;
-        window.location.href = previousPageUrl
+        const currentURL = new URL(window.location.href);
+        const searchParams = currentURL.searchParams;
+        searchParams.set("page", `${page-1}`);
+        const newURL = `${currentURL.pathname}?${searchParams.toString()}`;
+        window.location.href = newURL
     };
 
 
@@ -77,14 +80,16 @@ export function Home() {
     };
 
     function FetchSearch() {
-        const getPage: number | undefined = Number.isNaN(parseInt(String(page))) ? 0 : parseInt(String(page));
-        const getSize: number | undefined = Number.isNaN(parseInt(String(size))) ? 3 : parseInt(String(size));
-        window.location.href = `/?search=${searchTerm}&page=${getPage}&size=${getSize}`;
+        const currentURL = new URL(window.location.href);
+        currentURL.searchParams.set("search", searchTerm);
+        window.location.href = currentURL.toString();
         return <></>;
     }
 
     const handleFetchDistance = (distance) => {
-        setSelectedDistance(distance === undefined ? 0 : distance);
+        const currentURL = new URL(window.location.href);
+        currentURL.searchParams.set("distance", distance);
+        window.location.href = currentURL.toString();
     };
 
 

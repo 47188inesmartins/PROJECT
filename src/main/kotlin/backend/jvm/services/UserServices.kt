@@ -157,18 +157,18 @@ class UserServices : IUserInterface {
     override fun mapToAppointmentsInfo(listAppointmentEntities: List<AppointmentEntity>):List<AppointmentInfo>{
         if(listAppointmentEntities.isEmpty()) return emptyList()
         return listAppointmentEntities.map {
-            val getCompany = companyDao.getCompanyBySchedule(it.schedule.id)?:throw CompanyNotFound()
+            val getCompany = companyDao.getCompanyEntityBySchedule(it.schedule)?:throw CompanyNotFound()
             if(it.user == null) throw InvalidAppointment()
             val employee = it.user.firstOrNull { user ->
-                user?.let { it1 -> userDao.getUserDBByIdAndRole(UserRoles.EMPLOYEE.name, it1.id) } != null ||
-                user?.let { it1 -> userDao.getUserDBByIdAndRole(UserRoles.MANAGER.name, it1.id) } != null
+                user?.let { it1 -> userDao.getUserDBByIdAndRole(UserRoles.EMPLOYEE.name, getCompany.id, user.id) } != null ||
+                user?.let { it1 -> userDao.getUserDBByIdAndRole(UserRoles.MANAGER.name, it1.id, user.id) } != null
             }?: throw UserNotFound()
 
             AppointmentInfo(
                 it.id,
                 convertToHourFormat(it.appHour),
                 it.appDate,
-                getCompany,
+                getCompany.name,
                 employee.name
             )
         }

@@ -45,12 +45,12 @@ interface UserDao: JpaRepository<UserEntity, Int> {
      @Query(value = "update USER_ROLE set role_name= :nameRole where user_id=:id returning role_name", nativeQuery = true)
      fun changeRole (@Param("id") id: Int, @Param("nameRole") name: String): String
 
-     @Query(value = "select * from SCH_USER s inner join user_role ur on s.id =:id and ur.role_name =:role ", nativeQuery = true)
-     fun getUserDBByIdAndRole(@Param("role") role: String, @Param("id") id: Int): UserEntity?
+     @Query(value = "select * from SCH_USER s inner join user_company uc on uc.company_id =:companyId and uc.role =:role and s.id = :userId", nativeQuery = true)
+     fun getUserDBByIdAndRole(@Param("role") role: String, @Param("companyId") companyId: Int, @Param("userId") userId: Int): UserEntity?
 
 
      @Query(value = "select * from SCH_USER s inner join user_company us on us.company_id = :company " +
-             "and us.user_id = s.id and (us.role = 'EMPLOYEE' or us.role = 'MANAGER')", nativeQuery = true)
+             "and us.user_id = s.id and (us.role = 'EMPLOYEE')", nativeQuery = true)
      fun getUsersEmployeesByCompany(@Param("company") company: Int): List<UserEntity>?
 
      @Query(value = "(select uc.role from sch_user u inner join user_company uc on (u.id = :user and uc.user_id =u.id  and uc.company_id = :company " +

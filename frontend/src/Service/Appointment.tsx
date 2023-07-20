@@ -1,6 +1,7 @@
 import {Fetch, SimpleFetch1} from "../Utils/useFetch";
 import {Navigate} from "react-router";
 import React, {useEffect, useState} from "react";
+import Cookies from 'js-cookie';
 
 export namespace Appointment{
     export function AccessDeniedPage(){
@@ -44,4 +45,30 @@ export namespace Appointment{
             return appointments.response
         }
     }
+
+    export function addAppointment(id,obj){
+        const token =  Cookies.get('name');
+        fetch(`/api/company/${id}/appointment`, {
+            method: 'POST',
+            body: JSON.stringify(obj),
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        })
+            .then(response => {
+                if(response.status === 201){
+                    alert("your appointment was added")
+                    window.location.href = `/company/${id}`
+                }else if(response.status === 400){
+                    alert("Try again!Something went wrong")
+                }else if(response.status === 401){
+                    alert("Unauthorized")
+                }
+            })
+            .catch(error => {
+                console.error('Ocorreu um erro:', error);
+            });
+    }
+
 }

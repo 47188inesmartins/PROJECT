@@ -263,7 +263,7 @@ export function CompanyProfileManaging() {
                                                 className="square"
                                                 style={{ width: '200px', height: '200px', objectFit: 'cover' }}
                                                 fluid />
-                                            <a href={`/company/${id}/managing/employees`} className="mb-1"  style={{ fontSize: '1.2rem' }}>
+                                            <a href={`/company/${id}/upload-file`} className="mb-1"  style={{ fontSize: '1.2rem' }}>
                                                 <MDBCardText> upload your profile picture </MDBCardText>
                                             </a>
                                         </MDBCardBody>
@@ -283,6 +283,9 @@ export function CompanyProfileManaging() {
                                             </a>
                                             <a href={`/company/${id}/managing/unavailability`} className="mb-1"  style={{ fontSize: '1.2rem' }}>
                                                 <MDBCardText> Add personal break </MDBCardText>
+                                            </a>
+                                            <a href={`/company/${id}/managing/unavailabilities`} className="mb-1"  style={{ fontSize: '1.2rem' }}>
+                                                <MDBCardText> Check unavailabilities </MDBCardText>
                                             </a>
                                             <a href={`/company/profits`} className="mb-1"  style={{ fontSize: '1.2rem' }}>
                                                 <MDBCardText> Check your team profit </MDBCardText>

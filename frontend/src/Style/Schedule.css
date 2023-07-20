@@ -23,3 +23,43 @@
     border-radius: 10px; /* Valor de raio que determina o grau de arredondamento */
     /* Outras propriedades de estilo */
 }
+
+/* Adicione essas regras no seu arquivo de estilos CSS */
+
+.cell-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 0 -4px; /* Espaçamento entre as células */
+}
+
+.cell {
+    border-radius: 10px;
+    padding: 10px;
+    margin: 4px;
+    cursor: pointer;
+    animation: jumpAnimation 0.5s;
+    color: white;
+    background-color: #F35FA4;
+}
+
+/* Define o tamanho máximo das células por coluna (2 horas por coluna) */
+@media screen and (min-width: 768px) {
+    .cell-wrapper {
+        max-width: 400px; /* Ajuste o valor conforme necessário */
+        margin: 0 auto; /* Centraliza as células */
+    }
+}
+
+/* Efeitos de animação */
+@keyframes jumpAnimation {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}

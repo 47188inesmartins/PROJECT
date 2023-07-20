@@ -1,14 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import "react-datepicker/dist/react-datepicker.css";
 import '../Style/Schedule.css'
-import {Fetch, SimpleFetch} from "../Utils/useFetch";
+import {Fetch} from "../Utils/useFetch";
 import {useParams} from "react-router-dom";
 import {Navigate} from "react-router";
 import {Button, Modal} from "react-bootstrap";
 import {MDBInput} from "mdb-react-ui-kit";
 import { format } from 'date-fns';
 import {Layout} from "./Layout";
-import Cookies from 'js-cookie';
+import {Appointment} from "../Service/Appointment";
 
 
 function TimePickerComponent (){
@@ -26,54 +26,39 @@ function TimePickerComponent (){
     const schedule = Fetch(`company/${id}/day/week-day?day=${startDate}`, "GET").response
 
     return (
-        <>
+        <div>
             <div className="sidebar-left">
                 <Layout />
             </div>
-            {!click?
-                <>
-                    {!schedule?
+            {!click ?
+                <div>
+                    {!schedule ?
                         <div> ..loading.. </div>
                         :
                         <div>
-                            {schedule.size !== 0 ?
+                            <div
+                                className="mx-0 mb-0 row justify-content-sm-center justify-content-start px-1">
+                                <MDBInput wrapperClass='mb-4 mx-5 w-100'
+                                          labelClass='text-white'
+                                          label=''
+                                          id='formControlLg'
+                                          type='date'
+                                          size="lg"
+                                          value={startDate}
+                                          required={true}
+                                          onChange={(e) => setStartDate(e.target.value)}
+                                />
+                            </div>
+                            {schedule.length !== 0 ?
                                 <div className="container-fluid px-0 px-sm-4 mx-auto">
-                                    <div className="row justify-content-center mx-0">
-                                        <div className="col-lg-10">
-                                            <div className="card border-0">
-                                                <form autoComplete="off">
-                                                    <div className="card-header bg-dark">
-                                                        <div
-                                                            className="mx-0 mb-0 row justify-content-sm-center justify-content-start px-1">
-                                                            <MDBInput wrapperClass='mb-4 mx-5 w-100'
-                                                                      labelClass='text-white'
-                                                                      label=''
-                                                                      id='formControlLg'
-                                                                      type='date'
-                                                                      size="lg"
-                                                                      value={startDate}
-                                                                      required={true}
-                                                                      onChange={(e) => setStartDate(e.target.value)}
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                    <div className="card-body p-3 p-sm-5">
-                                                        <div className="row text-center mx-0">
-                                                            {schedule.map((group, rowIndex) => (
-                                                                <div className="row text-center mx-0" key={rowIndex}>
-                                                                    <div className="col-md-2 col-4 my-1 px-2"
-                                                                         key={rowIndex}>
-                                                                        <div className="cell py-1"
-                                                                             onClick={() => handleClick(group)}>{group}</div>
-                                                                    </div>
-                                                                </div>
-                                                            ))}
-                                                        </div>
-                                                    </div>
-                                                </form>
+                                    <div className="row justify-content-center mx-0 cell-wrapper">
+                                        {schedule.map((group, rowIndex) => (
+                                            <div className="col-md-2 col-4 my-1 px-2" key={rowIndex}>
+                                                <div className="cell py-1" onClick={() => handleClick(group)}>
+                                                    <span>{group}</span>
+                                                </div>
                                             </div>
-                                        </div>
-
+                                        ))}
                                     </div>
                                 </div>
                                 :
@@ -81,13 +66,13 @@ function TimePickerComponent (){
                             }
                         </div>
                     }
-                </>
+                </div>
                 :
-                <PopUpMessage id={id} date={startDate} hour={click}/>
+                <PopUpMessage id={id} date={startDate} hour={click} />
             }
-        </>
-    )
-}
+        </div>
+    );
+};
 
 
 function PopUpMessage(props:{id:string|undefined,date:string,hour:string}) {
@@ -147,13 +132,13 @@ function FetchAvailableServices(props:{id:string,date:string,hour:string}){
 
     return <Modal.Body>
         {!employees.serviceId?
-            <>
+            <div>
                 {response.response ?
-                    <>
+                    <div>
                         {response.response.length === 0 ?
-                            <> no available services </>
+                            <p> no available services </p>
                             :
-                            <>
+                            <div>
                                 {response.response.map((service) => (
                                     <div className="row text-center mx-0" key={service.first.id}>
                                         <div className="col-md-2 col-4 my-1 px-2" key={service.first.id}>
@@ -162,19 +147,18 @@ function FetchAvailableServices(props:{id:string,date:string,hour:string}){
                                             </div>
                                         </div>
                                     </div>
-                                ))
-                                }
-                            </>
+                                ))}
+                            </div>
                         }
-                    </>
+                    </div>
                     :
-                    <>No available Services for this date </>
+                    <p>No available Services for this date </p>
                 }
-            </>
+            </div>
             :
-            <>
+            <div>
                 <PopUpEmployee  appHour={props.hour} employees={employees} startDate={props.date}/>
-            </>
+            </div>
         }
     </Modal.Body>
 }
@@ -183,14 +167,12 @@ function PopUpEmployee(props: {employees, startDate, appHour}){
     const [show, setShow] = useState(true);
     const params = useParams()
     const id = params.id
-    const [dados, setDados] = useState({});
     const [redirecionar, setRedirecionar] = useState(false);
 
     const handleCancel = () => {
         setShow(false);
         window.location.href = `/company/${id}`;
     }
-    const token = Cookies.get('name');
 
     function handleClick(value){
         const obj = {
@@ -199,25 +181,7 @@ function PopUpEmployee(props: {employees, startDate, appHour}){
             service: props.employees.serviceId,
             user: value
         }
-
-        SimpleFetch(`/api/company/${id}/appointment`,obj,'POST')
-        setRedirecionar(true);
-        fetch(`/api/company/${id}/appointment`, {
-            method: 'POST',
-            body: JSON.stringify(obj),
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then(response => response.json())
-            .then(data => {
-                setDados(data);
-                setRedirecionar(true);
-            })
-            .catch(error => {
-                console.error('Ocorreu um erro:', error);
-            });
+        Appointment.addAppointment(id,obj);
     }
 
     useEffect(() => {

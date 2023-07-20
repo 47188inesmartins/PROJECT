@@ -3,6 +3,7 @@ package backend.jvm.dao
 import backend.jvm.model.*
 import backend.jvm.model.appointment.AppointmentEntity
 import backend.jvm.model.company.CompanyEntity
+import backend.jvm.model.schedule.ScheduleEntity
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
@@ -12,6 +13,8 @@ import java.sql.Time
 import java.util.*
 
 interface CompanyDao : JpaRepository<CompanyEntity, Int>{
+
+    fun getCompanyEntityBySchedule(schedule: ScheduleEntity): CompanyEntity?
 
     @Query(value = "SELECT * FROM COMPANY c WHERE type = ANY(:categories)", nativeQuery = true)
     fun getCompaniesByCategory(@Param("categories") categories: Array<String>, pageable: Pageable): Page<CompanyEntity>?

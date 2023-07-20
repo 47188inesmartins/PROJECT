@@ -16,7 +16,6 @@ import backend.jvm.model.user.UserOutputDto
 import backend.jvm.model.vacation.VacationOutputDto
 import backend.jvm.dao.*
 import backend.jvm.model.day.DayInputDto
-import backend.jvm.model.user.UserEntity
 import backend.jvm.services.dto.*
 import backend.jvm.services.interfaces.ICompanyServices
 import backend.jvm.utils.*
@@ -357,7 +356,7 @@ class CompanyServices : ICompanyServices {
      * @param company to save the default images
      */
     private fun defaultImages(company: CompanyEntity): List<ImageEntity> {
-        val file = File("src/main/kotlin/backend/jvm/utils/File/company-17.png")
+        val file = File("src/main/kotlin/backend/jvm/utils/File/company.png")
         val image = ImageEntity(file.readBytes(),company)
         imageDao.save(image)
         return listOf(image,image,image,image)

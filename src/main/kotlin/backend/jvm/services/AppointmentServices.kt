@@ -5,6 +5,8 @@ import backend.jvm.model.unavailability.UnavailabilityEntity
 import backend.jvm.dao.*
 import backend.jvm.model.appointment.AppointmentInputDto
 import backend.jvm.model.appointment.AppointmentOutputDto
+import backend.jvm.model.service.ServiceEntity
+import backend.jvm.model.service.ServiceInputDto
 import backend.jvm.model.service.ServiceOutputDto
 import backend.jvm.model.user.AppointmentManager
 import backend.jvm.model.user.UserEntity
@@ -100,7 +102,7 @@ class AppointmentServices : IAppointmentServices {
             ?: throw UserNotFound()
         val service = servicesRepository.getServiceDBById(appointmentEmployee.service)
             ?: throw ServiceNotFound()
-        val schedule = scheduleDao.getScheduleById(companyId)
+        val schedule = scheduleDao.getScheduleByCompany_Id(companyId)
             ?: throw ScheduleNotFound()
 
         val appointmentDate = Date.valueOf(appointmentEmployee.appDate)?: throw Exception("invalid date")
@@ -163,19 +165,22 @@ class AppointmentServices : IAppointmentServices {
      * @return The list of available services and their corresponding employees.
      * @throws ScheduleNotFound if the schedule is not found.
      */
-    override fun getAvailableServicesByAppointment(beginHour: String, date: String, companyId: Int): List<Pair<ServiceOutputDto, List<UserOutputDto>>> {
+    fun getAvailableServicesByAppointment(beginHour: String, date: String, companyId: Int): List<Pair<ServiceOutputDto, List<UserOutputDto>>> {
         val bh = Time.valueOf(beginHour.plus(":00"))
         val d = Date.valueOf(date)
         val weekDay = getDayOfWeek(d)
         val schedule = scheduleDao.getScheduleByCompany_Id(companyId) ?: throw ScheduleNotFound()
         val services = servicesRepository.getAllServicesFromACompany(companyId)
-        val day = dayDao.getDayByWeekDaysAndSchedule(weekDay, schedule)
+        //val day = dayDao.getDayByWeekDaysAndSchedule(weekDay, schedule)
 
         return services.map {
             val employees = userDao.getAvailableEmployeesByService(it.id, d, bh, addTimes(bh, it.duration))
-            Pair(ServiceOutputDto(it), employees.map { user -> UserOutputDto(user) })
+            Pair(it, employees.map { user -> UserOutputDto(user) })
         }.filter {
-            ((it.second.isNotEmpty() &&
+            val day = it.first.day?.firstOrNull { day -> day.weekDays.trim() == weekDay.trim() }
+
+            day != null && ((
+                    it.second.isNotEmpty() &&
                 (((day.beginHour) < addTimes(bh, it.first.duration) && addTimes(
                     bh,
                     it.first.duration
@@ -185,7 +190,7 @@ class AppointmentServices : IAppointmentServices {
                             it.first.duration
                         ) && addTimes(bh, it.first.duration) <= (day.endHour)))
             ))
-        }
+        }.map { Pair(ServiceOutputDto(it.first), it.second) }
     }
 
 

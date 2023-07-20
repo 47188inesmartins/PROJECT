@@ -10,28 +10,19 @@ import {UsersService} from "../../Service/UsersService";
 
 
 
-/*
-*
-*
-* acho que isto qual faz delete nao dá refresh da pagina
-*
-* */
+
 export function ManagingEmployees() {
     const cid = useParams().id;
     const response = Fetch(`company/${cid}/employees`, "GET");
     console.log("Employees", response);
 
-     const handleDelete = (employeeId) => {
-         UsersService.deleteEmployee(cid,employeeId)
-     };
-
-     const handleProfit = (employeeId) => {
-         UsersService.profitEmployee(cid,employeeId)
+    const handleDelete = (employeeId) => {
+        UsersService.deleteEmployee(cid,employeeId)
     };
 
-     function handleAddClick(){
-         window.location.href = `/company/${cid}/employees`
-     }
+    function handleAddClick(){
+        window.location.href = `/company/${cid}/employees`
+    }
 
     const divElement = <div className="d-flex justify-content-center align-items-start" style={{ minHeight: '100vh' }}>
         <div className="row">
@@ -43,21 +34,17 @@ export function ManagingEmployees() {
                         </button>
                     </div>
                     {!response.response ? (
-                        <>loading</>
+                        <div>...loading...</div>
                     ) : (
-                        <>
+                        <div>
                             {response.response.map((object: any) => (
                                 <div className="d-flex justify-content-center py-2" key={object.id}>
                                     <div className="second py-2 px-2">
                                         <div className="d-flex justify-content-between py-1 pt-2">
                                             <div>
-                                                <img src="https://i.imgur.com/AgAC1Is.jpg" width="70" alt="Profile" />
                                                 <span className="text2" style={{ fontSize: '20px', fontFamily: 'Arial' }}>{object.name}</span>
                                             </div>
                                             <div>
-                                                <button className="btn btn-primary mr-2" onClick={() => handleProfit(object.id)}>
-                                                    Profit
-                                                </button>
                                                 <button className="btn btn-danger" onClick={() => handleDelete(object.id)}>
                                                     Delete
                                                 </button>
@@ -66,17 +53,17 @@ export function ManagingEmployees() {
                                     </div>
                                 </div>
                             ))}
-                        </>
+                        </div>
                     )}
                 </div>
             </div>
         </div>
     </div>
     return <div>
-                <div className="sidebar-left">
-                    <Layout />
-                </div>
-                <AccessDenied  company={cid} content={divElement} role={['MANAGER']}/>
-                 <LayoutRight/>
-           </div>
+        <div className="sidebar-left">
+            <Layout />
+        </div>
+        <AccessDenied  company={cid} content={divElement} role={['MANAGER']}/>
+        <LayoutRight/>
+    </div>
 }

@@ -25,8 +25,6 @@ import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.server.ResponseStatusException
 import java.util.*
 
-
-
 @RequestMapping("/user")
 @RestController
 class UserController {
@@ -53,8 +51,6 @@ class UserController {
             }
         }
     }
-
-
 
     @RoleManager(["MANAGER","EMPLOYEE","CLIENT"])
     @DeleteMapping("/{id}")
@@ -143,8 +139,6 @@ class UserController {
         }
     }
 
-
-
     @PostMapping("/logout")
     fun logout(response: HttpServletResponse): ResponseEntity<String> {
         return try {
@@ -196,12 +190,8 @@ class UserController {
         }
     }
 
-
-
-  //  @RoleManager(["MANAGER","EMPLOYEE","CLIENT"])
     @PostMapping("/profile-pic")
-    fun uploadProfilePic(@RequestBody file: MultipartFile
-    ): ResponseEntity<String> {
+    fun uploadProfilePic(@RequestBody file: MultipartFile): ResponseEntity<String> {
         return try {
             val requestAttributes = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes
             val request = requestAttributes.request

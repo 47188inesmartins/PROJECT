@@ -1,4 +1,3 @@
-import {Fetch, SimpleFetch1} from "../Utils/useFetch";
 import Cookies from 'js-cookie';
 
 
@@ -13,13 +12,13 @@ export namespace UsersService{
                 'Authorization': `Bearer ${token}`
             }
         })
-            .then(response => {
+            .then(async response => {
                 console.log("AQUI",response)
                 if(response.status === 200){
                     alert("Employee has been removed from your company")
                     window.location.href = `/company/${cid}/managing/employees`;
                 }else if(response.status === 400){
-                    alert("Something went wrong")
+                    alert("Employee has been removed")
                     window.location.href = `/company/${cid}/managing/employees`;
                 }else if(response.status === 403){
                     alert("Forbidden you can´t make this action")
@@ -62,30 +61,49 @@ export namespace UsersService{
     }
 
     export function addEmployees(id:String,body:any){
-        const resp = Fetch(`/company/${id}/employee`, 'POST', body)
-        if(resp.response)
-            window.location.href = "/"
-        return resp
+        const token =  Cookies.get('name')
+        fetch(`/api/company/${id}/employee`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(body)
+        }).then( response => {
+                if (response.status === 200) {
+                    alert("Your employee was added");
+                    window.location.href = `/company/${id}/managing/employees`;
+                    console.log('Your image is save', response);
+                } else if(response.status === 400){
+                    alert("The employee wasn't added");
+                    window.location.href = `/company/${id}/managing/employees`;
+                    console.error('Something went wrong:', response.status);
+                }else if(response.status === 404){
+                    alert("The employee wasn't added");
+                    console.error('Something went wrong:', response.status);
+                }
+            }
+        )
     }
 
     export function profilePicture(id:String,formData:FormData){
         const token =  Cookies.get('name')
-            fetch(`/user/profile-pic`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: formData
-            }).then( response =>{
-                    if (response.status === 200) {
-                        alert("Your menssage was sent");
-                        window.location.href = '/';
-                        console.log('Your image is save', response);
-                    } else {
-                        console.error('Something went wrong:', response.status);
-                    }
+        fetch(`/api/user/profile-pic`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: formData
+        }).then( response =>{
+                if (response.status === 200) {
+                    alert("Your menssage was sent");
+                    window.location.href = '/';
+                    console.log('Your image is save', response);
+                } else {
+                    console.error('Something went wrong:', response.status);
                 }
-            )
+            }
+        )
     }
 }
