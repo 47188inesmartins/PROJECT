@@ -1,8 +1,8 @@
 
 ### Project and Seminar
 
->Our project is a web api for scheduling services.
-We have as a base scenario hairdressers. Hope you like it ;)
+>Our project is a web api for scheduling services on any company.
+> Hope you like it ;)
 
 **Contributors**
 
